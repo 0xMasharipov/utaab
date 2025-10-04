@@ -10,6 +10,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { EducationNavbar } from '@/components/education/EducationNavbar';
+import { CutiiAIPanel } from '@/components/education/CutiiAIPanel';
+import { CourseReviews } from '@/components/education/CourseReviews';
 
 export const CourseDetail = () => {
   const { slug } = useParams();
@@ -150,9 +152,18 @@ export const CourseDetail = () => {
     );
   }
 
+  // Prepare context for CUTII AI
+  const courseContext = course ? {
+    id: course.id,
+    title: getCourseTitle(course),
+    level: course.level,
+    topics: course.tags || [],
+  } : undefined;
+
   return (
     <div className="min-h-screen bg-background pt-24 pb-20">
       <EducationNavbar />
+      <CutiiAIPanel courseContext={courseContext} />
       {/* Hero Section */}
       <div className="bg-gradient-to-b from-primary/10 to-transparent py-12 px-6 mb-12">
         <div className="max-w-7xl mx-auto">
@@ -305,6 +316,9 @@ export const CourseDetail = () => {
               </Card>
             )}
 
+            {/* Reviews Section */}
+            <CourseReviews courseId={course.id} isEnrolled={isEnrolled} />
+
             {/* Instructor Bio */}
             {course.instructors && getInstructorBio(course.instructors) && (
               <Card className="glass">
@@ -316,26 +330,33 @@ export const CourseDetail = () => {
                     <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center text-3xl flex-shrink-0">
                       {course.instructors.name.charAt(0)}
                     </div>
-                    <div>
-                      <h3 className="text-xl font-semibold">{course.instructors.name}</h3>
-                      {course.instructors.title && (
-                        <p className="text-muted-foreground">{course.instructors.title}</p>
-                      )}
-                      <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4" />
-                          <span>{course.instructors.rating.toFixed(1)}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Users className="h-4 w-4" />
-                          <span>{course.instructors.total_students}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <BookOpen className="h-4 w-4" />
-                          <span>{course.instructors.total_courses}</span>
-                        </div>
+                  <div>
+                    <h3 className="text-xl font-semibold">{course.instructors.name}</h3>
+                    {course.instructors.title && (
+                      <p className="text-muted-foreground">{course.instructors.title}</p>
+                    )}
+                    <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <Star className="h-4 w-4" />
+                        <span>{course.instructors.rating.toFixed(1)}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Users className="h-4 w-4" />
+                        <span>{course.instructors.total_students}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <BookOpen className="h-4 w-4" />
+                        <span>{course.instructors.total_courses}</span>
                       </div>
                     </div>
+                    <Button
+                      variant="link"
+                      className="p-0 h-auto mt-2"
+                      onClick={() => navigate(`/education/instructor/${course.instructors.id}`)}
+                    >
+                      View Profile →
+                    </Button>
+                  </div>
                   </div>
                   <p className="text-muted-foreground whitespace-pre-line">
                     {getInstructorBio(course.instructors)}

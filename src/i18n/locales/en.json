@@ -204,6 +204,27 @@
       "beginner": "Beginner",
       "intermediate": "Intermediate",
       "advanced": "Advanced"
+    },
+    "ai": {
+      "title": "CUTII AI Assistant",
+      "placeholder": "Ask me anything...",
+      "disclaimer": "Educational use only • Not financial advice"
+    },
+    "instructor": {
+      "title": "Instructor",
+      "rating": "Instructor Rating",
+      "students": "Students",
+      "courses": "Courses",
+      "view_profile": "View Profile"
+    },
+    "admin": {
+      "title": "Admin Dashboard",
+      "courses": "Manage Courses",
+      "users": "Manage Users",
+      "categories": "Manage Categories",
+      "instructors": "Manage Instructors",
+      "reviews": "Manage Reviews",
+      "analytics": "Analytics"
     }
   }
 }

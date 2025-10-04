@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 import { EducationNavbar } from '@/components/education/EducationNavbar';
+import { CutiiAIPanel } from '@/components/education/CutiiAIPanel';
 
 export const EducationHome = () => {
   const { t, i18n } = useTranslation();
@@ -64,6 +65,7 @@ export const EducationHome = () => {
   return (
     <div className="min-h-screen bg-background">
       <EducationNavbar />
+      <CutiiAIPanel />
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-6">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
@@ -163,11 +165,17 @@ export const EducationHome = () => {
                       {getCourseSubtitle(course)}
                     </p>
                     {course.instructors && (
-                      <div className="flex items-center gap-2 text-sm">
+                      <div 
+                        className="flex items-center gap-2 text-sm mb-4 cursor-pointer hover:text-primary transition-colors"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/education/instructor/${course.instructors.id}`);
+                        }}
+                      >
                         <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
                           {course.instructors.name.charAt(0)}
                         </div>
-                        <span className="text-muted-foreground">{course.instructors.name}</span>
+                        <span className="text-muted-foreground hover:text-foreground">{course.instructors.name}</span>
                       </div>
                     )}
                     <div className="mt-4 flex items-center justify-between">

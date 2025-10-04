@@ -1,1 +1,4 @@
 project_id = "nxbjgqdehvxszqjoxumx"
+
+[functions.cutii-chat]
+verify_jwt = true

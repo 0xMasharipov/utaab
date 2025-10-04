@@ -26,6 +26,7 @@ export const EducationNavbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
 
@@ -49,6 +50,24 @@ export const EducationNavbar = () => {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Check if user has admin role
+  useEffect(() => {
+    if (!user?.id) {
+      setIsAdmin(false);
+      return;
+    }
+
+    supabase
+      .from('user_roles')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('role', 'admin')
+      .maybeSingle()
+      .then(({ data }) => {
+        setIsAdmin(!!data);
+      });
+  }, [user?.id]);
+
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
   };
@@ -62,6 +81,10 @@ export const EducationNavbar = () => {
     { label: t('education.home.categories'), path: '/education' },
     { label: t('education.catalog.all_courses'), path: '/education/courses' },
   ];
+
+  if (isAdmin) {
+    navItems.push({ label: 'Admin', path: '/education/admin' });
+  }
 
   return (
     <nav

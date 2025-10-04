@@ -204,6 +204,27 @@
       "beginner": "مبتدئ",
       "intermediate": "متوسط",
       "advanced": "متقدم"
+    },
+    "ai": {
+      "title": "مساعد CUTII AI",
+      "placeholder": "اسألني أي شيء...",
+      "disclaimer": "للاستخدام التعليمي فقط • ليست نصيحة مالية"
+    },
+    "instructor": {
+      "title": "المدرب",
+      "rating": "تقييم المدرب",
+      "students": "الطلاب",
+      "courses": "الدورات",
+      "view_profile": "عرض الملف الشخصي"
+    },
+    "admin": {
+      "title": "لوحة الإدارة",
+      "courses": "إدارة الدورات",
+      "users": "إدارة المستخدمين",
+      "categories": "إدارة الفئات",
+      "instructors": "إدارة المدربين",
+      "reviews": "إدارة التقييمات",
+      "analytics": "التحليلات"
     }
   }
 }

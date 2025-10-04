@@ -204,6 +204,27 @@
       "beginner": "Başlangıç",
       "intermediate": "Orta",
       "advanced": "İleri"
+    },
+    "ai": {
+      "title": "CUTII AI Asistanı",
+      "placeholder": "Bana bir şey sor...",
+      "disclaimer": "Sadece eğitim amaçlı • Mali tavsiye değildir"
+    },
+    "instructor": {
+      "title": "Eğitmen",
+      "rating": "Eğitmen Puanı",
+      "students": "Öğrenci",
+      "courses": "Kurs",
+      "view_profile": "Profili Görüntüle"
+    },
+    "admin": {
+      "title": "Yönetici Paneli",
+      "courses": "Kursları Yönet",
+      "users": "Kullanıcıları Yönet",
+      "categories": "Kategorileri Yönet",
+      "instructors": "Eğitmenleri Yönet",
+      "reviews": "Değerlendirmeleri Yönet",
+      "analytics": "Analitik"
     }
   }
 }
