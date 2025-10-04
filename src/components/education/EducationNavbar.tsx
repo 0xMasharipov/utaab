@@ -51,6 +51,8 @@ export const EducationNavbar = () => {
   }, []);
 
   // Check if user has admin role
+  // SECURITY NOTE: This client-side check is for UX only (showing/hiding admin menu items).
+  // All actual admin operations MUST be validated server-side in edge functions.
   useEffect(() => {
     if (!user?.id) {
       setIsAdmin(false);

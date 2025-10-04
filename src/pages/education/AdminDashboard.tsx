@@ -27,6 +27,9 @@ export const AdminDashboard = () => {
   }, []);
 
   // Check if user has admin role
+  // SECURITY NOTE: This client-side check is for UX only (showing/hiding UI elements).
+  // All actual admin operations MUST be validated server-side in edge functions.
+  // The admin-stats edge function properly validates admin status before returning data.
   const { data: userRole } = useQuery({
     queryKey: ['user-role', user?.id],
     queryFn: async () => {

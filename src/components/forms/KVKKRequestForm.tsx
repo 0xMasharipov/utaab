@@ -71,7 +71,7 @@ export const KVKKRequestForm = () => {
         });
         setErrors(newErrors);
       } else {
-        console.error('KVKK request error:', error);
+        // Error details are sanitized by mapError to prevent information leakage
         toast.error(mapError(error));
       }
     } finally {

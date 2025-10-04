@@ -211,7 +211,7 @@ export const EducationRegisterForm = () => {
         description: t('education.registration.welcomeMessage'),
       });
     } catch (error: any) {
-      console.error('Registration error:', error);
+      // Error details are sanitized by mapError to prevent information leakage
       toast({
         title: 'Error',
         description: mapError(error),

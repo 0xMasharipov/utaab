@@ -76,7 +76,7 @@ export const CommunityJoinForm = () => {
         setDraftSaved(true);
         setTimeout(() => setDraftSaved(false), 2000);
       } catch (e) {
-        console.error('Failed to parse draft', e);
+        // Draft parsing failed, will start fresh
       }
     }
   }, []);
@@ -214,7 +214,7 @@ export const CommunityJoinForm = () => {
       setSubmitted(true);
       toast.success(t('join.successTitle'));
     } catch (error: any) {
-      console.error('Form submission error:', error);
+      // Error details are sanitized by mapError to prevent information leakage
       toast.error(mapError(error));
     } finally {
       setIsSubmitting(false);
