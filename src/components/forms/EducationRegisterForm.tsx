@@ -17,6 +17,7 @@ import { ChevronLeft, ChevronRight, Eye, EyeOff, CheckCircle, ExternalLink } fro
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
+import { mapError } from '@/lib/errorUtils';
 
 const createBaseSchema = (t: any) => z.object({
   email: z.string().trim().email({ message: t('education.registration.validation.emailInvalid') }),
@@ -213,7 +214,7 @@ export const EducationRegisterForm = () => {
       console.error('Registration error:', error);
       toast({
         title: 'Error',
-        description: error.message || 'Failed to create account',
+        description: mapError(error),
         variant: 'destructive',
       });
     } finally {

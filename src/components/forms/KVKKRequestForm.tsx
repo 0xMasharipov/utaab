@@ -16,6 +16,7 @@ import { CheckCircle, Mail } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
+import { mapError } from '@/lib/errorUtils';
 
 const createSchema = (t: any) => z.object({
   full_name: z.string().trim().min(1, { message: t('kvkk.requestForm.validation.nameRequired') }),
@@ -69,7 +70,7 @@ export const KVKKRequestForm = () => {
         setErrors(newErrors);
       } else {
         console.error('KVKK request error:', error);
-        toast.error(error.message || 'Failed to submit request');
+        toast.error(mapError(error));
       }
     } finally {
       setIsSubmitting(false);

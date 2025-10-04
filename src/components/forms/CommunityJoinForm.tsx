@@ -17,6 +17,7 @@ import { ChevronLeft, ChevronRight, CheckCircle, ExternalLink, Calendar, Message
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
+import { mapError } from '@/lib/errorUtils';
 
 const createSchema = (t: any) => z.object({
   full_name: z.string().trim().min(1, { message: t('join.validation.nameRequired') }),
@@ -211,7 +212,7 @@ export const CommunityJoinForm = () => {
       toast.success(t('join.successTitle'));
     } catch (error: any) {
       console.error('Form submission error:', error);
-      toast.error(error.message || 'Failed to submit application');
+      toast.error(mapError(error));
     } finally {
       setIsSubmitting(false);
     }
