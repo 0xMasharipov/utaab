@@ -126,8 +126,7 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
       }
 
     } catch (error: any) {
-      console.error('CUTII error:', error);
-      
+      // Error details are not logged to prevent information leakage
       let errorMessage = 'Sorry, I encountered an error. Please try again.';
       if (error.message?.includes('rate limit') || error.message?.includes('429')) {
         errorMessage = 'I\'m receiving too many requests right now. Please wait a moment and try again.';

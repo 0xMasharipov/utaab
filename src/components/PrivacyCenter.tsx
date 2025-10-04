@@ -71,7 +71,7 @@ export const PrivacyCenter = ({ isOpen, onClose }: PrivacyCenterProps) => {
       toast.success(t('kvkk.requestForm.successTitle'));
       setDataRequestForm({ fullName: '', email: '', requestType: '', details: '' });
     } catch (error: any) {
-      console.error('KVKK request error:', error);
+      // Error details are sanitized by mapError to prevent information leakage
       toast.error(mapError(error));
     } finally {
       setIsSubmitting(false);

@@ -26,6 +26,8 @@ export const EducationNavbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
+  // SECURITY NOTE: This client-side isAdmin check is for UX only (showing/hiding UI elements).
+  // All actual admin operations MUST be validated server-side in edge functions.
   const [isAdmin, setIsAdmin] = useState(false);
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
