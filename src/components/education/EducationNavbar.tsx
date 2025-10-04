@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Menu, X, Globe } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Menu, X, Globe, User, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import { supabase } from '@/integrations/supabase/client';
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -16,10 +19,13 @@ const languages = [
   { code: 'ar', name: 'العربية', flag: '🇸🇦' },
 ];
 
-export const Navbar = () => {
+export const EducationNavbar = () => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
 
@@ -31,29 +37,31 @@ export const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
   };
 
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMobileMenuOpen(false);
-    }
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate('/education');
   };
 
   const navItems = [
-    { key: 'community', id: 'community' },
-    { key: 'learn', id: 'learn' },
-    { key: 'events', id: 'events' },
-    { key: 'projects', id: 'projects' },
-    { key: 'resources', id: 'resources' },
+    { label: t('education.home.categories'), path: '/education' },
+    { label: t('education.catalog.all_courses'), path: '/education/courses' },
   ];
-
-  const handleEducationClick = () => {
-    window.location.href = '/education';
-  };
 
   return (
     <nav
@@ -65,36 +73,31 @@ export const Navbar = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <button
-            onClick={() => scrollToSection('hero')}
+            onClick={() => navigate('/education')}
             className="text-xl font-bold text-foreground hover:text-accent transition-colors"
           >
-            UTAA Blockchain
+            UTAA Education
           </button>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
             {navItems.map((item) => (
               <button
-                key={item.key}
-                onClick={() => scrollToSection(item.id)}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                key={item.path}
+                onClick={() => navigate(item.path)}
+                className={`text-sm font-medium transition-colors ${
+                  location.pathname === item.path
+                    ? 'text-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
               >
-                {t(`nav.${item.key}`)}
+                {item.label}
               </button>
             ))}
           </div>
 
-          {/* Right side - Education + Language Selector + Join Button */}
+          {/* Right side - Language + User */}
           <div className="flex items-center gap-3">
-            {/* Education Button */}
-            <Button
-              onClick={handleEducationClick}
-              variant="ghost"
-              size="sm"
-              className="glass hover:bg-white/10 rounded-full px-4 hidden md:inline-flex"
-            >
-              {t('education.title')}
-            </Button>
             {/* Language Selector */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -129,13 +132,51 @@ export const Navbar = () => {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Join Button */}
+            {/* User Menu or Register Button */}
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="glass hover:bg-white/10 rounded-full"
+                  >
+                    <User className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  className="glass-strong border-white/20 backdrop-blur-2xl rounded-2xl z-[100]"
+                >
+                  <DropdownMenuItem onClick={() => navigate('/education/profile')}>
+                    <User className="h-4 w-4 mr-2" />
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="bg-white/10" />
+                  <DropdownMenuItem onClick={handleSignOut}>
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button
+                onClick={() => navigate('/education/register')}
+                className="btn-primary hidden sm:inline-flex"
+                size="sm"
+              >
+                {t('education.register')}
+              </Button>
+            )}
+
+            {/* Main Site Link */}
             <Button
-              onClick={() => scrollToSection('join')}
-              className="btn-primary hidden sm:inline-flex"
+              onClick={() => (window.location.href = '/')}
+              variant="outline"
               size="sm"
+              className="glass hidden md:inline-flex"
             >
-              {t('nav.join')}
+              Main Site
             </Button>
 
             {/* Mobile Menu Toggle */}
@@ -155,28 +196,33 @@ export const Navbar = () => {
             <div className="flex flex-col gap-3">
               {navItems.map((item) => (
                 <button
-                  key={item.key}
-                  onClick={() => scrollToSection(item.id)}
+                  key={item.path}
+                  onClick={() => {
+                    navigate(item.path);
+                    setIsMobileMenuOpen(false);
+                  }}
                   className="text-left text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2"
                 >
-                  {t(`nav.${item.key}`)}
+                  {item.label}
                 </button>
               ))}
               <Button
-                onClick={handleEducationClick}
-                variant="ghost"
-                className="w-full justify-start text-sm font-medium text-muted-foreground hover:text-foreground"
+                onClick={() => (window.location.href = '/')}
+                variant="outline"
+                className="w-full"
                 size="sm"
               >
-                {t('education.title')}
+                Main Site
               </Button>
-              <Button
-                onClick={() => scrollToSection('join')}
-                className="btn-primary w-full mt-2"
-                size="sm"
-              >
-                {t('nav.join')}
-              </Button>
+              {!user && (
+                <Button
+                  onClick={() => navigate('/education/register')}
+                  className="btn-primary w-full"
+                  size="sm"
+                >
+                  {t('education.register')}
+                </Button>
+              )}
             </div>
           </div>
         )}

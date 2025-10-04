@@ -145,5 +145,65 @@
     "tr": "Türkçe",
     "ru": "Русский",
     "ar": "العربية"
+  },
+  "education": {
+    "title": "منصة التعليم",
+    "register": "التسجيل",
+    "home": {
+      "hero_title": "تعلم تطوير البلوكشين",
+      "hero_subtitle": "أتقن تقنيات Web3 مع دورات يقودها خبراء",
+      "search_placeholder": "البحث عن الدورات...",
+      "featured": "الدورات المميزة",
+      "categories": "تصفح حسب الفئة",
+      "cta": "استكشف الدورات"
+    },
+    "catalog": {
+      "title": "كتالوج الدورات",
+      "filters": "المرشحات",
+      "all_courses": "جميع الدورات",
+      "level": "المستوى",
+      "language": "اللغة",
+      "price": "السعر",
+      "duration": "المدة",
+      "sort_by": "ترتيب حسب",
+      "popular": "الأكثر شعبية",
+      "newest": "الأحدث",
+      "highest_rated": "الأعلى تقييمًا",
+      "free": "مجاني",
+      "paid": "مدفوع",
+      "all_levels": "جميع المستويات",
+      "all_languages": "جميع اللغات",
+      "hours": "ساعات",
+      "course": "دورة",
+      "courses": "دورات",
+      "no_results": "لم يتم العثور على دورات",
+      "clear_filters": "مسح المرشحات"
+    },
+    "course": {
+      "enroll": "سجل الآن",
+      "enrolled": "مسجل",
+      "continue": "متابعة التعلم",
+      "what_learn": "ما ستتعلمه",
+      "prerequisites": "المتطلبات الأساسية",
+      "syllabus": "منهج الدورة",
+      "instructor": "المدرب",
+      "reviews": "التقييمات",
+      "rating": "التقييم",
+      "students": "طالب",
+      "duration": "المدة",
+      "level": "المستوى",
+      "language": "اللغة",
+      "last_updated": "آخر تحديث",
+      "share": "مشاركة",
+      "save": "حفظ",
+      "price_free": "مجاني",
+      "modules": "وحدات",
+      "lessons": "دروس"
+    },
+    "levels": {
+      "beginner": "مبتدئ",
+      "intermediate": "متوسط",
+      "advanced": "متقدم"
+    }
   }
 }

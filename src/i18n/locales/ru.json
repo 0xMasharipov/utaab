@@ -145,5 +145,65 @@
     "tr": "Türkçe",
     "ru": "Русский",
     "ar": "العربية"
+  },
+  "education": {
+    "title": "Образовательная платформа",
+    "register": "Регистрация",
+    "home": {
+      "hero_title": "Изучайте разработку блокчейна",
+      "hero_subtitle": "Освойте технологии Web3 с курсами от экспертов",
+      "search_placeholder": "Поиск курсов...",
+      "featured": "Избранные курсы",
+      "categories": "Обзор по категориям",
+      "cta": "Исследовать курсы"
+    },
+    "catalog": {
+      "title": "Каталог курсов",
+      "filters": "Фильтры",
+      "all_courses": "Все курсы",
+      "level": "Уровень",
+      "language": "Язык",
+      "price": "Цена",
+      "duration": "Продолжительность",
+      "sort_by": "Сортировать",
+      "popular": "Популярные",
+      "newest": "Новые",
+      "highest_rated": "Высокий рейтинг",
+      "free": "Бесплатно",
+      "paid": "Платно",
+      "all_levels": "Все уровни",
+      "all_languages": "Все языки",
+      "hours": "часов",
+      "course": "курс",
+      "courses": "курсов",
+      "no_results": "Курсы не найдены",
+      "clear_filters": "Очистить фильтры"
+    },
+    "course": {
+      "enroll": "Записаться",
+      "enrolled": "Записан",
+      "continue": "Продолжить обучение",
+      "what_learn": "Чему вы научитесь",
+      "prerequisites": "Предварительные требования",
+      "syllabus": "Программа курса",
+      "instructor": "Инструктор",
+      "reviews": "Отзывы",
+      "rating": "Рейтинг",
+      "students": "студентов",
+      "duration": "Продолжительность",
+      "level": "Уровень",
+      "language": "Язык",
+      "last_updated": "Обновлено",
+      "share": "Поделиться",
+      "save": "Сохранить",
+      "price_free": "Бесплатно",
+      "modules": "модулей",
+      "lessons": "уроков"
+    },
+    "levels": {
+      "beginner": "Начальный",
+      "intermediate": "Средний",
+      "advanced": "Продвинутый"
+    }
   }
 }

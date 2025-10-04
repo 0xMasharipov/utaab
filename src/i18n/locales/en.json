@@ -145,5 +145,65 @@
     "tr": "Türkçe",
     "ru": "Русский",
     "ar": "العربية"
+  },
+  "education": {
+    "title": "Education Platform",
+    "register": "Register",
+    "home": {
+      "hero_title": "Learn Blockchain Development",
+      "hero_subtitle": "Master Web3 technologies with expert-led courses",
+      "search_placeholder": "Search courses...",
+      "featured": "Featured Courses",
+      "categories": "Browse by Category",
+      "cta": "Explore Courses"
+    },
+    "catalog": {
+      "title": "Course Catalog",
+      "filters": "Filters",
+      "all_courses": "All Courses",
+      "level": "Level",
+      "language": "Language",
+      "price": "Price",
+      "duration": "Duration",
+      "sort_by": "Sort by",
+      "popular": "Most Popular",
+      "newest": "Newest",
+      "highest_rated": "Highest Rated",
+      "free": "Free",
+      "paid": "Paid",
+      "all_levels": "All Levels",
+      "all_languages": "All Languages",
+      "hours": "hours",
+      "course": "course",
+      "courses": "courses",
+      "no_results": "No courses found",
+      "clear_filters": "Clear Filters"
+    },
+    "course": {
+      "enroll": "Enroll Now",
+      "enrolled": "Enrolled",
+      "continue": "Continue Learning",
+      "what_learn": "What you'll learn",
+      "prerequisites": "Prerequisites",
+      "syllabus": "Course Syllabus",
+      "instructor": "Instructor",
+      "reviews": "Reviews",
+      "rating": "Rating",
+      "students": "students",
+      "duration": "Duration",
+      "level": "Level",
+      "language": "Language",
+      "last_updated": "Last updated",
+      "share": "Share",
+      "save": "Save",
+      "price_free": "Free",
+      "modules": "modules",
+      "lessons": "lessons"
+    },
+    "levels": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    }
   }
 }

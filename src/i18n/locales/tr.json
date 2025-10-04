@@ -145,5 +145,65 @@
     "tr": "Türkçe",
     "ru": "Русский",
     "ar": "العربية"
+  },
+  "education": {
+    "title": "Eğitim Platformu",
+    "register": "Kayıt Ol",
+    "home": {
+      "hero_title": "Blockchain Geliştirmeyi Öğrenin",
+      "hero_subtitle": "Uzman eğitmenlerle Web3 teknolojilerinde ustalaşın",
+      "search_placeholder": "Kurs ara...",
+      "featured": "Öne Çıkan Kurslar",
+      "categories": "Kategoriye Göre Gözat",
+      "cta": "Kursları Keşfet"
+    },
+    "catalog": {
+      "title": "Kurs Kataloğu",
+      "filters": "Filtreler",
+      "all_courses": "Tüm Kurslar",
+      "level": "Seviye",
+      "language": "Dil",
+      "price": "Fiyat",
+      "duration": "Süre",
+      "sort_by": "Sırala",
+      "popular": "En Popüler",
+      "newest": "En Yeni",
+      "highest_rated": "En Yüksek Puanlı",
+      "free": "Ücretsiz",
+      "paid": "Ücretli",
+      "all_levels": "Tüm Seviyeler",
+      "all_languages": "Tüm Diller",
+      "hours": "saat",
+      "course": "kurs",
+      "courses": "kurs",
+      "no_results": "Kurs bulunamadı",
+      "clear_filters": "Filtreleri Temizle"
+    },
+    "course": {
+      "enroll": "Şimdi Kaydol",
+      "enrolled": "Kayıtlı",
+      "continue": "Öğrenmeye Devam Et",
+      "what_learn": "Ne öğreneceksiniz",
+      "prerequisites": "Ön Koşullar",
+      "syllabus": "Kurs Müfredatı",
+      "instructor": "Eğitmen",
+      "reviews": "Değerlendirmeler",
+      "rating": "Puan",
+      "students": "öğrenci",
+      "duration": "Süre",
+      "level": "Seviye",
+      "language": "Dil",
+      "last_updated": "Son güncelleme",
+      "share": "Paylaş",
+      "save": "Kaydet",
+      "price_free": "Ücretsiz",
+      "modules": "modül",
+      "lessons": "ders"
+    },
+    "levels": {
+      "beginner": "Başlangıç",
+      "intermediate": "Orta",
+      "advanced": "İleri"
+    }
   }
 }
