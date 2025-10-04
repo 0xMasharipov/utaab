@@ -85,6 +85,102 @@ export type Database = {
           },
         ]
       }
+      community_applications: {
+        Row: {
+          availability_hours: number
+          city: string | null
+          country: string | null
+          created_at: string
+          department: string
+          email: string
+          experience_level: string
+          full_name: string
+          github_url: string | null
+          honeypot: string | null
+          id: string
+          interests: string[]
+          ip_address: unknown | null
+          kvkk_consent: boolean
+          kvkk_consent_timestamp: string
+          kvkk_consent_version: string
+          linkedin_url: string | null
+          locale: string
+          motivation: string
+          portfolio_url: string | null
+          preferred_tracks: string[]
+          referrer: string | null
+          submission_count: number | null
+          telegram: string | null
+          updated_at: string
+          user_agent: string | null
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          availability_hours: number
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          department: string
+          email: string
+          experience_level: string
+          full_name: string
+          github_url?: string | null
+          honeypot?: string | null
+          id?: string
+          interests: string[]
+          ip_address?: unknown | null
+          kvkk_consent?: boolean
+          kvkk_consent_timestamp?: string
+          kvkk_consent_version?: string
+          linkedin_url?: string | null
+          locale?: string
+          motivation: string
+          portfolio_url?: string | null
+          preferred_tracks: string[]
+          referrer?: string | null
+          submission_count?: number | null
+          telegram?: string | null
+          updated_at?: string
+          user_agent?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          availability_hours?: number
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          department?: string
+          email?: string
+          experience_level?: string
+          full_name?: string
+          github_url?: string | null
+          honeypot?: string | null
+          id?: string
+          interests?: string[]
+          ip_address?: unknown | null
+          kvkk_consent?: boolean
+          kvkk_consent_timestamp?: string
+          kvkk_consent_version?: string
+          linkedin_url?: string | null
+          locale?: string
+          motivation?: string
+          portfolio_url?: string | null
+          preferred_tracks?: string[]
+          referrer?: string | null
+          submission_count?: number | null
+          telegram?: string | null
+          updated_at?: string
+          user_agent?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: []
+      }
       courses: {
         Row: {
           category_id: string | null
@@ -226,6 +322,63 @@ export type Database = {
           },
         ]
       }
+      education_profiles: {
+        Row: {
+          created_at: string
+          department: string
+          email_course_updates: boolean | null
+          email_marketing: boolean | null
+          email_newsletters: boolean | null
+          focus_areas: string[]
+          full_name: string
+          id: string
+          kvkk_consent: boolean
+          kvkk_consent_timestamp: string
+          kvkk_consent_version: string
+          locale: string
+          preferred_language: string
+          role: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          department: string
+          email_course_updates?: boolean | null
+          email_marketing?: boolean | null
+          email_newsletters?: boolean | null
+          focus_areas: string[]
+          full_name: string
+          id?: string
+          kvkk_consent?: boolean
+          kvkk_consent_timestamp?: string
+          kvkk_consent_version?: string
+          locale?: string
+          preferred_language?: string
+          role: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          department?: string
+          email_course_updates?: boolean | null
+          email_marketing?: boolean | null
+          email_newsletters?: boolean | null
+          focus_areas?: string[]
+          full_name?: string
+          id?: string
+          kvkk_consent?: boolean
+          kvkk_consent_timestamp?: string
+          kvkk_consent_version?: string
+          locale?: string
+          preferred_language?: string
+          role?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       enrollments: {
         Row: {
           completed: boolean | null
@@ -309,6 +462,48 @@ export type Database = {
           total_courses?: number | null
           total_students?: number | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      kvkk_requests: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          details: string
+          email: string
+          full_name: string
+          id: string
+          locale: string
+          request_type: string
+          resolved_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          details: string
+          email: string
+          full_name: string
+          id?: string
+          locale?: string
+          request_type: string
+          resolved_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          details?: string
+          email?: string
+          full_name?: string
+          id?: string
+          locale?: string
+          request_type?: string
+          resolved_at?: string | null
+          status?: string
+          updated_at?: string
         }
         Relationships: []
       }

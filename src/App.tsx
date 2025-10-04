@@ -11,6 +11,7 @@ import { CourseDetail } from "./pages/education/CourseDetail";
 import { EducationRegister } from "./pages/education/EducationRegister";
 import { InstructorProfile } from "./pages/education/InstructorProfile";
 import { AdminDashboard } from "./pages/education/AdminDashboard";
+import { KVKKRequest } from "./pages/KVKKRequest";
 import './i18n/config';
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/education/register" element={<EducationRegister />} />
           <Route path="/education/instructor/:id" element={<InstructorProfile />} />
           <Route path="/education/admin/*" element={<AdminDashboard />} />
+          <Route path="/kvkk-request" element={<KVKKRequest />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
