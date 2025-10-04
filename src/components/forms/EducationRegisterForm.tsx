@@ -58,6 +58,7 @@ export const EducationRegisterForm = () => {
     email_course_updates: false,
     email_newsletters: false,
     email_marketing: false,
+    role: undefined,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -120,17 +121,43 @@ export const EducationRegisterForm = () => {
     }
   };
 
-  const handleNext = () => {
+  const handleNext = (e?: React.MouseEvent) => {
+    e?.preventDefault();
     if (validateStep(step)) {
       setStep(step + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Focus first field of next step after state update
+      setTimeout(() => {
+        const firstInput = document.querySelector(`form input:not([type="checkbox"]), form select, form textarea`) as HTMLElement;
+        firstInput?.focus();
+      }, 100);
+    } else {
+      // Focus first invalid field
+      setTimeout(() => {
+        const firstError = Object.keys(errors)[0];
+        if (firstError) {
+          const field = document.getElementById(firstError);
+          field?.focus();
+        }
+      }, 100);
     }
   };
 
-  const handleBack = () => {
+  const handleBack = (e?: React.MouseEvent) => {
+    e?.preventDefault();
     setStep(step - 1);
     setErrors({});
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Focus first field of previous step
+    setTimeout(() => {
+      const firstInput = document.querySelector(`form input:not([type="checkbox"]), form select, form textarea`) as HTMLElement;
+      firstInput?.focus();
+    }, 100);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && step < 3) {
+      e.preventDefault();
+      handleNext();
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -225,7 +252,7 @@ export const EducationRegisterForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="glass rounded-3xl p-6 md:p-12">
+    <form onSubmit={handleSubmit} onKeyDown={handleKeyDown} className="glass rounded-3xl p-6 md:p-12">
       {/* Progress Indicator */}
       <div className="flex justify-between mb-8">
         {[1, 2, 3].map((s) => (
