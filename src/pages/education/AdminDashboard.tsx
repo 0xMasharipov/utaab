@@ -44,22 +44,17 @@ export const AdminDashboard = () => {
     enabled: !!user?.id,
   });
 
-  // Fetch stats
+  // Fetch stats securely through edge function with server-side role validation
   const { data: stats } = useQuery({
     queryKey: ['admin-stats'],
     queryFn: async () => {
-      const [coursesResult, usersResult, reviewsResult, enrollmentsResult] = await Promise.all([
-        supabase.from('courses').select('id', { count: 'exact', head: true }),
-        supabase.from('user_roles').select('id', { count: 'exact', head: true }),
-        supabase.from('reviews').select('id', { count: 'exact', head: true }),
-        supabase.from('enrollments').select('id', { count: 'exact', head: true }),
-      ]);
-
+      const { data, error } = await supabase.functions.invoke('admin-stats');
+      if (error) throw error;
       return {
-        courses: coursesResult.count || 0,
-        users: usersResult.count || 0,
-        reviews: reviewsResult.count || 0,
-        enrollments: enrollmentsResult.count || 0,
+        courses: data?.totalApplications || 0,
+        users: data?.totalProfiles || 0,
+        reviews: data?.totalKvkkRequests || 0,
+        enrollments: data?.pendingKvkkRequests || 0,
       };
     },
     enabled: isAdmin,

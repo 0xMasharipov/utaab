@@ -45,17 +45,19 @@ export const KVKKRequestForm = () => {
 
       setIsSubmitting(true);
 
-      const { error } = await supabase.from('kvkk_requests').insert([
-        {
+      // Call edge function for server-side validation and rate limiting
+      const { data, error } = await supabase.functions.invoke('submit-kvkk-request', {
+        body: {
           full_name: validatedData.full_name,
           email: validatedData.email,
           request_type: validatedData.request_type,
           details: validatedData.details,
           locale: i18n.language,
         },
-      ]);
+      });
 
       if (error) throw error;
+      if (!data?.success) throw new Error('Submission failed');
 
       setSubmitted(true);
       toast.success(t('kvkk.requestForm.successTitle'));

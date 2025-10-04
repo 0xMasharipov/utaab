@@ -182,8 +182,9 @@ export const CommunityJoinForm = () => {
         user_agent: navigator.userAgent,
       };
 
-      const { error } = await supabase.from('community_applications').insert([
-        {
+      // Call edge function for server-side validation and rate limiting
+      const { data, error } = await supabase.functions.invoke('submit-community-application', {
+        body: {
           full_name: validatedData.full_name,
           email: validatedData.email,
           telegram: validatedData.telegram || null,
@@ -200,11 +201,13 @@ export const CommunityJoinForm = () => {
           motivation: validatedData.motivation,
           kvkk_consent: validatedData.kvkk_consent,
           kvkk_consent_version: '1.0',
+          honeypot: validatedData.honeypot || '',
           ...metadata,
         },
-      ]);
+      });
 
       if (error) throw error;
+      if (!data?.success) throw new Error('Submission failed');
 
       // Clear draft
       localStorage.removeItem('communityFormDraft');

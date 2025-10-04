@@ -41,7 +41,7 @@ export const CourseReviews = ({ courseId, isEnrolled }: CourseReviewsProps) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('reviews')
-        .select('*, user_id')
+        .select('id, course_id, rating, comment, created_at, updated_at, user_id')
         .eq('course_id', courseId)
         .order('created_at', { ascending: false });
       if (error) throw error;
@@ -226,29 +226,38 @@ export const CourseReviews = ({ courseId, isEnrolled }: CourseReviewsProps) => {
           </div>
         ) : reviews && reviews.length > 0 ? (
           <div className="space-y-4">
-            {reviews.map((review) => (
-              <div key={review.id} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                      {review.user_id.substring(0, 2).toUpperCase()}
-                    </div>
-                    <div>
-                      {renderStars(review.rating)}
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {new Date(review.created_at).toLocaleDateString()}
-                      </p>
+            {reviews.map((review) => {
+              // Only show user_id indicator if it's the current user's review (privacy protection)
+              const isOwnReview = user?.id === review.user_id;
+              const displayInitial = isOwnReview 
+                ? review.user_id.substring(0, 2).toUpperCase()
+                : 'U'; // Generic initial for other users
+              
+              return (
+                <div key={review.id} className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                        {displayInitial}
+                      </div>
+                      <div>
+                        {renderStars(review.rating)}
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {new Date(review.created_at).toLocaleDateString()}
+                          {isOwnReview && <span className="ml-2 text-accent">(Your review)</span>}
+                        </p>
+                      </div>
                     </div>
                   </div>
+                  {review.comment && (
+                    <p className="text-sm text-muted-foreground ml-13">
+                      {review.comment}
+                    </p>
+                  )}
+                  <Separator className="bg-white/10" />
                 </div>
-                {review.comment && (
-                  <p className="text-sm text-muted-foreground ml-13">
-                    {review.comment}
-                  </p>
-                )}
-                <Separator className="bg-white/10" />
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : (
           <div className="text-center py-8 text-muted-foreground">
