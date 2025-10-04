@@ -53,11 +53,11 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
 
           {/* Popup */}
           <motion.div
-            initial={{ opacity: 0, y: 100, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 100, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
             transition={{ type: 'spring', duration: 0.5 }}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[95%] max-w-4xl z-[100]"
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] max-w-4xl z-[100]"
           >
             <div className="glass-strong rounded-3xl p-6 md:p-8 shadow-2xl">
               <div className="flex items-start justify-between mb-4">
