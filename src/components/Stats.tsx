@@ -1,0 +1,81 @@
+import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { motion, useInView } from 'framer-motion';
+
+interface StatItemProps {
+  value: number;
+  label: string;
+  suffix?: string;
+}
+
+const StatItem = ({ value, label, suffix = '+' }: StatItemProps) => {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    if (isInView && !hasAnimated.current) {
+      hasAnimated.current = true;
+      let start = 0;
+      const duration = 2000;
+      const increment = value / (duration / 16);
+      
+      const timer = setInterval(() => {
+        start += increment;
+        if (start >= value) {
+          setCount(value);
+          clearInterval(timer);
+        } else {
+          setCount(Math.floor(start));
+        }
+      }, 16);
+
+      return () => clearInterval(timer);
+    }
+  }, [isInView, value]);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+      transition={{ duration: 0.6 }}
+      className="text-center"
+    >
+      <div className="text-5xl md:text-6xl lg:text-7xl font-bold text-glow mb-4">
+        {count}{suffix}
+      </div>
+      <div className="text-lg md:text-xl text-muted-foreground">{label}</div>
+    </motion.div>
+  );
+};
+
+export const Stats = () => {
+  const { t } = useTranslation();
+
+  const stats = [
+    { value: 500, label: t('stats.members'), suffix: '+' },
+    { value: 20, label: t('stats.projects'), suffix: '+' },
+    { value: 15, label: t('stats.events'), suffix: '+' },
+  ];
+
+  return (
+    <section className="py-20 md:py-32 relative">
+      <div className="section-container">
+        <div className="glass rounded-3xl p-12 md:p-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+            {stats.map((stat, index) => (
+              <StatItem
+                key={index}
+                value={stat.value}
+                label={stat.label}
+                suffix={stat.suffix}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};

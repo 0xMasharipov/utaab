@@ -1,0 +1,149 @@
+{
+  "nav": {
+    "community": "Community",
+    "learn": "Learn",
+    "events": "Events",
+    "projects": "Projects",
+    "resources": "Resources",
+    "join": "Join UTAAB"
+  },
+  "hero": {
+    "title": "Build your blockchain future",
+    "subtitle": "Join our community",
+    "description": "A hub for blockchain enthusiasts, professionals, and researchers to collaborate, learn, and innovate",
+    "cta": "Get Started"
+  },
+  "stats": {
+    "members": "Members",
+    "projects": "Active Projects",
+    "events": "Events Held"
+  },
+  "community": {
+    "title": "Our Community",
+    "subtitle": "Hub for enthusiasts, professionals, and researchers",
+    "description": "UTAA Blockchain Community is dedicated to broadening students' horizons, helping them grow their portfolios, and fostering collaboration on innovative blockchain projects.",
+    "vision": "We envision a thriving ecosystem where knowledge flows freely, partnerships form naturally, and breakthrough solutions emerge from collective creativity."
+  },
+  "learn": {
+    "title": "Learn & Grow",
+    "subtitle": "Resources to advance your blockchain knowledge",
+    "guides": "Educational Guides",
+    "tutorials": "Video Tutorials",
+    "workshops": "Workshops & Bootcamps"
+  },
+  "events": {
+    "title": "Events",
+    "upcoming": "Upcoming Events",
+    "past": "Past Events",
+    "noEvents": "No events scheduled yet"
+  },
+  "projects": {
+    "title": "Community Projects",
+    "subtitle": "Collaborative blockchain initiatives",
+    "viewProject": "View Project"
+  },
+  "resources": {
+    "title": "Resources",
+    "subtitle": "Tools and materials for blockchain development",
+    "documentation": "Documentation",
+    "tools": "Development Tools",
+    "research": "Research Papers"
+  },
+  "join": {
+    "title": "Join UTAA Blockchain",
+    "subtitle": "Become part of our growing community",
+    "step1": "Personal Info",
+    "step2": "Background",
+    "step3": "Interests",
+    "name": "Full Name",
+    "email": "Email Address",
+    "department": "Department",
+    "university": "University",
+    "experienceLevel": "Experience Level",
+    "interests": "Areas of Interest",
+    "consent": "I agree to the processing of my personal data",
+    "submit": "Submit Application",
+    "next": "Next",
+    "back": "Back",
+    "selectExperience": "Select your experience level",
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "expert": "Expert",
+    "selectInterests": "Select your interests",
+    "defi": "DeFi",
+    "nft": "NFT",
+    "dao": "DAO",
+    "layer2": "Layer 2",
+    "smartcontracts": "Smart Contracts",
+    "web3": "Web3",
+    "validation": {
+      "nameRequired": "Name is required",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email address",
+      "departmentRequired": "Department is required",
+      "universityRequired": "University is required",
+      "experienceRequired": "Please select your experience level",
+      "interestsRequired": "Please select at least one interest",
+      "consentRequired": "You must agree to data processing"
+    }
+  },
+  "privacy": {
+    "popup": {
+      "title": "Privacy & Data Protection",
+      "description": "We comply with KVKK (Law No. 6698). We process your personal data for community communications, events, and educational purposes.",
+      "accept": "Accept All",
+      "customize": "Customize",
+      "reject": "Reject Non-Essential"
+    },
+    "center": {
+      "title": "Privacy Center",
+      "dataController": "Data Controller",
+      "dataControllerText": "UTAA Blockchain Community (non-profit organization)",
+      "purposes": "Processing Purposes",
+      "purposesText": "Community communications, event management, educational activities, security, and analytics",
+      "legalBasis": "Legal Basis",
+      "legalBasisText": "Explicit consent, contract/service performance, legitimate interest, and legal obligations",
+      "retention": "Data Retention",
+      "retentionText": "We retain your data as long as necessary for the stated purposes or as required by law",
+      "transfers": "Data Transfers",
+      "transfersText": "Your data may be transferred to service providers. Cross-border transfers are conducted with appropriate safeguards.",
+      "rights": "Your Rights (Article 11)",
+      "rightsText": "You have the right to access, rectify, delete, restrict processing, object to processing, and data portability. Contact us to exercise these rights.",
+      "contact": "Contact",
+      "contactText": "For data subject requests or questions, contact us through the form on our website.",
+      "categories": "Consent Categories",
+      "essential": "Essential",
+      "essentialDesc": "Required for basic functionality",
+      "analytics": "Analytics",
+      "analyticsDesc": "Help us understand usage patterns",
+      "performance": "Performance",
+      "performanceDesc": "Optimize site performance",
+      "marketing": "Marketing",
+      "marketingDesc": "Send you relevant updates",
+      "savePreferences": "Save Preferences",
+      "links": {
+        "kvkkNotice": "KVKK Notice (Aydınlatma Metni)",
+        "privacyPolicy": "Privacy Policy (Gizlilik Politikası)",
+        "cookiePolicy": "Cookie Policy (Çerez Politikası)"
+      }
+    }
+  },
+  "footer": {
+    "brand": "UTAA Blockchain",
+    "description": "Building the future of blockchain technology through community collaboration and innovation.",
+    "quickLinks": "Quick Links",
+    "social": "Follow Us",
+    "newsletter": "Newsletter",
+    "newsletterPlaceholder": "Enter your email",
+    "subscribe": "Subscribe",
+    "disclaimer": "Non-profit community. Not financial advice.",
+    "rights": "All rights reserved."
+  },
+  "language": {
+    "en": "English",
+    "tr": "Türkçe",
+    "ru": "Русский",
+    "ar": "العربية"
+  }
+}

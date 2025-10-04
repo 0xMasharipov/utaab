@@ -1,0 +1,149 @@
+{
+  "nav": {
+    "community": "Topluluk",
+    "learn": "Öğren",
+    "events": "Etkinlikler",
+    "projects": "Projeler",
+    "resources": "Kaynaklar",
+    "join": "UTAAB'a Katıl"
+  },
+  "hero": {
+    "title": "Blockchain geleceğinizi inşa edin",
+    "subtitle": "Topluluğumuza katılın",
+    "description": "İşbirliği yapmak, öğrenmek ve yenilik yapmak için blockchain meraklıları, profesyoneller ve araştırmacılar için bir merkez",
+    "cta": "Başlayın"
+  },
+  "stats": {
+    "members": "Üye",
+    "projects": "Aktif Proje",
+    "events": "Düzenlenen Etkinlik"
+  },
+  "community": {
+    "title": "Topluluğumuz",
+    "subtitle": "Meraklılar, profesyoneller ve araştırmacılar için merkez",
+    "description": "UTAA Blockchain Topluluğu, öğrencilerin ufuklarını genişletmeye, portföylerini büyütmelerine ve yenilikçi blockchain projelerinde işbirliği yapmalarına yardımcı olmaya kendini adamıştır.",
+    "vision": "Bilginin özgürce aktığı, ortaklıkların doğal olarak oluştuğu ve kolektif yaratıcılıktan çığır açan çözümlerin ortaya çıktığı gelişen bir ekosistem hayal ediyoruz."
+  },
+  "learn": {
+    "title": "Öğren ve Geliş",
+    "subtitle": "Blockchain bilginizi geliştirmek için kaynaklar",
+    "guides": "Eğitim Kılavuzları",
+    "tutorials": "Video Eğitimleri",
+    "workshops": "Atölyeler ve Bootcamp'ler"
+  },
+  "events": {
+    "title": "Etkinlikler",
+    "upcoming": "Yaklaşan Etkinlikler",
+    "past": "Geçmiş Etkinlikler",
+    "noEvents": "Henüz planlanmış etkinlik yok"
+  },
+  "projects": {
+    "title": "Topluluk Projeleri",
+    "subtitle": "İşbirlikçi blockchain girişimleri",
+    "viewProject": "Projeyi Görüntüle"
+  },
+  "resources": {
+    "title": "Kaynaklar",
+    "subtitle": "Blockchain geliştirme için araçlar ve materyaller",
+    "documentation": "Dokümantasyon",
+    "tools": "Geliştirme Araçları",
+    "research": "Araştırma Makaleleri"
+  },
+  "join": {
+    "title": "UTAA Blockchain'e Katıl",
+    "subtitle": "Büyüyen topluluğumuzun bir parçası olun",
+    "step1": "Kişisel Bilgi",
+    "step2": "Geçmiş",
+    "step3": "İlgi Alanları",
+    "name": "Ad Soyad",
+    "email": "E-posta Adresi",
+    "department": "Bölüm",
+    "university": "Üniversite",
+    "experienceLevel": "Deneyim Seviyesi",
+    "interests": "İlgi Alanları",
+    "consent": "Kişisel verilerimin işlenmesini kabul ediyorum",
+    "submit": "Başvuruyu Gönder",
+    "next": "İleri",
+    "back": "Geri",
+    "selectExperience": "Deneyim seviyenizi seçin",
+    "beginner": "Başlangıç",
+    "intermediate": "Orta",
+    "advanced": "İleri",
+    "expert": "Uzman",
+    "selectInterests": "İlgi alanlarınızı seçin",
+    "defi": "DeFi",
+    "nft": "NFT",
+    "dao": "DAO",
+    "layer2": "Katman 2",
+    "smartcontracts": "Akıllı Sözleşmeler",
+    "web3": "Web3",
+    "validation": {
+      "nameRequired": "İsim gerekli",
+      "emailRequired": "E-posta gerekli",
+      "emailInvalid": "Geçersiz e-posta adresi",
+      "departmentRequired": "Bölüm gerekli",
+      "universityRequired": "Üniversite gerekli",
+      "experienceRequired": "Lütfen deneyim seviyenizi seçin",
+      "interestsRequired": "Lütfen en az bir ilgi alanı seçin",
+      "consentRequired": "Veri işlemeyi kabul etmelisiniz"
+    }
+  },
+  "privacy": {
+    "popup": {
+      "title": "Gizlilik ve Veri Koruma",
+      "description": "KVKK (Kanun No. 6698) ile uyumluyuz. Kişisel verilerinizi topluluk iletişimi, etkinlikler ve eğitim amaçları için işliyoruz.",
+      "accept": "Tümünü Kabul Et",
+      "customize": "Özelleştir",
+      "reject": "Zorunlu Olmayanları Reddet"
+    },
+    "center": {
+      "title": "Gizlilik Merkezi",
+      "dataController": "Veri Sorumlusu",
+      "dataControllerText": "UTAA Blockchain Topluluğu (kar amacı gütmeyen organizasyon)",
+      "purposes": "İşleme Amaçları",
+      "purposesText": "Topluluk iletişimi, etkinlik yönetimi, eğitim faaliyetleri, güvenlik ve analitik",
+      "legalBasis": "Hukuki Dayanak",
+      "legalBasisText": "Açık rıza, sözleşme/hizmet ifası, meşru menfaat ve yasal yükümlülükler",
+      "retention": "Veri Saklama",
+      "retentionText": "Verilerinizi belirtilen amaçlar için gerekli olduğu sürece veya yasal gerekliliklere göre saklarız",
+      "transfers": "Veri Aktarımları",
+      "transfersText": "Verileriniz hizmet sağlayıcılara aktarılabilir. Sınır ötesi aktarımlar uygun güvencelerle yapılır.",
+      "rights": "Haklarınız (Madde 11)",
+      "rightsText": "Verilerinize erişme, düzeltme, silme, işlemeyi kısıtlama, işlemeye itiraz ve veri taşınabilirliği haklarınız vardır. Bu hakları kullanmak için bizimle iletişime geçin.",
+      "contact": "İletişim",
+      "contactText": "Veri sahibi talepleri veya sorular için web sitemizdeki form aracılığıyla bizimle iletişime geçin.",
+      "categories": "Rıza Kategorileri",
+      "essential": "Zorunlu",
+      "essentialDesc": "Temel işlevsellik için gerekli",
+      "analytics": "Analitik",
+      "analyticsDesc": "Kullanım kalıplarını anlamamıza yardımcı olur",
+      "performance": "Performans",
+      "performanceDesc": "Site performansını optimize eder",
+      "marketing": "Pazarlama",
+      "marketingDesc": "Size ilgili güncellemeler gönderir",
+      "savePreferences": "Tercihleri Kaydet",
+      "links": {
+        "kvkkNotice": "KVKK Aydınlatma Metni",
+        "privacyPolicy": "Gizlilik Politikası",
+        "cookiePolicy": "Çerez Politikası"
+      }
+    }
+  },
+  "footer": {
+    "brand": "UTAA Blockchain",
+    "description": "Topluluk işbirliği ve inovasyonu yoluyla blockchain teknolojisinin geleceğini inşa ediyoruz.",
+    "quickLinks": "Hızlı Bağlantılar",
+    "social": "Bizi Takip Edin",
+    "newsletter": "Haber Bülteni",
+    "newsletterPlaceholder": "E-postanızı girin",
+    "subscribe": "Abone Ol",
+    "disclaimer": "Kar amacı gütmeyen topluluk. Mali tavsiye değildir.",
+    "rights": "Tüm hakları saklıdır."
+  },
+  "language": {
+    "en": "English",
+    "tr": "Türkçe",
+    "ru": "Русский",
+    "ar": "العربية"
+  }
+}
