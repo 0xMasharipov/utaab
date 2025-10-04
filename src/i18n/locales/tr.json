@@ -89,6 +89,10 @@
     }
   },
   "privacy": {
+    "floatingButton": {
+      "label": "Gizlilik ve KVKK Ayarları",
+      "text": "Gizlilik / KVKK"
+    },
     "popup": {
       "title": "Gizlilik ve Veri Koruma",
       "description": "KVKK (Kanun No. 6698) ile uyumluyuz. Kişisel verilerinizi topluluk iletişimi, etkinlikler ve eğitim amaçları için işliyoruz.",
@@ -98,36 +102,79 @@
     },
     "center": {
       "title": "Gizlilik Merkezi",
+      "version": "Sürüm",
+      "lastUpdated": "Son Güncelleme",
+      "preferencesSaved": "Tercihler başarıyla kaydedildi",
+      "tabs": {
+        "kvkk": "KVKK Aydınlatma",
+        "privacy": "Gizlilik Politikası",
+        "cookies": "Çerez Tercihleri",
+        "request": "Veri Talebi",
+        "disclaimer": "Feragatname"
+      },
+      "kvkkNotice": {
+        "title": "KVKK Aydınlatma Metni",
+        "lawReference": "6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) uyarınca, kişisel verilerinizin nasıl işlendiği hakkında aşağıdaki bilgileri sunuyoruz.",
+        "documents": "İlgili Belgeler"
+      },
       "dataController": "Veri Sorumlusu",
-      "dataControllerText": "UTAA Blockchain Topluluğu (kar amacı gütmeyen organizasyon)",
+      "dataControllerText": "UTAA Blockchain Topluluğu (kar amacı gütmeyen kuruluş). Kişisel verilerinizin KVKK'ya uygun şekilde işlenmesinden sorumlu veri sorumlusuyuz.",
       "purposes": "İşleme Amaçları",
-      "purposesText": "Topluluk iletişimi, etkinlik yönetimi, eğitim faaliyetleri, güvenlik ve analitik",
+      "purposesText": "Verileriniz şu amaçlarla işlenir: topluluk üyeliği yönetimi, etkinlik organizasyonu ve katılım takibi, eğitim programlarının sunumu, güvenlik ve dolandırıcılık önleme, hizmet iyileştirme analitiği ve topluluk faaliyetleri hakkında iletişim.",
       "legalBasis": "Hukuki Dayanak",
-      "legalBasisText": "Açık rıza, sözleşme/hizmet ifası, meşru menfaat ve yasal yükümlülükler",
-      "retention": "Veri Saklama",
-      "retentionText": "Verilerinizi belirtilen amaçlar için gerekli olduğu sürece veya yasal gerekliliklere göre saklarız",
+      "legalBasisText": "Verilerinizi şu temellerde işliyoruz: açık rızanız (Madde 5), sözleşme/hizmet ifası gerekliliği, meşru menfaatlerimiz (Madde 5/2-f) ve Türk hukuku kapsamındaki yasal yükümlülükler.",
+      "retention": "Veri Saklama Süresi",
+      "retentionText": "Kişisel verilerinizi, yukarıda belirtilen işleme amaçlarını yerine getirmek için gerekli süre boyunca veya yürürlükteki kanun ve düzenlemelerin gerektirdiği şekilde saklarız. Yasal saklama gereklilikleri saklı kalmak kaydıyla, verilerinizin silinmesini her zaman talep edebilirsiniz.",
       "transfers": "Veri Aktarımları",
-      "transfersText": "Verileriniz hizmet sağlayıcılara aktarılabilir. Sınır ötesi aktarımlar uygun güvencelerle yapılır.",
-      "rights": "Haklarınız (Madde 11)",
-      "rightsText": "Verilerinize erişme, düzeltme, silme, işlemeyi kısıtlama, işlemeye itiraz ve veri taşınabilirliği haklarınız vardır. Bu hakları kullanmak için bizimle iletişime geçin.",
-      "contact": "İletişim",
-      "contactText": "Veri sahibi talepleri veya sorular için web sitemizdeki form aracılığıyla bizimle iletişime geçin.",
+      "transfersText": "Verileriniz üçüncü taraf hizmet sağlayıcılara (ör. bulut barındırma, e-posta hizmetleri) Türkiye içinde veya dışında aktarılabilir. Tüm sınır ötesi aktarımlar, KVKK Madde 9'a uygun olarak uygun güvencelerle yapılır.",
+      "rights": "Haklarınız (KVKK Madde 11)",
+      "rightsText": "KVKK'nın 11. Maddesi uyarınca şu haklara sahipsiniz: verilerinizin işlenip işlenmediğini öğrenme, işleme hakkında bilgi talep etme, işleme amacını öğrenme, verilerin aktarıldığı üçüncü kişileri öğrenme, eksik veya hatalı verilerin düzeltilmesini talep etme, verilerin silinmesini veya yok edilmesini talep etme, düzeltme/silme işlemlerinin üçüncü kişilere bildirilmesini talep etme, işlemeye itiraz etme ve veri taşınabilirliği talep etme.",
+      "contact": "İletişim ve Veri Sahibi Talepleri",
+      "contactText": "KVKK Madde 11 kapsamındaki haklarınızı kullanmak için lütfen talebinizi 'Veri Talebi' sekmesi üzerinden gönderin veya web sitemizde belirtilen yöntemlerle bizimle iletişime geçin. Kanunun gerektirdiği şekilde 30 gün içinde yanıt vereceğiz.",
       "categories": "Rıza Kategorileri",
-      "essential": "Zorunlu",
-      "essentialDesc": "Temel işlevsellik için gerekli",
-      "analytics": "Analitik",
-      "analyticsDesc": "Kullanım kalıplarını anlamamıza yardımcı olur",
-      "performance": "Performans",
-      "performanceDesc": "Site performansını optimize eder",
-      "marketing": "Pazarlama",
-      "marketingDesc": "Size ilgili güncellemeler gönderir",
+      "essential": "Zorunlu Çerezler",
+      "essentialDesc": "Temel işlevsellik için gerekli (her zaman etkin)",
+      "analytics": "Analitik Çerezler",
+      "analyticsDesc": "Kullanım kalıplarını anlamamıza ve hizmetlerimizi iyileştirmemize yardımcı olur",
+      "performance": "Performans Çerezleri",
+      "performanceDesc": "Site performansını ve yüklenme sürelerini optimize eder",
+      "marketing": "Pazarlama Çerezleri",
+      "marketingDesc": "Topluluğumuz hakkında ilgili güncellemeler gönderir",
       "savePreferences": "Tercihleri Kaydet",
+      "cookiePreferences": {
+        "title": "Çerez Tercihleri",
+        "description": "Deneyiminizi iyileştirmek için çerezler ve benzer teknolojiler kullanıyoruz. Tercihlerinizi aşağıdan özelleştirebilirsiniz. Zorunlu çerezler devre dışı bırakılamaz.",
+        "note": "Tercihleriniz kaydedilecek ve hemen uygulanacaktır. Bu ayarları istediğiniz zaman değiştirebilirsiniz."
+      },
+      "privacyPolicy": {
+        "title": "Gizlilik Politikası",
+        "intro": "Bu Gizlilik Politikası, UTAA Blockchain Topluluğunun kişisel bilgilerinizi KVKK (Kanun No. 6698) uyarınca nasıl topladığını, kullandığını ve koruduğunu açıklar.",
+        "dataCollection": "Hangi Verileri Topluyoruz",
+        "dataCollectionText": "Doğrudan sağladığınız bilgileri (ad, e-posta, eğitim geçmişi, ilgi alanları) ve hizmetlerimizi kullanımınız yoluyla otomatik olarak toplanan bilgileri (kullanım verileri, cihaz bilgileri, çerezler) topluyoruz.",
+        "dataUsage": "Verilerinizi Nasıl Kullanıyoruz",
+        "dataUsageText": "Verilerinizi topluluk hizmetleri sağlamak, etkinlikler düzenlemek, eğitim içeriği sunmak, platformumuzu iyileştirmek, üyelerle iletişim kurmak ve güvenlik ile yasal uyumluluğu sağlamak için kullanıyoruz.",
+        "dataSharing": "Veri Paylaşımı ve Üçüncü Taraflar",
+        "dataSharingText": "Kişisel verilerinizi satmıyoruz. Platformumuzu işletmede yardımcı olan hizmet sağlayıcılarla, kanunun gerektirdiği durumlarda veya belirli amaçlar için açık rızanızla veri paylaşabiliriz."
+      },
+      "disclaimer": {
+        "title": "Önemli Feragatname",
+        "text1": "UTAA Blockchain Topluluğu kar amacı gütmeyen bir eğitim organizasyonudur. Tüm içerik, etkinlikler ve kaynaklar yalnızca bilgilendirme ve eğitim amaçlıdır.",
+        "text2": "Bu platformdaki hiçbir şey finansal, yatırım, hukuki veya profesyonel tavsiye niteliği taşımaz. Kripto para ve blockchain teknolojileri önemli riskler içerir.",
+        "text3": "Üyeler ve katılımcılar kendi kararlarından tek başına sorumludur ve herhangi bir finansal veya yatırım kararı vermeden önce bağımsız araştırma yapmalı ve kalifiye profesyonellerle danışmalıdır.",
+        "emphasis": "Hizmetlerimizi kullanarak bu şartları anladığınızı ve kabul ettiğinizi onaylarsınız."
+      },
       "links": {
         "kvkkNotice": "KVKK Aydınlatma Metni",
         "privacyPolicy": "Gizlilik Politikası",
         "cookiePolicy": "Çerez Politikası"
       }
     }
+  },
+  "common": {
+    "close": "Kapat",
+    "submitting": "Gönderiliyor...",
+    "save": "Kaydet",
+    "cancel": "İptal"
   },
   "footer": {
     "brand": "UTAA Blockchain",
@@ -225,6 +272,36 @@
       "instructors": "Eğitmenleri Yönet",
       "reviews": "Değerlendirmeleri Yönet",
       "analytics": "Analitik"
+    }
+  },
+  "kvkk": {
+    "requestForm": {
+      "title": "Veri Talebi Formu",
+      "subtitle": "KVKK (Kanun No. 6698) kapsamındaki haklarınızı kullanın",
+      "name": "Ad Soyad",
+      "email": "E-posta Adresi",
+      "requestType": "Talep Türü",
+      "selectType": "Talep türü seçin",
+      "typeAccess": "Verilerime erişim (Madde 11/1-a)",
+      "typeCorrection": "Verilerimin düzeltilmesi (Madde 11/1-d)",
+      "typeDeletion": "Verilerimin silinmesi (Madde 11/1-e)",
+      "typePortability": "Veri taşınabilirliği (Madde 11/1-g)",
+      "typeObjection": "İşlemeye itiraz (Madde 11/1-f)",
+      "details": "Talep Detayları",
+      "detailsPlaceholder": "Lütfen talebiniz hakkında detay verin...",
+      "submit": "Talebi Gönder",
+      "responseTime": "KVKK'nın gerektirdiği şekilde talebinize 30 gün içinde yanıt vereceğiz.",
+      "contact": "Acil durumlar için bizimle iletişime geçin:",
+      "successTitle": "Talep Gönderildi",
+      "successMessage": "KVKK veri talebiniz gönderildi. Güncellemeler için e-posta yoluyla sizinle iletişime geçeceğiz.",
+      "validation": {
+        "nameRequired": "İsim gerekli",
+        "emailRequired": "E-posta gerekli",
+        "emailInvalid": "Geçersiz e-posta adresi",
+        "typeRequired": "Lütfen bir talep türü seçin",
+        "detailsRequired": "Lütfen talebiniz hakkında detay verin",
+        "allRequired": "Tüm alanlar gereklidir"
+      }
     }
   }
 }

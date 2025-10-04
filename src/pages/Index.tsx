@@ -11,6 +11,7 @@ import { Join } from '@/components/Join';
 import { Footer } from '@/components/Footer';
 import { PrivacyPopup } from '@/components/PrivacyPopup';
 import { PrivacyCenter } from '@/components/PrivacyCenter';
+import { FloatingPrivacyButton } from '@/components/FloatingPrivacyButton';
 
 const Index = () => {
   const [isPrivacyCenterOpen, setIsPrivacyCenterOpen] = useState(false);
@@ -36,6 +37,7 @@ const Index = () => {
         isOpen={isPrivacyCenterOpen}
         onClose={() => setIsPrivacyCenterOpen(false)}
       />
+      <FloatingPrivacyButton onClick={() => setIsPrivacyCenterOpen(true)} />
     </div>
   );
 };

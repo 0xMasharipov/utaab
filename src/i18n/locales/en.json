@@ -125,6 +125,10 @@
     }
   },
   "privacy": {
+    "floatingButton": {
+      "label": "Privacy & KVKK Settings",
+      "text": "Privacy / KVKK"
+    },
     "popup": {
       "title": "Privacy & Data Protection",
       "description": "We comply with KVKK (Law No. 6698). We process your personal data for community communications, events, and educational purposes.",
@@ -134,36 +138,79 @@
     },
     "center": {
       "title": "Privacy Center",
+      "version": "Version",
+      "lastUpdated": "Last Updated",
+      "preferencesSaved": "Preferences saved successfully",
+      "tabs": {
+        "kvkk": "KVKK Notice",
+        "privacy": "Privacy Policy",
+        "cookies": "Cookie Preferences",
+        "request": "Data Request",
+        "disclaimer": "Disclaimer"
+      },
+      "kvkkNotice": {
+        "title": "KVKK Clarification Text (Aydınlatma Metni)",
+        "lawReference": "In accordance with Turkish Personal Data Protection Law No. 6698 (KVKK), we provide the following information about how we process your personal data.",
+        "documents": "Related Documents"
+      },
       "dataController": "Data Controller",
-      "dataControllerText": "UTAA Blockchain Community (non-profit organization)",
+      "dataControllerText": "UTAA Blockchain Community (non-profit organization). We are the data controller responsible for processing your personal data in compliance with KVKK.",
       "purposes": "Processing Purposes",
-      "purposesText": "Community communications, event management, educational activities, security, and analytics",
+      "purposesText": "Your data is processed for: community membership management, event organization and participation tracking, educational program delivery, security and fraud prevention, analytics for service improvement, and communication regarding community activities.",
       "legalBasis": "Legal Basis",
-      "legalBasisText": "Explicit consent, contract/service performance, legitimate interest, and legal obligations",
-      "retention": "Data Retention",
-      "retentionText": "We retain your data as long as necessary for the stated purposes or as required by law",
+      "legalBasisText": "We process your data based on: your explicit consent (Article 5), contract/service performance necessity, our legitimate interests (Article 5/2-f), and legal obligations under Turkish law.",
+      "retention": "Data Retention Period",
+      "retentionText": "We retain your personal data for the duration necessary to fulfill the processing purposes stated above, or as required by applicable laws and regulations. You may request deletion of your data at any time, subject to legal retention requirements.",
       "transfers": "Data Transfers",
-      "transfersText": "Your data may be transferred to service providers. Cross-border transfers are conducted with appropriate safeguards.",
-      "rights": "Your Rights (Article 11)",
-      "rightsText": "You have the right to access, rectify, delete, restrict processing, object to processing, and data portability. Contact us to exercise these rights.",
-      "contact": "Contact",
-      "contactText": "For data subject requests or questions, contact us through the form on our website.",
+      "transfersText": "Your data may be transferred to third-party service providers (e.g., cloud hosting, email services) within or outside Turkey. All cross-border transfers are conducted with appropriate safeguards in compliance with KVKK Article 9.",
+      "rights": "Your Rights (KVKK Article 11)",
+      "rightsText": "Under Article 11 of KVKK, you have the right to: learn whether your data is being processed, request information about processing, learn the purpose of processing, know third parties to whom data is transferred, request correction of incomplete or inaccurate data, request deletion or destruction of data, request notification of corrections/deletions to third parties, object to processing, and request data portability.",
+      "contact": "Contact & Data Subject Requests",
+      "contactText": "To exercise your rights under KVKK Article 11, please submit your request through the 'Data Request' tab or contact us via the methods provided on our website. We will respond within 30 days as required by law.",
       "categories": "Consent Categories",
-      "essential": "Essential",
-      "essentialDesc": "Required for basic functionality",
-      "analytics": "Analytics",
-      "analyticsDesc": "Help us understand usage patterns",
-      "performance": "Performance",
-      "performanceDesc": "Optimize site performance",
-      "marketing": "Marketing",
-      "marketingDesc": "Send you relevant updates",
+      "essential": "Essential Cookies",
+      "essentialDesc": "Required for basic functionality (always enabled)",
+      "analytics": "Analytics Cookies",
+      "analyticsDesc": "Help us understand usage patterns and improve our services",
+      "performance": "Performance Cookies",
+      "performanceDesc": "Optimize site performance and loading times",
+      "marketing": "Marketing Cookies",
+      "marketingDesc": "Send you relevant updates about our community",
       "savePreferences": "Save Preferences",
+      "cookiePreferences": {
+        "title": "Cookie Preferences",
+        "description": "We use cookies and similar technologies to improve your experience. You can customize your preferences below. Essential cookies cannot be disabled.",
+        "note": "Your preferences will be saved and applied immediately. You can change these settings at any time."
+      },
+      "privacyPolicy": {
+        "title": "Privacy Policy",
+        "intro": "This Privacy Policy explains how UTAA Blockchain Community collects, uses, and protects your personal information in compliance with KVKK (Law No. 6698).",
+        "dataCollection": "What Data We Collect",
+        "dataCollectionText": "We collect information you provide directly (name, email, educational background, interests) and automatically through your use of our services (usage data, device information, cookies).",
+        "dataUsage": "How We Use Your Data",
+        "dataUsageText": "We use your data to provide community services, organize events, deliver educational content, improve our platform, communicate with members, and ensure security and legal compliance.",
+        "dataSharing": "Data Sharing and Third Parties",
+        "dataSharingText": "We do not sell your personal data. We may share data with service providers who assist in operating our platform, as required by law, or with your explicit consent for specific purposes."
+      },
+      "disclaimer": {
+        "title": "Important Disclaimer",
+        "text1": "UTAA Blockchain Community is a non-profit educational organization. All content, events, and resources are provided for informational and educational purposes only.",
+        "text2": "Nothing on this platform constitutes financial, investment, legal, or professional advice. Cryptocurrency and blockchain technologies involve significant risks.",
+        "text3": "Members and participants are solely responsible for their own decisions and should conduct independent research and consult with qualified professionals before making any financial or investment decisions.",
+        "emphasis": "By using our services, you acknowledge that you understand and accept these terms."
+      },
       "links": {
         "kvkkNotice": "KVKK Notice (Aydınlatma Metni)",
         "privacyPolicy": "Privacy Policy (Gizlilik Politikası)",
         "cookiePolicy": "Cookie Policy (Çerez Politikası)"
       }
     }
+  },
+  "common": {
+    "close": "Close",
+    "submitting": "Submitting...",
+    "save": "Save",
+    "cancel": "Cancel"
   },
   "footer": {
     "brand": "UTAA Blockchain",
@@ -321,15 +368,15 @@
       "email": "Email Address",
       "requestType": "Request Type",
       "selectType": "Select request type",
-      "typeAccess": "Access to my data",
-      "typeCorrection": "Correction of my data",
-      "typeDeletion": "Deletion of my data",
-      "typePortability": "Data portability",
-      "typeObjection": "Objection to processing",
+      "typeAccess": "Access to my data (Article 11/1-a)",
+      "typeCorrection": "Correction of my data (Article 11/1-d)",
+      "typeDeletion": "Deletion of my data (Article 11/1-e)",
+      "typePortability": "Data portability (Article 11/1-g)",
+      "typeObjection": "Objection to processing (Article 11/1-f)",
       "details": "Request Details",
       "detailsPlaceholder": "Please provide details about your request...",
       "submit": "Submit Request",
-      "responseTime": "We will respond to your request within a reasonable period as required by law.",
+      "responseTime": "We will respond to your request within 30 days as required by KVKK.",
       "contact": "For urgent matters, contact us at:",
       "successTitle": "Request Submitted",
       "successMessage": "Your KVKK data request has been submitted. We will contact you via email with updates.",
@@ -338,7 +385,8 @@
         "emailRequired": "Email is required",
         "emailInvalid": "Invalid email address",
         "typeRequired": "Please select a request type",
-        "detailsRequired": "Please provide details about your request"
+        "detailsRequired": "Please provide details about your request",
+        "allRequired": "All fields are required"
       }
     }
   }
