@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { X, ExternalLink, Shield, FileText, Cookie, FileCheck, AlertCircle } from 'lucide-react';
+import { X, ExternalLink, Shield, FileText, Cookie, FileCheck, AlertCircle, Building2, Target, Scale, Archive, Globe, Hand, Mail, File } from 'lucide-react';
 import { toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
@@ -79,13 +79,13 @@ export const PrivacyCenter = ({ isOpen, onClose }: PrivacyCenterProps) => {
   };
 
   const sections = [
-    { key: 'dataController', icon: '🏢' },
-    { key: 'purposes', icon: '🎯' },
-    { key: 'legalBasis', icon: '⚖️' },
-    { key: 'retention', icon: '🗄️' },
-    { key: 'transfers', icon: '🌐' },
-    { key: 'rights', icon: '✋' },
-    { key: 'contact', icon: '📧' },
+    { key: 'dataController', icon: Building2 },
+    { key: 'purposes', icon: Target },
+    { key: 'legalBasis', icon: Scale },
+    { key: 'retention', icon: Archive },
+    { key: 'transfers', icon: Globe },
+    { key: 'rights', icon: Hand },
+    { key: 'contact', icon: Mail },
   ];
 
   const consentCategories = [
@@ -170,23 +170,27 @@ export const PrivacyCenter = ({ isOpen, onClose }: PrivacyCenterProps) => {
                           {t('privacy.center.kvkkNotice.lawReference')}
                         </p>
                         
-                        {sections.map((section) => (
-                          <div key={section.key} className="mb-6 pb-6 border-b border-white/10 last:border-0">
-                            <div className="flex items-start gap-3 mb-3">
-                              <span className="text-2xl">{section.icon}</span>
-                              <h4 className="text-lg font-bold text-foreground">
-                                {t(`privacy.center.${section.key}`)}
-                              </h4>
+                        {sections.map((section) => {
+                          const IconComponent = section.icon;
+                          return (
+                            <div key={section.key} className="mb-6 pb-6 border-b border-white/10 last:border-0">
+                              <div className="flex items-start gap-3 mb-3">
+                                <IconComponent className="h-6 w-6 text-accent flex-shrink-0 mt-1" />
+                                <h4 className="text-lg font-bold text-foreground">
+                                  {t(`privacy.center.${section.key}`)}
+                                </h4>
+                              </div>
+                              <p className="text-muted-foreground leading-relaxed">
+                                {t(`privacy.center.${section.key}Text`)}
+                              </p>
                             </div>
-                            <p className="text-muted-foreground leading-relaxed">
-                              {t(`privacy.center.${section.key}Text`)}
-                            </p>
-                          </div>
-                        ))}
+                          );
+                        })}
 
                         <div className="mt-6 p-4 glass-strong rounded-xl">
-                          <h4 className="font-semibold text-foreground mb-2">
-                            📄 {t('privacy.center.kvkkNotice.documents')}
+                          <h4 className="font-semibold text-foreground mb-2 flex items-center gap-2">
+                            <File className="h-5 w-5 text-accent" />
+                            {t('privacy.center.kvkkNotice.documents')}
                           </h4>
                           <div className="space-y-2">
                             {['kvkkNotice', 'privacyPolicy', 'cookiePolicy'].map((doc) => (
