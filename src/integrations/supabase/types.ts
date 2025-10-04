@@ -14,7 +14,304 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      categories: {
+        Row: {
+          created_at: string
+          icon: string | null
+          id: string
+          name_ar: string
+          name_en: string
+          name_ru: string
+          name_tr: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          name_ar: string
+          name_en: string
+          name_ru: string
+          name_tr: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          name_ar?: string
+          name_en?: string
+          name_ru?: string
+          name_tr?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      courses: {
+        Row: {
+          category_id: string | null
+          created_at: string
+          description_ar: string | null
+          description_en: string | null
+          description_ru: string | null
+          description_tr: string | null
+          duration_hours: number | null
+          featured: boolean | null
+          hero_image: string | null
+          id: string
+          instructor_id: string | null
+          is_free: boolean | null
+          is_published: boolean | null
+          language: Database["public"]["Enums"]["course_language"]
+          level: Database["public"]["Enums"]["course_level"]
+          outcomes_ar: string[] | null
+          outcomes_en: string[] | null
+          outcomes_ru: string[] | null
+          outcomes_tr: string[] | null
+          prerequisites_ar: string[] | null
+          prerequisites_en: string[] | null
+          prerequisites_ru: string[] | null
+          prerequisites_tr: string[] | null
+          price: number | null
+          promo_video: string | null
+          rating: number | null
+          slug: string
+          subtitle_ar: string | null
+          subtitle_en: string | null
+          subtitle_ru: string | null
+          subtitle_tr: string | null
+          tags: string[] | null
+          title_ar: string
+          title_en: string
+          title_ru: string
+          title_tr: string
+          total_enrollments: number | null
+          total_reviews: number | null
+          updated_at: string
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          description_ru?: string | null
+          description_tr?: string | null
+          duration_hours?: number | null
+          featured?: boolean | null
+          hero_image?: string | null
+          id?: string
+          instructor_id?: string | null
+          is_free?: boolean | null
+          is_published?: boolean | null
+          language?: Database["public"]["Enums"]["course_language"]
+          level?: Database["public"]["Enums"]["course_level"]
+          outcomes_ar?: string[] | null
+          outcomes_en?: string[] | null
+          outcomes_ru?: string[] | null
+          outcomes_tr?: string[] | null
+          prerequisites_ar?: string[] | null
+          prerequisites_en?: string[] | null
+          prerequisites_ru?: string[] | null
+          prerequisites_tr?: string[] | null
+          price?: number | null
+          promo_video?: string | null
+          rating?: number | null
+          slug: string
+          subtitle_ar?: string | null
+          subtitle_en?: string | null
+          subtitle_ru?: string | null
+          subtitle_tr?: string | null
+          tags?: string[] | null
+          title_ar: string
+          title_en: string
+          title_ru: string
+          title_tr: string
+          total_enrollments?: number | null
+          total_reviews?: number | null
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          description_ru?: string | null
+          description_tr?: string | null
+          duration_hours?: number | null
+          featured?: boolean | null
+          hero_image?: string | null
+          id?: string
+          instructor_id?: string | null
+          is_free?: boolean | null
+          is_published?: boolean | null
+          language?: Database["public"]["Enums"]["course_language"]
+          level?: Database["public"]["Enums"]["course_level"]
+          outcomes_ar?: string[] | null
+          outcomes_en?: string[] | null
+          outcomes_ru?: string[] | null
+          outcomes_tr?: string[] | null
+          prerequisites_ar?: string[] | null
+          prerequisites_en?: string[] | null
+          prerequisites_ru?: string[] | null
+          prerequisites_tr?: string[] | null
+          price?: number | null
+          promo_video?: string | null
+          rating?: number | null
+          slug?: string
+          subtitle_ar?: string | null
+          subtitle_en?: string | null
+          subtitle_ru?: string | null
+          subtitle_tr?: string | null
+          tags?: string[] | null
+          title_ar?: string
+          title_en?: string
+          title_ru?: string
+          title_tr?: string
+          total_enrollments?: number | null
+          total_reviews?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "courses_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "courses_instructor_id_fkey"
+            columns: ["instructor_id"]
+            isOneToOne: false
+            referencedRelation: "instructors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      enrollments: {
+        Row: {
+          completed: boolean | null
+          completed_at: string | null
+          course_id: string
+          enrolled_at: string
+          id: string
+          progress: number | null
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean | null
+          completed_at?: string | null
+          course_id: string
+          enrolled_at?: string
+          id?: string
+          progress?: number | null
+          user_id: string
+        }
+        Update: {
+          completed?: boolean | null
+          completed_at?: string | null
+          course_id?: string
+          enrolled_at?: string
+          id?: string
+          progress?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "enrollments_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      instructors: {
+        Row: {
+          avatar_url: string | null
+          bio_ar: string | null
+          bio_en: string | null
+          bio_ru: string | null
+          bio_tr: string | null
+          created_at: string
+          id: string
+          name: string
+          rating: number | null
+          title: string | null
+          total_courses: number | null
+          total_students: number | null
+          user_id: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio_ar?: string | null
+          bio_en?: string | null
+          bio_ru?: string | null
+          bio_tr?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          rating?: number | null
+          title?: string | null
+          total_courses?: number | null
+          total_students?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio_ar?: string | null
+          bio_en?: string | null
+          bio_ru?: string | null
+          bio_tr?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          rating?: number | null
+          title?: string | null
+          total_courses?: number | null
+          total_students?: number | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          comment: string | null
+          course_id: string
+          created_at: string
+          id: string
+          rating: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          comment?: string | null
+          course_id: string
+          created_at?: string
+          id?: string
+          rating: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          comment?: string | null
+          course_id?: string
+          created_at?: string
+          id?: string
+          rating?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +320,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      course_language: "en" | "tr" | "ru" | "ar"
+      course_level: "beginner" | "intermediate" | "advanced"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +448,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      course_language: ["en", "tr", "ru", "ar"],
+      course_level: ["beginner", "intermediate", "advanced"],
+    },
   },
 } as const
