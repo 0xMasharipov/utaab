@@ -12,18 +12,18 @@ export const Community = () => {
   const features = [
     {
       icon: Users,
-      title: 'Collaborative',
-      description: 'Work together on innovative projects',
+      titleKey: 'community.features.collaborative.title',
+      descriptionKey: 'community.features.collaborative.description',
     },
     {
       icon: Target,
-      title: 'Goal-Oriented',
-      description: 'Build portfolios and gain experience',
+      titleKey: 'community.features.goalOriented.title',
+      descriptionKey: 'community.features.goalOriented.description',
     },
     {
       icon: Lightbulb,
-      title: 'Innovative',
-      description: 'Push the boundaries of blockchain technology',
+      titleKey: 'community.features.innovative.title',
+      descriptionKey: 'community.features.innovative.description',
     },
   ];
 
@@ -80,8 +80,8 @@ export const Community = () => {
               className="glass rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 group"
             >
               <feature.icon className="h-12 w-12 text-accent mb-4 group-hover:scale-110 transition-transform" />
-              <h4 className="text-xl font-bold mb-2 text-foreground">{feature.title}</h4>
-              <p className="text-muted-foreground">{feature.description}</p>
+              <h4 className="text-xl font-bold mb-2 text-foreground">{t(feature.titleKey)}</h4>
+              <p className="text-muted-foreground">{t(feature.descriptionKey)}</p>
             </motion.div>
           ))}
         </div>

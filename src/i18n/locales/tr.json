@@ -22,7 +22,21 @@
     "title": "Topluluğumuz",
     "subtitle": "Meraklılar, profesyoneller ve araştırmacılar için merkez",
     "description": "UTAA Blockchain Topluluğu, öğrencilerin ufuklarını genişletmeye, portföylerini büyütmelerine ve yenilikçi blockchain projelerinde işbirliği yapmalarına yardımcı olmaya kendini adamıştır.",
-    "vision": "Bilginin özgürce aktığı, ortaklıkların doğal olarak oluştuğu ve kolektif yaratıcılıktan çığır açan çözümlerin ortaya çıktığı gelişen bir ekosistem hayal ediyoruz."
+    "vision": "Bilginin özgürce aktığı, ortaklıkların doğal olarak oluştuğu ve kolektif yaratıcılıktan çığır açan çözümlerin ortaya çıktığı gelişen bir ekosistem hayal ediyoruz.",
+    "features": {
+      "collaborative": {
+        "title": "İşbirlikçi",
+        "description": "Yenilikçi projeler üzerinde birlikte çalışın"
+      },
+      "goalOriented": {
+        "title": "Hedef Odaklı",
+        "description": "Portföy oluşturun ve deneyim kazanın"
+      },
+      "innovative": {
+        "title": "Yenilikçi",
+        "description": "Blockchain teknolojisinin sınırlarını zorlayın"
+      }
+    }
   },
   "learn": {
     "title": "Öğren ve Geliş",
