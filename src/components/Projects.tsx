@@ -41,10 +41,10 @@ export const Projects = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-glow-soft">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-glow-soft px-2">
             {t('projects.title')}
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-4">
             {t('projects.subtitle')}
           </p>
         </motion.div>
@@ -56,11 +56,11 @@ export const Projects = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
-              className="glass rounded-3xl p-8 hover:bg-white/10 transition-all duration-300 group flex flex-col"
+              className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:bg-white/10 transition-all duration-300 group flex flex-col"
             >
-              <div className="mb-4">
+              <div className="mb-3 sm:mb-4">
                 <span
-                  className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
+                  className={`inline-block px-3 py-1 rounded-full text-xs sm:text-sm font-semibold ${
                     project.status === 'Active'
                       ? 'bg-accent/20 text-accent'
                       : 'bg-yellow-500/20 text-yellow-400'
@@ -70,26 +70,26 @@ export const Projects = () => {
                 </span>
               </div>
 
-              <h3 className="text-2xl font-bold text-foreground mb-3 group-hover:text-accent transition-colors">
+              <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2 sm:mb-3 group-hover:text-accent transition-colors">
                 {project.title}
               </h3>
               
-              <p className="text-muted-foreground mb-6 flex-grow">
+              <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 flex-grow">
                 {project.description}
               </p>
 
-              <div className="flex flex-wrap gap-2 mb-6">
+              <div className="flex flex-wrap gap-2 mb-4 sm:mb-6">
                 {project.tags.map((tag, tagIndex) => (
                   <span
                     key={tagIndex}
-                    className="px-3 py-1 rounded-full text-sm glass-strong"
+                    className="px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm glass-strong"
                   >
                     {tag}
                   </span>
                 ))}
               </div>
 
-              <Button variant="outline" className="glass hover:bg-white/10 w-full group/btn">
+              <Button variant="outline" className="glass hover:bg-white/10 w-full group/btn min-h-[44px]">
                 {t('projects.viewProject')}
                 <ExternalLink className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
               </Button>

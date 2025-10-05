@@ -46,13 +46,13 @@ export const Hero = () => {
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
       </div>
 
-      <div className="section-container relative z-10 text-center py-32">
+      <div className="section-container relative z-10 text-center py-24 sm:py-28 md:py-32">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 text-glow-soft leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 sm:mb-6 text-glow-soft leading-tight px-2">
             {t('hero.title')}
           </h1>
         </motion.div>
@@ -61,7 +61,7 @@ export const Hero = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="text-3xl md:text-5xl font-semibold mb-8 text-accent"
+          className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-semibold mb-6 sm:mb-8 text-accent px-2"
         >
           {subtitleWords.map((word, wordIndex) => (
             <span key={wordIndex} className="inline-block mr-3">
@@ -82,7 +82,7 @@ export const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-12"
+          className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8 sm:mb-12 px-4"
         >
           {t('hero.description')}
         </motion.p>
@@ -92,7 +92,7 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <Button onClick={scrollToJoin} className="btn-primary text-lg px-8 py-6 group">
+          <Button onClick={scrollToJoin} className="btn-primary text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 group min-h-[44px]">
             {t('hero.cta')}
             <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </Button>

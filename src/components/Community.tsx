@@ -36,10 +36,10 @@ export const Community = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-glow-soft">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-glow-soft px-2">
             {t('community.title')}
           </h2>
-          <p className="text-xl md:text-2xl text-accent font-semibold mb-4">
+          <p className="text-lg sm:text-xl md:text-2xl text-accent font-semibold mb-3 sm:mb-4 px-2">
             {t('community.subtitle')}
           </p>
         </motion.div>
@@ -49,9 +49,9 @@ export const Community = () => {
             initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="glass rounded-3xl p-8 md:p-10"
+            className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10"
           >
-            <h3 className="text-2xl font-bold mb-4 text-foreground">Our Mission</h3>
+            <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-foreground">Our Mission</h3>
             <p className="text-muted-foreground text-lg leading-relaxed">
               {t('community.description')}
             </p>
@@ -61,9 +61,9 @@ export const Community = () => {
             initial={{ opacity: 0, x: 30 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="glass rounded-3xl p-8 md:p-10"
+            className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10"
           >
-            <h3 className="text-2xl font-bold mb-4 text-foreground">Our Vision</h3>
+            <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-foreground">Our Vision</h3>
             <p className="text-muted-foreground text-lg leading-relaxed">
               {t('community.vision')}
             </p>

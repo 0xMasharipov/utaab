@@ -97,16 +97,16 @@
   
   /* Button variants */
   .btn-primary {
-    @apply bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_hsl(var(--primary)/0.5)];
+    @apply bg-primary hover:bg-primary/90 text-primary-foreground px-4 sm:px-6 py-2.5 sm:py-3 rounded-full font-semibold transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_hsl(var(--primary)/0.5)] text-sm sm:text-base;
   }
   
   .btn-glass {
-    @apply glass hover:bg-white/10 text-foreground px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:scale-105;
+    @apply glass hover:bg-white/10 text-foreground px-4 sm:px-6 py-2.5 sm:py-3 rounded-full font-semibold transition-all duration-300 hover:scale-105 text-sm sm:text-base;
   }
   
   /* Section container */
   .section-container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8;
   }
   
   /* Animated gradient background */

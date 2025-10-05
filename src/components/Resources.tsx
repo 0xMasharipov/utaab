@@ -51,10 +51,10 @@ export const Resources = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-glow-soft">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-glow-soft px-2">
             {t('resources.title')}
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-4">
             {t('resources.subtitle')}
           </p>
         </motion.div>
@@ -66,14 +66,14 @@ export const Resources = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
-              className="glass rounded-3xl p-8 hover:bg-white/10 transition-all duration-300 group"
+              className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:bg-white/10 transition-all duration-300 group"
             >
-              <resource.icon className="h-12 w-12 text-accent mb-6 group-hover:scale-110 transition-transform" />
-              <h3 className="text-2xl font-bold text-foreground mb-6">{resource.title}</h3>
-              <ul className="space-y-3">
+              <resource.icon className="h-10 w-10 sm:h-12 sm:w-12 text-accent mb-4 sm:mb-6 group-hover:scale-110 transition-transform" />
+              <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6">{resource.title}</h3>
+              <ul className="space-y-2 sm:space-y-3">
                 {resource.items.map((item, itemIndex) => (
                   <li key={itemIndex}>
-                    <button className="text-muted-foreground hover:text-accent transition-colors text-left w-full">
+                    <button className="text-sm sm:text-base text-muted-foreground hover:text-accent transition-colors text-left w-full py-1">
                       • {item}
                     </button>
                   </li>

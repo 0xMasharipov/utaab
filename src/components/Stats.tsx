@@ -43,10 +43,10 @@ const StatItem = ({ value, label, suffix = '+' }: StatItemProps) => {
       transition={{ duration: 0.6 }}
       className="text-center"
     >
-      <div className="text-5xl md:text-6xl lg:text-7xl font-bold text-glow mb-4">
+      <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-glow mb-3 sm:mb-4">
         {count}{suffix}
       </div>
-      <div className="text-lg md:text-xl text-muted-foreground">{label}</div>
+      <div className="text-base sm:text-lg md:text-xl text-muted-foreground">{label}</div>
     </motion.div>
   );
 };
@@ -63,8 +63,8 @@ export const Stats = () => {
   return (
     <section className="py-20 md:py-32 relative">
       <div className="section-container">
-        <div className="glass rounded-3xl p-12 md:p-16">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+        <div className="glass rounded-2xl sm:rounded-3xl p-8 sm:p-12 md:p-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10 md:gap-12">
             {stats.map((stat, index) => (
               <StatItem
                 key={index}

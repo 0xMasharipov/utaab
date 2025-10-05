@@ -35,14 +35,14 @@ export const Events = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-glow-soft">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-glow-soft px-2">
             {t('events.title')}
           </h2>
         </motion.div>
 
         {/* Upcoming Events */}
         <div className="mb-12">
-          <h3 className="text-2xl font-bold text-foreground mb-6">{t('events.upcoming')}</h3>
+          <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6 px-2">{t('events.upcoming')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {upcomingEvents.map((event, index) => (
               <motion.div
@@ -50,7 +50,7 @@ export const Events = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
-                className="glass rounded-3xl p-8 hover:bg-white/10 transition-all duration-300 group"
+                className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:bg-white/10 transition-all duration-300 group"
               >
                 <h4 className="text-xl font-bold text-foreground mb-4 group-hover:text-accent transition-colors">
                   {event.title}
@@ -77,8 +77,8 @@ export const Events = () => {
 
         {/* Past Events */}
         <div>
-          <h3 className="text-2xl font-bold text-foreground mb-6">{t('events.past')}</h3>
-          <div className="glass rounded-3xl p-8 text-center">
+          <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6 px-2">{t('events.past')}</h3>
+          <div className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-center">
             <p className="text-muted-foreground">{t('events.noEvents')}</p>
           </div>
         </div>

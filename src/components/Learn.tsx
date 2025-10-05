@@ -36,7 +36,7 @@ export const Learn = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-glow-soft">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-glow-soft px-2">
             {t('learn.title')}
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -51,10 +51,10 @@ export const Learn = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
-              className="glass rounded-3xl p-8 hover:bg-white/10 transition-all duration-300 group cursor-pointer"
+              className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:bg-white/10 transition-all duration-300 group cursor-pointer"
             >
-              <resource.icon className="h-16 w-16 text-accent mb-6 group-hover:scale-110 transition-transform" />
-              <h3 className="text-2xl font-bold text-foreground mb-3">{resource.title}</h3>
+              <resource.icon className="h-10 w-10 sm:h-12 sm:w-12 text-accent mb-3 sm:mb-4" />
+              <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2 sm:mb-3">{resource.title}</h3>
               <p className="text-muted-foreground">{resource.description}</p>
             </motion.div>
           ))}

@@ -57,16 +57,16 @@ export const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
-        isScrolled ? 'w-[95%] max-w-6xl' : 'w-[90%] max-w-5xl'
+      className={`fixed top-2 sm:top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
+        isScrolled ? 'w-[96%] sm:w-[95%] max-w-6xl' : 'w-[92%] sm:w-[90%] max-w-5xl'
       }`}
     >
-      <div className={`glass-strong rounded-full px-6 py-4 ${isScrolled ? 'shadow-lg' : ''}`}>
+      <div className={`glass-strong rounded-full px-3 sm:px-4 md:px-6 py-3 sm:py-4 ${isScrolled ? 'shadow-lg' : ''}`}>
         <div className="flex items-center justify-between">
           {/* Logo */}
           <button
             onClick={() => scrollToSection('hero')}
-            className="text-xl font-bold text-foreground hover:text-accent transition-colors"
+            className="text-base sm:text-lg md:text-xl font-bold text-foreground hover:text-accent transition-colors"
           >
             UTAA Blockchain
           </button>

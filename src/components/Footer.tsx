@@ -31,12 +31,12 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
   };
 
   return (
-    <footer className="relative py-16 border-t border-white/10">
+    <footer className="relative py-12 sm:py-16 border-t border-white/10">
       <div className="section-container">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12 mb-8 sm:mb-12">
           {/* Brand */}
           <div>
-            <h3 className="text-2xl font-bold text-foreground mb-4">
+            <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-3 sm:mb-4">
               {t('footer.brand')}
             </h3>
             <p className="text-muted-foreground leading-relaxed">
@@ -76,17 +76,17 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
             <h4 className="text-lg font-semibold text-foreground mb-4">
               {t('footer.social')}
             </h4>
-            <div className="flex gap-3">
+            <div className="flex gap-2 sm:gap-3">
               {socialLinks.map((social) => (
                 <a
                   key={social.name}
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`glass p-3 rounded-xl transition-all hover:scale-110 ${social.color}`}
+                  className={`glass p-2 sm:p-3 rounded-xl transition-all hover:scale-110 min-h-[44px] min-w-[44px] flex items-center justify-center ${social.color}`}
                   aria-label={social.name}
                 >
-                  <social.icon className="h-5 w-5" />
+                  <social.icon className="h-5 w-5 sm:h-6 sm:w-6" />
                 </a>
               ))}
             </div>
@@ -97,13 +97,13 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
             <h4 className="text-lg font-semibold text-foreground mb-4">
               {t('footer.newsletter')}
             </h4>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <Input
                 type="email"
                 placeholder={t('footer.newsletterPlaceholder')}
-                className="glass border-white/20 focus:border-accent text-foreground placeholder:text-muted-foreground"
+                className="glass border-white/20 focus:border-accent text-foreground placeholder:text-muted-foreground text-sm sm:text-base min-h-[44px]"
               />
-              <Button className="btn-primary px-4">
+              <Button className="btn-primary px-3 sm:px-4 min-h-[44px] whitespace-nowrap">
                 {t('footer.subscribe')}
               </Button>
             </div>
