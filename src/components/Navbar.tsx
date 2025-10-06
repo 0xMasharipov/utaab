@@ -125,7 +125,13 @@ export const Navbar = () => {
         isScrolled ? 'w-[96%] sm:w-[95%] max-w-6xl' : 'w-[92%] sm:w-[90%] max-w-5xl'
       }`}
     >
-      <div className={`glass-strong rounded-full px-3 sm:px-4 md:px-6 py-3 sm:py-4 ${isScrolled ? 'shadow-lg' : ''}`}>
+      <div 
+        className={`glass-strong rounded-full px-3 sm:px-4 md:px-6 py-3 sm:py-4 ${isScrolled ? 'shadow-lg' : ''}`}
+        style={{
+          backdropFilter: 'blur(16px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(16px) saturate(180%)',
+        }}
+      >
         <div className="flex items-center justify-between">
           {/* Logo */}
           <button
