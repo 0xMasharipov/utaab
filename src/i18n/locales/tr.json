@@ -106,22 +106,22 @@
   "resources": {
     "title": "Kaynaklar",
     "subtitle": "Blockchain geliştirme için araçlar ve materyaller",
-    "documentation": "Dokümantasyon",
-    "tools": "Geliştirme Araçları",
-    "research": "Araştırma Makaleleri",
+    "documentationTitle": "Dokümantasyon",
+    "toolsTitle": "Geliştirme Araçları",
+    "researchTitle": "Araştırma Makaleleri",
     "docs": {
       "gettingStarted": "Başlangıç Kılavuzu",
       "blockchainBasics": "Blockchain Temelleri",
       "smartContractTutorial": "Akıllı Sözleşme Eğitimi",
       "securityBestPractices": "Güvenlik En İyi Uygulamaları"
     },
-    "tools": {
+    "toolsItems": {
       "devEnvironment": "Geliştirme Ortamı Kurulumu",
       "testingFrameworks": "Test Çerçeveleri",
       "deploymentTools": "Dağıtım Araçları",
       "codeTemplates": "Kod Şablonları"
     },
-    "research": {
+    "researchItems": {
       "layer2Scaling": "Katman 2 Ölçeklendirme Çözümleri",
       "consensusMechanisms": "Konsensüs Mekanizmaları",
       "defiProtocols": "DeFi Protokolleri",

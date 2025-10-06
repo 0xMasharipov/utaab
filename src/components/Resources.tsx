@@ -12,7 +12,7 @@ export const Resources = () => {
   const resources = [
     {
       icon: FileText,
-      title: t('resources.documentation'),
+      title: t('resources.documentationTitle'),
       items: [
         'resources.docs.gettingStarted',
         'resources.docs.blockchainBasics',
@@ -22,22 +22,22 @@ export const Resources = () => {
     },
     {
       icon: Code,
-      title: t('resources.tools'),
+      title: t('resources.toolsTitle'),
       items: [
-        'resources.tools.devEnvironment',
-        'resources.tools.testingFrameworks',
-        'resources.tools.deploymentTools',
-        'resources.tools.codeTemplates',
+        'resources.toolsItems.devEnvironment',
+        'resources.toolsItems.testingFrameworks',
+        'resources.toolsItems.deploymentTools',
+        'resources.toolsItems.codeTemplates',
       ],
     },
     {
       icon: BookMarked,
-      title: t('resources.research'),
+      title: t('resources.researchTitle'),
       items: [
-        'resources.research.layer2Scaling',
-        'resources.research.consensusMechanisms',
-        'resources.research.defiProtocols',
-        'resources.research.zkProofs',
+        'resources.researchItems.layer2Scaling',
+        'resources.researchItems.consensusMechanisms',
+        'resources.researchItems.defiProtocols',
+        'resources.researchItems.zkProofs',
       ],
     },
   ];

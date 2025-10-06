@@ -106,22 +106,22 @@
   "resources": {
     "title": "Resources",
     "subtitle": "Tools and materials for blockchain development",
-    "documentation": "Documentation",
-    "tools": "Development Tools",
-    "research": "Research Papers",
+    "documentationTitle": "Documentation",
+    "toolsTitle": "Development Tools",
+    "researchTitle": "Research Papers",
     "docs": {
       "gettingStarted": "Getting Started Guide",
       "blockchainBasics": "Blockchain Basics",
       "smartContractTutorial": "Smart Contract Tutorial",
       "securityBestPractices": "Security Best Practices"
     },
-    "tools": {
+    "toolsItems": {
       "devEnvironment": "Development Environment Setup",
       "testingFrameworks": "Testing Frameworks",
       "deploymentTools": "Deployment Tools",
       "codeTemplates": "Code Templates"
     },
-    "research": {
+    "researchItems": {
       "layer2Scaling": "Layer 2 Scaling Solutions",
       "consensusMechanisms": "Consensus Mechanisms",
       "defiProtocols": "DeFi Protocols",

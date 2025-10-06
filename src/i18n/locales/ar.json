@@ -106,22 +106,22 @@
   "resources": {
     "title": "الموارد",
     "subtitle": "أدوات ومواد لتطوير البلوكشين",
-    "documentation": "التوثيق",
-    "tools": "أدوات التطوير",
-    "research": "الأوراق البحثية",
+    "documentationTitle": "التوثيق",
+    "toolsTitle": "أدوات التطوير",
+    "researchTitle": "الأوراق البحثية",
     "docs": {
       "gettingStarted": "دليل البدء",
       "blockchainBasics": "أساسيات البلوكشين",
       "smartContractTutorial": "دليل العقود الذكية",
       "securityBestPractices": "أفضل ممارسات الأمان"
     },
-    "tools": {
+    "toolsItems": {
       "devEnvironment": "إعداد بيئة التطوير",
       "testingFrameworks": "أطر الاختبار",
       "deploymentTools": "أدوات النشر",
       "codeTemplates": "قوالب الكود"
     },
-    "research": {
+    "researchItems": {
       "layer2Scaling": "حلول توسيع الطبقة الثانية",
       "consensusMechanisms": "آليات الإجماع",
       "defiProtocols": "بروتوكولات DeFi",
