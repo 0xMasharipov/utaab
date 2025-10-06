@@ -5,7 +5,10 @@
     "events": "Events",
     "projects": "Projects",
     "resources": "Resources",
-    "join": "Join UTAAB"
+    "join": "Join UTAAB",
+    "menu": "Menu",
+    "close": "Close",
+    "language": "Language"
   },
   "hero": {
     "title": "Build your blockchain future",

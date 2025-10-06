@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Menu, X, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -20,8 +21,12 @@ export const Navbar = () => {
   const { t, i18n } = useTranslation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
+  const isRTL = i18n.language === 'ar';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,15 +36,73 @@ export const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Lock scroll when menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      
+      // Focus first item
+      setTimeout(() => closeButtonRef.current?.focus(), 100);
+    } else {
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
+    }
+  }, [isMobileMenuOpen]);
+
+  // Focus trap
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeMobileMenu();
+      }
+
+      if (e.key === 'Tab') {
+        const focusableElements = menuRef.current?.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (!focusableElements || focusableElements.length === 0) return;
+
+        const firstElement = focusableElements[0] as HTMLElement;
+        const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+        if (e.shiftKey && document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isMobileMenuOpen]);
+
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+    setTimeout(() => hamburgerRef.current?.focus(), 150);
   };
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
-      setIsMobileMenuOpen(false);
+      closeMobileMenu();
     }
   };
 
@@ -52,6 +115,7 @@ export const Navbar = () => {
   ];
 
   const handleEducationClick = () => {
+    closeMobileMenu();
     window.location.href = '/education';
   };
 
@@ -140,46 +204,122 @@ export const Navbar = () => {
 
             {/* Mobile Menu Toggle */}
             <button
+              ref={hamburgerRef}
               className="md:hidden text-foreground"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Toggle menu"
+              aria-label={isMobileMenuOpen ? t('nav.close') : t('nav.menu')}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-menu"
             >
               {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden mt-4 pt-4 border-t border-white/10">
-            <div className="flex flex-col gap-3">
-              {navItems.map((item) => (
-                <button
-                  key={item.key}
-                  onClick={() => scrollToSection(item.id)}
-                  className="text-left text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2"
-                >
-                  {t(`nav.${item.key}`)}
-                </button>
-              ))}
-              <Button
-                onClick={handleEducationClick}
-                variant="ghost"
-                className="w-full justify-start text-sm font-medium text-muted-foreground hover:text-foreground"
-                size="sm"
+        {/* Mobile Menu Panel */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
+                className="fixed inset-0 bg-black/70 backdrop-blur-md z-[60] md:hidden"
+                onClick={closeMobileMenu}
+                aria-hidden="true"
+              />
+              
+              {/* Menu Panel */}
+              <motion.div
+                id="mobile-menu"
+                ref={menuRef}
+                role="dialog"
+                aria-modal="true"
+                aria-label={t('nav.menu')}
+                initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}
+                className={`fixed top-20 ${isRTL ? 'right-2' : 'left-2'} ${isRTL ? 'left-2' : 'right-2'} max-h-[85vh] overflow-y-auto z-[70] md:hidden glass-strong rounded-3xl shadow-2xl`}
+                style={{
+                  paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',
+                  paddingLeft: 'max(1.5rem, env(safe-area-inset-left))',
+                  paddingRight: 'max(1.5rem, env(safe-area-inset-right))',
+                }}
               >
-                {t('education.title')}
-              </Button>
-              <Button
-                onClick={() => scrollToSection('join')}
-                className="btn-primary w-full mt-2"
-                size="sm"
-              >
-                {t('nav.join')}
-              </Button>
-            </div>
-          </div>
-        )}
+                {/* Close Button */}
+                <div className="flex justify-end pt-4 pb-2">
+                  <button
+                    ref={closeButtonRef}
+                    onClick={closeMobileMenu}
+                    className="text-foreground hover:text-accent transition-colors p-2 rounded-full hover:bg-white/10"
+                    aria-label={t('nav.close')}
+                  >
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
+
+                {/* Menu Items */}
+                <nav className="flex flex-col gap-1 pb-6">
+                  {navItems.map((item, index) => (
+                    <button
+                      key={item.key}
+                      onClick={() => scrollToSection(item.id)}
+                      className="text-left text-base font-medium text-foreground hover:text-accent hover:bg-white/5 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                    >
+                      {t(`nav.${item.key}`)}
+                    </button>
+                  ))}
+                  
+                  <div className="h-px bg-white/10 my-2" />
+                  
+                  <button
+                    onClick={handleEducationClick}
+                    className="text-left text-base font-medium text-foreground hover:text-accent hover:bg-white/5 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                  >
+                    {t('education.title')}
+                  </button>
+
+                  <div className="h-px bg-white/10 my-2" />
+
+                  {/* CTA Button */}
+                  <Button
+                    onClick={() => scrollToSection('join')}
+                    className="btn-primary w-full mt-2 min-h-[44px]"
+                    size="lg"
+                  >
+                    {t('nav.join')}
+                  </Button>
+
+                  {/* Language Switcher in Menu */}
+                  <div className="mt-4 pt-4 border-t border-white/10">
+                    <p className="text-xs text-muted-foreground mb-3 px-4">{t('nav.language')}</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {languages.map((lang) => (
+                        <button
+                          key={lang.code}
+                          onClick={() => {
+                            changeLanguage(lang.code);
+                          }}
+                          className={`flex items-center gap-2 px-4 py-3 rounded-xl min-h-[44px] transition-all ${
+                            i18n.language === lang.code
+                              ? 'bg-accent/20 text-accent-foreground font-medium'
+                              : 'hover:bg-white/5 text-foreground'
+                          }`}
+                        >
+                          <span className="text-xl">{lang.flag}</span>
+                          <span className="text-sm">{lang.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </nav>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </div>
     </nav>
   );

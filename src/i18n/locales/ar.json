@@ -5,7 +5,10 @@
     "events": "الفعاليات",
     "projects": "المشاريع",
     "resources": "الموارد",
-    "join": "انضم إلى UTAAB"
+    "join": "انضم إلى UTAAB",
+    "menu": "القائمة",
+    "close": "إغلاق",
+    "language": "اللغة"
   },
   "hero": {
     "title": "ابنِ مستقبلك في البلوكشين",

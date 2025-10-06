@@ -5,7 +5,10 @@
     "events": "События",
     "projects": "Проекты",
     "resources": "Ресурсы",
-    "join": "Присоединиться к UTAAB"
+    "join": "Присоединиться к UTAAB",
+    "menu": "Меню",
+    "close": "Закрыть",
+    "language": "Язык"
   },
   "hero": {
     "title": "Создайте своё blockchain-будущее",

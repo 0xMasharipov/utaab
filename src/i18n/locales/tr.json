@@ -5,7 +5,10 @@
     "events": "Etkinlikler",
     "projects": "Projeler",
     "resources": "Kaynaklar",
-    "join": "UTAAB'a Katıl"
+    "join": "UTAAB'a Katıl",
+    "menu": "Menü",
+    "close": "Kapat",
+    "language": "Dil"
   },
   "hero": {
     "title": "Blockchain geleceğinizi inşa edin",
