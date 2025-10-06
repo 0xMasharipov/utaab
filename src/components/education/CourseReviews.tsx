@@ -37,7 +37,7 @@ export const CourseReviews = ({ courseId, isEnrolled }: CourseReviewsProps) => {
   }, []);
 
   const { data: reviews, isLoading } = useQuery({
-    queryKey: ['reviews', courseId],
+    queryKey: ['reviews', courseId, user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('reviews')
@@ -227,11 +227,9 @@ export const CourseReviews = ({ courseId, isEnrolled }: CourseReviewsProps) => {
         ) : reviews && reviews.length > 0 ? (
           <div className="space-y-4">
             {reviews.map((review) => {
-              // Only show user_id indicator if it's the current user's review (privacy protection)
-              const isOwnReview = user?.id === review.user_id;
-              const displayInitial = isOwnReview 
-                ? review.user_id.substring(0, 2).toUpperCase()
-                : 'U'; // Generic initial for other users
+              // Privacy: Only show user identity for own reviews
+              const isOwnReview = user?.id && review.user_id === user.id;
+              const displayInitial = isOwnReview ? 'YOU' : 'U';
               
               return (
                 <div key={review.id} className="space-y-2">

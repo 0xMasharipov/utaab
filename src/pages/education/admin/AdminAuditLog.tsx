@@ -135,7 +135,11 @@ export const AdminAuditLog = () => {
                       </span>
                     </div>
                     <p className="text-sm mb-1">
-                      <span className="font-medium">{log.user_email || 'System'}</span>
+                      <span className="font-medium">
+                        {log.user_email 
+                          ? `${log.user_email.substring(0, 3)}***@${log.user_email.split('@')[1]?.substring(0, 3)}***` 
+                          : 'System'}
+                      </span>
                       {' '}performed{' '}
                       <span className="font-medium">{log.action}</span>
                       {' '}on{' '}
@@ -144,7 +148,7 @@ export const AdminAuditLog = () => {
                     </p>
                     {log.ip_address && (
                       <p className="text-xs text-muted-foreground">
-                        IP: {String(log.ip_address)}
+                        IP: {String(log.ip_address).split('.').slice(0, 2).join('.')}.***.***.***
                       </p>
                     )}
                   </div>
