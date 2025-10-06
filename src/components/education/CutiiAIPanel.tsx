@@ -3,10 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { Bot, Send, X, Minimize2, Maximize2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -30,8 +31,9 @@ interface CutiiAIPanelProps {
 export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps) => {
   const { t } = useTranslation();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
@@ -43,6 +45,12 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [user, setUser] = useState<any>(null);
+  const [size, setSize] = useState({ width: 800, height: 600 });
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const dragStartRef = useRef({ x: 0, y: 0 });
+  const resizeStartRef = useRef({ width: 0, height: 0, mouseX: 0, mouseY: 0 });
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -59,6 +67,76 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  useEffect(() => {
+    if (isOpen && !isMobile) {
+      const updatePosition = () => {
+        const maxX = window.innerWidth - size.width;
+        const maxY = window.innerHeight - size.height;
+        setPosition({
+          x: Math.max(0, Math.min(position.x, maxX)),
+          y: Math.max(0, Math.min(position.y, maxY))
+        });
+      };
+      updatePosition();
+      window.addEventListener('resize', updatePosition);
+      return () => window.removeEventListener('resize', updatePosition);
+    }
+  }, [isOpen, isMobile, size, position.x, position.y]);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (isMobile || isMaximized) return;
+    setIsDragging(true);
+    dragStartRef.current = {
+      x: e.clientX - position.x,
+      y: e.clientY - position.y
+    };
+  };
+
+  const handleResizeMouseDown = (e: React.MouseEvent) => {
+    if (isMobile || isMaximized) return;
+    e.stopPropagation();
+    setIsResizing(true);
+    resizeStartRef.current = {
+      width: size.width,
+      height: size.height,
+      mouseX: e.clientX,
+      mouseY: e.clientY
+    };
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isDragging) {
+        setPosition({
+          x: Math.max(0, Math.min(e.clientX - dragStartRef.current.x, window.innerWidth - size.width)),
+          y: Math.max(0, Math.min(e.clientY - dragStartRef.current.y, window.innerHeight - size.height))
+        });
+      }
+      if (isResizing) {
+        const deltaX = e.clientX - resizeStartRef.current.mouseX;
+        const deltaY = e.clientY - resizeStartRef.current.mouseY;
+        setSize({
+          width: Math.max(500, Math.min(resizeStartRef.current.width + deltaX, window.innerWidth)),
+          height: Math.max(400, Math.min(resizeStartRef.current.height + deltaY, window.innerHeight))
+        });
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+      setIsResizing(false);
+    };
+
+    if (isDragging || isResizing) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
+    }
+  }, [isDragging, isResizing, size.width, size.height]);
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
@@ -151,8 +229,8 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
     }
   };
 
-  if (!isOpen) {
-    return (
+  return (
+    <>
       <Button
         onClick={() => setIsOpen(true)}
         className="fixed bottom-6 right-6 z-50 rounded-full w-14 h-14 shadow-lg glass-strong border border-white/30 hover:bg-white/10 transition-all"
@@ -160,47 +238,70 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
       >
         <Bot className="h-6 w-6 text-white" />
       </Button>
-    );
-  }
 
-  return (
-    <Card 
-      className={`fixed bottom-6 right-6 z-50 shadow-2xl transition-all border border-white/30 ${
-        isMinimized ? 'w-80 h-16' : 'w-96 h-[600px]'
-      }`}
-      style={{
-        background: 'rgba(15, 23, 42, 0.75)',
-        backdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
-        WebkitBackdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
-      }}
-    >
-      <CardHeader className="flex flex-row items-center justify-between p-4 border-b border-white/10">
-        <div className="flex items-center gap-2">
-          <Bot className="h-5 w-5 text-primary" />
-          <CardTitle className="text-lg">CUTII AI Assistant</CardTitle>
-        </div>
-        <div className="flex items-center gap-1">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-            onClick={() => setIsMinimized(!isMinimized)}
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent
+          className={`p-0 gap-0 border border-white/30 ${
+            isMobile || isMaximized 
+              ? 'w-screen h-screen max-w-none rounded-none' 
+              : 'max-w-none'
+          }`}
+          style={
+            isMobile || isMaximized
+              ? {
+                  background: 'rgba(15, 23, 42, 0.95)',
+                  backdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
+                  WebkitBackdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
+                }
+              : {
+                  width: `${size.width}px`,
+                  height: `${size.height}px`,
+                  left: `${position.x}px`,
+                  top: `${position.y}px`,
+                  transform: 'none',
+                  background: 'rgba(15, 23, 42, 0.95)',
+                  backdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
+                  WebkitBackdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
+                  position: 'fixed',
+                }
+          }
+          onPointerDownOutside={(e) => e.preventDefault()}
+          onEscapeKeyDown={() => setIsOpen(false)}
+        >
+          {/* Header */}
+          <div 
+            className={`flex items-center justify-between p-4 border-b border-white/10 ${
+              !isMobile && !isMaximized ? 'cursor-move' : ''
+            }`}
+            onMouseDown={handleMouseDown}
           >
-            {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-            onClick={() => setIsOpen(false)}
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-      </CardHeader>
+            <div className="flex items-center gap-2">
+              <Bot className="h-5 w-5 text-primary" />
+              <h3 className="text-lg font-semibold">CUTII AI Assistant</h3>
+            </div>
+            <div className="flex items-center gap-1">
+              {!isMobile && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => setIsMaximized(!isMaximized)}
+                >
+                  {isMaximized ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+                </Button>
+              )}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => setIsOpen(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
 
-      {!isMinimized && (
-        <CardContent className="p-0 flex flex-col h-[calc(100%-4rem)]">
+          {/* Messages */}
           <ScrollArea className="flex-1 p-4">
             <div className="space-y-4">
               {messages.map((message, idx) => (
@@ -233,6 +334,7 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
             </div>
           </ScrollArea>
 
+          {/* Input */}
           <div className="p-4 border-t border-white/10">
             <div className="flex gap-2">
               <Input
@@ -242,6 +344,7 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
                 placeholder="Ask me anything..."
                 className="glass flex-1"
                 disabled={isLoading}
+                autoFocus
               />
               <Button
                 onClick={handleSend}
@@ -260,8 +363,19 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
               Educational use only • Not financial advice
             </p>
           </div>
-        </CardContent>
-      )}
-    </Card>
+
+          {/* Resize Handle - Desktop Only */}
+          {!isMobile && !isMaximized && (
+            <div
+              className="absolute bottom-0 right-0 w-4 h-4 cursor-nwse-resize"
+              onMouseDown={handleResizeMouseDown}
+              style={{
+                background: 'linear-gradient(135deg, transparent 50%, rgba(255,255,255,0.2) 50%)',
+              }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
