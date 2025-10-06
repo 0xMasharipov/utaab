@@ -126,10 +126,11 @@ export const Navbar = () => {
       }`}
     >
       <div 
-        className={`glass-strong rounded-full px-3 sm:px-4 md:px-6 py-3 sm:py-4 ${isScrolled ? 'shadow-lg' : ''}`}
+        className={`rounded-full px-3 sm:px-4 md:px-6 py-3 sm:py-4 border border-white/10 ${isScrolled ? 'shadow-lg' : ''}`}
         style={{
-          backdropFilter: 'blur(16px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(16px) saturate(180%)',
+          background: 'rgba(0, 0, 0, 0.6)',
+          backdropFilter: 'blur(12px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(12px) saturate(180%)',
         }}
       >
         <div className="flex items-center justify-between">
@@ -232,7 +233,12 @@ export const Navbar = () => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.15 }}
-                className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] md:hidden"
+                className="fixed inset-0 z-[60] md:hidden"
+                style={{
+                  background: 'rgba(0, 0, 0, 0.4)',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                }}
                 onClick={closeMobileMenu}
                 aria-hidden="true"
               />
@@ -253,9 +259,9 @@ export const Navbar = () => {
                   paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',
                   paddingLeft: 'max(1.5rem, env(safe-area-inset-left))',
                   paddingRight: 'max(1.5rem, env(safe-area-inset-right))',
-                  background: 'rgba(255, 255, 255, 0.06)',
-                  backdropFilter: 'blur(12px)',
-                  WebkitBackdropFilter: 'blur(12px)',
+                  background: 'rgba(0, 0, 0, 0.6)',
+                  backdropFilter: 'blur(12px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(12px) saturate(180%)',
                 }}
               >
                 {/* Close Button */}
