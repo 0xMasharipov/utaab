@@ -139,7 +139,7 @@ export const Navbar = () => {
             onClick={() => scrollToSection('hero')}
             className="text-base sm:text-lg md:text-xl font-bold text-foreground hover:text-accent transition-colors"
           >
-            UTAA Blockchain
+            UTAA <span className="text-accent">Blockchain</span>
           </button>
 
           {/* Desktop Navigation */}
