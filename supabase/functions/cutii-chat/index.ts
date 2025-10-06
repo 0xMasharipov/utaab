@@ -77,17 +77,74 @@ const requestSchema = z.object({
   }).optional(),
 });
 
-// Dangerous patterns that indicate prompt injection
+// Enhanced dangerous patterns for prompt injection detection
 const dangerousPatterns = [
-  /ignore (previous|all|prior) (instructions|rules|directions)/i,
+  /ignore (previous|all|prior|earlier) (instructions|rules|directions|context|prompts?)/i,
+  /disregard (all |your |previous |prior )?(instructions|rules|context)/i,
+  /forget (everything|all previous|your role|prior context)/i,
   /you are now (a |an )?(?!CUTII|a learning assistant|an educational assistant)/i,
-  /repeat (your|the) system prompt/i,
-  /disregard (all |your )?rules/i,
-  /new instructions:/i,
-  /system:/i,
-  /forget (everything|all previous|your role)/i,
-  /reveal (your|the) (instructions|prompt|rules)/i,
+  /repeat (your|the) (system )?prompts?/i,
+  /reveal (your|the) (instructions|prompts?|rules)/i,
+  /new (instructions|rules|context|role):/i,
+  /system\s*:/i,
+  /(start|begin) (over|fresh|anew) (with|from)/i,
+  /override (your |the )?(instructions|rules|prompts?)/i,
+  /act as (?!.*(teach|learn|educat|explain|help|assist))/i,
+  /pretend (you are|to be)(?!.*(teach|educat))/i,
+  /(tell|show) me your (prompts?|instructions|rules)/i,
+  /what (is|are) your (instructions|rules|prompts?)/i,
 ];
+
+// Patterns to detect if system prompt leaked in output
+const leakagePatterns = [
+  /you are cutii.*learning assistant/i,
+  /stay focused on learning/i,
+  /avoid financial advice/i,
+];
+
+// Log suspicious activity for security monitoring
+async function logSuspiciousActivity(
+  supabaseClient: any,
+  userId: string,
+  userMessage: string,
+  detectedPattern: string
+) {
+  try {
+    console.log('[SECURITY] Suspicious input detected', {
+      userId: userId.substring(0, 8) + '***',
+      pattern: detectedPattern,
+      timestamp: new Date().toISOString()
+    });
+    
+    // Log to audit table for security monitoring
+    await supabaseClient
+      .from('audit_log')
+      .insert({
+        user_id: userId,
+        action: 'security_alert',
+        entity_type: 'chat',
+        entity_name: 'prompt_injection_attempt',
+        changes: {
+          pattern: detectedPattern,
+          message_length: userMessage.length,
+          timestamp: new Date().toISOString()
+        }
+      });
+  } catch (error) {
+    console.error('[SECURITY] Failed to log suspicious activity:', error);
+  }
+}
+
+// Check if AI output contains leaked system instructions
+function checkOutputLeakage(output: string): boolean {
+  const normalized = output.toLowerCase();
+  for (const pattern of leakagePatterns) {
+    if (pattern.test(normalized)) {
+      return true;
+    }
+  }
+  return false;
+}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -135,11 +192,19 @@ serve(async (req) => {
     const validated = requestSchema.parse(body);
     const { messages, courseContext, lessonContext } = validated;
 
-    // Check for prompt injection attempts
+    // Check for prompt injection attempts with logging
     for (const msg of messages) {
       if (msg.role === 'user') {
         for (const pattern of dangerousPatterns) {
           if (pattern.test(msg.content)) {
+            // Log suspicious activity
+            await logSuspiciousActivity(
+              supabase,
+              user.id,
+              msg.content,
+              pattern.source
+            );
+            
             return new Response(
               JSON.stringify({ 
                 error: 'Invalid message content. Please rephrase your question.' 
@@ -232,6 +297,27 @@ ${lessonContext.description ? `Description: ${lessonContext.description}` : ''}`
 
     if (!aiMessage) {
       throw new Error('No response from AI');
+    }
+
+    // Output filtering: Check if system instructions leaked
+    if (checkOutputLeakage(aiMessage)) {
+      console.warn('[SECURITY] Potential system prompt leakage detected in output');
+      await logSuspiciousActivity(
+        supabase,
+        user.id,
+        'OUTPUT_LEAKAGE',
+        'system_prompt_leaked_in_response'
+      );
+      
+      // Return a safe generic response instead
+      return new Response(
+        JSON.stringify({ 
+          message: "I'm CUTII, your blockchain learning assistant. How can I help you with your studies today?" 
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     return new Response(
