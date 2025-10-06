@@ -158,7 +158,7 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
         className="fixed bottom-6 right-6 z-50 rounded-full w-14 h-14 shadow-lg glass-strong border border-white/30 hover:bg-white/10 transition-all"
         size="icon"
       >
-        <Bot className="h-6 w-6 text-primary" />
+        <Bot className="h-6 w-6 text-white" />
       </Button>
     );
   }
