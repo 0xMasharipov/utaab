@@ -13,15 +13,15 @@ export const Events = () => {
   // Example events - in real app, these would come from a database
   const upcomingEvents = [
     {
-      title: 'Blockchain Fundamentals Workshop',
-      date: 'December 15, 2025',
-      location: 'Main Campus',
+      titleKey: 'events.event1.title',
+      dateKey: 'events.event1.date',
+      locationKey: 'events.event1.location',
       attendees: 50,
     },
     {
-      title: 'Smart Contract Development',
-      date: 'December 22, 2025',
-      location: 'Online',
+      titleKey: 'events.event2.title',
+      dateKey: 'events.event2.date',
+      locationKey: 'events.event2.location',
       attendees: 100,
     },
   ];
@@ -53,23 +53,23 @@ export const Events = () => {
                 className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:bg-white/10 transition-all duration-300 group"
               >
                 <h4 className="text-xl font-bold text-foreground mb-4 group-hover:text-accent transition-colors">
-                  {event.title}
+                  {t(event.titleKey)}
                 </h4>
                 <div className="space-y-3 text-muted-foreground">
                   <div className="flex items-center gap-2">
                     <Calendar className="h-5 w-5 text-accent" />
-                    <span>{event.date}</span>
+                    <span>{t(event.dateKey)}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <MapPin className="h-5 w-5 text-accent" />
-                    <span>{event.location}</span>
+                    <span>{t(event.locationKey)}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Users className="h-5 w-5 text-accent" />
-                    <span>{event.attendees} attendees</span>
+                    <span>{t('events.attendees', { count: event.attendees })}</span>
                   </div>
                 </div>
-                <Button className="btn-primary w-full mt-6">Register</Button>
+                <Button className="btn-primary w-full mt-6">{t('events.register')}</Button>
               </motion.div>
             ))}
           </div>

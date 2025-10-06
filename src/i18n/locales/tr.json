@@ -57,7 +57,19 @@
     "title": "Etkinlikler",
     "upcoming": "Yaklaşan Etkinlikler",
     "past": "Geçmiş Etkinlikler",
-    "noEvents": "Henüz planlanmış etkinlik yok"
+    "noEvents": "Henüz planlanmış etkinlik yok",
+    "attendees": "{{count}} katılımcı",
+    "register": "Kaydol",
+    "event1": {
+      "title": "Blockchain Temelleri Atölyesi",
+      "date": "15 Aralık 2025",
+      "location": "Ana Kampüs"
+    },
+    "event2": {
+      "title": "Akıllı Sözleşme Geliştirme",
+      "date": "22 Aralık 2025",
+      "location": "Çevrimiçi"
+    }
   },
   "projects": {
     "title": "Topluluk Projeleri",
