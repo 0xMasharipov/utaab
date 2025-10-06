@@ -65,7 +65,7 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
                   onClick={onPrivacyClick}
                   className="text-muted-foreground hover:text-accent transition-colors"
                 >
-                  Privacy Center
+                  {t('footer.privacyCenter')}
                 </button>
               </li>
             </ul>
