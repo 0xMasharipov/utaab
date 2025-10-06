@@ -23,7 +23,6 @@ import { AdminUsers } from "./pages/education/admin/AdminUsers";
 import { AdminSettings } from "./pages/education/admin/AdminSettings";
 import { AdminAuditLog } from "./pages/education/admin/AdminAuditLog";
 import { KVKKRequest } from "./pages/KVKKRequest";
-import './i18n/config';
 
 const queryClient = new QueryClient();
 
