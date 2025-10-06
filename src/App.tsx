@@ -13,6 +13,15 @@ import { EducationRegister } from "./pages/education/EducationRegister";
 import { InstructorProfile } from "./pages/education/InstructorProfile";
 import { AdminDashboard } from "./pages/education/AdminDashboard";
 import { KVKKRequest } from "./pages/KVKKRequest";
+import { AdminLayout } from "./components/admin/AdminLayout";
+import { AdminOverview } from "./pages/education/admin/AdminOverview";
+import { AdminCourses } from "./pages/education/admin/AdminCourses";
+import { AdminAnnouncements } from "./pages/education/admin/AdminAnnouncements";
+import { AdminMessages } from "./pages/education/admin/AdminMessages";
+import { AdminMedia } from "./pages/education/admin/AdminMedia";
+import { AdminUsers } from "./pages/education/admin/AdminUsers";
+import { AdminSettings } from "./pages/education/admin/AdminSettings";
+import { AdminAuditLog } from "./pages/education/admin/AdminAuditLog";
 import './i18n/config';
 
 const queryClient = new QueryClient();
@@ -31,7 +40,16 @@ const App = () => (
           <Route path="/education/learn/:slug" element={<CourseLearn />} />
           <Route path="/education/register" element={<EducationRegister />} />
           <Route path="/education/instructor/:id" element={<InstructorProfile />} />
-          <Route path="/education/admin/*" element={<AdminDashboard />} />
+          <Route path="/education/admin" element={<AdminLayout />}>
+            <Route index element={<AdminOverview />} />
+            <Route path="courses" element={<AdminCourses />} />
+            <Route path="announcements" element={<AdminAnnouncements />} />
+            <Route path="messages" element={<AdminMessages />} />
+            <Route path="media" element={<AdminMedia />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="settings" element={<AdminSettings />} />
+            <Route path="audit" element={<AdminAuditLog />} />
+          </Route>
           <Route path="/kvkk-request" element={<KVKKRequest />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

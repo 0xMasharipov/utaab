@@ -14,6 +14,135 @@ export type Database = {
   }
   public: {
     Tables: {
+      announcements: {
+        Row: {
+          attachments: Json | null
+          audience_type: string
+          body_ar: string | null
+          body_en: string
+          body_ru: string | null
+          body_tr: string | null
+          clicks: number | null
+          created_at: string | null
+          created_by: string | null
+          cta_link: string | null
+          cta_text: string | null
+          delivery_channels: string[]
+          email_opens: number | null
+          end_time: string | null
+          id: string
+          impressions: number | null
+          start_time: string | null
+          target_courses: string[] | null
+          target_locales: string[] | null
+          target_tags: string[] | null
+          title_ar: string | null
+          title_en: string
+          title_ru: string | null
+          title_tr: string | null
+          updated_at: string | null
+          visibility: string
+        }
+        Insert: {
+          attachments?: Json | null
+          audience_type?: string
+          body_ar?: string | null
+          body_en: string
+          body_ru?: string | null
+          body_tr?: string | null
+          clicks?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          cta_link?: string | null
+          cta_text?: string | null
+          delivery_channels?: string[]
+          email_opens?: number | null
+          end_time?: string | null
+          id?: string
+          impressions?: number | null
+          start_time?: string | null
+          target_courses?: string[] | null
+          target_locales?: string[] | null
+          target_tags?: string[] | null
+          title_ar?: string | null
+          title_en: string
+          title_ru?: string | null
+          title_tr?: string | null
+          updated_at?: string | null
+          visibility?: string
+        }
+        Update: {
+          attachments?: Json | null
+          audience_type?: string
+          body_ar?: string | null
+          body_en?: string
+          body_ru?: string | null
+          body_tr?: string | null
+          clicks?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          cta_link?: string | null
+          cta_text?: string | null
+          delivery_channels?: string[]
+          email_opens?: number | null
+          end_time?: string | null
+          id?: string
+          impressions?: number | null
+          start_time?: string | null
+          target_courses?: string[] | null
+          target_locales?: string[] | null
+          target_tags?: string[] | null
+          title_ar?: string | null
+          title_en?: string
+          title_ru?: string | null
+          title_tr?: string | null
+          updated_at?: string | null
+          visibility?: string
+        }
+        Relationships: []
+      }
+      audit_log: {
+        Row: {
+          action: string
+          changes: Json | null
+          created_at: string | null
+          entity_id: string | null
+          entity_name: string | null
+          entity_type: string
+          id: string
+          ip_address: unknown | null
+          user_agent: string | null
+          user_email: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          changes?: Json | null
+          created_at?: string | null
+          entity_id?: string | null
+          entity_name?: string | null
+          entity_type: string
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          changes?: Json | null
+          created_at?: string | null
+          entity_id?: string | null
+          entity_name?: string | null
+          entity_type?: string
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string
@@ -651,6 +780,75 @@ export type Database = {
           },
         ]
       }
+      media_library: {
+        Row: {
+          alt_text: string | null
+          created_at: string | null
+          description: string | null
+          dimensions: Json | null
+          duration_seconds: number | null
+          file_hash: string | null
+          file_path: string
+          file_size: number
+          file_type: string
+          filename: string
+          folder: string | null
+          id: string
+          is_public: boolean | null
+          mime_type: string
+          original_filename: string
+          storage_bucket: string
+          tags: string[] | null
+          updated_at: string | null
+          uploaded_by: string | null
+          usage_count: number | null
+        }
+        Insert: {
+          alt_text?: string | null
+          created_at?: string | null
+          description?: string | null
+          dimensions?: Json | null
+          duration_seconds?: number | null
+          file_hash?: string | null
+          file_path: string
+          file_size: number
+          file_type: string
+          filename: string
+          folder?: string | null
+          id?: string
+          is_public?: boolean | null
+          mime_type: string
+          original_filename: string
+          storage_bucket: string
+          tags?: string[] | null
+          updated_at?: string | null
+          uploaded_by?: string | null
+          usage_count?: number | null
+        }
+        Update: {
+          alt_text?: string | null
+          created_at?: string | null
+          description?: string | null
+          dimensions?: Json | null
+          duration_seconds?: number | null
+          file_hash?: string | null
+          file_path?: string
+          file_size?: number
+          file_type?: string
+          filename?: string
+          folder?: string | null
+          id?: string
+          is_public?: boolean | null
+          mime_type?: string
+          original_filename?: string
+          storage_bucket?: string
+          tags?: string[] | null
+          updated_at?: string | null
+          uploaded_by?: string | null
+          usage_count?: number | null
+        }
+        Relationships: []
+      }
       quiz_attempts: {
         Row: {
           answers: Json
@@ -773,6 +971,66 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      site_messages: {
+        Row: {
+          broadcast_channels: string[] | null
+          category: string | null
+          content_ar: string | null
+          content_en: string
+          content_ru: string | null
+          content_tr: string | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          is_published: boolean | null
+          message_key: string
+          message_type: string
+          schedule_end: string | null
+          schedule_start: string | null
+          target_audience: string | null
+          updated_at: string | null
+          version: number | null
+        }
+        Insert: {
+          broadcast_channels?: string[] | null
+          category?: string | null
+          content_ar?: string | null
+          content_en: string
+          content_ru?: string | null
+          content_tr?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_published?: boolean | null
+          message_key: string
+          message_type?: string
+          schedule_end?: string | null
+          schedule_start?: string | null
+          target_audience?: string | null
+          updated_at?: string | null
+          version?: number | null
+        }
+        Update: {
+          broadcast_channels?: string[] | null
+          category?: string | null
+          content_ar?: string | null
+          content_en?: string
+          content_ru?: string | null
+          content_tr?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_published?: boolean | null
+          message_key?: string
+          message_type?: string
+          schedule_end?: string | null
+          schedule_start?: string | null
+          target_audience?: string | null
+          updated_at?: string | null
+          version?: number | null
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {
