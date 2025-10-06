@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 
-export const EducationRegister = () => {
+export const EducationSignIn = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -22,23 +22,23 @@ export const EducationRegister = () => {
 
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 text-glow">
-            {t('education.registration.title')}
+            {t('education.registration.signIn')}
           </h1>
           <p className="text-lg text-muted-foreground">
-            {t('education.registration.subtitle')}
+            Welcome back! Sign in to continue your learning journey
           </p>
         </div>
 
-        <EducationRegisterForm initialMode="signup" />
+        <EducationRegisterForm initialMode="signin" />
 
         <div className="mt-6 text-center">
           <p className="text-muted-foreground">
-            {t('education.registration.haveAccount')}{' '}
+            {t('education.registration.noAccount')}{' '}
             <button
-              onClick={() => navigate('/education/sign-in')}
+              onClick={() => navigate('/education/register')}
               className="text-accent hover:underline font-medium"
             >
-              {t('education.registration.signIn')}
+              {t('education.registration.createAccount')}
             </button>
           </p>
         </div>

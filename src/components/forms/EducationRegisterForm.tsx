@@ -350,7 +350,7 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
               {t('education.registration.noAccount')}{' '}
               <button
                 type="button"
-                onClick={() => setMode('signup')}
+                onClick={() => navigate('/education/register')}
                 className="text-accent hover:underline font-medium"
               >
                 {t('education.registration.createAccount')}

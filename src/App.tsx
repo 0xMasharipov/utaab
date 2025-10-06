@@ -10,6 +10,7 @@ import { CourseCatalog } from "./pages/education/CourseCatalog";
 import { CourseDetail } from "./pages/education/CourseDetail";
 import { CourseLearn } from "./pages/education/CourseLearn";
 import { EducationRegister } from "./pages/education/EducationRegister";
+import { EducationSignIn } from "./pages/education/EducationSignIn";
 import { InstructorProfile } from "./pages/education/InstructorProfile";
 import { AdminLayout } from "./components/admin/AdminLayout";
 import { AdminOverview } from "./pages/education/admin/AdminOverview";
@@ -39,6 +40,7 @@ function App() {
             <Route path="/education/course/:slug" element={<CourseDetail />} />
             <Route path="/education/learn/:slug" element={<CourseLearn />} />
             <Route path="/education/register" element={<EducationRegister />} />
+            <Route path="/education/sign-in" element={<EducationSignIn />} />
             <Route path="/education/instructor/:id" element={<InstructorProfile />} />
             <Route path="/education/admin" element={<AdminLayout />}>
               <Route index element={<AdminOverview />} />
