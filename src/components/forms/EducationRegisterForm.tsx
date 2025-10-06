@@ -43,10 +43,11 @@ const createSchema = (t: any) => createBaseSchema(t).refine(data => data.passwor
 
 type FormData = z.infer<ReturnType<typeof createSchema>>;
 
-export const EducationRegisterForm = () => {
+export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?: 'signup' | 'signin' }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [mode, setMode] = useState<'signup' | 'signin'>(initialMode);
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [completed, setCompleted] = useState(false);
@@ -163,6 +164,46 @@ export const EducationRegisterForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Handle sign in mode
+    if (mode === 'signin') {
+      if (!formData.email || !formData.password) {
+        toast({
+          title: 'Error',
+          description: 'Please enter email and password',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      setIsSubmitting(true);
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: formData.email,
+          password: formData.password,
+        });
+
+        if (error) throw error;
+
+        toast({
+          title: t('education.registration.welcomeBack'),
+          description: t('education.registration.signInSuccess'),
+        });
+
+        navigate('/education');
+      } catch (error: any) {
+        toast({
+          title: 'Error',
+          description: mapError(error),
+          variant: 'destructive',
+        });
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
+    }
+
+    // Handle sign up mode
     if (!validateStep(3)) return;
 
     setIsSubmitting(true);
@@ -248,6 +289,75 @@ export const EducationRegisterForm = () => {
         <Button className="btn-primary" onClick={() => navigate('/education')}>
           {t('education.registration.gotoDashboard')}
         </Button>
+      </div>
+    );
+  }
+
+  // Sign In Mode - Simple form
+  if (mode === 'signin') {
+    return (
+      <div className="glass rounded-3xl p-6 md:p-12">
+        <h3 className="text-2xl font-bold mb-6 text-foreground">
+          {t('education.registration.signIn')}
+        </h3>
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <Label htmlFor="signin-email" className="text-foreground mb-2 block">
+              {t('education.registration.email')}
+            </Label>
+            <Input
+              id="signin-email"
+              type="email"
+              value={formData.email || ''}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              className="glass border-white/20 focus:border-accent text-foreground"
+              placeholder="you@example.com"
+              required
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="signin-password" className="text-foreground mb-2 block">
+              {t('education.registration.password')}
+            </Label>
+            <div className="relative">
+              <Input
+                id="signin-password"
+                type={showPassword ? 'text' : 'password'}
+                value={formData.password || ''}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                className="glass border-white/20 focus:border-accent text-foreground pr-10"
+                placeholder="••••••••"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
+          </div>
+
+          <Button type="submit" className="btn-primary w-full" disabled={isSubmitting}>
+            {isSubmitting ? t('education.registration.signingIn') : t('education.registration.signIn')}
+          </Button>
+
+          <div className="text-center pt-4">
+            <p className="text-muted-foreground">
+              {t('education.registration.noAccount')}{' '}
+              <button
+                type="button"
+                onClick={() => setMode('signup')}
+                className="text-accent hover:underline font-medium"
+              >
+                {t('education.registration.createAccount')}
+              </button>
+            </p>
+          </div>
+        </form>
       </div>
     );
   }
