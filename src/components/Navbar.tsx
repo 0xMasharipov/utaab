@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { Menu, X, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,6 +20,7 @@ const languages = [
 
 export const Navbar = () => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -27,6 +29,7 @@ export const Navbar = () => {
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
   const isRTL = i18n.language === 'ar';
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -99,11 +102,20 @@ export const Navbar = () => {
   };
 
   const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      closeMobileMenu();
-    }
+    closeMobileMenu();
+    setTimeout(() => {
+      const element = document.getElementById(id);
+      if (element) {
+        const navbarHeight = 100;
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition - navbarHeight;
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: prefersReducedMotion ? 'auto' : 'smooth'
+        });
+      }
+    }, prefersReducedMotion ? 0 : 200);
   };
 
   const navItems = [
@@ -116,7 +128,9 @@ export const Navbar = () => {
 
   const handleEducationClick = () => {
     closeMobileMenu();
-    window.location.href = '/education';
+    setTimeout(() => {
+      navigate('/education');
+    }, prefersReducedMotion ? 0 : 200);
   };
 
   return (
@@ -232,12 +246,13 @@ export const Navbar = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.15 }}
+                transition={{ duration: prefersReducedMotion ? 0 : 0.15 }}
                 className="fixed inset-0 z-[60] md:hidden"
                 style={{
                   background: 'rgba(0, 0, 0, 0.3)',
                   backdropFilter: 'blur(4px)',
                   WebkitBackdropFilter: 'blur(4px)',
+                  pointerEvents: 'auto',
                 }}
                 onClick={closeMobileMenu}
                 aria-hidden="true"
@@ -247,21 +262,21 @@ export const Navbar = () => {
               <motion.div
                 id="mobile-menu"
                 ref={menuRef}
-                role="dialog"
+                role="menu"
                 aria-modal="true"
                 aria-label={t('nav.menu')}
-                initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: -20, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                transition={{ duration: 0.2, ease: 'easeOut' }}
-                className={`fixed top-20 ${isRTL ? 'right-2' : 'left-2'} ${isRTL ? 'left-2' : 'right-2'} max-h-[85vh] overflow-y-auto z-[70] md:hidden rounded-3xl shadow-2xl border border-white/20`}
+                exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -20, scale: 0.95 }}
+                transition={{ duration: prefersReducedMotion ? 0 : 0.2, ease: 'easeOut' }}
+                className={`fixed top-20 ${isRTL ? 'right-2' : 'left-2'} ${isRTL ? 'left-2' : 'right-2'} max-h-[85vh] overflow-y-auto z-[70] md:hidden rounded-3xl shadow-2xl border border-white/30`}
                 style={{
                   paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',
                   paddingLeft: 'max(1.5rem, env(safe-area-inset-left))',
                   paddingRight: 'max(1.5rem, env(safe-area-inset-right))',
-                  background: 'rgba(255, 255, 255, 0.08)',
-                  backdropFilter: 'blur(24px) saturate(200%) brightness(1.1)',
-                  WebkitBackdropFilter: 'blur(24px) saturate(200%) brightness(1.1)',
+                  background: 'rgba(15, 23, 42, 0.75)',
+                  backdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
+                  WebkitBackdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
                 }}
               >
                 {/* Close Button */}
@@ -281,7 +296,14 @@ export const Navbar = () => {
                   {navItems.map((item, index) => (
                     <button
                       key={item.key}
+                      role="menuitem"
                       onClick={() => scrollToSection(item.id)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          scrollToSection(item.id);
+                        }
+                      }}
                       className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                     >
                       {t(`nav.${item.key}`)}
@@ -291,7 +313,14 @@ export const Navbar = () => {
                   <div className="h-px bg-white/20 my-2" />
                   
                   <button
+                    role="menuitem"
                     onClick={handleEducationClick}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleEducationClick();
+                      }
+                    }}
                     className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                   >
                     {t('education.title')}
