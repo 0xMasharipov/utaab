@@ -178,12 +178,19 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
 
       setIsSubmitting(true);
       try {
+        console.log('Attempting sign in for:', formData.email);
+        
         const { data, error } = await supabase.auth.signInWithPassword({
           email: formData.email,
           password: formData.password,
         });
 
-        if (error) throw error;
+        if (error) {
+          console.error('Sign in error:', error);
+          throw error;
+        }
+
+        console.log('Sign in successful:', data.user?.email);
 
         toast({
           title: t('education.registration.welcomeBack'),
@@ -192,6 +199,7 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
 
         navigate('/education');
       } catch (error: any) {
+        console.error('Sign in failed:', error);
         toast({
           title: 'Error',
           description: mapError(error),

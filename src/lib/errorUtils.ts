@@ -23,7 +23,28 @@ export const mapError = (error: any): string => {
     return 'The data provided does not meet the requirements';
   }
   
-  // Authentication errors
+  // Supabase Auth specific errors
+  if (error.message?.includes('Invalid login credentials')) {
+    return 'Invalid email or password. Please check your credentials and try again.';
+  }
+  
+  if (error.message?.includes('Email not confirmed')) {
+    return 'Please confirm your email address before signing in.';
+  }
+  
+  if (error.message?.includes('User not found')) {
+    return 'No account found with this email address.';
+  }
+  
+  if (error.message?.includes('Email already registered') || error.message?.includes('User already registered')) {
+    return 'An account with this email already exists. Try signing in instead.';
+  }
+  
+  if (error.message?.includes('Password should be at least')) {
+    return 'Password must be at least 8 characters long.';
+  }
+  
+  // Generic authentication errors
   if (error.message?.includes('JWT') || error.message?.includes('token')) {
     return 'Session expired. Please refresh the page.';
   }
@@ -40,6 +61,18 @@ export const mapError = (error: any): string => {
   // Network errors
   if (error.message?.includes('fetch') || error.message?.includes('network')) {
     return 'Network error. Please check your connection and try again.';
+  }
+  
+  // For development: log the actual error (sanitized in production)
+  console.error('Unmapped error:', {
+    message: error.message,
+    code: error.code,
+    name: error.name
+  });
+  
+  // If we have a user-friendly error message from Supabase, use it
+  if (error.message && typeof error.message === 'string' && !error.message.includes('postgres') && !error.message.includes('database')) {
+    return error.message;
   }
   
   // Generic fallback - never expose internal details
