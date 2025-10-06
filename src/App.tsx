@@ -22,6 +22,7 @@ import { AdminMedia } from "./pages/education/admin/AdminMedia";
 import { AdminUsers } from "./pages/education/admin/AdminUsers";
 import { AdminSettings } from "./pages/education/admin/AdminSettings";
 import { AdminAuditLog } from "./pages/education/admin/AdminAuditLog";
+import { AdminSecurity } from "./pages/education/admin/AdminSecurity";
 import { KVKKRequest } from "./pages/KVKKRequest";
 
 const queryClient = new QueryClient();
@@ -52,6 +53,7 @@ function App() {
               <Route path="users" element={<AdminUsers />} />
               <Route path="settings" element={<AdminSettings />} />
               <Route path="audit" element={<AdminAuditLog />} />
+              <Route path="security" element={<AdminSecurity />} />
             </Route>
             <Route path="/kvkk-request" element={<KVKKRequest />} />
             <Route path="*" element={<NotFound />} />

@@ -10,6 +10,7 @@ import {
   Users,
   Settings,
   FileText,
+  Shield,
   Menu,
   X,
   LogOut,
@@ -26,6 +27,7 @@ const sidebarItems = [
   { icon: MessageSquare, label: 'Site Messages', path: '/education/admin/messages' },
   { icon: ImageIcon, label: 'Media Library', path: '/education/admin/media' },
   { icon: Users, label: 'Users & Roles', path: '/education/admin/users' },
+  { icon: Shield, label: 'Security', path: '/education/admin/security' },
   { icon: Settings, label: 'Settings', path: '/education/admin/settings' },
   { icon: FileText, label: 'Audit Log', path: '/education/admin/audit' },
 ];

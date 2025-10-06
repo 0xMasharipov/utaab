@@ -1,0 +1,147 @@
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1';
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
+interface RateLimitRequest {
+  identifier: string; // IP address or user ID
+  endpoint: string;
+  limit?: number; // requests per window
+  window?: number; // window in seconds
+}
+
+serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const { identifier, endpoint, limit = 20, window = 60 } = await req.json() as RateLimitRequest;
+    
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    );
+
+    // Check if IP is blacklisted
+    const { data: isBlacklisted } = await supabaseClient.rpc('is_ip_blacklisted', {
+      _ip: identifier
+    });
+
+    if (isBlacklisted) {
+      // Log the blocked attempt
+      await supabaseClient.rpc('log_security_event', {
+        _event_type: 'ip_blacklisted',
+        _severity: 'high',
+        _ip: identifier,
+        _endpoint: endpoint,
+        _details: { action: 'blocked' }
+      });
+
+      return new Response(
+        JSON.stringify({
+          allowed: false,
+          reason: 'IP blacklisted',
+          retry_after: null,
+        }),
+        {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    const windowStart = new Date(Date.now() - window * 1000);
+
+    // Get or create rate limit entry
+    const { data: rateLimitData, error: selectError } = await supabaseClient
+      .from('rate_limits')
+      .select('*')
+      .eq('identifier', identifier)
+      .eq('endpoint', endpoint)
+      .gte('window_start', windowStart.toISOString())
+      .single();
+
+    if (selectError && selectError.code !== 'PGRST116') {
+      // PGRST116 is "not found", which is ok
+      throw selectError;
+    }
+
+    let requestCount = 0;
+    let allowed = true;
+    let retryAfter: number | null = null;
+
+    if (rateLimitData) {
+      requestCount = rateLimitData.request_count + 1;
+      allowed = requestCount <= limit;
+
+      if (!allowed) {
+        const windowEnd = new Date(new Date(rateLimitData.window_start).getTime() + window * 1000);
+        retryAfter = Math.ceil((windowEnd.getTime() - Date.now()) / 1000);
+
+        // Log rate limit event
+        await supabaseClient.rpc('log_security_event', {
+          _event_type: 'rate_limit',
+          _severity: requestCount > limit * 2 ? 'high' : 'medium',
+          _ip: identifier,
+          _endpoint: endpoint,
+          _details: {
+            request_count: requestCount,
+            limit: limit,
+            window: window,
+          }
+        });
+      }
+
+      // Update count
+      await supabaseClient
+        .from('rate_limits')
+        .update({ request_count: requestCount, updated_at: new Date().toISOString() })
+        .eq('id', rateLimitData.id);
+    } else {
+      // Create new rate limit entry
+      requestCount = 1;
+      await supabaseClient
+        .from('rate_limits')
+        .insert({
+          identifier,
+          endpoint,
+          request_count: 1,
+          window_start: new Date().toISOString(),
+        });
+    }
+
+    return new Response(
+      JSON.stringify({
+        allowed,
+        request_count: requestCount,
+        limit,
+        window,
+        retry_after: retryAfter,
+      }),
+      {
+        status: allowed ? 200 : 429,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+          ...(retryAfter ? { 'Retry-After': retryAfter.toString() } : {}),
+        },
+      }
+    );
+  } catch (error) {
+    console.error('Rate limit check error:', error);
+    return new Response(
+      JSON.stringify({
+        allowed: true, // Fail open to avoid blocking legitimate users
+        error: error instanceof Error ? error.message : 'Unknown error',
+      }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
+    );
+  }
+});
