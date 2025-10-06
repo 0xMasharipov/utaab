@@ -155,18 +155,25 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
     return (
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 rounded-full w-14 h-14 shadow-lg btn-primary"
+        className="fixed bottom-6 right-6 z-50 rounded-full w-14 h-14 shadow-lg glass-strong border border-white/30 hover:bg-white/10 transition-all"
         size="icon"
       >
-        <Bot className="h-6 w-6" />
+        <Bot className="h-6 w-6 text-primary" />
       </Button>
     );
   }
 
   return (
-    <Card className={`fixed bottom-6 right-6 z-50 glass-strong shadow-2xl transition-all ${
-      isMinimized ? 'w-80 h-16' : 'w-96 h-[600px]'
-    }`}>
+    <Card 
+      className={`fixed bottom-6 right-6 z-50 shadow-2xl transition-all border border-white/30 ${
+        isMinimized ? 'w-80 h-16' : 'w-96 h-[600px]'
+      }`}
+      style={{
+        background: 'rgba(15, 23, 42, 0.75)',
+        backdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
+        WebkitBackdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
+      }}
+    >
       <CardHeader className="flex flex-row items-center justify-between p-4 border-b border-white/10">
         <div className="flex items-center gap-2">
           <Bot className="h-5 w-5 text-primary" />
