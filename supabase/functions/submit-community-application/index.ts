@@ -26,6 +26,7 @@ const applicationSchema = z.object({
   kvkk_consent_version: z.string(),
   locale: z.string().max(10),
   honeypot: z.string().max(0),
+  form_start_time: z.number().optional(), // Bot detection: form load timestamp
   utm_source: z.string().trim().max(255).optional().nullable(),
   utm_medium: z.string().trim().max(255).optional().nullable(),
   utm_campaign: z.string().trim().max(255).optional().nullable(),
@@ -103,6 +104,17 @@ serve(async (req) => {
         JSON.stringify({ error: 'Invalid submission' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
+    }
+    
+    // Bot detection: Check if submission was too fast (less than 10 seconds)
+    if (validated.form_start_time) {
+      const timeTaken = Date.now() - validated.form_start_time;
+      if (timeTaken < 10000) { // Less than 10 seconds
+        return new Response(
+          JSON.stringify({ error: 'Submission too fast. Please take your time to fill the form.' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
     }
     
     // Create Supabase client with service role

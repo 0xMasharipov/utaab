@@ -52,23 +52,21 @@ export const EducationNavbar = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Check if user has admin role
-  // SECURITY NOTE: This client-side check is for UX only (showing/hiding admin menu items).
-  // All actual admin operations MUST be validated server-side in edge functions.
+  // Check if user has admin role using secure server-side endpoint
   useEffect(() => {
     if (!user?.id) {
       setIsAdmin(false);
       return;
     }
 
-    supabase
-      .from('user_roles')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('role', 'admin')
-      .maybeSingle()
+    // Use server-side admin check to prevent client-side manipulation
+    supabase.functions
+      .invoke('check-admin-status')
       .then(({ data }) => {
-        setIsAdmin(!!data);
+        setIsAdmin(data?.isAdmin ?? false);
+      })
+      .catch(() => {
+        setIsAdmin(false);
       });
   }, [user?.id]);
 

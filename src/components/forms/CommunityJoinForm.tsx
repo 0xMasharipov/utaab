@@ -55,6 +55,7 @@ export const CommunityJoinForm = () => {
     experience_level: undefined,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [formStartTime] = useState(Date.now()); // Track when form was loaded for bot detection
 
   const interestOptions = [
     'interestSolidity', 'interestRust', 'interestZK', 'interestL2',
@@ -181,6 +182,7 @@ export const CommunityJoinForm = () => {
           kvkk_consent: validatedData.kvkk_consent,
           kvkk_consent_version: '1.0',
           honeypot: validatedData.honeypot || '',
+          form_start_time: formStartTime, // Bot detection: check submission speed
           ...metadata,
         },
       });
