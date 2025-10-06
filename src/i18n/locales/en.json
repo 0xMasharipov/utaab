@@ -74,7 +74,34 @@
   "projects": {
     "title": "Community Projects",
     "subtitle": "Collaborative blockchain initiatives",
-    "viewProject": "View Project"
+    "viewProject": "View Project",
+    "status": {
+      "active": "Active",
+      "planning": "Planning"
+    },
+    "project1": {
+      "title": "Decentralized Identity System",
+      "description": "Building a secure identity verification system on zkSync"
+    },
+    "project2": {
+      "title": "NFT Marketplace",
+      "description": "Community-driven marketplace for digital assets"
+    },
+    "project3": {
+      "title": "DAO Governance Platform",
+      "description": "Transparent governance for community decisions"
+    },
+    "tags": {
+      "defi": "DeFi",
+      "layer2": "Layer 2",
+      "identity": "Identity",
+      "nft": "NFT",
+      "web3": "Web3",
+      "marketplace": "Marketplace",
+      "dao": "DAO",
+      "governance": "Governance",
+      "smartContracts": "Smart Contracts"
+    }
   },
   "resources": {
     "title": "Resources",

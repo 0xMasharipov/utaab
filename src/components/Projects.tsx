@@ -13,22 +13,22 @@ export const Projects = () => {
   // Example projects
   const projects = [
     {
-      title: 'Decentralized Identity System',
-      description: 'Building a secure identity verification system on zkSync',
-      tags: ['DeFi', 'Layer 2', 'Identity'],
-      status: 'Active',
+      titleKey: 'projects.project1.title',
+      descriptionKey: 'projects.project1.description',
+      tags: ['projects.tags.defi', 'projects.tags.layer2', 'projects.tags.identity'],
+      statusKey: 'projects.status.active',
     },
     {
-      title: 'NFT Marketplace',
-      description: 'Community-driven marketplace for digital assets',
-      tags: ['NFT', 'Web3', 'Marketplace'],
-      status: 'Active',
+      titleKey: 'projects.project2.title',
+      descriptionKey: 'projects.project2.description',
+      tags: ['projects.tags.nft', 'projects.tags.web3', 'projects.tags.marketplace'],
+      statusKey: 'projects.status.active',
     },
     {
-      title: 'DAO Governance Platform',
-      description: 'Transparent governance for community decisions',
-      tags: ['DAO', 'Governance', 'Smart Contracts'],
-      status: 'Planning',
+      titleKey: 'projects.project3.title',
+      descriptionKey: 'projects.project3.description',
+      tags: ['projects.tags.dao', 'projects.tags.governance', 'projects.tags.smartContracts'],
+      statusKey: 'projects.status.planning',
     },
   ];
 
@@ -61,21 +61,21 @@ export const Projects = () => {
               <div className="mb-3 sm:mb-4">
                 <span
                   className={`inline-block px-3 py-1 rounded-full text-xs sm:text-sm font-semibold ${
-                    project.status === 'Active'
+                    project.statusKey === 'projects.status.active'
                       ? 'bg-accent/20 text-accent'
                       : 'bg-yellow-500/20 text-yellow-400'
                   }`}
                 >
-                  {project.status}
+                  {t(project.statusKey)}
                 </span>
               </div>
 
               <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2 sm:mb-3 group-hover:text-accent transition-colors">
-                {project.title}
+                {t(project.titleKey)}
               </h3>
               
               <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 flex-grow">
-                {project.description}
+                {t(project.descriptionKey)}
               </p>
 
               <div className="flex flex-wrap gap-2 mb-4 sm:mb-6">
@@ -84,7 +84,7 @@ export const Projects = () => {
                     key={tagIndex}
                     className="px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm glass-strong"
                   >
-                    {tag}
+                    {t(tag)}
                   </span>
                 ))}
               </div>

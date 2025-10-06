@@ -74,7 +74,34 @@
   "projects": {
     "title": "Topluluk Projeleri",
     "subtitle": "İşbirlikçi blockchain girişimleri",
-    "viewProject": "Projeyi Görüntüle"
+    "viewProject": "Projeyi Görüntüle",
+    "status": {
+      "active": "Aktif",
+      "planning": "Planlama"
+    },
+    "project1": {
+      "title": "Merkezi Olmayan Kimlik Sistemi",
+      "description": "zkSync üzerinde güvenli kimlik doğrulama sistemi oluşturma"
+    },
+    "project2": {
+      "title": "NFT Pazaryeri",
+      "description": "Dijital varlıklar için topluluk odaklı pazaryeri"
+    },
+    "project3": {
+      "title": "DAO Yönetişim Platformu",
+      "description": "Topluluk kararları için şeffaf yönetişim"
+    },
+    "tags": {
+      "defi": "DeFi",
+      "layer2": "Katman 2",
+      "identity": "Kimlik",
+      "nft": "NFT",
+      "web3": "Web3",
+      "marketplace": "Pazaryeri",
+      "dao": "DAO",
+      "governance": "Yönetişim",
+      "smartContracts": "Akıllı Sözleşmeler"
+    }
   },
   "resources": {
     "title": "Kaynaklar",

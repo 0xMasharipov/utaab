@@ -74,7 +74,34 @@
   "projects": {
     "title": "مشاريع المجتمع",
     "subtitle": "مبادرات البلوكشين التعاونية",
-    "viewProject": "عرض المشروع"
+    "viewProject": "عرض المشروع",
+    "status": {
+      "active": "نشط",
+      "planning": "قيد التخطيط"
+    },
+    "project1": {
+      "title": "نظام الهوية اللامركزي",
+      "description": "بناء نظام آمن للتحقق من الهوية على zkSync"
+    },
+    "project2": {
+      "title": "سوق NFT",
+      "description": "سوق يقوده المجتمع للأصول الرقمية"
+    },
+    "project3": {
+      "title": "منصة حوكمة DAO",
+      "description": "حوكمة شفافة لقرارات المجتمع"
+    },
+    "tags": {
+      "defi": "التمويل اللامركزي",
+      "layer2": "الطبقة الثانية",
+      "identity": "الهوية",
+      "nft": "NFT",
+      "web3": "ويب 3",
+      "marketplace": "السوق",
+      "dao": "DAO",
+      "governance": "الحوكمة",
+      "smartContracts": "العقود الذكية"
+    }
   },
   "resources": {
     "title": "الموارد",
