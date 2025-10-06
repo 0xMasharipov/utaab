@@ -103,7 +103,7 @@ export const EducationNavbar = () => {
             onClick={() => navigate('/education')}
             className="text-xl font-bold text-foreground hover:text-accent transition-colors"
           >
-            UTAAB Edu
+            UTAAB <span className="text-primary">Edu</span>
           </button>
 
           {/* Desktop Navigation */}
