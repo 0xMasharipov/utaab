@@ -46,7 +46,6 @@ serve(async (req) => {
       .maybeSingle();
 
     if (roleError || !roleData) {
-      console.warn('Non-admin user attempted to access stats:', user.id);
       return new Response(
         JSON.stringify({ error: 'Forbidden' }),
         { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -73,8 +72,6 @@ serve(async (req) => {
       totalKvkkRequests: kvkkRequestsResult.count || 0,
       pendingKvkkRequests: pendingKvkkResult.count || 0,
     };
-
-    console.log('Admin stats fetched for user:', user.id);
 
     return new Response(
       JSON.stringify(stats),

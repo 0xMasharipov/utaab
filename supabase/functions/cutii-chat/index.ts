@@ -84,7 +84,6 @@ serve(async (req) => {
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
-      console.error('Auth error:', authError);
       return new Response(
         JSON.stringify({ error: 'Unauthorized' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -93,7 +92,6 @@ serve(async (req) => {
 
     // Check rate limit
     if (!checkRateLimit(user.id)) {
-      console.warn('Rate limit exceeded for user:', user.id);
       return new Response(
         JSON.stringify({ error: 'Rate limit exceeded. Please wait a moment and try again.' }),
         { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -111,7 +109,6 @@ serve(async (req) => {
       if (msg.role === 'user') {
         for (const pattern of dangerousPatterns) {
           if (pattern.test(msg.content)) {
-            console.warn('Potential prompt injection detected from user:', user.id);
             return new Response(
               JSON.stringify({ 
                 error: 'Invalid message content. Please rephrase your question.' 
@@ -214,7 +211,6 @@ ${lessonContext.description ? `Description: ${lessonContext.description}` : ''}`
       }
 
       const errorText = await response.text();
-      console.error('AI gateway error:', response.status, errorText);
       throw new Error('AI service error');
     }
 
@@ -232,8 +228,6 @@ ${lessonContext.description ? `Description: ${lessonContext.description}` : ''}`
       }
     );
   } catch (error: any) {
-    console.error('Error in cutii-chat function:', error);
-    
     if (error instanceof z.ZodError) {
       return new Response(
         JSON.stringify({ error: 'Invalid request format', details: error.errors }),

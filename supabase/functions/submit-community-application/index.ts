@@ -34,23 +34,55 @@ const applicationSchema = z.object({
   user_agent: z.string().max(500).optional().nullable(),
 });
 
-// Simple rate limiter using Map (in-memory)
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+// Persistent rate limiting using database
+async function checkRateLimit(
+  supabase: any,
+  identifier: string,
+  endpoint: string,
+  maxRequests = 3,
+  windowMs = 3600000
+): Promise<boolean> {
+  const windowStart = new Date(Date.now() - windowMs);
 
-function checkRateLimit(identifier: string, maxRequests = 3, windowMs = 3600000): boolean {
-  const now = Date.now();
-  const record = rateLimitMap.get(identifier);
+  // Get current count for this identifier in the time window
+  const { data, error } = await supabase
+    .from('rate_limits')
+    .select('request_count')
+    .eq('identifier', identifier)
+    .eq('endpoint', endpoint)
+    .gte('window_start', windowStart.toISOString())
+    .single();
 
-  if (!record || now > record.resetTime) {
-    rateLimitMap.set(identifier, { count: 1, resetTime: now + windowMs });
-    return true;
-  }
-
-  if (record.count >= maxRequests) {
+  if (error && error.code !== 'PGRST116') {
     return false;
   }
 
-  record.count++;
+  if (!data) {
+    // First request in window
+    await supabase.from('rate_limits').insert({
+      identifier,
+      endpoint,
+      request_count: 1,
+      window_start: new Date().toISOString(),
+    });
+    return true;
+  }
+
+  if (data.request_count >= maxRequests) {
+    return false;
+  }
+
+  // Increment count
+  await supabase
+    .from('rate_limits')
+    .update({ 
+      request_count: data.request_count + 1,
+      updated_at: new Date().toISOString()
+    })
+    .eq('identifier', identifier)
+    .eq('endpoint', endpoint)
+    .gte('window_start', windowStart.toISOString());
+
   return true;
 }
 
@@ -67,27 +99,26 @@ serve(async (req) => {
     
     // Check honeypot
     if (validated.honeypot) {
-      console.warn('Honeypot triggered for email:', validated.email);
       return new Response(
         JSON.stringify({ error: 'Invalid submission' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
     
-    // Rate limiting by email (3 submissions per hour)
-    if (!checkRateLimit(validated.email)) {
-      console.warn('Rate limit exceeded for:', validated.email);
+    // Create Supabase client with service role
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    );
+    
+    // Rate limiting by email (3 submissions per hour) - persistent
+    const allowed = await checkRateLimit(supabase, validated.email, 'community-application', 3, 3600000);
+    if (!allowed) {
       return new Response(
         JSON.stringify({ error: 'Too many submissions. Please try again later.' }),
         { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
-    
-    // Create Supabase client with service role to bypass RLS
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-    );
     
     // Insert the application
     const { data, error } = await supabase
@@ -122,19 +153,14 @@ serve(async (req) => {
       .single();
     
     if (error) {
-      console.error('Database insert error:', error);
       throw error;
     }
-    
-    console.log('Application submitted successfully:', data.id);
     
     return new Response(
       JSON.stringify({ success: true, id: data.id }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error: any) {
-    console.error('Submission error:', error);
-    
     if (error instanceof z.ZodError) {
       return new Response(
         JSON.stringify({ error: 'Validation failed', details: error.errors }),

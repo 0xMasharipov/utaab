@@ -7,18 +7,19 @@ export const AdminOverview = () => {
   const { data: stats } = useQuery({
     queryKey: ['admin-overview-stats'],
     queryFn: async () => {
-      const [coursesRes, profilesRes, enrollmentsRes, announcementsRes] = await Promise.all([
-        supabase.from('courses').select('id, is_published', { count: 'exact', head: true }),
-        supabase.from('education_profiles').select('id', { count: 'exact', head: true }),
-        supabase.from('enrollments').select('id', { count: 'exact', head: true }),
-        supabase.from('announcements').select('id', { count: 'exact', head: true }),
-      ]);
+      // Use secure edge function instead of direct client queries
+      const { data, error } = await supabase.functions.invoke('admin-stats');
+      
+      if (error) {
+        console.error('Failed to fetch admin stats');
+        throw error;
+      }
 
       return {
-        totalCourses: coursesRes.count || 0,
-        totalUsers: profilesRes.count || 0,
-        totalEnrollments: enrollmentsRes.count || 0,
-        totalAnnouncements: announcementsRes.count || 0,
+        totalCourses: data?.courses || 0,
+        totalUsers: data?.profiles || 0,
+        totalEnrollments: data?.enrollments || 0,
+        totalAnnouncements: data?.announcements || 0,
       };
     },
   });

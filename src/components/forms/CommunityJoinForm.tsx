@@ -55,7 +55,6 @@ export const CommunityJoinForm = () => {
     experience_level: undefined,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [draftSaved, setDraftSaved] = useState(false);
 
   const interestOptions = [
     'interestSolidity', 'interestRust', 'interestZK', 'interestL2',
@@ -65,27 +64,7 @@ export const CommunityJoinForm = () => {
 
   const trackOptions = ['trackLearn', 'trackResearch', 'trackProjects', 'trackEvents', 'trackMentorship'];
 
-  // Auto-save draft
-  useEffect(() => {
-    const savedDraft = localStorage.getItem('communityFormDraft');
-    if (savedDraft && !submitted) {
-      try {
-        const parsed = JSON.parse(savedDraft);
-        setFormData(parsed.formData);
-        setStep(parsed.step);
-        setDraftSaved(true);
-        setTimeout(() => setDraftSaved(false), 2000);
-      } catch (e) {
-        // Draft parsing failed, will start fresh
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!submitted && Object.keys(formData).length > 0) {
-      localStorage.setItem('communityFormDraft', JSON.stringify({ formData, step }));
-    }
-  }, [formData, step, submitted]);
+  // Remove auto-save draft feature for security (no PII in localStorage)
 
   const validateStep = (currentStep: number): boolean => {
     const newErrors: Record<string, string> = {};
@@ -209,8 +188,6 @@ export const CommunityJoinForm = () => {
       if (error) throw error;
       if (!data?.success) throw new Error('Submission failed');
 
-      // Clear draft
-      localStorage.removeItem('communityFormDraft');
       setSubmitted(true);
       toast.success(t('join.successTitle'));
     } catch (error: any) {
@@ -273,12 +250,6 @@ export const CommunityJoinForm = () => {
 
   return (
     <form onSubmit={handleSubmit} onKeyDown={handleKeyDown} className="glass rounded-3xl p-6 md:p-12">
-      {draftSaved && (
-        <div className="mb-4 p-3 glass-strong rounded-xl text-sm text-accent text-center">
-          {t('join.draftRestored')}
-        </div>
-      )}
-
       {/* Progress Indicator */}
       <div className="flex justify-between mb-8">
         {[1, 2, 3, 4].map((s) => (
