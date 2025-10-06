@@ -226,7 +226,7 @@ export const Navbar = () => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.15 }}
-                className="fixed inset-0 bg-black/70 backdrop-blur-md z-[60] md:hidden"
+                className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] md:hidden"
                 onClick={closeMobileMenu}
                 aria-hidden="true"
               />
@@ -242,11 +242,14 @@ export const Navbar = () => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -20, scale: 0.95 }}
                 transition={{ duration: 0.2, ease: 'easeOut' }}
-                className={`fixed top-20 ${isRTL ? 'right-2' : 'left-2'} ${isRTL ? 'left-2' : 'right-2'} max-h-[85vh] overflow-y-auto z-[70] md:hidden glass-strong rounded-3xl shadow-2xl`}
+                className={`fixed top-20 ${isRTL ? 'right-2' : 'left-2'} ${isRTL ? 'left-2' : 'right-2'} max-h-[85vh] overflow-y-auto z-[70] md:hidden rounded-3xl shadow-2xl border border-white/10`}
                 style={{
                   paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',
                   paddingLeft: 'max(1.5rem, env(safe-area-inset-left))',
                   paddingRight: 'max(1.5rem, env(safe-area-inset-right))',
+                  background: 'rgba(255, 255, 255, 0.06)',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
                 }}
               >
                 {/* Close Button */}
@@ -254,7 +257,7 @@ export const Navbar = () => {
                   <button
                     ref={closeButtonRef}
                     onClick={closeMobileMenu}
-                    className="text-foreground hover:text-accent transition-colors p-2 rounded-full hover:bg-white/10"
+                    className="text-white hover:text-accent transition-colors p-2 rounded-full hover:bg-white/20"
                     aria-label={t('nav.close')}
                   >
                     <X className="h-6 w-6" />
@@ -267,22 +270,22 @@ export const Navbar = () => {
                     <button
                       key={item.key}
                       onClick={() => scrollToSection(item.id)}
-                      className="text-left text-base font-medium text-foreground hover:text-accent hover:bg-white/5 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                      className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                     >
                       {t(`nav.${item.key}`)}
                     </button>
                   ))}
                   
-                  <div className="h-px bg-white/10 my-2" />
+                  <div className="h-px bg-white/20 my-2" />
                   
                   <button
                     onClick={handleEducationClick}
-                    className="text-left text-base font-medium text-foreground hover:text-accent hover:bg-white/5 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                    className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                   >
                     {t('education.title')}
                   </button>
 
-                  <div className="h-px bg-white/10 my-2" />
+                  <div className="h-px bg-white/20 my-2" />
 
                   {/* CTA Button */}
                   <Button
@@ -294,8 +297,8 @@ export const Navbar = () => {
                   </Button>
 
                   {/* Language Switcher in Menu */}
-                  <div className="mt-4 pt-4 border-t border-white/10">
-                    <p className="text-xs text-muted-foreground mb-3 px-4">{t('nav.language')}</p>
+                  <div className="mt-4 pt-4 border-t border-white/20">
+                    <p className="text-xs text-white/70 mb-3 px-4">{t('nav.language')}</p>
                     <div className="grid grid-cols-2 gap-2">
                       {languages.map((lang) => (
                         <button
@@ -305,8 +308,8 @@ export const Navbar = () => {
                           }}
                           className={`flex items-center gap-2 px-4 py-3 rounded-xl min-h-[44px] transition-all ${
                             i18n.language === lang.code
-                              ? 'bg-accent/20 text-accent-foreground font-medium'
-                              : 'hover:bg-white/5 text-foreground'
+                              ? 'bg-accent/30 text-white font-medium'
+                              : 'hover:bg-white/15 text-white'
                           }`}
                         >
                           <span className="text-xl">{lang.flag}</span>
