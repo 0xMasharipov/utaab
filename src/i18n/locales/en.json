@@ -108,7 +108,25 @@
     "subtitle": "Tools and materials for blockchain development",
     "documentation": "Documentation",
     "tools": "Development Tools",
-    "research": "Research Papers"
+    "research": "Research Papers",
+    "docs": {
+      "gettingStarted": "Getting Started Guide",
+      "blockchainBasics": "Blockchain Basics",
+      "smartContractTutorial": "Smart Contract Tutorial",
+      "securityBestPractices": "Security Best Practices"
+    },
+    "tools": {
+      "devEnvironment": "Development Environment Setup",
+      "testingFrameworks": "Testing Frameworks",
+      "deploymentTools": "Deployment Tools",
+      "codeTemplates": "Code Templates"
+    },
+    "research": {
+      "layer2Scaling": "Layer 2 Scaling Solutions",
+      "consensusMechanisms": "Consensus Mechanisms",
+      "defiProtocols": "DeFi Protocols",
+      "zkProofs": "Zero-Knowledge Proofs"
+    }
   },
   "join": {
     "title": "Join UTAA Blockchain",

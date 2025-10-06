@@ -108,7 +108,25 @@
     "subtitle": "Инструменты и материалы для разработки блокчейна",
     "documentation": "Документация",
     "tools": "Инструменты Разработки",
-    "research": "Исследовательские Работы"
+    "research": "Исследовательские Работы",
+    "docs": {
+      "gettingStarted": "Руководство по началу работы",
+      "blockchainBasics": "Основы блокчейна",
+      "smartContractTutorial": "Учебник по смарт-контрактам",
+      "securityBestPractices": "Лучшие практики безопасности"
+    },
+    "tools": {
+      "devEnvironment": "Настройка среды разработки",
+      "testingFrameworks": "Фреймворки для тестирования",
+      "deploymentTools": "Инструменты развертывания",
+      "codeTemplates": "Шаблоны кода"
+    },
+    "research": {
+      "layer2Scaling": "Решения для масштабирования Layer 2",
+      "consensusMechanisms": "Механизмы консенсуса",
+      "defiProtocols": "DeFi протоколы",
+      "zkProofs": "Доказательства с нулевым разглашением"
+    }
   },
   "join": {
     "title": "Присоединиться к UTAA Blockchain",

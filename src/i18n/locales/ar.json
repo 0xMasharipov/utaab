@@ -108,7 +108,25 @@
     "subtitle": "أدوات ومواد لتطوير البلوكشين",
     "documentation": "التوثيق",
     "tools": "أدوات التطوير",
-    "research": "الأوراق البحثية"
+    "research": "الأوراق البحثية",
+    "docs": {
+      "gettingStarted": "دليل البدء",
+      "blockchainBasics": "أساسيات البلوكشين",
+      "smartContractTutorial": "دليل العقود الذكية",
+      "securityBestPractices": "أفضل ممارسات الأمان"
+    },
+    "tools": {
+      "devEnvironment": "إعداد بيئة التطوير",
+      "testingFrameworks": "أطر الاختبار",
+      "deploymentTools": "أدوات النشر",
+      "codeTemplates": "قوالب الكود"
+    },
+    "research": {
+      "layer2Scaling": "حلول توسيع الطبقة الثانية",
+      "consensusMechanisms": "آليات الإجماع",
+      "defiProtocols": "بروتوكولات DeFi",
+      "zkProofs": "إثباتات المعرفة الصفرية"
+    }
   },
   "join": {
     "title": "انضم إلى UTAA Blockchain",

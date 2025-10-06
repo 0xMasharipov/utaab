@@ -14,30 +14,30 @@ export const Resources = () => {
       icon: FileText,
       title: t('resources.documentation'),
       items: [
-        'Getting Started Guide',
-        'Blockchain Basics',
-        'Smart Contract Tutorial',
-        'Security Best Practices',
+        'resources.docs.gettingStarted',
+        'resources.docs.blockchainBasics',
+        'resources.docs.smartContractTutorial',
+        'resources.docs.securityBestPractices',
       ],
     },
     {
       icon: Code,
       title: t('resources.tools'),
       items: [
-        'Development Environment Setup',
-        'Testing Frameworks',
-        'Deployment Tools',
-        'Code Templates',
+        'resources.tools.devEnvironment',
+        'resources.tools.testingFrameworks',
+        'resources.tools.deploymentTools',
+        'resources.tools.codeTemplates',
       ],
     },
     {
       icon: BookMarked,
       title: t('resources.research'),
       items: [
-        'Layer 2 Scaling Solutions',
-        'Consensus Mechanisms',
-        'DeFi Protocols',
-        'Zero-Knowledge Proofs',
+        'resources.research.layer2Scaling',
+        'resources.research.consensusMechanisms',
+        'resources.research.defiProtocols',
+        'resources.research.zkProofs',
       ],
     },
   ];
@@ -74,7 +74,7 @@ export const Resources = () => {
                 {resource.items.map((item, itemIndex) => (
                   <li key={itemIndex}>
                     <button className="text-sm sm:text-base text-muted-foreground hover:text-accent transition-colors text-left w-full py-1">
-                      • {item}
+                      • {t(item)}
                     </button>
                   </li>
                 ))}
