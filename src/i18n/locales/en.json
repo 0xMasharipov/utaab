@@ -24,7 +24,9 @@
   "community": {
     "title": "Our Community",
     "subtitle": "Hub for enthusiasts, professionals, and researchers",
+    "mission": "Our Mission",
     "description": "UTAA Blockchain Community is dedicated to broadening students' horizons, helping them grow their portfolios, and fostering collaboration on innovative blockchain projects.",
+    "visionTitle": "Our Vision",
     "vision": "We envision a thriving ecosystem where knowledge flows freely, partnerships form naturally, and breakthrough solutions emerge from collective creativity.",
     "features": {
       "collaborative": {

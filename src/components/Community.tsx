@@ -51,7 +51,7 @@ export const Community = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10"
           >
-            <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-foreground">Our Mission</h3>
+            <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-foreground">{t('community.mission')}</h3>
             <p className="text-muted-foreground text-lg leading-relaxed">
               {t('community.description')}
             </p>
@@ -63,7 +63,7 @@ export const Community = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10"
           >
-            <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-foreground">Our Vision</h3>
+            <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-foreground">{t('community.visionTitle')}</h3>
             <p className="text-muted-foreground text-lg leading-relaxed">
               {t('community.vision')}
             </p>
