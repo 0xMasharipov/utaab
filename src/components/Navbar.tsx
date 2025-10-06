@@ -235,9 +235,9 @@ export const Navbar = () => {
                 transition={{ duration: 0.15 }}
                 className="fixed inset-0 z-[60] md:hidden"
                 style={{
-                  background: 'rgba(0, 0, 0, 0.4)',
-                  backdropFilter: 'blur(8px)',
-                  WebkitBackdropFilter: 'blur(8px)',
+                  background: 'rgba(0, 0, 0, 0.3)',
+                  backdropFilter: 'blur(4px)',
+                  WebkitBackdropFilter: 'blur(4px)',
                 }}
                 onClick={closeMobileMenu}
                 aria-hidden="true"
@@ -254,14 +254,14 @@ export const Navbar = () => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -20, scale: 0.95 }}
                 transition={{ duration: 0.2, ease: 'easeOut' }}
-                className={`fixed top-20 ${isRTL ? 'right-2' : 'left-2'} ${isRTL ? 'left-2' : 'right-2'} max-h-[85vh] overflow-y-auto z-[70] md:hidden rounded-3xl shadow-2xl border border-white/10`}
+                className={`fixed top-20 ${isRTL ? 'right-2' : 'left-2'} ${isRTL ? 'left-2' : 'right-2'} max-h-[85vh] overflow-y-auto z-[70] md:hidden rounded-3xl shadow-2xl border border-white/20`}
                 style={{
                   paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',
                   paddingLeft: 'max(1.5rem, env(safe-area-inset-left))',
                   paddingRight: 'max(1.5rem, env(safe-area-inset-right))',
-                  background: 'rgba(0, 0, 0, 0.6)',
-                  backdropFilter: 'blur(12px) saturate(180%)',
-                  WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  backdropFilter: 'blur(24px) saturate(200%) brightness(1.1)',
+                  WebkitBackdropFilter: 'blur(24px) saturate(200%) brightness(1.1)',
                 }}
               >
                 {/* Close Button */}
