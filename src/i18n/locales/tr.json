@@ -47,8 +47,11 @@
     "title": "Öğren ve Geliş",
     "subtitle": "Blockchain bilginizi geliştirmek için kaynaklar",
     "guides": "Eğitim Kılavuzları",
+    "guidesDescription": "Blockchain geliştirme için kapsamlı kılavuzlar",
     "tutorials": "Video Eğitimleri",
-    "workshops": "Atölyeler ve Bootcamp'ler"
+    "tutorialsDescription": "Adım adım video eğitimleri",
+    "workshops": "Atölyeler ve Bootcamp'ler",
+    "workshopsDescription": "Uygulamalı öğrenme deneyimleri"
   },
   "events": {
     "title": "Etkinlikler",

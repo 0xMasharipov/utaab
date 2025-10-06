@@ -47,8 +47,11 @@
     "title": "تعلم وانمُ",
     "subtitle": "موارد لتطوير معرفتك بالبلوكشين",
     "guides": "أدلة تعليمية",
+    "guidesDescription": "أدلة شاملة لتطوير البلوكشين",
     "tutorials": "دروس فيديو",
-    "workshops": "ورش عمل ومعسكرات تدريبية"
+    "tutorialsDescription": "دروس فيديو خطوة بخطوة",
+    "workshops": "ورش عمل ومعسكرات تدريبية",
+    "workshopsDescription": "تجارب تعليمية عملية"
   },
   "events": {
     "title": "الفعاليات",

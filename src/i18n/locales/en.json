@@ -47,8 +47,11 @@
     "title": "Learn & Grow",
     "subtitle": "Resources to advance your blockchain knowledge",
     "guides": "Educational Guides",
+    "guidesDescription": "Comprehensive guides for blockchain development",
     "tutorials": "Video Tutorials",
-    "workshops": "Workshops & Bootcamps"
+    "tutorialsDescription": "Step-by-step video tutorials",
+    "workshops": "Workshops & Bootcamps",
+    "workshopsDescription": "Hands-on learning experiences"
   },
   "events": {
     "title": "Events",

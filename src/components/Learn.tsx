@@ -13,17 +13,17 @@ export const Learn = () => {
     {
       icon: BookOpen,
       title: t('learn.guides'),
-      description: 'Comprehensive guides for blockchain development',
+      description: t('learn.guidesDescription'),
     },
     {
       icon: Video,
       title: t('learn.tutorials'),
-      description: 'Step-by-step video tutorials',
+      description: t('learn.tutorialsDescription'),
     },
     {
       icon: GraduationCap,
       title: t('learn.workshops'),
-      description: 'Hands-on learning experiences',
+      description: t('learn.workshopsDescription'),
     },
   ];
 
