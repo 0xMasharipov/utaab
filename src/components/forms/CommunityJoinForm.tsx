@@ -275,7 +275,7 @@ export const CommunityJoinForm = () => {
     <form onSubmit={handleSubmit} onKeyDown={handleKeyDown} className="glass rounded-3xl p-6 md:p-12">
       {draftSaved && (
         <div className="mb-4 p-3 glass-strong rounded-xl text-sm text-accent text-center">
-          Draft restored
+          {t('join.draftRestored')}
         </div>
       )}
 
@@ -341,7 +341,7 @@ export const CommunityJoinForm = () => {
 
               <div>
                 <Label htmlFor="telegram" className="text-foreground mb-2 block">
-                  {t('join.telegram')} <span className="text-muted-foreground text-sm">(optional)</span>
+                  {t('join.telegram')} <span className="text-muted-foreground text-sm">({t('join.optional')})</span>
                 </Label>
                 <Input
                   id="telegram"
@@ -367,7 +367,7 @@ export const CommunityJoinForm = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="country" className="text-foreground mb-2 block">
-                    {t('join.country')} <span className="text-muted-foreground text-sm">(optional)</span>
+                    {t('join.country')} <span className="text-muted-foreground text-sm">({t('join.optional')})</span>
                   </Label>
                   <Input
                     id="country"
@@ -378,7 +378,7 @@ export const CommunityJoinForm = () => {
                 </div>
                 <div>
                   <Label htmlFor="city" className="text-foreground mb-2 block">
-                    {t('join.city')} <span className="text-muted-foreground text-sm">(optional)</span>
+                    {t('join.city')} <span className="text-muted-foreground text-sm">({t('join.optional')})</span>
                   </Label>
                   <Input
                     id="city"
@@ -499,7 +499,7 @@ export const CommunityJoinForm = () => {
             <div className="space-y-4 mb-6">
               <div>
                 <Label htmlFor="github_url" className="text-foreground mb-2 block">
-                  {t('join.github')} <span className="text-muted-foreground text-sm">(optional)</span>
+                  {t('join.github')} <span className="text-muted-foreground text-sm">({t('join.optional')})</span>
                 </Label>
                 <Input
                   id="github_url"
@@ -514,7 +514,7 @@ export const CommunityJoinForm = () => {
 
               <div>
                 <Label htmlFor="portfolio_url" className="text-foreground mb-2 block">
-                  {t('join.portfolio')} <span className="text-muted-foreground text-sm">(optional)</span>
+                  {t('join.portfolio')} <span className="text-muted-foreground text-sm">({t('join.optional')})</span>
                 </Label>
                 <Input
                   id="portfolio_url"
@@ -529,7 +529,7 @@ export const CommunityJoinForm = () => {
 
               <div>
                 <Label htmlFor="linkedin_url" className="text-foreground mb-2 block">
-                  {t('join.linkedin')} <span className="text-muted-foreground text-sm">(optional)</span>
+                  {t('join.linkedin')} <span className="text-muted-foreground text-sm">({t('join.optional')})</span>
                 </Label>
                 <Input
                   id="linkedin_url"
@@ -651,8 +651,8 @@ export const CommunityJoinForm = () => {
               </div>
 
               <div className="glass rounded-xl p-4 text-sm text-muted-foreground">
-                <p className="font-medium text-foreground mb-2">Non-profit community</p>
-                <p>Educational purposes only — not financial advice.</p>
+                <p className="font-medium text-foreground mb-2">{t('join.nonProfitTitle')}</p>
+                <p>{t('join.nonProfitDescription')}</p>
               </div>
             </div>
 
@@ -662,7 +662,7 @@ export const CommunityJoinForm = () => {
                 {t('join.back')}
               </Button>
               <Button type="submit" className="btn-primary flex-1" disabled={isSubmitting}>
-                {isSubmitting ? 'Submitting...' : t('join.submit')}
+                {isSubmitting ? t('join.submitting') : t('join.submit')}
               </Button>
             </div>
           </motion.div>
