@@ -629,6 +629,36 @@ export type Database = {
         }
         Relationships: []
       }
+      ip_blacklist: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          expires_at: string | null
+          id: string
+          ip_address: unknown
+          is_active: boolean | null
+          reason: string
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          ip_address: unknown
+          is_active?: boolean | null
+          reason: string
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          ip_address?: unknown
+          is_active?: boolean | null
+          reason?: string
+        }
+        Relationships: []
+      }
       kvkk_requests: {
         Row: {
           admin_notes: string | null
@@ -1002,6 +1032,69 @@ export type Database = {
           },
         ]
       }
+      security_events: {
+        Row: {
+          created_at: string | null
+          details: Json | null
+          endpoint: string | null
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          severity: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          details?: Json | null
+          endpoint?: string | null
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          severity?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          details?: Json | null
+          endpoint?: string | null
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          severity?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      security_settings: {
+        Row: {
+          description: string | null
+          id: string
+          setting_key: string
+          setting_value: Json
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          description?: string | null
+          id?: string
+          setting_key: string
+          setting_value: Json
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          description?: string | null
+          id?: string
+          setting_key?: string
+          setting_value?: Json
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       site_messages: {
         Row: {
           broadcast_channels: string[] | null
@@ -1092,9 +1185,23 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      cleanup_old_security_events: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       generate_certificate_number: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      get_security_metrics: {
+        Args: { _hours?: number }
+        Returns: {
+          events_by_severity: Json
+          events_by_type: Json
+          recent_spikes: Json
+          top_ips: Json
+          total_events: number
+        }[]
       }
       has_role: {
         Args: {
@@ -1102,6 +1209,22 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      is_ip_blacklisted: {
+        Args: { _ip: unknown }
+        Returns: boolean
+      }
+      log_security_event: {
+        Args: {
+          _details?: Json
+          _endpoint?: string
+          _event_type: string
+          _ip?: unknown
+          _severity: string
+          _user_agent?: string
+          _user_id?: string
+        }
+        Returns: string
       }
     }
     Enums: {
