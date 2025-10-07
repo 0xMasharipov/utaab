@@ -29,7 +29,11 @@ import {
   GraduationCap,
   Lock,
   Eye,
-  LayoutDashboard
+  LayoutDashboard,
+  Bookmark,
+  ExternalLink,
+  AlertCircle,
+  FileText
 } from 'lucide-react';
 
 export const UserProfile = () => {
@@ -74,8 +78,23 @@ export const UserProfile = () => {
     enabled: !!user?.id,
   });
 
-  // Check if user is admin
-  const isAdmin = user?.email === '0xz2n@gmail.com';
+  // Check if user is admin using proper role-based access control
+  const { data: isAdmin } = useQuery({
+    queryKey: ['user-admin-status', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return false;
+      const { data, error } = await supabase.rpc('has_role', {
+        _user_id: user.id,
+        _role: 'admin'
+      });
+      if (error) {
+        console.error('Error checking admin status:', error);
+        return false;
+      }
+      return data ?? false;
+    },
+    enabled: !!user?.id,
+  });
 
   // Fetch enrollments and progress
   const { data: enrollments } = useQuery({
@@ -129,19 +148,52 @@ export const UserProfile = () => {
     enabled: !!user?.id,
   });
 
+  // Fetch saved items
+  const { data: savedItems } = useQuery({
+    queryKey: ['user-saved-items', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
+      const { data, error } = await supabase
+        .from('saved_items')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user?.id,
+  });
+
+  // Fetch notifications
+  const { data: notificationsList } = useQuery({
+    queryKey: ['user-notifications', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
+      const { data, error } = await supabase
+        .from('notifications')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(50);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user?.id,
+  });
+
   // Notification preferences state
-  const [notifications, setNotifications] = useState({
+  const [notificationPrefs, setNotificationPrefs] = useState({
     email_course_updates: profile?.email_course_updates ?? false,
     email_newsletters: profile?.email_newsletters ?? false,
     email_marketing: profile?.email_marketing ?? false,
   });
 
   // Update notification preferences
-  const updateNotifications = async (key: string, value: boolean) => {
+  const updateNotificationPrefs = async (key: string, value: boolean) => {
     if (!user?.id) return;
 
-    const newNotifications = { ...notifications, [key]: value };
-    setNotifications(newNotifications);
+    const newPrefs = { ...notificationPrefs, [key]: value };
+    setNotificationPrefs(newPrefs);
 
     const { error } = await supabase
       .from('education_profiles')
@@ -160,6 +212,26 @@ export const UserProfile = () => {
         description: 'Notification preferences updated',
       });
     }
+  };
+
+  // Mark notification as read
+  const markNotificationRead = async (notificationId: string) => {
+    await supabase
+      .from('notifications')
+      .update({ read: true })
+      .eq('id', notificationId);
+  };
+
+  // Remove saved item
+  const removeSavedItem = async (itemId: string) => {
+    await supabase
+      .from('saved_items')
+      .delete()
+      .eq('id', itemId);
+    toast({
+      title: 'Removed',
+      description: 'Item removed from saved list',
+    });
   };
 
   const getInitials = (name: string) => {
@@ -266,7 +338,7 @@ export const UserProfile = () => {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="glass-strong p-1.5 rounded-2xl">
+          <TabsList className="glass-strong p-1.5 rounded-2xl flex-wrap h-auto">
             <TabsTrigger value="overview" className="rounded-xl">
               <Eye className="h-4 w-4 mr-2" />
               Overview
@@ -279,9 +351,21 @@ export const UserProfile = () => {
               <Award className="h-4 w-4 mr-2" />
               Certificates
             </TabsTrigger>
+            <TabsTrigger value="saved" className="rounded-xl">
+              <Bookmark className="h-4 w-4 mr-2" />
+              Saved
+            </TabsTrigger>
+            <TabsTrigger value="notifications" className="rounded-xl">
+              <Bell className="h-4 w-4 mr-2" />
+              Notifications
+            </TabsTrigger>
             <TabsTrigger value="settings" className="rounded-xl">
               <Settings className="h-4 w-4 mr-2" />
               Settings
+            </TabsTrigger>
+            <TabsTrigger value="privacy" className="rounded-xl">
+              <Shield className="h-4 w-4 mr-2" />
+              Privacy
             </TabsTrigger>
           </TabsList>
 
@@ -489,134 +573,277 @@ export const UserProfile = () => {
             )}
           </TabsContent>
 
-          {/* Settings Tab */}
-          <TabsContent value="settings" className="space-y-6">
-            {/* Notifications */}
+          {/* Saved Tab */}
+          <TabsContent value="saved" className="space-y-4">
             <Card className="glass-strong border-white/20">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-foreground">
-                  <Bell className="h-5 w-5" />
-                  Notifications
-                </CardTitle>
-                <CardDescription>Manage your notification preferences</CardDescription>
+                <CardTitle className="text-foreground">Saved Items</CardTitle>
+                <CardDescription>Your bookmarked courses and resources</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {savedItems && savedItems.length > 0 ? (
+                  <div className="space-y-3">
+                    {savedItems.map((item: any) => (
+                      <div
+                        key={item.id}
+                        className="glass rounded-2xl p-4 flex items-center justify-between hover:bg-white/10 transition-all"
+                      >
+                        <div className="flex items-center gap-3">
+                          <Bookmark className="h-5 w-5 text-accent" />
+                          <div>
+                            <p className="text-foreground font-medium capitalize">{item.item_type}</p>
+                            <p className="text-sm text-muted-foreground">
+                              Saved {new Date(item.created_at).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeSavedItem(item.id)}
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Bookmark className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-muted-foreground">No saved items yet</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Notifications Tab */}
+          <TabsContent value="notifications" className="space-y-4">
+            <Card className="glass-strong border-white/20">
+              <CardHeader>
+                <CardTitle className="text-foreground">Notifications</CardTitle>
+                <CardDescription>Stay updated with your learning activity</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {notificationsList && notificationsList.length > 0 ? (
+                  <div className="space-y-3">
+                    {notificationsList.map((notif: any) => (
+                      <div
+                        key={notif.id}
+                        className={`glass rounded-2xl p-4 cursor-pointer hover:bg-white/10 transition-all ${
+                          !notif.read ? 'border-l-4 border-accent' : ''
+                        }`}
+                        onClick={() => {
+                          markNotificationRead(notif.id);
+                          if (notif.link) navigate(notif.link);
+                        }}
+                      >
+                        <div className="flex items-start gap-3">
+                          <Bell className={`h-5 w-5 mt-0.5 ${notif.read ? 'text-muted-foreground' : 'text-accent'}`} />
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-foreground">{notif.title}</h4>
+                            <p className="text-sm text-muted-foreground mt-1">{notif.message}</p>
+                            <p className="text-xs text-muted-foreground mt-2">
+                              {new Date(notif.created_at).toLocaleString()}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Bell className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-muted-foreground">No notifications yet</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Settings Tab */}
+          <TabsContent value="settings" className="space-y-6">
+            <Card className="glass-strong border-white/20">
+              <CardHeader>
+                <CardTitle className="text-foreground">Email Preferences</CardTitle>
+                <CardDescription>Manage your email notification preferences</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label htmlFor="course-updates" className="text-foreground">Course Updates</Label>
+                    <Label className="text-foreground">Course Updates</Label>
                     <p className="text-sm text-muted-foreground">
-                      Get notified about new lessons and course changes
+                      Receive notifications about new lessons and course updates
                     </p>
                   </div>
                   <Switch
-                    id="course-updates"
-                    checked={notifications.email_course_updates}
-                    onCheckedChange={(checked) => updateNotifications('email_course_updates', checked)}
+                    checked={notificationPrefs.email_course_updates}
+                    onCheckedChange={(checked) => updateNotificationPrefs('email_course_updates', checked)}
                   />
                 </div>
-                <Separator className="bg-white/10" />
+                <Separator />
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label htmlFor="newsletters" className="text-foreground">Newsletters</Label>
+                    <Label className="text-foreground">Newsletters</Label>
                     <p className="text-sm text-muted-foreground">
-                      Receive our weekly newsletter with tips and updates
+                      Receive our weekly newsletter with educational content
                     </p>
                   </div>
                   <Switch
-                    id="newsletters"
-                    checked={notifications.email_newsletters}
-                    onCheckedChange={(checked) => updateNotifications('email_newsletters', checked)}
+                    checked={notificationPrefs.email_newsletters}
+                    onCheckedChange={(checked) => updateNotificationPrefs('email_newsletters', checked)}
                   />
                 </div>
-                <Separator className="bg-white/10" />
+                <Separator />
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label htmlFor="marketing" className="text-foreground">Marketing</Label>
+                    <Label className="text-foreground">Marketing</Label>
                     <p className="text-sm text-muted-foreground">
-                      Get information about new courses and special offers
+                      Receive updates about new features and promotions
                     </p>
                   </div>
                   <Switch
-                    id="marketing"
-                    checked={notifications.email_marketing}
-                    onCheckedChange={(checked) => updateNotifications('email_marketing', checked)}
+                    checked={notificationPrefs.email_marketing}
+                    onCheckedChange={(checked) => updateNotificationPrefs('email_marketing', checked)}
                   />
                 </div>
               </CardContent>
             </Card>
 
-            {/* Privacy & KVKK */}
+            <Card className="glass-strong border-white/20">
+              <CardHeader>
+                <CardTitle className="text-foreground">Account Information</CardTitle>
+                <CardDescription>View your account details</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label className="text-foreground">Email</Label>
+                  <Input value={user.email} disabled className="glass mt-1.5" />
+                </div>
+                <div>
+                  <Label className="text-foreground">Full Name</Label>
+                  <Input value={profile.full_name} disabled className="glass mt-1.5" />
+                </div>
+                <div>
+                  <Label className="text-foreground">Department</Label>
+                  <Input value={profile.department} disabled className="glass mt-1.5" />
+                </div>
+                <div>
+                  <Label className="text-foreground">Role</Label>
+                  <Input value={profile.role} disabled className="glass mt-1.5" />
+                </div>
+              </CardContent>
+            </Card>
+
             <Card className="glass-strong border-white/20">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-foreground">
-                  <Shield className="h-5 w-5" />
-                  Privacy & Data Protection (KVKK)
+                  <Lock className="h-5 w-5 text-accent" />
+                  Security
+                </CardTitle>
+                <CardDescription>Manage your account security</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="outline" className="glass">
+                  Change Password
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Privacy Tab */}
+          <TabsContent value="privacy" className="space-y-6">
+            <Card className="glass-strong border-white/20">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-foreground">
+                  <Shield className="h-5 w-5 text-accent" />
+                  KVKK & Privacy
                 </CardTitle>
                 <CardDescription>Manage your data and privacy settings</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground">
-                    You have the right to access, modify, or delete your personal data in accordance with KVKK regulations.
+              <CardContent className="space-y-6">
+                <div>
+                  <h4 className="font-medium text-foreground mb-2">KVKK Consent</h4>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Version: {profile.kvkk_consent_version}
                   </p>
-                  <Button
-                    variant="outline"
-                    className="glass"
-                    onClick={() => navigate('/kvkk-request')}
-                  >
-                    <Lock className="h-4 w-4 mr-2" />
-                    Submit Data Request
-                  </Button>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Consent given: {new Date(profile.kvkk_consent_timestamp).toLocaleDateString()}
+                  </p>
                 </div>
-                <Separator className="bg-white/10" />
-                <div className="space-y-2">
-                  <Label className="text-foreground">KVKK Consent Version</Label>
+
+                <Separator />
+
+                <div className="space-y-3">
+                  <h4 className="font-medium text-foreground">Data Categories</h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between glass rounded-xl p-3">
+                      <span className="text-sm text-foreground">Essential Data</span>
+                      <Badge variant="outline">Required</Badge>
+                    </div>
+                    <div className="flex items-center justify-between glass rounded-xl p-3">
+                      <span className="text-sm text-foreground">Analytics</span>
+                      <Badge variant="outline">Active</Badge>
+                    </div>
+                    <div className="flex items-center justify-between glass rounded-xl p-3">
+                      <span className="text-sm text-foreground">Performance</span>
+                      <Badge variant="outline">Active</Badge>
+                    </div>
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div className="space-y-3">
+                  <h4 className="font-medium text-foreground">Your Rights</h4>
                   <p className="text-sm text-muted-foreground">
-                    Version {profile.kvkk_consent_version} - Accepted on{' '}
-                    {new Date(profile.kvkk_consent_timestamp).toLocaleDateString()}
+                    Under KVKK (Law No. 6698), you have the right to access, correct, delete, or port your data.
                   </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="glass"
+                      onClick={() => navigate('/kvkk-request')}
+                    >
+                      <FileText className="h-4 w-4 mr-2" />
+                      Make Data Request
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="glass"
+                      onClick={() => window.open('/privacy', '_blank')}
+                    >
+                      <ExternalLink className="h-4 w-4 mr-2" />
+                      Privacy Policy
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="glass"
+                      onClick={() => window.open('/cookie-policy', '_blank')}
+                    >
+                      <ExternalLink className="h-4 w-4 mr-2" />
+                      Cookie Policy
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Account Settings */}
-            <Card className="glass-strong border-white/20">
+            <Card className="glass-strong border-white/20 border-destructive/50">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-foreground">
-                  <User className="h-5 w-5" />
-                  Account Information
+                <CardTitle className="flex items-center gap-2 text-destructive">
+                  <AlertCircle className="h-5 w-5" />
+                  Danger Zone
                 </CardTitle>
-                <CardDescription>Your account details</CardDescription>
+                <CardDescription>Irreversible actions</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-foreground">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={user.email}
-                    disabled
-                    className="glass"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="name" className="text-foreground">Full Name</Label>
-                  <Input
-                    id="name"
-                    value={profile.full_name}
-                    disabled
-                    className="glass"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="department" className="text-foreground">Department</Label>
-                  <Input
-                    id="department"
-                    value={profile.department}
-                    disabled
-                    className="glass"
-                  />
-                </div>
+              <CardContent>
+                <Button variant="destructive" size="sm">
+                  Request Account Deletion
+                </Button>
               </CardContent>
             </Card>
           </TabsContent>
