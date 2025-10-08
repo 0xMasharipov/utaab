@@ -9,8 +9,10 @@
     "menu": "Menü",
     "close": "Kapat",
     "language": "Dil",
-    "studentAuth": "Öğrenci • Giriş / Kayıt",
-    "adminAuth": "Yönetici • Giriş"
+    "account": "Hesap",
+    "studentSignIn": "Öğrenci Girişi",
+    "studentRegister": "Öğrenci Kaydı",
+    "adminSignIn": "Yönetici Girişi"
   },
   "auth": {
     "studentSignIn": "Öğrenci Girişi",

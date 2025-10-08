@@ -9,8 +9,10 @@
     "menu": "Меню",
     "close": "Закрыть",
     "language": "Язык",
-    "studentAuth": "Студент • Вход / Регистрация",
-    "adminAuth": "Администратор • Вход"
+    "account": "Аккаунт",
+    "studentSignIn": "Вход студента",
+    "studentRegister": "Регистрация студента",
+    "adminSignIn": "Вход администратора"
   },
   "auth": {
     "studentSignIn": "Вход для Студентов",

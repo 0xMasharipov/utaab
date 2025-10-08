@@ -9,8 +9,10 @@
     "menu": "القائمة",
     "close": "إغلاق",
     "language": "اللغة",
-    "studentAuth": "طالب • تسجيل الدخول / التسجيل",
-    "adminAuth": "مسؤول • تسجيل الدخول"
+    "account": "الحساب",
+    "studentSignIn": "تسجيل دخول الطالب",
+    "studentRegister": "تسجيل طالب",
+    "adminSignIn": "تسجيل دخول المشرف"
   },
   "auth": {
     "studentSignIn": "تسجيل دخول الطالب",

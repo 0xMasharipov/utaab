@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Menu, X, Globe } from 'lucide-react';
+import { Menu, X, Globe, ChevronDown, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -167,22 +167,10 @@ export const Navbar = () => {
                 {t(`nav.${item.key}`)}
               </button>
             ))}
-            <button
-              onClick={() => { closeMobileMenu(); navigate('/education/register'); }}
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              {t('nav.studentAuth')}
-            </button>
-            <button
-              onClick={() => { closeMobileMenu(); navigate('/admin/login'); }}
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              {t('nav.adminAuth')}
-            </button>
           </div>
 
-          {/* Right side - Education + Language Selector + Join Button */}
-          <div className="flex items-center gap-3">
+          {/* Right side - Education + Language + Account + Join Button */}
+          <div className="flex items-center gap-2">
             {/* Education Button */}
             <Button
               onClick={handleEducationClick}
@@ -192,6 +180,7 @@ export const Navbar = () => {
             >
               {t('education.title')}
             </Button>
+            
             {/* Language Selector */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -223,6 +212,52 @@ export const Navbar = () => {
                     <span>{lang.name}</span>
                   </DropdownMenuItem>
                 ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Account Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="glass hover:bg-white/10 rounded-full px-3 hidden md:inline-flex"
+                  aria-label="Account menu"
+                >
+                  <User className="h-4 w-4 mr-1" />
+                  <span className="text-sm">{t('nav.account')}</span>
+                  <ChevronDown className="h-3 w-3 ml-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="glass-strong border-white/20 backdrop-blur-2xl rounded-2xl min-w-[200px] z-[100]"
+              >
+                <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
+                  Student
+                </div>
+                <DropdownMenuItem
+                  onClick={() => { closeMobileMenu(); navigate('/education/signin'); }}
+                  className="cursor-pointer px-4 py-2 rounded-xl hover:bg-white/10"
+                >
+                  {t('nav.studentSignIn')}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => { closeMobileMenu(); navigate('/education/register'); }}
+                  className="cursor-pointer px-4 py-2 rounded-xl hover:bg-white/10"
+                >
+                  {t('nav.studentRegister')}
+                </DropdownMenuItem>
+                <div className="h-px bg-white/20 my-1" />
+                <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
+                  Admin
+                </div>
+                <DropdownMenuItem
+                  onClick={() => { closeMobileMenu(); navigate('/admin/login'); }}
+                  className="cursor-pointer px-4 py-2 rounded-xl hover:bg-white/10"
+                >
+                  {t('nav.adminSignIn')}
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -340,6 +375,26 @@ export const Navbar = () => {
 
                   <div className="h-px bg-white/20 my-2" />
 
+                  {/* Account Section */}
+                  <div className="px-4 py-2 text-xs font-semibold text-white/70">
+                    {t('nav.account')}
+                  </div>
+
+                  <button
+                    role="menuitem"
+                    onClick={() => { closeMobileMenu(); setTimeout(() => navigate('/education/signin'), 200); }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        closeMobileMenu();
+                        setTimeout(() => navigate('/education/signin'), 200);
+                      }
+                    }}
+                    className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                  >
+                    {t('nav.studentSignIn')}
+                  </button>
+
                   <button
                     role="menuitem"
                     onClick={() => { closeMobileMenu(); setTimeout(() => navigate('/education/register'), 200); }}
@@ -352,7 +407,7 @@ export const Navbar = () => {
                     }}
                     className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                   >
-                    {t('nav.studentAuth')}
+                    {t('nav.studentRegister')}
                   </button>
 
                   <button
@@ -367,7 +422,7 @@ export const Navbar = () => {
                     }}
                     className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                   >
-                    {t('nav.adminAuth')}
+                    {t('nav.adminSignIn')}
                   </button>
 
                   <div className="h-px bg-white/20 my-2" />

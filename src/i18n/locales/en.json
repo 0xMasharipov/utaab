@@ -9,8 +9,10 @@
     "menu": "Menu",
     "close": "Close",
     "language": "Language",
-    "studentAuth": "Student • Sign in / Register",
-    "adminAuth": "Admin • Sign in"
+    "account": "Account",
+    "studentSignIn": "Student Sign In",
+    "studentRegister": "Student Register",
+    "adminSignIn": "Admin Sign In"
   },
   "auth": {
     "studentSignIn": "Student Sign In",
