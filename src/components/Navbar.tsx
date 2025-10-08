@@ -148,12 +148,14 @@ export const Navbar = () => {
         }}
       >
         <div className="flex items-center justify-between">
-          {/* Logo */}
+          {/* Logo - Stacked */}
           <button
             onClick={() => scrollToSection('hero')}
-            className="text-base sm:text-lg md:text-xl font-bold text-foreground hover:text-accent transition-colors"
+            className="flex flex-col leading-none hover:opacity-80 transition-opacity"
+            aria-label="UTAA Blockchain - Home"
           >
-            UTAA <span className="text-accent">Blockchain</span>
+            <span className="text-base sm:text-lg md:text-xl font-bold text-foreground">UTAA</span>
+            <span className="text-xs sm:text-sm md:text-base font-semibold text-accent tracking-wide">Blockchain</span>
           </button>
 
           {/* Desktop Navigation */}
