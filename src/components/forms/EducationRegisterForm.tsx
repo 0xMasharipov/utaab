@@ -18,6 +18,9 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
 import { mapError } from '@/lib/errorUtils';
+import { TurnstileWidget } from '@/components/security/TurnstileWidget';
+import { HoneypotField } from '@/components/security/HoneypotField';
+import { useSecurity } from '@/hooks/useSecurity';
 
 const createBaseSchema = (t: any) => z.object({
   email: z.string().trim().email({ message: t('education.registration.validation.emailInvalid') }),
@@ -53,6 +56,11 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
   const [completed, setCompleted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string>("");
+  const [honeypot, setHoneypot] = useState("");
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const { config, verifyCaptcha, checkRateLimit, validateFormTiming, logSecurityEvent } = useSecurity();
+  const requireCaptcha = config.captchaEnabled || failedAttempts >= 2;
   const [formData, setFormData] = useState<Partial<FormData>>({
     preferred_language: i18n.language,
     focus_areas: [],
@@ -170,7 +178,7 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
       if (!formData.email || !formData.password) {
         toast({
           title: 'Error',
-          description: 'Please enter email and password',
+          description: t('auth.captchaRequired'),
           variant: 'destructive',
         });
         return;
@@ -178,19 +186,70 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
 
       setIsSubmitting(true);
       try {
-        console.log('Attempting sign in for:', formData.email);
-        
+        // Check rate limit
+        const rateLimitCheck = await checkRateLimit(formData.email, 'student_login', 10);
+        if (!rateLimitCheck.allowed) {
+          toast({
+            title: 'Error',
+            description: t('auth.tooManyAttempts'),
+            variant: 'destructive',
+          });
+          setIsSubmitting(false);
+          return;
+        }
+
+        // Verify CAPTCHA if required
+        if (requireCaptcha) {
+          if (!captchaToken) {
+            toast({
+              title: 'Error',
+              description: t('auth.captchaRequired'),
+              variant: 'destructive',
+            });
+            setIsSubmitting(false);
+            return;
+          }
+
+          const captchaValid = await verifyCaptcha(captchaToken);
+          if (!captchaValid) {
+            toast({
+              title: 'Error',
+              description: t('auth.captchaFailed'),
+              variant: 'destructive',
+            });
+            setCaptchaToken("");
+            setIsSubmitting(false);
+            return;
+          }
+        }
+
         const { data, error } = await supabase.auth.signInWithPassword({
-          email: formData.email,
+          email: formData.email.trim().toLowerCase(),
           password: formData.password,
         });
 
         if (error) {
-          console.error('Sign in error:', error);
-          throw error;
+          setFailedAttempts(prev => prev + 1);
+          await logSecurityEvent('student_login_failed', 'low', { email: formData.email });
+          
+          let errorMessage = mapError(error);
+          if (error.message?.includes('Invalid login credentials')) {
+            errorMessage = t('auth.incorrectPassword');
+          } else if (error.message?.includes('Email not confirmed')) {
+            errorMessage = t('auth.verifyEmail');
+          }
+          
+          toast({
+            title: 'Error',
+            description: errorMessage,
+            variant: 'destructive',
+          });
+          setCaptchaToken("");
+          setIsSubmitting(false);
+          return;
         }
 
-        console.log('Sign in successful:', data.user?.email);
+        await logSecurityEvent('student_login_success', 'low', { email: formData.email });
 
         toast({
           title: t('education.registration.welcomeBack'),
@@ -205,6 +264,7 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
           description: mapError(error),
           variant: 'destructive',
         });
+        setCaptchaToken("");
       } finally {
         setIsSubmitting(false);
       }
@@ -214,14 +274,73 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
     // Handle sign up mode
     if (!validateStep(3)) return;
 
+    // Honeypot check (bot detection)
+    if (honeypot) {
+      await logSecurityEvent('honeypot_triggered', 'high', { email: formData.email });
+      toast({
+        title: 'Error',
+        description: 'Please try again later',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    // Form timing check
+    if (!validateFormTiming()) {
+      await logSecurityEvent('fast_submission', 'medium', { email: formData.email });
+      toast({
+        title: 'Error',
+        description: 'Please take your time filling out the form',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     try {
+      // Check rate limit
+      const rateLimitCheck = await checkRateLimit(formData.email || 'unknown', 'student_register', 3);
+      if (!rateLimitCheck.allowed) {
+        toast({
+          title: 'Error',
+          description: t('auth.tooManyAttempts'),
+          variant: 'destructive',
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Verify CAPTCHA
+      if (requireCaptcha) {
+        if (!captchaToken) {
+          toast({
+            title: 'Error',
+            description: t('auth.captchaRequired'),
+            variant: 'destructive',
+          });
+          setIsSubmitting(false);
+          return;
+        }
+
+        const captchaValid = await verifyCaptcha(captchaToken);
+        if (!captchaValid) {
+          toast({
+            title: 'Error',
+            description: t('auth.captchaFailed'),
+            variant: 'destructive',
+          });
+          setCaptchaToken("");
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
       const schema = createSchema(t);
       const validatedData = schema.parse(formData);
 
       // Sign up with Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: validatedData.email,
+        email: validatedData.email.trim().toLowerCase(),
         password: validatedData.password,
         options: {
           emailRedirectTo: `${window.location.origin}/education`,
@@ -231,7 +350,26 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
         },
       });
 
-      if (authError) throw authError;
+      if (authError) {
+        await logSecurityEvent('student_register_failed', 'medium', { email: validatedData.email });
+        
+        let errorMessage = mapError(authError);
+        if (authError.message?.includes('already registered')) {
+          errorMessage = t('auth.emailTaken');
+        } else if (authError.message?.includes('Password')) {
+          errorMessage = t('auth.weakPassword');
+        }
+        
+        toast({
+          title: 'Error',
+          description: errorMessage,
+          variant: 'destructive',
+        });
+        setCaptchaToken("");
+        setIsSubmitting(false);
+        return;
+      }
+
       if (!authData.user) throw new Error('No user returned from signup');
 
       // Create education profile
@@ -254,6 +392,8 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
 
       if (profileError) throw profileError;
 
+      await logSecurityEvent('student_register_success', 'low', { email: validatedData.email });
+
       setCompleted(true);
       toast({
         title: t('education.registration.welcomeTitle'),
@@ -266,6 +406,7 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
         description: mapError(error),
         variant: 'destructive',
       });
+      setCaptchaToken("");
     } finally {
       setIsSubmitting(false);
     }
@@ -310,6 +451,7 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
         </h3>
         
         <form onSubmit={handleSubmit} className="space-y-4">
+          <HoneypotField value={honeypot} onChange={setHoneypot} />
           <div>
             <Label htmlFor="signin-email" className="text-foreground mb-2 block">
               {t('education.registration.email')}
@@ -349,9 +491,79 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
             </div>
           </div>
 
-          <Button type="submit" className="btn-primary w-full" disabled={isSubmitting}>
+          {requireCaptcha && (
+            <div className="space-y-2">
+              <Label>{t('auth.captchaRequired')}</Label>
+              <TurnstileWidget
+                onVerify={setCaptchaToken}
+                onError={() => setCaptchaToken("")}
+                onExpire={() => setCaptchaToken("")}
+                theme="dark"
+              />
+            </div>
+          )}
+
+          <Button 
+            type="submit" 
+            className="btn-primary w-full" 
+            disabled={isSubmitting || (requireCaptcha && !captchaToken)}
+          >
             {isSubmitting ? t('education.registration.signingIn') : t('education.registration.signIn')}
           </Button>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-white/10" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">Or</span>
+            </div>
+          </div>
+
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full glass border-white/20"
+            onClick={async () => {
+              const { error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                  redirectTo: `${window.location.origin}/education`,
+                },
+              });
+              if (error) {
+                toast({
+                  title: 'Error',
+                  description: error.message,
+                  variant: 'destructive',
+                });
+              }
+            }}
+          >
+            <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
+              <path
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                fill="#4285F4"
+              />
+              <path
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                fill="#34A853"
+              />
+              <path
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                fill="#FBBC05"
+              />
+              <path
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                fill="#EA4335"
+              />
+            </svg>
+            {t('auth.continueWithGoogle')}
+          </Button>
+
+          <p className="text-xs text-center text-muted-foreground">
+            {t('auth.privacyNotice')}
+          </p>
 
           <div className="text-center pt-4">
             <p className="text-muted-foreground">
@@ -372,6 +584,7 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
 
   return (
     <form onSubmit={handleSubmit} onKeyDown={handleKeyDown} className="glass rounded-3xl p-6 md:p-12">
+      <HoneypotField value={honeypot} onChange={setHoneypot} />
       {/* Progress Indicator */}
       <div className="flex justify-between mb-8">
         {[1, 2, 3].map((s) => (
@@ -685,15 +898,85 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
               </div>
             </div>
 
+            {requireCaptcha && (
+              <div className="space-y-2">
+                <Label>{t('auth.captchaRequired')}</Label>
+                <TurnstileWidget
+                  onVerify={setCaptchaToken}
+                  onError={() => setCaptchaToken("")}
+                  onExpire={() => setCaptchaToken("")}
+                  theme="dark"
+                />
+              </div>
+            )}
+
             <div className="flex gap-3">
               <Button type="button" onClick={handleBack} variant="outline" className="flex-1 glass hover:bg-white/10">
                 <ChevronLeft className="mr-2 h-5 w-5" />
                 {t('join.back')}
               </Button>
-              <Button type="submit" className="btn-primary flex-1" disabled={isSubmitting}>
+              <Button 
+                type="submit" 
+                className="btn-primary flex-1" 
+                disabled={isSubmitting || (requireCaptcha && !captchaToken)}
+              >
                 {isSubmitting ? 'Creating Account...' : t('education.registration.createAccount')}
               </Button>
             </div>
+
+            <div className="relative mt-6">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-white/10" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">Or</span>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full glass border-white/20"
+              onClick={async () => {
+                const { error } = await supabase.auth.signInWithOAuth({
+                  provider: 'google',
+                  options: {
+                    redirectTo: `${window.location.origin}/education/register?complete=true`,
+                  },
+                });
+                if (error) {
+                  toast({
+                    title: 'Error',
+                    description: error.message,
+                    variant: 'destructive',
+                  });
+                }
+              }}
+            >
+              <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
+                <path
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  fill="#4285F4"
+                />
+                <path
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  fill="#34A853"
+                />
+                <path
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                  fill="#FBBC05"
+                />
+                <path
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                  fill="#EA4335"
+                />
+              </svg>
+              {t('auth.continueWithGoogle')}
+            </Button>
+
+            <p className="text-xs text-center text-muted-foreground">
+              {t('auth.privacyNotice')}
+            </p>
           </motion.div>
         )}
       </AnimatePresence>

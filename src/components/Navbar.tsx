@@ -167,6 +167,18 @@ export const Navbar = () => {
                 {t(`nav.${item.key}`)}
               </button>
             ))}
+            <button
+              onClick={() => { closeMobileMenu(); navigate('/education/register'); }}
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {t('nav.studentAuth')}
+            </button>
+            <button
+              onClick={() => { closeMobileMenu(); navigate('/admin/login'); }}
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {t('nav.adminAuth')}
+            </button>
           </div>
 
           {/* Right side - Education + Language Selector + Join Button */}
@@ -324,6 +336,38 @@ export const Navbar = () => {
                     className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                   >
                     {t('education.title')}
+                  </button>
+
+                  <div className="h-px bg-white/20 my-2" />
+
+                  <button
+                    role="menuitem"
+                    onClick={() => { closeMobileMenu(); setTimeout(() => navigate('/education/register'), 200); }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        closeMobileMenu();
+                        setTimeout(() => navigate('/education/register'), 200);
+                      }
+                    }}
+                    className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                  >
+                    {t('nav.studentAuth')}
+                  </button>
+
+                  <button
+                    role="menuitem"
+                    onClick={() => { closeMobileMenu(); setTimeout(() => navigate('/admin/login'), 200); }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        closeMobileMenu();
+                        setTimeout(() => navigate('/admin/login'), 200);
+                      }
+                    }}
+                    className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                  >
+                    {t('nav.adminAuth')}
                   </button>
 
                   <div className="h-px bg-white/20 my-2" />

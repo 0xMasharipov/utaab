@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Shield, Eye, EyeOff } from "lucide-react";
+import { TurnstileWidget } from "@/components/security/TurnstileWidget";
+import { useSecurity } from "@/hooks/useSecurity";
 
 export default function AdminLogin() {
   const { t } = useTranslation();
@@ -17,19 +19,64 @@ export default function AdminLogin() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string>("");
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const { config, verifyCaptcha, checkRateLimit, logSecurityEvent } = useSecurity();
+  const requireCaptcha = config.captchaEnabled || failedAttempts >= 3;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
+      // Check rate limit
+      const rateLimitCheck = await checkRateLimit(email, 'admin_login', 5);
+      if (!rateLimitCheck.allowed) {
+        toast({
+          title: t("common.error"),
+          description: t("auth.tooManyAttempts"),
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      // Verify CAPTCHA if required
+      if (requireCaptcha) {
+        if (!captchaToken) {
+          toast({
+            title: t("common.error"),
+            description: t("auth.captchaRequired"),
+            variant: "destructive",
+          });
+          setIsLoading(false);
+          return;
+        }
+
+        const captchaValid = await verifyCaptcha(captchaToken);
+        if (!captchaValid) {
+          toast({
+            title: t("common.error"),
+            description: t("auth.captchaFailed"),
+            variant: "destructive",
+          });
+          setCaptchaToken("");
+          setIsLoading(false);
+          return;
+        }
+      }
+
       // Sign in
       const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email,
+        email: email.trim().toLowerCase(),
         password,
       });
 
-      if (authError) throw authError;
+      if (authError) {
+        setFailedAttempts(prev => prev + 1);
+        await logSecurityEvent('admin_login_failed', 'medium', { email });
+        throw authError;
+      }
 
       // Check if user has admin role
       const { data: hasAdmin, error: roleError } = await supabase.rpc('has_role', {
@@ -56,6 +103,8 @@ export default function AdminLogin() {
 
       if (sessionError) throw sessionError;
 
+      await logSecurityEvent('admin_login_success', 'low', { email });
+
       toast({
         title: t("common.success"),
         description: "Admin login successful",
@@ -64,11 +113,20 @@ export default function AdminLogin() {
       navigate("/admin/dashboard");
     } catch (error: any) {
       console.error("Admin login error:", error);
+      
+      let errorMessage = error.message;
+      if (error.message?.includes('Invalid login credentials')) {
+        errorMessage = t("auth.incorrectPassword");
+      } else if (error.message?.includes('Email not confirmed')) {
+        errorMessage = t("auth.verifyEmail");
+      }
+
       toast({
         title: t("common.error"),
-        description: error.message,
+        description: errorMessage,
         variant: "destructive",
       });
+      setCaptchaToken("");
     } finally {
       setIsLoading(false);
     }
@@ -127,13 +185,29 @@ export default function AdminLogin() {
                 </Button>
               </div>
             </div>
+            {requireCaptcha && (
+              <div className="space-y-2">
+                <Label>{t("auth.captchaRequired")}</Label>
+                <TurnstileWidget
+                  onVerify={setCaptchaToken}
+                  onError={() => setCaptchaToken("")}
+                  onExpire={() => setCaptchaToken("")}
+                  theme="dark"
+                />
+              </div>
+            )}
+
             <Button
               type="submit"
               className="w-full"
-              disabled={isLoading}
+              disabled={isLoading || (requireCaptcha && !captchaToken)}
             >
               {isLoading ? "Signing in..." : "Sign In"}
             </Button>
+
+            <p className="text-xs text-center text-muted-foreground mt-4">
+              {t("auth.privacyNotice")}
+            </p>
           </form>
         </CardContent>
       </Card>
