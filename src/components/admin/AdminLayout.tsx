@@ -15,21 +15,24 @@ import {
   X,
   LogOut,
   ChevronLeft,
+  Calendar,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 
 const sidebarItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/education/admin' },
-  { icon: BookOpen, label: 'Courses', path: '/education/admin/courses' },
-  { icon: Megaphone, label: 'Announcements', path: '/education/admin/announcements' },
-  { icon: MessageSquare, label: 'Site Messages', path: '/education/admin/messages' },
-  { icon: ImageIcon, label: 'Media Library', path: '/education/admin/media' },
-  { icon: Users, label: 'Users & Roles', path: '/education/admin/users' },
-  { icon: Shield, label: 'Security', path: '/education/admin/security' },
-  { icon: Settings, label: 'Settings', path: '/education/admin/settings' },
-  { icon: FileText, label: 'Audit Log', path: '/education/admin/audit' },
+  { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
+  { icon: Calendar, label: 'Events', path: '/admin/events' },
+  { icon: BookOpen, label: 'Courses', path: '/admin/courses' },
+  { icon: FileText, label: 'Site Content', path: '/admin/site-content' },
+  { icon: Megaphone, label: 'Announcements', path: '/admin/announcements' },
+  { icon: MessageSquare, label: 'Messages', path: '/admin/messages' },
+  { icon: ImageIcon, label: 'Media Library', path: '/admin/media' },
+  { icon: Users, label: 'Users & Roles', path: '/admin/users' },
+  { icon: Shield, label: 'Security', path: '/admin/security' },
+  { icon: Settings, label: 'Settings', path: '/admin/settings' },
+  { icon: FileText, label: 'Audit Log', path: '/admin/audit' },
 ];
 
 export const AdminLayout = ({ children }: { children?: React.ReactNode }) => {

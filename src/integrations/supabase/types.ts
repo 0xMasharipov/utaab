@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_sessions: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          ip_address: unknown | null
+          last_activity: string
+          session_token: string
+          two_factor_verified: boolean | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          id?: string
+          ip_address?: unknown | null
+          last_activity?: string
+          session_token: string
+          two_factor_verified?: boolean | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          ip_address?: unknown | null
+          last_activity?: string
+          session_token?: string
+          two_factor_verified?: boolean | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       announcements: {
         Row: {
           attachments: Json | null
@@ -580,6 +616,123 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      events: {
+        Row: {
+          archive_at: string | null
+          attachments: Json | null
+          capacity: number | null
+          cover_image: string | null
+          created_at: string
+          created_by: string | null
+          description_ar: string | null
+          description_en: string | null
+          description_ru: string | null
+          description_tr: string | null
+          end_date: string | null
+          id: string
+          language: string
+          location_address: string | null
+          location_online_link: string | null
+          location_type: string
+          meta_description: string | null
+          meta_keywords: string[] | null
+          meta_title: string | null
+          promo_video: string | null
+          publish_at: string | null
+          rsvp_link: string | null
+          slug: string
+          start_date: string
+          subtitle_ar: string | null
+          subtitle_en: string | null
+          subtitle_ru: string | null
+          subtitle_tr: string | null
+          tags: string[] | null
+          timezone: string
+          title_ar: string | null
+          title_en: string
+          title_ru: string | null
+          title_tr: string | null
+          updated_at: string
+          visibility: string
+        }
+        Insert: {
+          archive_at?: string | null
+          attachments?: Json | null
+          capacity?: number | null
+          cover_image?: string | null
+          created_at?: string
+          created_by?: string | null
+          description_ar?: string | null
+          description_en?: string | null
+          description_ru?: string | null
+          description_tr?: string | null
+          end_date?: string | null
+          id?: string
+          language?: string
+          location_address?: string | null
+          location_online_link?: string | null
+          location_type?: string
+          meta_description?: string | null
+          meta_keywords?: string[] | null
+          meta_title?: string | null
+          promo_video?: string | null
+          publish_at?: string | null
+          rsvp_link?: string | null
+          slug: string
+          start_date: string
+          subtitle_ar?: string | null
+          subtitle_en?: string | null
+          subtitle_ru?: string | null
+          subtitle_tr?: string | null
+          tags?: string[] | null
+          timezone?: string
+          title_ar?: string | null
+          title_en: string
+          title_ru?: string | null
+          title_tr?: string | null
+          updated_at?: string
+          visibility?: string
+        }
+        Update: {
+          archive_at?: string | null
+          attachments?: Json | null
+          capacity?: number | null
+          cover_image?: string | null
+          created_at?: string
+          created_by?: string | null
+          description_ar?: string | null
+          description_en?: string | null
+          description_ru?: string | null
+          description_tr?: string | null
+          end_date?: string | null
+          id?: string
+          language?: string
+          location_address?: string | null
+          location_online_link?: string | null
+          location_type?: string
+          meta_description?: string | null
+          meta_keywords?: string[] | null
+          meta_title?: string | null
+          promo_video?: string | null
+          publish_at?: string | null
+          rsvp_link?: string | null
+          slug?: string
+          start_date?: string
+          subtitle_ar?: string | null
+          subtitle_en?: string | null
+          subtitle_ru?: string | null
+          subtitle_tr?: string | null
+          tags?: string[] | null
+          timezone?: string
+          title_ar?: string | null
+          title_en?: string
+          title_ru?: string | null
+          title_tr?: string | null
+          updated_at?: string
+          visibility?: string
+        }
+        Relationships: []
       }
       instructors: {
         Row: {
@@ -1238,6 +1391,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_expired_admin_sessions: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       cleanup_old_rate_limits: {
         Args: Record<PropertyKey, never>
         Returns: undefined

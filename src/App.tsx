@@ -23,7 +23,11 @@ import { AdminUsers } from "./pages/education/admin/AdminUsers";
 import { AdminSettings } from "./pages/education/admin/AdminSettings";
 import { AdminAuditLog } from "./pages/education/admin/AdminAuditLog";
 import { AdminSecurity } from "./pages/education/admin/AdminSecurity";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminEvents from "./pages/admin/AdminEvents";
+import AdminSiteContent from "./pages/admin/AdminSiteContent";
 import { KVKKRequest } from "./pages/KVKKRequest";
+import { AdminDashboard } from "./pages/education/AdminDashboard";
 
 const queryClient = new QueryClient();
 
@@ -44,8 +48,16 @@ function App() {
             <Route path="/education/sign-in" element={<EducationSignIn />} />
             <Route path="/education/profile" element={<UserProfile />} />
             <Route path="/education/instructor/:id" element={<InstructorProfile />} />
-            <Route path="/education/admin" element={<AdminLayout />}>
-              <Route index element={<AdminOverview />} />
+            
+            {/* Separate Admin Authentication */}
+            <Route path="/admin/login" element={<AdminLogin />} />
+            
+            {/* Admin Routes */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="events" element={<AdminEvents />} />
+              <Route path="site-content" element={<AdminSiteContent />} />
               <Route path="courses" element={<AdminCourses />} />
               <Route path="announcements" element={<AdminAnnouncements />} />
               <Route path="messages" element={<AdminMessages />} />
@@ -55,6 +67,20 @@ function App() {
               <Route path="audit" element={<AdminAuditLog />} />
               <Route path="security" element={<AdminSecurity />} />
             </Route>
+            
+            {/* Legacy admin routes - redirect to new structure */}
+            <Route path="/education/admin/*" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="courses" element={<AdminCourses />} />
+              <Route path="announcements" element={<AdminAnnouncements />} />
+              <Route path="messages" element={<AdminMessages />} />
+              <Route path="media" element={<AdminMedia />} />
+              <Route path="users" element={<AdminUsers />} />
+              <Route path="settings" element={<AdminSettings />} />
+              <Route path="audit" element={<AdminAuditLog />} />
+              <Route path="security" element={<AdminSecurity />} />
+            </Route>
+            
             <Route path="/kvkk-request" element={<KVKKRequest />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
