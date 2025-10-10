@@ -16,13 +16,13 @@ export const Projects = () => {
       titleKey: 'projects.project1.title',
       descriptionKey: 'projects.project1.description',
       tags: ['projects.tags.defi', 'projects.tags.layer2', 'projects.tags.identity'],
-      statusKey: 'projects.status.active',
+      statusKey: 'projects.status.planning',
     },
     {
       titleKey: 'projects.project2.title',
       descriptionKey: 'projects.project2.description',
       tags: ['projects.tags.nft', 'projects.tags.web3', 'projects.tags.marketplace'],
-      statusKey: 'projects.status.active',
+      statusKey: 'projects.status.planning',
     },
     {
       titleKey: 'projects.project3.title',
