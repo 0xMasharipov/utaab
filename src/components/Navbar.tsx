@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { motion, AnimatePresence } from 'framer-motion';
+import logo from '@/assets/logo.png';
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -148,14 +149,13 @@ export const Navbar = () => {
         }}
       >
         <div className="flex items-center justify-between">
-          {/* Logo - Stacked */}
+          {/* Logo */}
           <button
             onClick={() => scrollToSection('hero')}
-            className="flex flex-col leading-none hover:opacity-80 transition-opacity"
+            className="flex items-center hover:opacity-80 transition-opacity"
             aria-label="UTAA Blockchain - Home"
           >
-            <span className="text-base sm:text-lg md:text-xl font-bold text-foreground">UTAA</span>
-            <span className="text-xs sm:text-sm md:text-base font-semibold text-accent tracking-wide">Blockchain</span>
+            <img src={logo} alt="UTAA Blockchain" className="h-8 sm:h-10 w-auto" />
           </button>
 
           {/* Desktop Navigation */}
