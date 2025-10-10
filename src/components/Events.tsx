@@ -69,7 +69,7 @@ export const Events = () => {
                     <span>{t('events.attendees', { count: event.attendees })}</span>
                   </div>
                 </div>
-                <Button className="btn-primary w-full mt-6">{t('events.register')}</Button>
+                <Button className="btn-primary w-full mt-6" disabled>{t('common.soon')}</Button>
               </motion.div>
             ))}
           </div>

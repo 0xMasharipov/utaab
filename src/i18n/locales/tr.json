@@ -323,7 +323,8 @@
     "close": "Kapat",
     "submitting": "Gönderiliyor...",
     "save": "Kaydet",
-    "cancel": "İptal"
+    "cancel": "İptal",
+    "soon": "Yakında"
   },
   "footer": {
     "brand": "UTAA Blockchain",

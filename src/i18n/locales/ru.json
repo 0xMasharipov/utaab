@@ -323,7 +323,8 @@
     "close": "Закрыть",
     "submitting": "Отправка...",
     "save": "Сохранить",
-    "cancel": "Отмена"
+    "cancel": "Отмена",
+    "soon": "Скоро"
   },
   "footer": {
     "brand": "UTAA Blockchain",

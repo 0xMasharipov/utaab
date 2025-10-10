@@ -323,7 +323,8 @@
     "close": "Close",
     "submitting": "Submitting...",
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "soon": "Soon"
   },
   "footer": {
     "brand": "UTAA Blockchain",
