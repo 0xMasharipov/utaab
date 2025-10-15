@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Menu, X, Globe, ChevronDown, User } from 'lucide-react';
+import { Menu, X, Globe, ChevronDown, User, Linkedin, Send, Instagram } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -134,62 +134,84 @@ export const Navbar = () => {
     }, prefersReducedMotion ? 0 : 200);
   };
 
+  const socialLinks = [
+    { icon: Linkedin, url: 'https://www.linkedin.com/company/utaab/', label: 'LinkedIn' },
+    { icon: Send, url: 'https://t.me/UTAAB', label: 'Telegram' },
+    { icon: Instagram, url: 'https://www.instagram.com/utaa.blockchain/', label: 'Instagram' },
+  ];
+
   return (
     <nav
-      className={`fixed top-2 sm:top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
+      className={`fixed top-2 sm:top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-[240ms] ease-out ${
         isScrolled ? 'w-[96%] sm:w-[95%] max-w-6xl' : 'w-[92%] sm:w-[90%] max-w-5xl'
       }`}
     >
       <div 
-        className={`rounded-full px-3 sm:px-4 md:px-6 py-3 sm:py-4 border border-white/10 ${isScrolled ? 'shadow-lg' : ''}`}
-        style={{
-          background: 'rgba(0, 0, 0, 0.6)',
-          backdropFilter: 'blur(12px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(12px) saturate(180%)',
-        }}
+        className={`glass-strong rounded-full px-3 sm:px-4 md:px-6 py-3 sm:py-4 transition-all duration-200 ${
+          isScrolled ? 'shadow-[0_8px_32px_hsl(var(--primary)/0.15)]' : 'shadow-[0_4px_16px_hsl(var(--primary)/0.1)]'
+        }`}
       >
         <div className="flex items-center justify-between">
-          {/* Logo */}
+          {/* Logo + Branding */}
           <button
             onClick={() => scrollToSection('hero')}
-            className="flex items-center hover:opacity-80 transition-opacity"
+            className="flex items-center gap-2 hover:opacity-80 transition-all duration-200 group"
             aria-label="UTAA Blockchain - Home"
           >
-            <img src={logo} alt="UTAA Blockchain" className="h-8 sm:h-10 w-auto" />
+            <img src={logo} alt="UTAA Blockchain" className="h-8 sm:h-10 w-auto transition-transform duration-200 group-hover:scale-105" />
+            <span className="text-lg sm:text-xl font-bold tracking-tight hidden xs:inline">
+              UTAA<span className="text-primary">B</span>
+            </span>
           </button>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden lg:flex items-center gap-6">
             {navItems.map((item) => (
               <button
                 key={item.key}
                 onClick={() => scrollToSection(item.id)}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-180 hover:scale-105 relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-primary after:transition-all after:duration-200 hover:after:w-full"
               >
                 {t(`nav.${item.key}`)}
               </button>
             ))}
           </div>
 
-          {/* Right side - Education + Language + Account + Join Button */}
+          {/* Right side - Education + Language + Account + Social + Join Button */}
           <div className="flex items-center gap-2">
             {/* Education Button */}
             <Button
               onClick={handleEducationClick}
               variant="ghost"
               size="sm"
-              className="glass hover:bg-white/10 rounded-full px-4 hidden md:inline-flex"
+              className="glass hover:bg-white/10 rounded-full px-4 hidden lg:inline-flex transition-all duration-180 hover:scale-105 hover:shadow-[0_0_20px_hsl(var(--primary)/0.3)]"
             >
               {t('education.title')}
             </Button>
             
+            {/* Social Links - Desktop */}
+            <div className="hidden lg:flex items-center gap-1">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.label}
+                  className="glass hover:bg-white/10 rounded-full p-2 transition-all duration-180 hover:scale-110 hover:shadow-[0_0_20px_hsl(var(--primary)/0.3)]"
+                >
+                  <social.icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
+
             {/* Language Selector */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="glass hover:bg-white/10 rounded-full px-3"
+                  className="glass hover:bg-white/10 rounded-full px-3 transition-all duration-180 hover:scale-105"
                   aria-label="Select language"
                 >
                   <Globe className="h-4 w-4 mr-2" />
@@ -198,15 +220,15 @@ export const Navbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="glass-strong border-white/20 backdrop-blur-2xl rounded-2xl min-w-[180px] z-[100]"
+                className="glass-strong border-white/20 backdrop-blur-2xl rounded-2xl min-w-[180px] z-[100] bg-background/95"
               >
                 {languages.map((lang) => (
                   <DropdownMenuItem
                     key={lang.code}
                     onClick={() => changeLanguage(lang.code)}
-                    className={`cursor-pointer px-4 py-2 rounded-xl ${
+                    className={`cursor-pointer px-4 py-2 rounded-xl transition-all duration-180 ${
                       i18n.language === lang.code
-                        ? 'bg-accent/20 text-accent-foreground'
+                        ? 'bg-primary/20 text-foreground font-medium'
                         : 'hover:bg-white/10'
                     }`}
                   >
@@ -223,30 +245,30 @@ export const Navbar = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="glass hover:bg-white/10 rounded-full px-3 hidden md:inline-flex"
+                  className="glass hover:bg-white/10 rounded-full px-3 hidden lg:inline-flex transition-all duration-180 hover:scale-105"
                   aria-label="Account menu"
                 >
                   <User className="h-4 w-4 mr-1" />
                   <span className="text-sm">{t('nav.account')}</span>
-                  <ChevronDown className="h-3 w-3 ml-1" />
+                  <ChevronDown className={`h-3 w-3 ml-1 transition-transform duration-180 ${isRTL ? 'rotate-90' : ''}`} />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="glass-strong border-white/20 backdrop-blur-2xl rounded-2xl min-w-[200px] z-[100]"
+                className="glass-strong border-white/20 backdrop-blur-2xl rounded-2xl min-w-[200px] z-[100] bg-background/95"
               >
                 <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
                   Student
                 </div>
                 <DropdownMenuItem
                   onClick={() => { closeMobileMenu(); navigate('/education/signin'); }}
-                  className="cursor-pointer px-4 py-2 rounded-xl hover:bg-white/10"
+                  className="cursor-pointer px-4 py-2 rounded-xl hover:bg-white/10 transition-all duration-180"
                 >
                   {t('nav.studentSignIn')}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => { closeMobileMenu(); navigate('/education/register'); }}
-                  className="cursor-pointer px-4 py-2 rounded-xl hover:bg-white/10"
+                  className="cursor-pointer px-4 py-2 rounded-xl hover:bg-white/10 transition-all duration-180"
                 >
                   {t('nav.studentRegister')}
                 </DropdownMenuItem>
@@ -256,7 +278,7 @@ export const Navbar = () => {
                 </div>
                 <DropdownMenuItem
                   onClick={() => { closeMobileMenu(); navigate('/admin/login'); }}
-                  className="cursor-pointer px-4 py-2 rounded-xl hover:bg-white/10"
+                  className="cursor-pointer px-4 py-2 rounded-xl hover:bg-white/10 transition-all duration-180"
                 >
                   {t('nav.adminSignIn')}
                 </DropdownMenuItem>
@@ -266,7 +288,7 @@ export const Navbar = () => {
             {/* Join Button */}
             <Button
               onClick={() => scrollToSection('join')}
-              className="btn-primary hidden sm:inline-flex"
+              className="btn-primary hidden sm:inline-flex transition-all duration-200 hover:shadow-[0_0_30px_hsl(var(--primary)/0.5)]"
               size="sm"
             >
               {t('nav.join')}
@@ -275,7 +297,7 @@ export const Navbar = () => {
             {/* Mobile Menu Toggle */}
             <button
               ref={hamburgerRef}
-              className="md:hidden text-foreground"
+              className="lg:hidden text-foreground p-2 hover:bg-white/10 rounded-full transition-all duration-180"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label={isMobileMenuOpen ? t('nav.close') : t('nav.menu')}
               aria-expanded={isMobileMenuOpen}
@@ -290,42 +312,43 @@ export const Navbar = () => {
         <AnimatePresence>
           {isMobileMenuOpen && (
             <>
-              {/* Backdrop */}
+              {/* Backdrop - Fully Frosted */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: prefersReducedMotion ? 0 : 0.15 }}
-                className="fixed inset-0 z-[60] md:hidden"
+                transition={{ duration: prefersReducedMotion ? 0 : 0.18 }}
+                className="fixed inset-0 z-[60] lg:hidden"
                 style={{
-                  background: 'rgba(0, 0, 0, 0.3)',
-                  backdropFilter: 'blur(4px)',
-                  WebkitBackdropFilter: 'blur(4px)',
+                  background: 'rgba(0, 0, 0, 0.8)',
+                  backdropFilter: 'blur(16px) saturate(150%)',
+                  WebkitBackdropFilter: 'blur(16px) saturate(150%)',
                   pointerEvents: 'auto',
                 }}
                 onClick={closeMobileMenu}
                 aria-hidden="true"
               />
               
-              {/* Menu Panel */}
+              {/* Menu Panel - Rounded Rectangle Glass */}
               <motion.div
                 id="mobile-menu"
                 ref={menuRef}
                 role="menu"
                 aria-modal="true"
                 aria-label={t('nav.menu')}
-                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: -20, scale: 0.95 }}
+                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: -20, scale: 0.96 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -20, scale: 0.95 }}
-                transition={{ duration: prefersReducedMotion ? 0 : 0.2, ease: 'easeOut' }}
-                className={`fixed top-20 ${isRTL ? 'right-2' : 'left-2'} ${isRTL ? 'left-2' : 'right-2'} max-h-[85vh] overflow-y-auto z-[70] md:hidden rounded-3xl shadow-2xl border border-white/30`}
+                exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -20, scale: 0.96 }}
+                transition={{ duration: prefersReducedMotion ? 0 : 0.24, ease: [0.4, 0, 0.2, 1] }}
+                className={`fixed top-20 ${isRTL ? 'right-4' : 'left-4'} ${isRTL ? 'left-4' : 'right-4'} max-h-[calc(100vh-6rem)] overflow-y-auto z-[70] lg:hidden rounded-3xl border border-white/20`}
                 style={{
                   paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',
                   paddingLeft: 'max(1.5rem, env(safe-area-inset-left))',
                   paddingRight: 'max(1.5rem, env(safe-area-inset-right))',
-                  background: 'rgba(15, 23, 42, 0.75)',
-                  backdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
-                  WebkitBackdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
+                  background: 'hsl(var(--background) / 0.95)',
+                  backdropFilter: 'blur(32px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(32px) saturate(180%)',
+                  boxShadow: '0 8px 32px hsl(var(--primary) / 0.2)',
                 }}
               >
                 {/* Close Button */}
@@ -333,7 +356,7 @@ export const Navbar = () => {
                   <button
                     ref={closeButtonRef}
                     onClick={closeMobileMenu}
-                    className="text-white hover:text-accent transition-colors p-2 rounded-full hover:bg-white/20"
+                    className="text-foreground hover:text-primary transition-all duration-180 p-2 rounded-full hover:bg-white/10"
                     aria-label={t('nav.close')}
                   >
                     <X className="h-6 w-6" />
@@ -342,7 +365,7 @@ export const Navbar = () => {
 
                 {/* Menu Items */}
                 <nav className="flex flex-col gap-1 pb-6">
-                  {navItems.map((item, index) => (
+                  {navItems.map((item) => (
                     <button
                       key={item.key}
                       role="menuitem"
@@ -353,13 +376,13 @@ export const Navbar = () => {
                           scrollToSection(item.id);
                         }
                       }}
-                      className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                      className="text-left text-base font-medium text-foreground hover:text-primary hover:bg-white/10 transition-all duration-180 py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                     >
                       {t(`nav.${item.key}`)}
                     </button>
                   ))}
                   
-                  <div className="h-px bg-white/20 my-2" />
+                  <div className="h-px bg-border my-2" />
                   
                   <button
                     role="menuitem"
@@ -370,15 +393,15 @@ export const Navbar = () => {
                         handleEducationClick();
                       }
                     }}
-                    className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                    className="text-left text-base font-medium text-foreground hover:text-primary hover:bg-white/10 transition-all duration-180 py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                   >
                     {t('education.title')}
                   </button>
 
-                  <div className="h-px bg-white/20 my-2" />
+                  <div className="h-px bg-border my-2" />
 
                   {/* Account Section */}
-                  <div className="px-4 py-2 text-xs font-semibold text-white/70">
+                  <div className="px-4 py-2 text-xs font-semibold text-muted-foreground">
                     {t('nav.account')}
                   </div>
 
@@ -392,7 +415,7 @@ export const Navbar = () => {
                         setTimeout(() => navigate('/education/signin'), 200);
                       }
                     }}
-                    className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                    className="text-left text-base font-medium text-foreground hover:text-primary hover:bg-white/10 transition-all duration-180 py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                   >
                     {t('nav.studentSignIn')}
                   </button>
@@ -407,7 +430,7 @@ export const Navbar = () => {
                         setTimeout(() => navigate('/education/register'), 200);
                       }
                     }}
-                    className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                    className="text-left text-base font-medium text-foreground hover:text-primary hover:bg-white/10 transition-all duration-180 py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                   >
                     {t('nav.studentRegister')}
                   </button>
@@ -422,12 +445,12 @@ export const Navbar = () => {
                         setTimeout(() => navigate('/admin/login'), 200);
                       }
                     }}
-                    className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                    className="text-left text-base font-medium text-foreground hover:text-primary hover:bg-white/10 transition-all duration-180 py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                   >
                     {t('nav.adminSignIn')}
                   </button>
 
-                  <div className="h-px bg-white/20 my-2" />
+                  <div className="h-px bg-border my-2" />
 
                   {/* CTA Button */}
                   <Button
@@ -438,9 +461,28 @@ export const Navbar = () => {
                     {t('nav.join')}
                   </Button>
 
+                  {/* Social Links */}
+                  <div className="mt-4 pt-4 border-t border-border">
+                    <p className="text-xs text-muted-foreground mb-3 px-4">{t('nav.social')}</p>
+                    <div className="flex items-center justify-center gap-3">
+                      {socialLinks.map((social) => (
+                        <a
+                          key={social.label}
+                          href={social.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={social.label}
+                          className="glass hover:bg-white/10 rounded-full p-3 min-w-[44px] min-h-[44px] flex items-center justify-center transition-all duration-180 hover:scale-110 hover:shadow-[0_0_20px_hsl(var(--primary)/0.3)]"
+                        >
+                          <social.icon className="h-5 w-5" />
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+
                   {/* Language Switcher in Menu */}
-                  <div className="mt-4 pt-4 border-t border-white/20">
-                    <p className="text-xs text-white/70 mb-3 px-4">{t('nav.language')}</p>
+                  <div className="mt-4 pt-4 border-t border-border">
+                    <p className="text-xs text-muted-foreground mb-3 px-4">{t('nav.language')}</p>
                     <div className="grid grid-cols-2 gap-2">
                       {languages.map((lang) => (
                         <button
@@ -448,10 +490,10 @@ export const Navbar = () => {
                           onClick={() => {
                             changeLanguage(lang.code);
                           }}
-                          className={`flex items-center gap-2 px-4 py-3 rounded-xl min-h-[44px] transition-all ${
+                          className={`flex items-center gap-2 px-4 py-3 rounded-xl min-h-[44px] transition-all duration-180 ${
                             i18n.language === lang.code
-                              ? 'bg-accent/30 text-white font-medium'
-                              : 'hover:bg-white/15 text-white'
+                              ? 'bg-primary/20 text-foreground font-medium'
+                              : 'hover:bg-white/10 text-foreground'
                           }`}
                         >
                           <span className="text-xl">{lang.flag}</span>

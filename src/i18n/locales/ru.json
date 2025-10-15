@@ -12,7 +12,9 @@
     "account": "Аккаунт",
     "studentSignIn": "Вход студента",
     "studentRegister": "Регистрация студента",
-    "adminSignIn": "Вход администратора"
+    "adminSignIn": "Вход администратора",
+    "returnToMain": "Вернуться на главную",
+    "social": "Подписывайтесь"
   },
   "auth": {
     "studentSignIn": "Вход для Студентов",
