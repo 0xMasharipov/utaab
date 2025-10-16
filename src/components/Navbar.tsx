@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Menu, X, Globe, ChevronDown, User, Linkedin, Send, Instagram } from 'lucide-react';
+import { Menu, X, Globe, ChevronDown, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -134,11 +134,6 @@ export const Navbar = () => {
     }, prefersReducedMotion ? 0 : 200);
   };
 
-  const socialLinks = [
-    { icon: Linkedin, url: 'https://www.linkedin.com/company/utaab/', label: 'LinkedIn' },
-    { icon: Send, url: 'https://t.me/UTAAB', label: 'Telegram' },
-    { icon: Instagram, url: 'https://www.instagram.com/utaa.blockchain/', label: 'Instagram' },
-  ];
 
   return (
     <nav
@@ -177,7 +172,7 @@ export const Navbar = () => {
             ))}
           </div>
 
-          {/* Right side - Education + Language + Account + Social + Join Button */}
+          {/* Right side - Education + Language + Account + Join Button */}
           <div className="flex items-center gap-2">
             {/* Education Button */}
             <Button
@@ -188,22 +183,6 @@ export const Navbar = () => {
             >
               {t('education.title')}
             </Button>
-            
-            {/* Social Links - Desktop */}
-            <div className="hidden lg:flex items-center gap-1">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={social.label}
-                  className="glass hover:bg-white/10 rounded-full p-2 transition-all duration-180 hover:scale-110 hover:shadow-[0_0_20px_hsl(var(--primary)/0.3)]"
-                >
-                  <social.icon className="h-4 w-4" />
-                </a>
-              ))}
-            </div>
 
             {/* Language Selector */}
             <DropdownMenu>
@@ -460,25 +439,6 @@ export const Navbar = () => {
                   >
                     {t('nav.join')}
                   </Button>
-
-                  {/* Social Links */}
-                  <div className="mt-4 pt-4 border-t border-border">
-                    <p className="text-xs text-muted-foreground mb-3 px-4">{t('nav.social')}</p>
-                    <div className="flex items-center justify-center gap-3">
-                      {socialLinks.map((social) => (
-                        <a
-                          key={social.label}
-                          href={social.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={social.label}
-                          className="glass hover:bg-white/10 rounded-full p-3 min-w-[44px] min-h-[44px] flex items-center justify-center transition-all duration-180 hover:scale-110 hover:shadow-[0_0_20px_hsl(var(--primary)/0.3)]"
-                        >
-                          <social.icon className="h-5 w-5" />
-                        </a>
-                      ))}
-                    </div>
-                  </div>
 
                   {/* Language Switcher in Menu */}
                   <div className="mt-4 pt-4 border-t border-border">
