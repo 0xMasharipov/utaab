@@ -153,9 +153,7 @@ export const Navbar = () => {
             className="flex items-center gap-2 hover:opacity-80 transition-all duration-200 group"
             aria-label="UTAA Blockchain - Home"
           >
-            <span className="text-2xl sm:text-3xl font-bold tracking-tight transition-transform duration-200 group-hover:scale-105">
-              UTAA<span className="text-primary">B</span>
-            </span>
+            <img src={logo} alt="UTAA Blockchain" className="h-8 sm:h-10 w-auto transition-transform duration-200 group-hover:scale-105" />
             <span className="text-lg sm:text-xl font-bold tracking-tight hidden xs:inline">
               UTAA<span className="text-primary">B</span>
             </span>
