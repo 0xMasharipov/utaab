@@ -12,9 +12,7 @@
     "account": "Hesap",
     "studentSignIn": "Öğrenci Girişi",
     "studentRegister": "Öğrenci Kaydı",
-    "adminSignIn": "Yönetici Girişi",
-    "returnToMain": "Ana Siteye Dön",
-    "social": "Bizi Takip Edin"
+    "adminSignIn": "Yönetici Girişi"
   },
   "auth": {
     "studentSignIn": "Öğrenci Girişi",

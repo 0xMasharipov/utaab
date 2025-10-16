@@ -12,9 +12,7 @@
     "account": "Account",
     "studentSignIn": "Student Sign In",
     "studentRegister": "Student Register",
-    "adminSignIn": "Admin Sign In",
-    "returnToMain": "Return to Main Site",
-    "social": "Follow Us"
+    "adminSignIn": "Admin Sign In"
   },
   "auth": {
     "studentSignIn": "Student Sign In",
