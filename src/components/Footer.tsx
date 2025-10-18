@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Linkedin, Send, Instagram } from 'lucide-react';
+import { Linkedin, Instagram, Twitter } from 'lucide-react';
 
 interface FooterProps {
   onPrivacyClick: () => void;
@@ -18,9 +18,9 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
   ];
 
   const socialLinks = [
-    { name: 'LinkedIn', icon: Linkedin, url: '#', color: 'hover:text-blue-400' },
-    { name: 'Telegram', icon: Send, url: '#', color: 'hover:text-blue-300' },
-    { name: 'Instagram', icon: Instagram, url: '#', color: 'hover:text-pink-400' },
+    { name: 'LinkedIn', icon: Linkedin, url: 'https://www.linkedin.com/company/utaa-blockchain/', color: 'hover:text-blue-400' },
+    { name: 'Instagram', icon: Instagram, url: 'https://www.instagram.com/utaa_blockchain?igsh=MXhpYW55aDYxdjdmeQ%3D%3D&utm_source=qr', color: 'hover:text-pink-400' },
+    { name: 'X', icon: Twitter, url: 'https://x.com/utaa_blockchain?s=11', color: 'hover:text-blue-300' },
   ];
 
   const scrollToSection = (id: string) => {
