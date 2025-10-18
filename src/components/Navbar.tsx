@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Menu, X, Globe, ChevronDown, User, Linkedin, Instagram, Twitter } from 'lucide-react';
+import { Menu, X, Globe, ChevronDown, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -17,12 +17,6 @@ const languages = [
   { code: 'tr', name: 'Türkçe', flag: '🇹🇷' },
   { code: 'ru', name: 'Русский', flag: '🇷🇺' },
   { code: 'ar', name: 'العربية', flag: '🇸🇦' },
-];
-
-const socialLinks = [
-  { icon: Linkedin, href: 'https://www.linkedin.com/company/utaa-blockchain/', label: 'LinkedIn' },
-  { icon: Instagram, href: 'https://www.instagram.com/utaa_blockchain?igsh=MXhpYW55aDYxdjdmeQ%3D%3D&utm_source=qr', label: 'Instagram' },
-  { icon: Twitter, href: 'https://x.com/utaa_blockchain?s=11', label: 'X (Twitter)' },
 ];
 
 export const Navbar = () => {
@@ -177,27 +171,8 @@ export const Navbar = () => {
             ))}
           </div>
 
-          {/* Right side - Social + Education + Language + Account + Join Button */}
+          {/* Right side - Education + Language + Account + Join Button */}
           <div className="flex items-center gap-2">
-            {/* Social Links */}
-            <div className="hidden md:flex items-center gap-2">
-              {socialLinks.map((social) => {
-                const Icon = social.icon;
-                return (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-foreground transition-colors p-2"
-                    aria-label={social.label}
-                  >
-                    <Icon className="h-4 w-4" />
-                  </a>
-                );
-              })}
-            </div>
-
             {/* Education Button */}
             <Button
               onClick={handleEducationClick}
@@ -463,32 +438,8 @@ export const Navbar = () => {
                     {t('nav.join')}
                   </Button>
 
-                  {/* Social Links */}
-                  <div className="mt-4 pt-4 border-t border-white/20">
-                    <div className="px-4 py-2 text-xs font-semibold text-white/70">
-                      Connect
-                    </div>
-                    <div className="flex gap-4 px-4 py-2">
-                      {socialLinks.map((social) => {
-                        const Icon = social.icon;
-                        return (
-                          <a
-                            key={social.label}
-                            href={social.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-white hover:text-accent transition-colors p-2 rounded-full hover:bg-white/20"
-                            aria-label={social.label}
-                          >
-                            <Icon className="h-5 w-5" />
-                          </a>
-                        );
-                      })}
-                    </div>
-                  </div>
-
                   {/* Language Switcher in Menu */}
-                  <div className="mt-2 border-t border-white/20 pt-4">
+                  <div className="mt-4 pt-4 border-t border-white/20">
                     <p className="text-xs text-white/70 mb-3 px-4">{t('nav.language')}</p>
                     <div className="grid grid-cols-2 gap-2">
                       {languages.map((lang) => (
