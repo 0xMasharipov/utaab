@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Globe, User, LogOut, Linkedin } from 'lucide-react';
+import { Menu, X, Globe, User, LogOut, Linkedin, Instagram, Twitter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -21,6 +21,8 @@ const languages = [
 
 const socialLinks = [
   { icon: Linkedin, href: 'https://www.linkedin.com/company/utaa-blockchain/', label: 'LinkedIn' },
+  { icon: Instagram, href: 'https://www.instagram.com/utaa_blockchain?igsh=MXhpYW55aDYxdjdmeQ%3D%3D&utm_source=qr', label: 'Instagram' },
+  { icon: Twitter, href: 'https://x.com/utaa_blockchain?s=11', label: 'X (Twitter)' },
 ];
 
 export const EducationNavbar = () => {
