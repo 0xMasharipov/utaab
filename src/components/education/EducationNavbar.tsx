@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Globe, User, LogOut } from 'lucide-react';
+import { Menu, X, Globe, User, LogOut, Linkedin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -17,6 +17,10 @@ const languages = [
   { code: 'tr', name: 'Türkçe', flag: '🇹🇷' },
   { code: 'ru', name: 'Русский', flag: '🇷🇺' },
   { code: 'ar', name: 'العربية', flag: '🇸🇦' },
+];
+
+const socialLinks = [
+  { icon: Linkedin, href: 'https://www.linkedin.com/company/utaa-blockchain/', label: 'LinkedIn' },
 ];
 
 export const EducationNavbar = () => {
@@ -121,8 +125,27 @@ export const EducationNavbar = () => {
             ))}
           </div>
 
-          {/* Right side - Language + User */}
+          {/* Right side - Social + Language + User */}
           <div className="flex items-center gap-3">
+            {/* Social Links */}
+            <div className="hidden md:flex items-center gap-2">
+              {socialLinks.map((social) => {
+                const Icon = social.icon;
+                return (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-foreground transition-colors p-2"
+                    aria-label={social.label}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </a>
+                );
+              })}
+            </div>
+
             {/* Language Selector */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -248,6 +271,30 @@ export const EducationNavbar = () => {
                   {t('education.register')}
                 </Button>
               )}
+              
+              {/* Social Links */}
+              <div className="mt-4 pt-4 border-t border-white/10">
+                <div className="text-xs font-semibold text-muted-foreground mb-2">
+                  Connect
+                </div>
+                <div className="flex gap-4">
+                  {socialLinks.map((social) => {
+                    const Icon = social.icon;
+                    return (
+                      <a
+                        key={social.label}
+                        href={social.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-muted-foreground hover:text-foreground transition-colors p-2 rounded-full hover:bg-white/10"
+                        aria-label={social.label}
+                      >
+                        <Icon className="h-5 w-5" />
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </div>
         )}
