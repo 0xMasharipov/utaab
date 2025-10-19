@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Linkedin, Instagram, Twitter } from 'lucide-react';
+import { Linkedin, Instagram, Twitter, Send } from 'lucide-react';
+import logo from '@/assets/logo.png';
 interface FooterProps {
   onPrivacyClick: () => void;
 }
@@ -28,17 +29,22 @@ export const Footer = ({
     name: 'LinkedIn',
     icon: Linkedin,
     url: 'https://www.linkedin.com/company/utaa-blockchain/',
-    color: 'hover:text-blue-400'
+    ariaLabel: 'Visit UTAAB on LinkedIn'
+  }, {
+    name: 'Telegram',
+    icon: Send,
+    url: 'https://t.me/utaa_blockchain',
+    ariaLabel: 'Visit UTAAB on Telegram'
   }, {
     name: 'Instagram',
     icon: Instagram,
     url: 'https://www.instagram.com/utaa_blockchain?igsh=MXhpYW55aDYxdjdmeQ%3D%3D&utm_source=qr',
-    color: 'hover:text-pink-400'
+    ariaLabel: 'Visit UTAAB on Instagram'
   }, {
     name: 'X',
     icon: Twitter,
     url: 'https://x.com/utaa_blockchain?s=11',
-    color: 'hover:text-blue-300'
+    ariaLabel: 'Visit UTAAB on X'
   }];
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -53,9 +59,14 @@ export const Footer = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12 mb-8 sm:mb-12">
           {/* Brand */}
           <div>
-            <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-3 sm:mb-4">
-              {t('footer.brand')}
-            </h3>
+            <img 
+              src={logo} 
+              alt="UTAA Blockchain logo" 
+              className="h-7 sm:h-8 w-auto mb-3 sm:mb-4 transition-transform hover:scale-105"
+              width="120"
+              height="32"
+              loading="eager"
+            />
             <p className="text-muted-foreground leading-relaxed text-base text-left">
               {t('footer.description')}
             </p>
@@ -85,10 +96,20 @@ export const Footer = ({
             <h4 className="text-lg font-semibold text-foreground mb-4">
               {t('footer.social')}
             </h4>
-            <div className="flex gap-2 sm:gap-3">
-              {socialLinks.map(social => <a key={social.name} href={social.url} target="_blank" rel="noopener noreferrer" className={`glass p-2 sm:p-3 rounded-xl transition-all hover:scale-110 min-h-[44px] min-w-[44px] flex items-center justify-center ${social.color}`} aria-label={social.name}>
-                  <social.icon className="h-5 w-5 sm:h-6 sm:w-6" />
-                </a>)}
+            <div className="flex flex-wrap gap-3">
+              {socialLinks.map(social => (
+                <a 
+                  key={social.name} 
+                  href={social.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="glass border border-white/10 p-3 rounded-full transition-all hover:scale-110 hover:border-accent hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] min-h-[44px] min-w-[44px] flex items-center justify-center text-muted-foreground hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background" 
+                  aria-label={social.ariaLabel}
+                  title={social.ariaLabel}
+                >
+                  <social.icon className="h-5 w-5" />
+                </a>
+              ))}
             </div>
           </div>
 
