@@ -42,18 +42,49 @@ export const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [isVerifying, setIsVerifying] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-    });
+    const verifyAdminStatus = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!session) {
+          navigate('/education/admin-login');
+          return;
+        }
+
+        setUser(session.user);
+
+        // Server-side admin verification
+        const { data, error } = await supabase.functions.invoke('check-admin-status');
+        
+        if (error || !data?.isAdmin) {
+          await supabase.auth.signOut();
+          navigate('/education/admin-login');
+          return;
+        }
+
+        setIsVerifying(false);
+      } catch (error) {
+        console.error('Admin verification failed:', error);
+        await supabase.auth.signOut();
+        navigate('/education/admin-login');
+      }
+    };
+
+    verifyAdminStatus();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null);
+      if (!session) {
+        navigate('/education/admin-login');
+      } else {
+        setUser(session.user);
+      }
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [navigate]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -61,6 +92,17 @@ export const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
   };
 
   const isRTL = i18n.language === 'ar';
+
+  if (isVerifying) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-muted-foreground">Verifying admin access...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={cn('min-h-screen bg-background', isRTL && 'rtl')}>
