@@ -38,13 +38,18 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12 mb-8 sm:mb-12">
           {/* Brand */}
           <div>
-            <img 
-              src={logoImage} 
-              alt="UTAA Blockchain logo" 
-              className="h-7 sm:h-8 w-auto mb-3 sm:mb-4 transition-transform hover:scale-105"
-              width="120"
-              height="32"
-            />
+            <div className="flex items-center gap-3 mb-3 sm:mb-4">
+              <h3 className="text-xl sm:text-2xl font-bold text-foreground">
+                UTAA Blockchain
+              </h3>
+              <img 
+                src={logoImage} 
+                alt="UTAA Blockchain logo" 
+                className="h-7 sm:h-8 w-auto transition-transform hover:scale-105"
+                width="120"
+                height="32"
+              />
+            </div>
             <p className="text-muted-foreground leading-relaxed">
               {t('footer.description')}
             </p>
