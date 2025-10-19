@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Linkedin, Instagram, Twitter } from 'lucide-react';
+import { Linkedin, Instagram, Twitter, Send } from 'lucide-react';
+import logoImage from '@/assets/logo.png';
 
 interface FooterProps {
   onPrivacyClick: () => void;
@@ -19,8 +20,9 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
 
   const socialLinks = [
     { name: 'LinkedIn', icon: Linkedin, url: 'https://www.linkedin.com/company/utaa-blockchain/', color: 'hover:text-blue-400' },
+    { name: 'Telegram', icon: Send, url: 'https://t.me/utaa_blockchain', color: 'hover:text-blue-300' },
     { name: 'Instagram', icon: Instagram, url: 'https://www.instagram.com/utaa_blockchain?igsh=MXhpYW55aDYxdjdmeQ%3D%3D&utm_source=qr', color: 'hover:text-pink-400' },
-    { name: 'X', icon: Twitter, url: 'https://x.com/utaa_blockchain?s=11', color: 'hover:text-blue-300' },
+    { name: 'X', icon: Twitter, url: 'https://x.com/utaa_blockchain?s=11', color: 'hover:text-sky-400' },
   ];
 
   const scrollToSection = (id: string) => {
@@ -36,9 +38,13 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12 mb-8 sm:mb-12">
           {/* Brand */}
           <div>
-            <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-3 sm:mb-4">
-              {t('footer.brand')}
-            </h3>
+            <img 
+              src={logoImage} 
+              alt="UTAA Blockchain logo" 
+              className="h-7 sm:h-8 w-auto mb-3 sm:mb-4 transition-transform hover:scale-105"
+              width="120"
+              height="32"
+            />
             <p className="text-muted-foreground leading-relaxed">
               {t('footer.description')}
             </p>
@@ -83,8 +89,9 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`glass p-2 sm:p-3 rounded-xl transition-all hover:scale-110 min-h-[44px] min-w-[44px] flex items-center justify-center ${social.color}`}
-                  aria-label={social.name}
+                  className={`glass p-2 sm:p-3 rounded-xl transition-all hover:scale-110 hover:shadow-lg min-h-[44px] min-w-[44px] flex items-center justify-center ${social.color}`}
+                  aria-label={`Visit UTAA Blockchain on ${social.name}`}
+                  title={`Visit UTAA Blockchain on ${social.name}`}
                 >
                   <social.icon className="h-5 w-5 sm:h-6 sm:w-6" />
                 </a>
