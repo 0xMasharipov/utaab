@@ -103,7 +103,7 @@ export const Footer = ({
                   href={social.url} 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="glass border border-white/10 p-3 rounded-full transition-all hover:scale-110 hover:border-accent hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] min-h-[44px] min-w-[44px] flex items-center justify-center text-muted-foreground hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background" 
+                  className="glass border border-white/10 p-3 rounded-xl transition-all hover:scale-110 hover:border-accent hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] min-h-[44px] min-w-[44px] flex items-center justify-center text-muted-foreground hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background" 
                   aria-label={social.ariaLabel}
                   title={social.ariaLabel}
                 >
