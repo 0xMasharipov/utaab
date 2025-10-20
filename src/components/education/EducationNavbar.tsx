@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Globe, User, LogOut } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -29,8 +30,13 @@ export const EducationNavbar = () => {
   // SECURITY NOTE: This client-side isAdmin check is for UX only (showing/hiding UI elements).
   // All actual admin operations MUST be validated server-side in edge functions.
   const [isAdmin, setIsAdmin] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
+  const isRTL = i18n.language === 'ar';
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,6 +45,59 @@ export const EducationNavbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Lock scroll when menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      
+      // Focus first item
+      setTimeout(() => closeButtonRef.current?.focus(), 100);
+    } else {
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
+    }
+  }, [isMobileMenuOpen]);
+
+  // Focus trap
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeMobileMenu();
+      }
+
+      if (e.key === 'Tab') {
+        const focusableElements = menuRef.current?.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (!focusableElements || focusableElements.length === 0) return;
+
+        const firstElement = focusableElements[0] as HTMLElement;
+        const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+        if (e.shiftKey && document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isMobileMenuOpen]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -72,6 +131,11 @@ export const EducationNavbar = () => {
 
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+    setTimeout(() => hamburgerRef.current?.focus(), 150);
   };
 
   const handleSignOut = async () => {
@@ -206,51 +270,178 @@ export const EducationNavbar = () => {
 
             {/* Mobile Menu Toggle */}
             <button
+              ref={hamburgerRef}
               className="md:hidden text-foreground"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Toggle menu"
+              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-menu"
             >
               {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden mt-4 pt-4 border-t border-white/10">
-            <div className="flex flex-col gap-3">
-              {navItems.map((item) => (
-                <button
-                  key={item.path}
-                  onClick={() => {
-                    navigate(item.path);
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="text-left text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2"
-                >
-                  {item.label}
-                </button>
-              ))}
-              <Button
-                onClick={() => (window.location.href = '/')}
-                variant="outline"
-                className="w-full"
-                size="sm"
+        {/* Mobile Menu Panel */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: prefersReducedMotion ? 0 : 0.15 }}
+                className="fixed inset-0 z-[60] md:hidden"
+                style={{
+                  background: 'rgba(0, 0, 0, 0.3)',
+                  backdropFilter: 'blur(4px)',
+                  WebkitBackdropFilter: 'blur(4px)',
+                  pointerEvents: 'auto',
+                }}
+                onClick={closeMobileMenu}
+                aria-hidden="true"
+              />
+              
+              {/* Menu Panel */}
+              <motion.div
+                id="mobile-menu"
+                ref={menuRef}
+                role="menu"
+                aria-modal="true"
+                aria-label="Mobile menu"
+                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: -20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -20, scale: 0.95 }}
+                transition={{ duration: prefersReducedMotion ? 0 : 0.2, ease: 'easeOut' }}
+                className={`fixed top-20 ${isRTL ? 'right-2' : 'left-2'} ${isRTL ? 'left-2' : 'right-2'} max-h-[85vh] overflow-y-auto z-[70] md:hidden rounded-3xl shadow-2xl border border-white/30`}
+                style={{
+                  paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',
+                  paddingLeft: 'max(1.5rem, env(safe-area-inset-left))',
+                  paddingRight: 'max(1.5rem, env(safe-area-inset-right))',
+                  background: 'rgba(15, 23, 42, 0.75)',
+                  backdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
+                  WebkitBackdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
+                }}
               >
-                Main Site
-              </Button>
-              {!user && (
-                <Button
-                  onClick={() => navigate('/education/register')}
-                  className="btn-primary w-full"
-                  size="sm"
-                >
-                  {t('education.register')}
-                </Button>
-              )}
-            </div>
-          </div>
-        )}
+                {/* Close Button */}
+                <div className="flex justify-end pt-4 pb-2">
+                  <button
+                    ref={closeButtonRef}
+                    onClick={closeMobileMenu}
+                    className="text-white hover:text-accent transition-colors p-2 rounded-full hover:bg-white/20"
+                    aria-label="Close menu"
+                  >
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
+
+                {/* Menu Items */}
+                <nav className="flex flex-col gap-1 pb-6">
+                  {navItems.map((item) => (
+                    <button
+                      key={item.path}
+                      role="menuitem"
+                      onClick={() => {
+                        navigate(item.path);
+                        closeMobileMenu();
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          navigate(item.path);
+                          closeMobileMenu();
+                        }
+                      }}
+                      className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                  
+                  <div className="h-px bg-white/20 my-2" />
+                  
+                  <button
+                    role="menuitem"
+                    onClick={() => {
+                      closeMobileMenu();
+                      setTimeout(() => (window.location.href = '/'), prefersReducedMotion ? 0 : 200);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        closeMobileMenu();
+                        setTimeout(() => (window.location.href = '/'), prefersReducedMotion ? 0 : 200);
+                      }
+                    }}
+                    className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                  >
+                    Main Site
+                  </button>
+
+                  {!user ? (
+                    <>
+                      <div className="h-px bg-white/20 my-2" />
+                      
+                      <Button
+                        onClick={() => {
+                          closeMobileMenu();
+                          setTimeout(() => navigate('/education/register'), prefersReducedMotion ? 0 : 200);
+                        }}
+                        className="btn-primary w-full mt-2 min-h-[44px]"
+                        size="lg"
+                      >
+                        {t('education.register')}
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <div className="h-px bg-white/20 my-2" />
+                      
+                      <button
+                        role="menuitem"
+                        onClick={() => {
+                          closeMobileMenu();
+                          setTimeout(() => navigate('/education/profile'), prefersReducedMotion ? 0 : 200);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            closeMobileMenu();
+                            setTimeout(() => navigate('/education/profile'), prefersReducedMotion ? 0 : 200);
+                          }
+                        }}
+                        className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                      >
+                        <User className="h-4 w-4 mr-2" />
+                        Profile
+                      </button>
+                      
+                      <button
+                        role="menuitem"
+                        onClick={() => {
+                          closeMobileMenu();
+                          setTimeout(() => handleSignOut(), prefersReducedMotion ? 0 : 200);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            closeMobileMenu();
+                            setTimeout(() => handleSignOut(), prefersReducedMotion ? 0 : 200);
+                          }
+                        }}
+                        className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                      >
+                        <LogOut className="h-4 w-4 mr-2" />
+                        Sign Out
+                      </button>
+                    </>
+                  )}
+                </nav>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </div>
     </nav>
   );
