@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Globe, User, LogOut } from 'lucide-react';
+import { Menu, X, Globe, User, LogOut, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -10,7 +10,9 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
+import logo from '@/assets/logo.png';
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -29,8 +31,13 @@ export const EducationNavbar = () => {
   // SECURITY NOTE: This client-side isAdmin check is for UX only (showing/hiding UI elements).
   // All actual admin operations MUST be validated server-side in edge functions.
   const [isAdmin, setIsAdmin] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
+  const isRTL = i18n.language === 'ar';
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,6 +46,59 @@ export const EducationNavbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Lock scroll when menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      
+      // Focus first item
+      setTimeout(() => closeButtonRef.current?.focus(), 100);
+    } else {
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
+    }
+  }, [isMobileMenuOpen]);
+
+  // Focus trap
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeMobileMenu();
+      }
+
+      if (e.key === 'Tab') {
+        const focusableElements = menuRef.current?.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (!focusableElements || focusableElements.length === 0) return;
+
+        const firstElement = focusableElements[0] as HTMLElement;
+        const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+        if (e.shiftKey && document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isMobileMenuOpen]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -74,10 +134,30 @@ export const EducationNavbar = () => {
     i18n.changeLanguage(lng);
   };
 
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+    setTimeout(() => hamburgerRef.current?.focus(), 150);
+  };
+
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     navigate('/education');
   };
+
+  const scrollToMainSection = (id: string) => {
+    closeMobileMenu();
+    setTimeout(() => {
+      window.location.href = `/#${id}`;
+    }, prefersReducedMotion ? 0 : 200);
+  };
+
+  const mainSiteNavItems = [
+    { key: 'community', id: 'community' },
+    { key: 'learn', id: 'learn' },
+    { key: 'events', id: 'events' },
+    { key: 'projects', id: 'projects' },
+    { key: 'resources', id: 'resources' },
+  ];
 
   const navItems = [
     { label: t('education.home.categories'), path: '/education' },
@@ -90,18 +170,27 @@ export const EducationNavbar = () => {
 
   return (
     <nav
-      className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
-        isScrolled ? 'w-[95%] max-w-6xl' : 'w-[90%] max-w-5xl'
+      className={`fixed top-2 sm:top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
+        isScrolled ? 'w-[96%] sm:w-[95%] max-w-6xl' : 'w-[92%] sm:w-[90%] max-w-5xl'
       }`}
     >
-      <div className={`glass-strong rounded-full px-6 py-4 ${isScrolled ? 'shadow-lg' : ''}`}>
+      <div 
+        className={`rounded-full px-3 sm:px-4 md:px-6 py-3 sm:py-4 border border-white/10 ${isScrolled ? 'shadow-lg' : ''}`}
+        style={{
+          background: 'rgba(0, 0, 0, 0.6)',
+          backdropFilter: 'blur(12px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+        }}
+      >
         <div className="flex items-center justify-between">
           {/* Logo */}
           <button
             onClick={() => navigate('/education')}
-            className="text-xl font-bold text-foreground hover:text-accent transition-colors"
+            className="flex items-center hover:opacity-80 transition-opacity"
+            aria-label="UTAAB Education - Home"
           >
-            UTAAB <span className="text-primary">Edu</span>
+            <img src={logo} alt="UTAA Blockchain" className="h-8 sm:h-10 w-auto" />
+            <span className="ml-2 text-lg font-bold text-primary hidden sm:inline">Edu</span>
           </button>
 
           {/* Desktop Navigation */}
@@ -206,51 +295,185 @@ export const EducationNavbar = () => {
 
             {/* Mobile Menu Toggle */}
             <button
+              ref={hamburgerRef}
               className="md:hidden text-foreground"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Toggle menu"
+              aria-label={isMobileMenuOpen ? t('nav.close') : t('nav.menu')}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-menu"
             >
               {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden mt-4 pt-4 border-t border-white/10">
-            <div className="flex flex-col gap-3">
-              {navItems.map((item) => (
-                <button
-                  key={item.path}
-                  onClick={() => {
-                    navigate(item.path);
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="text-left text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2"
-                >
-                  {item.label}
-                </button>
-              ))}
-              <Button
-                onClick={() => (window.location.href = '/')}
-                variant="outline"
-                className="w-full"
-                size="sm"
+        {/* Mobile Menu Panel */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: prefersReducedMotion ? 0 : 0.15 }}
+                className="fixed inset-0 z-[60] md:hidden"
+                style={{
+                  background: 'rgba(0, 0, 0, 0.3)',
+                  backdropFilter: 'blur(4px)',
+                  WebkitBackdropFilter: 'blur(4px)',
+                  pointerEvents: 'auto',
+                }}
+                onClick={closeMobileMenu}
+                aria-hidden="true"
+              />
+              
+              {/* Menu Panel */}
+              <motion.div
+                id="mobile-menu"
+                ref={menuRef}
+                role="menu"
+                aria-modal="true"
+                aria-label={t('nav.menu')}
+                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: -20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -20, scale: 0.95 }}
+                transition={{ duration: prefersReducedMotion ? 0 : 0.2, ease: 'easeOut' }}
+                className={`fixed top-20 ${isRTL ? 'right-2' : 'left-2'} ${isRTL ? 'left-2' : 'right-2'} max-h-[85vh] overflow-y-auto z-[70] md:hidden rounded-3xl shadow-2xl border border-white/30`}
+                style={{
+                  paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',
+                  paddingLeft: 'max(1.5rem, env(safe-area-inset-left))',
+                  paddingRight: 'max(1.5rem, env(safe-area-inset-right))',
+                  background: 'rgba(15, 23, 42, 0.75)',
+                  backdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
+                  WebkitBackdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
+                }}
               >
-                Main Site
-              </Button>
-              {!user && (
-                <Button
-                  onClick={() => navigate('/education/register')}
-                  className="btn-primary w-full"
-                  size="sm"
-                >
-                  {t('education.register')}
-                </Button>
-              )}
-            </div>
-          </div>
-        )}
+                {/* Close Button */}
+                <div className="flex justify-end pt-4 pb-2">
+                  <button
+                    ref={closeButtonRef}
+                    onClick={closeMobileMenu}
+                    className="text-white hover:text-accent transition-colors p-2 rounded-full hover:bg-white/20"
+                    aria-label={t('nav.close')}
+                  >
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
+
+                {/* Menu Items */}
+                <nav className="flex flex-col gap-1 pb-6">
+                  {/* Main site navigation */}
+                  {mainSiteNavItems.map((item) => (
+                    <button
+                      key={item.key}
+                      role="menuitem"
+                      onClick={() => scrollToMainSection(item.id)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          scrollToMainSection(item.id);
+                        }
+                      }}
+                      className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                    >
+                      {t(`nav.${item.key}`)}
+                    </button>
+                  ))}
+                  
+                  <div className="h-px bg-white/20 my-2" />
+                  
+                  {/* Education Platform */}
+                  <button
+                    role="menuitem"
+                    onClick={() => { closeMobileMenu(); setTimeout(() => navigate('/education'), 200); }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        closeMobileMenu();
+                        setTimeout(() => navigate('/education'), 200);
+                      }
+                    }}
+                    className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                  >
+                    {t('education.title')}
+                  </button>
+
+                  <div className="h-px bg-white/20 my-2" />
+
+                  {/* Account Section */}
+                  <div className="px-4 py-2 text-xs font-semibold text-white/70">
+                    {t('nav.account')}
+                  </div>
+
+                  <button
+                    role="menuitem"
+                    onClick={() => { closeMobileMenu(); setTimeout(() => navigate('/education/signin'), 200); }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        closeMobileMenu();
+                        setTimeout(() => navigate('/education/signin'), 200);
+                      }
+                    }}
+                    className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                  >
+                    {t('nav.studentSignIn')}
+                  </button>
+
+                  <button
+                    role="menuitem"
+                    onClick={() => { closeMobileMenu(); setTimeout(() => navigate('/education/register'), 200); }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        closeMobileMenu();
+                        setTimeout(() => navigate('/education/register'), 200);
+                      }
+                    }}
+                    className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                  >
+                    {t('nav.studentRegister')}
+                  </button>
+
+                  <div className="h-px bg-white/20 my-2" />
+
+                  {/* CTA Button */}
+                  <Button
+                    onClick={() => scrollToMainSection('join')}
+                    className="btn-primary w-full mt-2 min-h-[44px]"
+                    size="lg"
+                  >
+                    {t('nav.join')}
+                  </Button>
+
+                  {/* Language Switcher in Menu */}
+                  <div className="mt-4 pt-4 border-t border-white/20">
+                    <div className="px-4 py-2 text-xs font-semibold text-white/70">
+                      {t('nav.language')}
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 px-2">
+                      {languages.map((lang) => (
+                        <button
+                          key={lang.code}
+                          onClick={() => { changeLanguage(lang.code); }}
+                          className={`text-left text-sm font-medium transition-all py-2 px-3 rounded-lg min-h-[44px] flex items-center gap-2 ${
+                            i18n.language === lang.code
+                              ? 'bg-accent/30 text-white'
+                              : 'text-white/80 hover:bg-white/10'
+                          }`}
+                        >
+                          <span>{lang.flag}</span>
+                          <span>{lang.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </nav>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </div>
     </nav>
   );
