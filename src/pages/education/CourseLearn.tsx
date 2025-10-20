@@ -13,6 +13,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Award } from 'lucide-react';
 import { toast } from 'sonner';
 
+/* SECURITY NOTE: This component displays course content from the database.
+ * React's JSX automatically escapes string values, providing XSS protection.
+ * 
+ * CRITICAL: If rich text support is added in the future:
+ * - NEVER use dangerouslySetInnerHTML without sanitization
+ * - Use DOMPurify or similar library to sanitize HTML content
+ * - Implement Content Security Policy (CSP) headers
+ * - Add strict input validation on admin course creation
+ * See: https://docs.lovable.dev/features/security
+ */
+
 export const CourseLearn = () => {
   const { slug } = useParams<{ slug: string }>();
   const { i18n } = useTranslation();

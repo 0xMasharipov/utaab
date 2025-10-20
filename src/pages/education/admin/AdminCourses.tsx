@@ -133,15 +133,21 @@ export const AdminCourses = () => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="glass-strong">
+                      {/* SECURITY WARNING: Edit/Delete actions not yet implemented.
+                          When implementing, MUST use server-side edge functions with:
+                          1. Server-side admin role verification
+                          2. Audit logging for destructive operations
+                          3. RLS policies as defense-in-depth
+                          See: https://docs.lovable.dev/features/security */}
                       <DropdownMenuItem>
                         <Eye className="h-4 w-4 mr-2" />
                         View
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem disabled>
                         <Edit className="h-4 w-4 mr-2" />
                         Edit
                       </DropdownMenuItem>
-                      <DropdownMenuItem className="text-red-400">
+                      <DropdownMenuItem disabled className="text-red-400">
                         <Trash2 className="h-4 w-4 mr-2" />
                         Delete
                       </DropdownMenuItem>
