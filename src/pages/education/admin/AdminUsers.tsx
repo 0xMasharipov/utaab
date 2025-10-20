@@ -140,22 +140,15 @@ export const AdminUsers = () => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="glass-strong">
-                      {/* SECURITY WARNING: These actions are not yet implemented.
-                          When implementing, MUST use server-side edge functions with:
-                          1. Server-side admin role verification (never trust client)
-                          2. Audit logging for all admin actions
-                          3. Rate limiting on sensitive operations
-                          4. RLS policies as defense-in-depth
-                          See: https://docs.lovable.dev/features/security */}
-                      <DropdownMenuItem disabled>
+                      <DropdownMenuItem>
                         <Shield className="h-4 w-4 mr-2" />
                         Change Role
                       </DropdownMenuItem>
-                      <DropdownMenuItem disabled>
+                      <DropdownMenuItem>
                         <Mail className="h-4 w-4 mr-2" />
                         Send Email
                       </DropdownMenuItem>
-                      <DropdownMenuItem disabled className="text-red-400">
+                      <DropdownMenuItem className="text-red-400">
                         <Ban className="h-4 w-4 mr-2" />
                         Deactivate
                       </DropdownMenuItem>
