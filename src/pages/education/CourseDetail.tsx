@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { EducationNavbar } from '@/components/education/EducationNavbar';
 import { CutiiAIPanel } from '@/components/education/CutiiAIPanel';
 import { CourseReviews } from '@/components/education/CourseReviews';
+import { SafeContent } from '@/components/common/SafeContent';
 
 export const CourseDetail = () => {
   const { slug } = useParams();
@@ -181,9 +182,11 @@ export const CourseDetail = () => {
                 {getCourseTitle(course)}
               </h1>
               
-              <p className="text-xl text-muted-foreground mb-6">
-                {getCourseDescription(course)}
-              </p>
+              <SafeContent 
+                content={getCourseDescription(course)}
+                className="text-xl text-muted-foreground mb-6"
+                as="p"
+              />
 
               {/* Course Stats */}
               <div className="flex flex-wrap items-center gap-6 text-sm">
@@ -309,9 +312,11 @@ export const CourseDetail = () => {
                   <CardTitle>About this course</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground whitespace-pre-line">
-                    {getCourseDescription(course)}
-                  </p>
+                  <SafeContent 
+                    content={getCourseDescription(course)}
+                    className="text-muted-foreground whitespace-pre-line"
+                    as="p"
+                  />
                 </CardContent>
               </Card>
             )}
@@ -358,9 +363,11 @@ export const CourseDetail = () => {
                     </Button>
                   </div>
                   </div>
-                  <p className="text-muted-foreground whitespace-pre-line">
-                    {getInstructorBio(course.instructors)}
-                  </p>
+                  <SafeContent 
+                    content={getInstructorBio(course.instructors)}
+                    className="text-muted-foreground whitespace-pre-line"
+                    as="p"
+                  />
                 </CardContent>
               </Card>
             )}

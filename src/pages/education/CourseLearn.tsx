@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Award } from 'lucide-react';
 import { toast } from 'sonner';
+import { SafeContent } from '@/components/common/SafeContent';
 
 export const CourseLearn = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -235,15 +236,16 @@ export const CourseLearn = () => {
                       ? currentLesson.title_ar
                       : currentLesson?.title_en}
                   </h2>
-                  <p>
-                    {i18n.language === 'tr' && currentLesson?.description_tr
+                  <SafeContent 
+                    content={i18n.language === 'tr' && currentLesson?.description_tr
                       ? currentLesson.description_tr
                       : i18n.language === 'ru' && currentLesson?.description_ru
                       ? currentLesson.description_ru
                       : i18n.language === 'ar' && currentLesson?.description_ar
                       ? currentLesson.description_ar
                       : currentLesson?.description_en}
-                  </p>
+                    as="p"
+                  />
                 </div>
               </TabsContent>
 

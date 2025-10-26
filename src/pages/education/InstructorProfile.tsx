@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { EducationNavbar } from '@/components/education/EducationNavbar';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
+import { SafeContent } from '@/components/common/SafeContent';
 
 export const InstructorProfile = () => {
   const { id } = useParams();
@@ -113,9 +114,11 @@ export const InstructorProfile = () => {
                 </div>
 
                 {getInstructorBio(instructor) && (
-                  <p className="text-muted-foreground whitespace-pre-line">
-                    {getInstructorBio(instructor)}
-                  </p>
+                  <SafeContent 
+                    content={getInstructorBio(instructor)}
+                    className="text-muted-foreground whitespace-pre-line"
+                    as="p"
+                  />
                 )}
               </div>
             </div>

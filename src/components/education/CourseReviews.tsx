@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
+import { SafeContent } from '@/components/common/SafeContent';
 
 interface CourseReviewsProps {
   courseId: string;
@@ -248,9 +249,11 @@ export const CourseReviews = ({ courseId, isEnrolled }: CourseReviewsProps) => {
                     </div>
                   </div>
                   {review.comment && (
-                    <p className="text-sm text-muted-foreground ml-13">
-                      {review.comment}
-                    </p>
+                    <SafeContent 
+                      content={review.comment}
+                      className="text-sm text-muted-foreground ml-13"
+                      as="p"
+                    />
                   )}
                   <Separator className="bg-white/10" />
                 </div>
