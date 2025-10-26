@@ -19,7 +19,7 @@ export type Database = {
           created_at: string
           expires_at: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           last_activity: string
           session_token: string
           two_factor_verified: boolean | null
@@ -30,7 +30,7 @@ export type Database = {
           created_at?: string
           expires_at: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           last_activity?: string
           session_token: string
           two_factor_verified?: boolean | null
@@ -41,7 +41,7 @@ export type Database = {
           created_at?: string
           expires_at?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           last_activity?: string
           session_token?: string
           two_factor_verified?: boolean | null
@@ -146,7 +146,7 @@ export type Database = {
           entity_name: string | null
           entity_type: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           user_agent: string | null
           user_email: string | null
           user_id: string | null
@@ -159,7 +159,7 @@ export type Database = {
           entity_name?: string | null
           entity_type: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           user_agent?: string | null
           user_email?: string | null
           user_id?: string | null
@@ -172,7 +172,7 @@ export type Database = {
           entity_name?: string | null
           entity_type?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           user_agent?: string | null
           user_email?: string | null
           user_id?: string | null
@@ -299,7 +299,7 @@ export type Database = {
           honeypot: string | null
           id: string
           interests: string[]
-          ip_address: unknown | null
+          ip_address: unknown
           kvkk_consent: boolean
           kvkk_consent_timestamp: string
           kvkk_consent_version: string
@@ -330,7 +330,7 @@ export type Database = {
           honeypot?: string | null
           id?: string
           interests: string[]
-          ip_address?: unknown | null
+          ip_address?: unknown
           kvkk_consent?: boolean
           kvkk_consent_timestamp?: string
           kvkk_consent_version?: string
@@ -361,7 +361,7 @@ export type Database = {
           honeypot?: string | null
           id?: string
           interests?: string[]
-          ip_address?: unknown | null
+          ip_address?: unknown
           kvkk_consent?: boolean
           kvkk_consent_timestamp?: string
           kvkk_consent_version?: string
@@ -1249,7 +1249,7 @@ export type Database = {
           endpoint: string | null
           event_type: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           severity: string
           user_agent: string | null
           user_id: string | null
@@ -1260,7 +1260,7 @@ export type Database = {
           endpoint?: string | null
           event_type: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           severity?: string
           user_agent?: string | null
           user_id?: string | null
@@ -1271,7 +1271,7 @@ export type Database = {
           endpoint?: string | null
           event_type?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           severity?: string
           user_agent?: string | null
           user_id?: string | null
@@ -1391,26 +1391,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      cleanup_expired_admin_sessions: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      cleanup_old_rate_limits: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      cleanup_old_security_events: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      ensure_admin_role: {
-        Args: { admin_email: string }
-        Returns: undefined
-      }
-      generate_certificate_number: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      cleanup_expired_admin_sessions: { Args: never; Returns: undefined }
+      cleanup_old_rate_limits: { Args: never; Returns: undefined }
+      cleanup_old_security_events: { Args: never; Returns: undefined }
+      ensure_admin_role: { Args: { admin_email: string }; Returns: undefined }
+      generate_certificate_number: { Args: never; Returns: string }
       get_security_metrics: {
         Args: { _hours?: number }
         Returns: {
@@ -1428,10 +1413,7 @@ export type Database = {
         }
         Returns: boolean
       }
-      is_ip_blacklisted: {
-        Args: { _ip: unknown }
-        Returns: boolean
-      }
+      is_ip_blacklisted: { Args: { _ip: unknown }; Returns: boolean }
       log_security_event: {
         Args: {
           _details?: Json
