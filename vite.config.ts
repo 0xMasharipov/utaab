@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     headers: {
       'X-Content-Type-Options': 'nosniff',
-      'X-Frame-Options': 'DENY',
+      'X-Frame-Options': 'SAMEORIGIN',
       'Referrer-Policy': 'no-referrer-when-downgrade',
       'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
     }
