@@ -14,6 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
+        sans: ['Montserrat', 'sans-serif'],
         montserrat: ['Montserrat', 'sans-serif'],
         arabic: ['Noto Sans Arabic', 'sans-serif'],
       },
