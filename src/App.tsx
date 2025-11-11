@@ -26,6 +26,9 @@ import { AdminSecurity } from "./pages/education/admin/AdminSecurity";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminEvents from "./pages/admin/AdminEvents";
 import AdminSiteContent from "./pages/admin/AdminSiteContent";
+import AdminUsersNew from "./pages/admin/AdminUsers";
+import AdminCommunities from "./pages/admin/AdminCommunities";
+import AdminCommunityDetail from "./pages/admin/AdminCommunityDetail";
 import { KVKKRequest } from "./pages/KVKKRequest";
 import { AdminDashboard } from "./pages/education/AdminDashboard";
 
@@ -56,13 +59,15 @@ function App() {
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
               <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="users" element={<AdminUsersNew />} />
+              <Route path="communities" element={<AdminCommunities />} />
+              <Route path="communities/:id" element={<AdminCommunityDetail />} />
               <Route path="events" element={<AdminEvents />} />
               <Route path="site-content" element={<AdminSiteContent />} />
               <Route path="courses" element={<AdminCourses />} />
               <Route path="announcements" element={<AdminAnnouncements />} />
               <Route path="messages" element={<AdminMessages />} />
               <Route path="media" element={<AdminMedia />} />
-              <Route path="users" element={<AdminUsers />} />
               <Route path="settings" element={<AdminSettings />} />
               <Route path="audit" element={<AdminAuditLog />} />
               <Route path="security" element={<AdminSecurity />} />

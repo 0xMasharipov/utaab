@@ -23,13 +23,14 @@ import { cn } from '@/lib/utils';
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
+  { icon: Users, label: 'Users & Roles', path: '/admin/users' },
+  { icon: Users, label: 'Communities', path: '/admin/communities' },
   { icon: Calendar, label: 'Events', path: '/admin/events' },
   { icon: BookOpen, label: 'Courses', path: '/admin/courses' },
   { icon: FileText, label: 'Site Content', path: '/admin/site-content' },
   { icon: Megaphone, label: 'Announcements', path: '/admin/announcements' },
   { icon: MessageSquare, label: 'Messages', path: '/admin/messages' },
   { icon: ImageIcon, label: 'Media Library', path: '/admin/media' },
-  { icon: Users, label: 'Users & Roles', path: '/admin/users' },
   { icon: Shield, label: 'Security', path: '/admin/security' },
   { icon: Settings, label: 'Settings', path: '/admin/settings' },
   { icon: FileText, label: 'Audit Log', path: '/admin/audit' },
