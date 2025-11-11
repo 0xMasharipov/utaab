@@ -28,10 +28,41 @@ interface Stats {
 export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats>({});
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    fetchStats();
+    // Get current user
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+
+    // Use check-admin-status edge function for server-side admin verification
+    const checkAdminStatus = async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke('check-admin-status');
+        if (error) throw error;
+        setIsAdmin(data?.isAdmin || false);
+        
+        // Only fetch stats if user is confirmed admin
+        if (data?.isAdmin) {
+          fetchStats();
+        } else {
+          setLoading(false);
+        }
+      } catch (error: any) {
+        console.error('Admin check failed:', error);
+        setIsAdmin(false);
+        setLoading(false);
+      }
+    };
+
+    checkAdminStatus();
+  }, [user]);
 
   const fetchStats = async () => {
     try {
