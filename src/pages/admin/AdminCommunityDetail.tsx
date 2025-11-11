@@ -80,12 +80,15 @@ export default function AdminCommunityDetail() {
 
   const handleAddAdmin = async () => {
     try {
-      // Find user by email
-      const { data: { users }, error: usersError } = await supabase.auth.admin.listUsers();
-      if (usersError) throw usersError;
+      // Use secure edge function to lookup user by email
+      const { data: userData, error: lookupError } = await supabase.functions.invoke('lookup-user-by-email', {
+        body: { email: adminEmail }
+      });
 
-      const user = users?.find((u: any) => u.email === adminEmail);
-      if (!user) throw new Error('User not found');
+      if (lookupError) throw lookupError;
+      if (!userData) throw new Error('User not found');
+
+      const user = userData;
 
       // Add community_admin role
       const { error: roleError } = await supabase.from('user_roles').insert({
