@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
+import { WhatsAppButton } from '@/components/common/WhatsAppButton';
 import {
   Select,
   SelectContent,
@@ -221,12 +222,21 @@ export const CommunityJoinForm = () => {
           <CheckCircle className="h-20 w-20 text-accent mx-auto mb-6" />
         </motion.div>
         <h3 className="text-3xl font-bold mb-4 text-foreground">{t('join.successTitle')}</h3>
-        <p className="text-muted-foreground text-lg mb-8">
+        <p className="text-muted-foreground text-lg mb-6">
           {t('join.successMessage')}
+        </p>
+        <p className="text-foreground text-base mb-8">
+          Connect with our community on WhatsApp to stay updated!
         </p>
         
         <div className="grid gap-4 max-w-md mx-auto">
-          <Button className="btn-primary w-full" asChild>
+          <WhatsAppButton 
+            variant="primary"
+            autoRedirect={true}
+            message="Join WhatsApp Community"
+          />
+          
+          <Button className="btn-glass w-full" asChild>
             <a href="https://t.me/utaablockchain" target="_blank" rel="noopener noreferrer">
               <MessageCircle className="mr-2 h-5 w-5" />
               {t('join.joinTelegram')}

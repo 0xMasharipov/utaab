@@ -12,7 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { CheckCircle, Mail } from 'lucide-react';
+import { CheckCircle, Mail, Home } from 'lucide-react';
+import { WhatsAppButton } from '@/components/common/WhatsAppButton';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
@@ -90,9 +91,26 @@ export const KVKKRequestForm = () => {
           <CheckCircle className="h-20 w-20 text-accent mx-auto mb-6" />
         </motion.div>
         <h3 className="text-3xl font-bold mb-4 text-foreground">{t('kvkk.requestForm.successTitle')}</h3>
-        <p className="text-muted-foreground text-lg">
+        <p className="text-muted-foreground text-lg mb-6">
           {t('kvkk.requestForm.successMessage')}
         </p>
+        <p className="text-foreground text-base mb-8">
+          Meanwhile, join our community on WhatsApp to stay connected!
+        </p>
+        
+        <div className="grid gap-4 max-w-md mx-auto">
+          <WhatsAppButton 
+            variant="primary"
+            message="Join WhatsApp Community"
+          />
+          
+          <Button className="btn-glass w-full" asChild>
+            <a href="/">
+              <Home className="mr-2 h-5 w-5" />
+              Back to Home
+            </a>
+          </Button>
+        </div>
       </div>
     );
   }

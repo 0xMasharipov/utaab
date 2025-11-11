@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import { WhatsAppButton } from '@/components/common/WhatsAppButton';
 import {
   Select,
   SelectContent,
@@ -431,13 +432,23 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
           <CheckCircle className="h-20 w-20 text-accent mx-auto mb-6" />
         </motion.div>
         <h3 className="text-3xl font-bold mb-4 text-foreground">{t('education.registration.welcomeTitle')}</h3>
-        <p className="text-muted-foreground text-lg mb-8">
+        <p className="text-muted-foreground text-lg mb-6">
           {t('education.registration.welcomeMessage')}
         </p>
+        <p className="text-foreground text-base mb-8">
+          Join our WhatsApp Community to connect with other students and instructors!
+        </p>
         
-        <Button className="btn-primary" onClick={() => navigate('/education')}>
-          {t('education.registration.gotoDashboard')}
-        </Button>
+        <div className="grid gap-4 max-w-md mx-auto">
+          <WhatsAppButton 
+            variant="primary"
+            message="Join WhatsApp Community"
+          />
+          
+          <Button className="btn-glass" onClick={() => navigate('/education')}>
+            {t('education.registration.gotoDashboard')}
+          </Button>
+        </div>
       </div>
     );
   }
