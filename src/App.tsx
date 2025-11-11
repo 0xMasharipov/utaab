@@ -29,6 +29,7 @@ import AdminSiteContent from "./pages/admin/AdminSiteContent";
 import AdminUsersNew from "./pages/admin/AdminUsers";
 import AdminCommunities from "./pages/admin/AdminCommunities";
 import AdminCommunityDetail from "./pages/admin/AdminCommunityDetail";
+import Profile from "./pages/Profile";
 import { KVKKRequest } from "./pages/KVKKRequest";
 import { AdminDashboard } from "./pages/education/AdminDashboard";
 
@@ -51,6 +52,7 @@ function App() {
             <Route path="/education/sign-in" element={<EducationSignIn />} />
             <Route path="/education/profile" element={<UserProfile />} />
             <Route path="/education/instructor/:id" element={<InstructorProfile />} />
+            <Route path="/profile" element={<Profile />} />
             
             {/* Separate Admin Authentication */}
             <Route path="/admin/login" element={<AdminLogin />} />
