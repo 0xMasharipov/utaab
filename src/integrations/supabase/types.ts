@@ -1409,6 +1409,39 @@ export type Database = {
         }
         Relationships: []
       }
+      settings: {
+        Row: {
+          category: string
+          created_at: string | null
+          description: string | null
+          id: string
+          setting_key: string
+          setting_value: Json
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          setting_key: string
+          setting_value?: Json
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          setting_key?: string
+          setting_value?: Json
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       site_messages: {
         Row: {
           broadcast_channels: string[] | null

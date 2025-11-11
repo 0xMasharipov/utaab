@@ -58,19 +58,108 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     );
 
-    // Get stats in parallel
-    const [applicationsResult, profilesResult, kvkkRequestsResult, pendingKvkkResult] = await Promise.all([
-      supabaseAdmin.from('community_applications').select('id', { count: 'exact', head: true }),
+    // Get comprehensive stats in parallel
+    const [
+      profilesResult,
+      adminRolesResult,
+      coursesResult,
+      publishedCoursesResult,
+      lessonsResult,
+      enrollmentsResult,
+      completedEnrollmentsResult,
+      certificatesResult,
+      reviewsResult,
+      securityEventsResult,
+      criticalEventsResult,
+      announcementsResult,
+      activeAnnouncementsResult,
+      mediaResult,
+      adminSessionsResult,
+      communitiesResult,
+    ] = await Promise.all([
       supabaseAdmin.from('education_profiles').select('id', { count: 'exact', head: true }),
-      supabaseAdmin.from('kvkk_requests').select('id', { count: 'exact', head: true }),
-      supabaseAdmin.from('kvkk_requests').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
+      supabaseAdmin.from('user_roles').select('id', { count: 'exact', head: true }).eq('role', 'admin'),
+      supabaseAdmin.from('courses').select('id', { count: 'exact', head: true }),
+      supabaseAdmin.from('courses').select('id', { count: 'exact', head: true }).eq('is_published', true),
+      supabaseAdmin.from('lessons').select('id', { count: 'exact', head: true }),
+      supabaseAdmin.from('enrollments').select('id', { count: 'exact', head: true }),
+      supabaseAdmin.from('enrollments').select('id', { count: 'exact', head: true }).eq('completed', true),
+      supabaseAdmin.from('certificates').select('id', { count: 'exact', head: true }),
+      supabaseAdmin.from('reviews').select('id', { count: 'exact', head: true }),
+      supabaseAdmin.from('security_events').select('id', { count: 'exact', head: true }).gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()),
+      supabaseAdmin.from('security_events').select('id', { count: 'exact', head: true }).eq('severity', 'critical').gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()),
+      supabaseAdmin.from('announcements').select('id', { count: 'exact', head: true }),
+      supabaseAdmin.from('announcements').select('id', { count: 'exact', head: true }).eq('visibility', 'published').lte('start_time', new Date().toISOString()).or('end_time.is.null,end_time.gte.' + new Date().toISOString()),
+      supabaseAdmin.from('media_library').select('file_size', { count: 'exact' }),
+      supabaseAdmin.from('admin_sessions').select('id', { count: 'exact', head: true }).gt('expires_at', new Date().toISOString()),
+      supabaseAdmin.from('communities').select('id', { count: 'exact', head: true }),
     ]);
 
+    // Calculate storage usage
+    const totalStorage = mediaResult.data?.reduce((acc, item) => acc + (item.file_size || 0), 0) || 0;
+    const storageGB = (totalStorage / (1024 * 1024 * 1024)).toFixed(2);
+
+    // Get top courses by enrollment
+    const { data: topCourses } = await supabaseAdmin
+      .from('courses')
+      .select('title_en, total_enrollments')
+      .order('total_enrollments', { ascending: false })
+      .limit(5);
+
+    // Get new users this week
+    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+    const { count: newUsersThisWeek } = await supabaseAdmin
+      .from('education_profiles')
+      .select('id', { count: 'exact', head: true })
+      .gte('created_at', weekAgo);
+
+    // Calculate completion rate
+    const completionRate = enrollmentsResult.count 
+      ? ((completedEnrollmentsResult.count || 0) / enrollmentsResult.count * 100).toFixed(1)
+      : 0;
+
     const stats = {
-      totalApplications: applicationsResult.count || 0,
-      totalProfiles: profilesResult.count || 0,
-      totalKvkkRequests: kvkkRequestsResult.count || 0,
-      pendingKvkkRequests: pendingKvkkResult.count || 0,
+      // System Health
+      systemHealth: {
+        totalUsers: profilesResult.count || 0,
+        newUsersThisWeek: newUsersThisWeek || 0,
+        activeAdmins: adminRolesResult.count || 0,
+        activeSessions: adminSessionsResult.count || 0,
+        errorRate: criticalEventsResult.count || 0,
+      },
+      // Content Metrics
+      contentMetrics: {
+        totalCourses: coursesResult.count || 0,
+        publishedCourses: publishedCoursesResult.count || 0,
+        draftCourses: (coursesResult.count || 0) - (publishedCoursesResult.count || 0),
+        totalLessons: lessonsResult.count || 0,
+        storageUsedGB: storageGB,
+        mediaFiles: mediaResult.count || 0,
+      },
+      // Engagement
+      engagement: {
+        totalEnrollments: enrollmentsResult.count || 0,
+        completedCourses: completedEnrollmentsResult.count || 0,
+        inProgressCourses: (enrollmentsResult.count || 0) - (completedEnrollmentsResult.count || 0),
+        completionRate: completionRate,
+        certificatesIssued: certificatesResult.count || 0,
+        totalReviews: reviewsResult.count || 0,
+        topCourses: topCourses || [],
+      },
+      // Security
+      security: {
+        eventsLast24h: securityEventsResult.count || 0,
+        criticalEventsLast24h: criticalEventsResult.count || 0,
+      },
+      // Announcements
+      announcements: {
+        total: announcementsResult.count || 0,
+        active: activeAnnouncementsResult.count || 0,
+      },
+      // Communities
+      communities: {
+        total: communitiesResult.count || 0,
+      },
     };
 
     return new Response(
