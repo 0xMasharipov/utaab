@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from '@/assets/logo.png';
+import { BrandText } from '@/components/common/BrandText';
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -152,10 +153,22 @@ export const Navbar = () => {
           {/* Logo */}
           <button
             onClick={() => scrollToSection('hero')}
-            className="flex items-center hover:opacity-80 transition-opacity"
+            className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity"
             aria-label="UTAA Blockchain - Home"
           >
             <img src={logo} alt="UTAA Blockchain" className="h-8 sm:h-10 w-auto" />
+            <BrandText 
+              variant="navbar-mobile" 
+              className="sm:hidden"
+            />
+            <BrandText 
+              variant="navbar-tablet" 
+              className="hidden sm:block md:hidden"
+            />
+            <BrandText 
+              variant="navbar-desktop" 
+              className="hidden md:block"
+            />
           </button>
 
           {/* Desktop Navigation */}

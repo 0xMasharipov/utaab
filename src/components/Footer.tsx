@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Linkedin, Instagram, Twitter, Send } from 'lucide-react';
 import logo from '@/assets/logo.png';
+import { BrandText } from '@/components/common/BrandText';
 interface FooterProps {
   onPrivacyClick: () => void;
 }
@@ -59,14 +60,17 @@ export const Footer = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12 mb-8 sm:mb-12">
           {/* Brand */}
           <div>
-            <img 
-              src={logo} 
-              alt="UTAA Blockchain logo" 
-              className="h-7 sm:h-8 w-auto mb-3 sm:mb-4 transition-transform hover:scale-105"
-              width="120"
-              height="32"
-              loading="eager"
-            />
+            <div className="flex items-center gap-3 mb-3 sm:mb-4">
+              <img 
+                src={logo} 
+                alt="UTAA Blockchain logo" 
+                className="h-7 sm:h-8 w-auto transition-transform hover:scale-105"
+                width="120"
+                height="32"
+                loading="eager"
+              />
+              <BrandText variant="footer" />
+            </div>
             <p className="text-muted-foreground leading-relaxed text-base text-left">
               {t('footer.description')}
             </p>

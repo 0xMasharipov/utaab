@@ -12,6 +12,8 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { supabase } from '@/integrations/supabase/client';
+import logo from '@/assets/logo.png';
+import { BrandText } from '@/components/common/BrandText';
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -163,9 +165,22 @@ export const EducationNavbar = () => {
           {/* Logo */}
           <button
             onClick={() => navigate('/education')}
-            className="text-xl font-bold text-foreground hover:text-accent transition-colors"
+            className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity"
+            aria-label="UTAA Blockchain Education - Home"
           >
-            UTAAB <span className="text-primary">Edu</span>
+            <img src={logo} alt="UTAA Blockchain" className="h-8 sm:h-10 w-auto" />
+            <BrandText 
+              variant="navbar-mobile" 
+              className="sm:hidden"
+            />
+            <BrandText 
+              variant="navbar-tablet" 
+              className="hidden sm:block md:hidden"
+            />
+            <BrandText 
+              variant="navbar-desktop" 
+              className="hidden md:block"
+            />
           </button>
 
           {/* Desktop Navigation */}
