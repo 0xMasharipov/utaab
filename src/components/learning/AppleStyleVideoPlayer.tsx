@@ -36,6 +36,8 @@ export const AppleStyleVideoPlayer = ({
   const [showCaptionsMenu, setShowCaptionsMenu] = useState(false);
   const [selectedCaption, setSelectedCaption] = useState<string>('en');
   const [captionsEnabled, setCaptionsEnabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
   const inactivityTimerRef = useRef<NodeJS.Timeout>();
 
@@ -82,14 +84,34 @@ export const AppleStyleVideoPlayer = ({
       onVideoEnd?.();
     };
 
+    const handleLoadStart = () => setIsLoading(true);
+    const handleCanPlay = () => setIsLoading(false);
+    const handleError = (e: Event) => {
+      console.error('Video error:', e);
+      setError('Failed to load video');
+      setIsLoading(false);
+    };
+    const handleWaiting = () => setIsLoading(true);
+    const handlePlaying = () => setIsLoading(false);
+
     video.addEventListener('timeupdate', handleTimeUpdate);
     video.addEventListener('loadedmetadata', handleLoadedMetadata);
     video.addEventListener('ended', handleEnded);
+    video.addEventListener('loadstart', handleLoadStart);
+    video.addEventListener('canplay', handleCanPlay);
+    video.addEventListener('error', handleError);
+    video.addEventListener('waiting', handleWaiting);
+    video.addEventListener('playing', handlePlaying);
 
     return () => {
       video.removeEventListener('timeupdate', handleTimeUpdate);
       video.removeEventListener('loadedmetadata', handleLoadedMetadata);
       video.removeEventListener('ended', handleEnded);
+      video.removeEventListener('loadstart', handleLoadStart);
+      video.removeEventListener('canplay', handleCanPlay);
+      video.removeEventListener('error', handleError);
+      video.removeEventListener('waiting', handleWaiting);
+      video.removeEventListener('playing', handlePlaying);
     };
   }, [onVideoEnd]);
 
@@ -134,10 +156,21 @@ export const AppleStyleVideoPlayer = ({
         setIsPlaying(false);
       } else {
         try {
-          await videoRef.current.play();
-          setIsPlaying(true);
+          // Ensure video is ready to play
+          if (videoRef.current.readyState >= 2) {
+            await videoRef.current.play();
+            setIsPlaying(true);
+          } else {
+            setError('Video not ready yet. Please wait...');
+            setTimeout(() => setError(null), 2000);
+          }
         } catch (error) {
           console.error('Failed to play video:', error);
+          // Don't show error for user-initiated pause during play attempt
+          if ((error as Error).name !== 'AbortError') {
+            setError('Failed to play video. Please try again.');
+            setTimeout(() => setError(null), 3000);
+          }
         }
       }
     }
@@ -277,10 +310,36 @@ export const AppleStyleVideoPlayer = ({
         )}
       </video>
 
+      {/* Loading Spinner */}
+      {isLoading && !error && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-accent border-t-transparent" />
+        </div>
+      )}
+
+      {/* Error Message */}
+      {error && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="text-center">
+            <p className="text-white mb-4">{error}</p>
+            <button 
+              onClick={() => {
+                setError(null);
+                setIsLoading(true);
+                videoRef.current?.load();
+              }}
+              className="px-4 py-2 bg-accent rounded-lg text-white hover:bg-accent/90"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Center Play Icon */}
       <div 
         className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 pointer-events-none ${
-          !isPlaying ? 'opacity-100' : 'opacity-0'
+          !isPlaying && !isLoading && !error ? 'opacity-100' : 'opacity-0'
         }`}
       >
         <button

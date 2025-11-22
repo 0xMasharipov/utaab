@@ -369,6 +369,34 @@
       "enable_cc": "Altyazıları Aç",
       "select_language": "Altyazı Dili Seçin"
     },
+    "mitOcw": {
+      "pageTitle": "Blockchain ve Para - MIT OpenCourseWare | UTAAB EDU",
+      "metaDescription": "Prof. Gary Gensler tarafından verilen MIT'nin Blockchain ve Para dersinden 24 dersin tamamını izleyin. Blockchain teknolojisi, kripto paralar ve finansal sistemleri kapsayan ücretsiz MIT OpenCourseWare eğitim kaynağı.",
+      "schoolName": "MIT Sloan Yönetim Okulu",
+      "courseTitle": "Blockchain ve Para",
+      "courseDescription": "Blockchain teknolojisinin temel ilkelerini, kripto paraları ve bunların paranın ve finansal sistemlerin geleceği üzerindeki etkilerini keşfedin.",
+      "instructor": "Eğitmen",
+      "instructorName": "Prof. Gary Gensler",
+      "course": "Kurs",
+      "courseCode": "15.S12 (Güz 2018)",
+      "lectures": "Dersler",
+      "courseLectures": "Kurs Dersleri",
+      "lectureNumber": "Ders {{number}}",
+      "nowPlaying": "Şimdi Oynatılıyor",
+      "previous": "Önceki",
+      "next": "Sonraki",
+      "attribution": {
+        "title": "MIT OpenCourseWare Atıf",
+        "videoSource": "Bu videolar MIT OpenCourseWare kursu",
+        "courseName": "15.S12 \"Blockchain ve Para\"",
+        "taughtBy": "Prof. Gary Gensler tarafından verilmiştir (Güz 2018).",
+        "license": "Lisans",
+        "licenseType": "Creative Commons BY-NC-SA 4.0",
+        "source": "Kaynak",
+        "mitOcw": "MIT OpenCourseWare",
+        "disclaimer": "UTAAB EDU bu içeriği ticari olmayan eğitim amaçlı olarak archive.org'dan doğrudan yayınlar. Tüm haklar MIT'ye aittir. Bu kurs, uygun atıfla ücretsiz kullanıma izin veren Creative Commons lisansı altında sunulmaktadır."
+      }
+    },
     "catalog": {
       "title": "Kurs Kataloğu",
       "filters": "Filtreler",

@@ -369,6 +369,34 @@
       "enable_cc": "تمكين الترجمة",
       "select_language": "اختر لغة الترجمة"
     },
+    "mitOcw": {
+      "pageTitle": "البلوكشين والمال - MIT OpenCourseWare | UTAAB EDU",
+      "metaDescription": "شاهد جميع المحاضرات الـ 24 من دورة معهد ماساتشوستس للتكنولوجيا \"البلوكشين والمال\" التي يدرسها البروفيسور غاري جينسلر. مورد تعليمي مجاني من MIT OpenCourseWare يغطي تقنية البلوكشين والعملات المشفرة والأنظمة المالية.",
+      "schoolName": "MIT Sloan School of Management",
+      "courseTitle": "البلوكشين والمال",
+      "courseDescription": "استكشف المبادئ الأساسية لتقنية البلوكشين والعملات المشفرة وآثارها على مستقبل المال والأنظمة المالية.",
+      "instructor": "المدرس",
+      "instructorName": "البروفيسور غاري جينسلر",
+      "course": "الدورة",
+      "courseCode": "15.S12 (خريف 2018)",
+      "lectures": "المحاضرات",
+      "courseLectures": "محاضرات الدورة",
+      "lectureNumber": "المحاضرة {{number}}",
+      "nowPlaying": "قيد التشغيل الآن",
+      "previous": "السابق",
+      "next": "التالي",
+      "attribution": {
+        "title": "إسناد MIT OpenCourseWare",
+        "videoSource": "هذه الفيديوهات من دورة MIT OpenCourseWare",
+        "courseName": "15.S12 \"البلوكشين والمال\"",
+        "taughtBy": "التي درّسها البروفيسور غاري جينسلر (خريف 2018).",
+        "license": "الترخيص",
+        "licenseType": "Creative Commons BY-NC-SA 4.0",
+        "source": "المصدر",
+        "mitOcw": "MIT OpenCourseWare",
+        "disclaimer": "يقوم UTAAB EDU ببث هذا المحتوى مباشرة من archive.org لأغراض تعليمية غير تجارية. جميع الحقوق محفوظة لـ MIT. يتم توفير هذه الدورة بموجب ترخيص Creative Commons، الذي يسمح بالاستخدام المجاني مع الإسناد المناسب."
+      }
+    },
     "catalog": {
       "title": "كتالوج الدورات",
       "filters": "المرشحات",

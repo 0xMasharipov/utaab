@@ -1,5 +1,6 @@
 import { Play } from 'lucide-react';
 import { MITLecture } from '@/data/mitOcwLectures';
+import { useTranslation } from 'react-i18next';
 
 interface LecturePlaylistProps {
   lectures: MITLecture[];
@@ -8,14 +9,16 @@ interface LecturePlaylistProps {
 }
 
 export const LecturePlaylist = ({ lectures, currentLectureId, onLectureSelect }: LecturePlaylistProps) => {
+  const { t } = useTranslation();
+  
   return (
     <div className="glass rounded-2xl border border-white/10 overflow-hidden">
       <div className="p-4 border-b border-white/10">
         <h3 className="text-foreground font-montserrat font-semibold text-lg">
-          Course Lectures
+          {t('education.mitOcw.courseLectures')}
         </h3>
         <p className="text-muted-foreground text-sm mt-1">
-          {lectures.length} lectures
+          {lectures.length} {t('education.mitOcw.lectures').toLowerCase()}
         </p>
       </div>
 
@@ -64,7 +67,7 @@ export const LecturePlaylist = ({ lectures, currentLectureId, onLectureSelect }:
                   {isActive && (
                     <span className="flex items-center gap-1 text-accent text-xs font-montserrat font-semibold">
                       <Play className="h-3 w-3" fill="currentColor" />
-                      Now Playing
+                      {t('education.mitOcw.nowPlaying')}
                     </span>
                   )}
                 </div>
