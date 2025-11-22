@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
@@ -155,7 +155,7 @@ export default function AdminLogin() {
   };
 
   // Handle OAuth callback
-  useState(() => {
+  useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('oauth') === 'callback') {
       supabase.auth.getSession().then(async ({ data: { session } }) => {
@@ -214,7 +214,7 @@ export default function AdminLogin() {
         }
       });
     }
-  });
+  }, [navigate, toast, t, logSecurityEvent]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 p-4">

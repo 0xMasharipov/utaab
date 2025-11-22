@@ -53,7 +53,7 @@ export const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
         const { data: { session } } = await supabase.auth.getSession();
         
         if (!session) {
-          navigate('/education/admin-login');
+          navigate('/admin/login');
           return;
         }
 
@@ -64,7 +64,7 @@ export const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
         
         if (error || !data?.isAdmin) {
           await supabase.auth.signOut();
-          navigate('/education/admin-login');
+          navigate('/admin/login');
           return;
         }
 
@@ -72,7 +72,7 @@ export const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
       } catch (error) {
         console.error('Admin verification failed:', error);
         await supabase.auth.signOut();
-        navigate('/education/admin-login');
+        navigate('/admin/login');
       }
     };
 
@@ -80,7 +80,7 @@ export const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (!session) {
-        navigate('/education/admin-login');
+        navigate('/admin/login');
       } else {
         setUser(session.user);
       }
