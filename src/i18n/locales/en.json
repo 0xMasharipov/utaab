@@ -12,6 +12,7 @@
     "account": "Account",
     "studentSignIn": "Student Sign In",
     "studentRegister": "Student Register",
+    "studentAuthOptions": "Student Sign In | Register",
     "adminSignIn": "Admin Sign In"
   },
   "auth": {

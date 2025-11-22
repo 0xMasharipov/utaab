@@ -255,13 +255,7 @@ export const Navbar = () => {
                   onClick={() => { closeMobileMenu(); navigate('/education/signin'); }}
                   className="cursor-pointer px-4 py-2 rounded-xl hover:bg-white/10"
                 >
-                  {t('nav.studentSignIn')}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => { closeMobileMenu(); navigate('/education/register'); }}
-                  className="cursor-pointer px-4 py-2 rounded-xl hover:bg-white/10"
-                >
-                  {t('nav.studentRegister')}
+                  {t('nav.studentAuthOptions')}
                 </DropdownMenuItem>
                 <div className="h-px bg-white/20 my-1" />
                 <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
@@ -407,22 +401,7 @@ export const Navbar = () => {
                     }}
                     className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                   >
-                    {t('nav.studentSignIn')}
-                  </button>
-
-                  <button
-                    role="menuitem"
-                    onClick={() => { closeMobileMenu(); setTimeout(() => navigate('/education/register'), 200); }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        closeMobileMenu();
-                        setTimeout(() => navigate('/education/register'), 200);
-                      }
-                    }}
-                    className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
-                  >
-                    {t('nav.studentRegister')}
+                    {t('nav.studentAuthOptions')}
                   </button>
 
                   <button

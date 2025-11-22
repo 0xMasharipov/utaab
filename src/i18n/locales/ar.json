@@ -12,6 +12,7 @@
     "account": "الحساب",
     "studentSignIn": "تسجيل دخول الطالب",
     "studentRegister": "تسجيل طالب",
+    "studentAuthOptions": "تسجيل دخول الطالب | تسجيل",
     "adminSignIn": "تسجيل دخول المشرف"
   },
   "auth": {
