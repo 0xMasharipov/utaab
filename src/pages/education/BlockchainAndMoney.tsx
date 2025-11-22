@@ -6,12 +6,45 @@ import { mitBlockchainLectures, MITLecture } from '@/data/mitOcwLectures';
 import { Info, ChevronLeft, ChevronRight, Menu } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { supabase } from '@/integrations/supabase/client';
 
 export const BlockchainAndMoney = () => {
   const { t, i18n } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentLecture, setCurrentLecture] = useState<MITLecture>(mitBlockchainLectures[0]);
   const [isPlaylistVisible, setIsPlaylistVisible] = useState(true);
+  const [subtitlesFromDb, setSubtitlesFromDb] = useState<Record<number, { en?: string; tr?: string; ru?: string; ar?: string }>>({});
+
+  // Load subtitles from database
+  useEffect(() => {
+    const loadSubtitles = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('lecture_subtitles')
+          .select('*');
+        
+        if (error) throw error;
+        
+        if (data) {
+          const subtitleMap = data.reduce((acc, item) => {
+            acc[item.lecture_id] = {
+              en: item.subtitle_en || undefined,
+              tr: item.subtitle_tr || undefined,
+              ru: item.subtitle_ru || undefined,
+              ar: item.subtitle_ar || undefined,
+            };
+            return acc;
+          }, {} as Record<number, { en?: string; tr?: string; ru?: string; ar?: string }>);
+          
+          setSubtitlesFromDb(subtitleMap);
+        }
+      } catch (error) {
+        console.error('Error loading subtitles from database:', error);
+      }
+    };
+    
+    loadSubtitles();
+  }, []);
 
   // Initialize lecture from URL or localStorage
   useEffect(() => {
@@ -165,12 +198,12 @@ export const BlockchainAndMoney = () => {
             </div>
 
             {/* Video Player */}
-            <AppleStyleVideoPlayer
-              videoUrl={currentLecture.videoUrl}
-              title={currentLecture.title}
-              onVideoEnd={handleVideoEnd}
-              subtitles={currentLecture.subtitles}
-            />
+              <AppleStyleVideoPlayer
+                videoUrl={currentLecture.videoUrl}
+                title={currentLecture.title}
+                onVideoEnd={handleVideoEnd}
+                subtitles={subtitlesFromDb[currentLecture.id] || currentLecture.subtitles}
+              />
 
             {/* Navigation Buttons */}
             <div className="flex items-center justify-between gap-4">
