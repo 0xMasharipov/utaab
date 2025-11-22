@@ -154,7 +154,7 @@ export const Navbar = () => {
           <button
             onClick={() => scrollToSection('hero')}
             className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity"
-            aria-label="UTAA Blockchain - Home"
+            aria-label="UTAAB - Home"
           >
             <img 
               src={logo} 
