@@ -23,6 +23,7 @@ export const TurnstileWidget = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Load Turnstile script
@@ -30,7 +31,16 @@ export const TurnstileWidget = ({
     script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
     script.async = true;
     script.defer = true;
-    script.onload = () => setIsLoaded(true);
+    script.onload = () => {
+      console.log('[Turnstile] Script loaded successfully');
+      setIsLoaded(true);
+      setIsLoading(false);
+    };
+    script.onerror = (error) => {
+      console.error('[Turnstile] Failed to load script:', error);
+      setIsLoading(false);
+      onError?.();
+    };
     document.head.appendChild(script);
 
     return () => {
@@ -38,35 +48,47 @@ export const TurnstileWidget = ({
         document.head.removeChild(script);
       }
     };
-  }, []);
+  }, [onError]);
 
   useEffect(() => {
     if (!isLoaded || !containerRef.current) return;
 
     const turnstile = (window as any).turnstile;
-    if (!turnstile) return;
+    if (!turnstile) {
+      console.error('[Turnstile] Turnstile API not available');
+      return;
+    }
 
     // Remove existing widget if any
     if (widgetIdRef.current) {
       turnstile.remove(widgetIdRef.current);
     }
 
+    console.log('[Turnstile] Rendering widget with site key:', TURNSTILE_SITE_KEY);
+
     // Render new widget
-    widgetIdRef.current = turnstile.render(containerRef.current, {
-      sitekey: TURNSTILE_SITE_KEY,
-      theme,
-      size,
-      language: i18n.language,
-      callback: (token: string) => {
-        onVerify(token);
-      },
-      'error-callback': () => {
-        onError?.();
-      },
-      'expired-callback': () => {
-        onExpire?.();
-      },
-    });
+    try {
+      widgetIdRef.current = turnstile.render(containerRef.current, {
+        sitekey: TURNSTILE_SITE_KEY,
+        theme,
+        size,
+        language: i18n.language,
+        callback: (token: string) => {
+          console.log('[Turnstile] Verification successful');
+          onVerify(token);
+        },
+        'error-callback': () => {
+          console.error('[Turnstile] Verification error');
+          onError?.();
+        },
+        'expired-callback': () => {
+          console.log('[Turnstile] Token expired');
+          onExpire?.();
+        },
+      });
+    } catch (error) {
+      console.error('[Turnstile] Error rendering widget:', error);
+    }
 
     return () => {
       if (widgetIdRef.current) {
@@ -78,6 +100,9 @@ export const TurnstileWidget = ({
 
   return (
     <div className="flex justify-center my-4">
+      {isLoading && (
+        <div className="text-muted-foreground text-sm">Loading verification...</div>
+      )}
       <div ref={containerRef} />
     </div>
   );

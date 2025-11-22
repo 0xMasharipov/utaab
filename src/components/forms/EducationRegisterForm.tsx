@@ -502,22 +502,20 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
             </div>
           </div>
 
-          {requireCaptcha && (
-            <div className="space-y-2">
-              <Label>{t('auth.captchaRequired')}</Label>
-              <TurnstileWidget
-                onVerify={setCaptchaToken}
-                onError={() => setCaptchaToken("")}
-                onExpire={() => setCaptchaToken("")}
-                theme="dark"
-              />
-            </div>
-          )}
+          <div className="space-y-2">
+            <Label>Security Verification</Label>
+            <TurnstileWidget
+              onVerify={setCaptchaToken}
+              onError={() => setCaptchaToken("")}
+              onExpire={() => setCaptchaToken("")}
+              theme="dark"
+            />
+          </div>
 
           <Button 
             type="submit" 
             className="btn-primary w-full" 
-            disabled={isSubmitting || (requireCaptcha && !captchaToken)}
+            disabled={isSubmitting || !captchaToken}
           >
             {isSubmitting ? t('education.registration.signingIn') : t('education.registration.signIn')}
           </Button>
@@ -909,17 +907,15 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
               </div>
             </div>
 
-            {requireCaptcha && (
-              <div className="space-y-2">
-                <Label>{t('auth.captchaRequired')}</Label>
-                <TurnstileWidget
-                  onVerify={setCaptchaToken}
-                  onError={() => setCaptchaToken("")}
-                  onExpire={() => setCaptchaToken("")}
-                  theme="dark"
-                />
-              </div>
-            )}
+            <div className="space-y-2">
+              <Label>Security Verification</Label>
+              <TurnstileWidget
+                onVerify={setCaptchaToken}
+                onError={() => setCaptchaToken("")}
+                onExpire={() => setCaptchaToken("")}
+                theme="dark"
+              />
+            </div>
 
             <div className="flex gap-3">
               <Button type="button" onClick={handleBack} variant="outline" className="flex-1 glass hover:bg-white/10">
@@ -929,7 +925,7 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
               <Button 
                 type="submit" 
                 className="btn-primary flex-1" 
-                disabled={isSubmitting || (requireCaptcha && !captchaToken)}
+                disabled={isSubmitting || !captchaToken}
               >
                 {isSubmitting ? 'Creating Account...' : t('education.registration.createAccount')}
               </Button>
