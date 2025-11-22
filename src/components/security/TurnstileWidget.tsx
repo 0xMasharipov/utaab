@@ -10,7 +10,7 @@ interface TurnstileWidgetProps {
 }
 
 // Cloudflare Turnstile Site Key (public - it's safe to be in code)
-const TURNSTILE_SITE_KEY = '0x4AAAAAAAzcj4KvUqH-djbJ';
+const TURNSTILE_SITE_KEY = '0x4AAAAAACCU59q4dk2ggTF_';
 
 export const TurnstileWidget = ({
   onVerify,
