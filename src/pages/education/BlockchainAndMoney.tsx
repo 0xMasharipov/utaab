@@ -79,7 +79,7 @@ export const BlockchainAndMoney = () => {
   const hasNext = currentIndex < mitBlockchainLectures.length - 1;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pt-24 md:pt-28">
       <EducationNavbar />
       
       {/* Course Header */}
@@ -170,6 +170,7 @@ export const BlockchainAndMoney = () => {
               videoUrl={currentLecture.videoUrl}
               title={currentLecture.title}
               onVideoEnd={handleVideoEnd}
+              subtitles={currentLecture.subtitles}
             />
 
             {/* Navigation Buttons */}

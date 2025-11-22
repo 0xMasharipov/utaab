@@ -363,6 +363,12 @@
       "open_resources_subtitle": "Курсы мирового класса от ведущих учреждений",
       "mit_partnership": "Бесплатно • Партнерство с MIT"
     },
+    "video": {
+      "captions": "Субтитры",
+      "disable_cc": "Отключить субтитры",
+      "enable_cc": "Включить субтитры",
+      "select_language": "Выбрать язык субтитров"
+    },
     "catalog": {
       "title": "Каталог курсов",
       "filters": "Фильтры",

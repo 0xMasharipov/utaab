@@ -363,6 +363,12 @@
       "open_resources_subtitle": "Önde gelen kurumlardan dünya standartında kurslar",
       "mit_partnership": "Ücretsiz • MIT Ortaklığı"
     },
+    "video": {
+      "captions": "Altyazılar",
+      "disable_cc": "Altyazıları Kapat",
+      "enable_cc": "Altyazıları Aç",
+      "select_language": "Altyazı Dili Seçin"
+    },
     "catalog": {
       "title": "Kurs Kataloğu",
       "filters": "Filtreler",

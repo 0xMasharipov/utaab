@@ -363,6 +363,12 @@
       "open_resources_subtitle": "دورات عالمية المستوى من مؤسسات رائدة",
       "mit_partnership": "مجاني • شراكة MIT"
     },
+    "video": {
+      "captions": "التسميات التوضيحية",
+      "disable_cc": "تعطيل الترجمة",
+      "enable_cc": "تمكين الترجمة",
+      "select_language": "اختر لغة الترجمة"
+    },
     "catalog": {
       "title": "كتالوج الدورات",
       "filters": "المرشحات",

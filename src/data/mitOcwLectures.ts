@@ -4,6 +4,12 @@ export interface MITLecture {
   videoUrl: string;
   duration: string;
   description?: string;
+  subtitles?: {
+    en?: string;
+    tr?: string;
+    ru?: string;
+    ar?: string;
+  };
 }
 
 export const mitBlockchainLectures: MITLecture[] = [
@@ -12,7 +18,13 @@ export const mitBlockchainLectures: MITLecture[] = [
     title: "Lecture 1 – Introduction",
     videoUrl: "https://dn720003.ca.archive.org/0/items/MIT15.S12F18/MIT15_S12F18_lec01_300k.mp4",
     duration: "1:28:00",
-    description: "Introduction to the course and blockchain technology"
+    description: "Introduction to the course and blockchain technology",
+    subtitles: {
+      en: "/subtitles/mit-blockchain/lecture-01-en.vtt",
+      tr: "/subtitles/mit-blockchain/lecture-01-tr.vtt",
+      ru: "/subtitles/mit-blockchain/lecture-01-ru.vtt",
+      ar: "/subtitles/mit-blockchain/lecture-01-ar.vtt",
+    }
   },
   {
     id: 2,
