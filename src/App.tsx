@@ -33,6 +33,8 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminSettingsNew from "./pages/admin/AdminSettingsNew";
 import Profile from "./pages/Profile";
 import { KVKKRequest } from "./pages/KVKKRequest";
+import { PrivacyPolicy } from "./pages/PrivacyPolicy";
+import { TermsOfService } from "./pages/TermsOfService";
 import { AdminDashboard as OldAdminDashboard } from "./pages/education/AdminDashboard";
 
 const queryClient = new QueryClient();
@@ -91,6 +93,8 @@ function App() {
             </Route>
             
             <Route path="/kvkk-request" element={<KVKKRequest />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
