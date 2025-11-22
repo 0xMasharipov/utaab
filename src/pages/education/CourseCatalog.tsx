@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { Search, SlidersHorizontal, X } from 'lucide-react';
@@ -17,6 +17,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 import { EducationNavbar } from '@/components/education/EducationNavbar';
 import { CutiiAIPanel } from '@/components/education/CutiiAIPanel';
+import { ExternalCourseCard } from '@/components/education/ExternalCourseCard';
+import { externalCourses } from '@/data/externalCourses';
 
 export const CourseCatalog = () => {
   const { t, i18n } = useTranslation();
@@ -135,6 +137,44 @@ export const CourseCatalog = () => {
     searchQuery.trim() !== '',
   ].filter(Boolean).length;
 
+  // Merge database courses with external courses
+  const allCourses = useMemo(() => {
+    const dbCourses = courses || [];
+    
+    // Filter external courses based on current filters
+    let filteredExternal = externalCourses;
+    
+    if (selectedLevel !== 'all') {
+      filteredExternal = filteredExternal.filter(c => c.level === selectedLevel);
+    }
+    
+    if (selectedLanguage !== 'all') {
+      filteredExternal = filteredExternal.filter(c => c.language === selectedLanguage);
+    }
+    
+    if (selectedPrice === 'paid') {
+      filteredExternal = []; // External courses are free
+    }
+    
+    if (searchQuery.trim()) {
+      const locale = i18n.language as 'en' | 'tr' | 'ru' | 'ar';
+      const searchLower = searchQuery.toLowerCase();
+      filteredExternal = filteredExternal.filter(course => {
+        const title = course[`title_${locale}`] || course.title_en;
+        const subtitle = course[`subtitle_${locale}`] || course.subtitle_en;
+        return (
+          title.toLowerCase().includes(searchLower) ||
+          subtitle.toLowerCase().includes(searchLower) ||
+          course.tags.some(tag => tag.toLowerCase().includes(searchLower))
+        );
+      });
+    }
+    
+    return { db: dbCourses, external: filteredExternal };
+  }, [courses, selectedLevel, selectedLanguage, selectedPrice, searchQuery, i18n.language]);
+
+  const totalCoursesCount = allCourses.db.length + allCourses.external.length;
+
   return (
     <div className="min-h-screen bg-background pt-24 pb-20 px-6">
       <EducationNavbar />
@@ -244,7 +284,12 @@ export const CourseCatalog = () => {
           {/* Sort and Results Count */}
           <div className="flex items-center justify-between">
             <p className="text-muted-foreground">
-              {courses?.length || 0} {courses?.length === 1 ? t('education.catalog.course') : t('education.catalog.courses')}
+              {totalCoursesCount} {totalCoursesCount === 1 ? t('education.catalog.course') : t('education.catalog.courses')}
+              {allCourses.external.length > 0 && (
+                <span className="text-xs ml-2 text-primary">
+                  ({allCourses.external.length} {t('education.catalog.external')})
+                </span>
+              )}
             </p>
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger className="glass w-[200px]">
@@ -264,9 +309,19 @@ export const CourseCatalog = () => {
           <div className="text-center py-20">
             <div className="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full mx-auto" />
           </div>
-        ) : courses && courses.length > 0 ? (
+        ) : totalCoursesCount > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.map((course) => (
+            {/* External Courses First */}
+            {allCourses.external.map((course) => (
+              <ExternalCourseCard
+                key={course.id}
+                course={course}
+                onClick={() => navigate(course.externalUrl)}
+              />
+            ))}
+            
+            {/* Database Courses */}
+            {allCourses.db.map((course) => (
               <Card
                 key={course.id}
                 className="glass cursor-pointer transition-all hover:scale-105 hover:shadow-lg overflow-hidden"

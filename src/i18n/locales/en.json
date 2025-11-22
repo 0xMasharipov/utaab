@@ -410,7 +410,10 @@
       "search_placeholder": "Search courses...",
       "featured": "Featured Courses",
       "categories": "Browse by Category",
-      "cta": "Explore Courses"
+      "cta": "Explore Courses",
+      "open_resources": "Open Educational Resources",
+      "open_resources_subtitle": "World-class courses from leading institutions",
+      "mit_partnership": "Free • MIT Partnership"
     },
     "catalog": {
       "title": "Course Catalog",
@@ -432,7 +435,8 @@
       "course": "course",
       "courses": "courses",
       "no_results": "No courses found",
-      "clear_filters": "Clear Filters"
+      "clear_filters": "Clear Filters",
+      "external": "from partner institutions"
     },
     "course": {
       "enroll": "Enroll Now",

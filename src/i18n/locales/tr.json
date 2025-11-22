@@ -358,7 +358,10 @@
       "search_placeholder": "Kurs ara...",
       "featured": "Öne Çıkan Kurslar",
       "categories": "Kategoriye Göre Gözat",
-      "cta": "Kursları Keşfet"
+      "cta": "Kursları Keşfet",
+      "open_resources": "Açık Eğitim Kaynakları",
+      "open_resources_subtitle": "Önde gelen kurumlardan dünya standartında kurslar",
+      "mit_partnership": "Ücretsiz • MIT Ortaklığı"
     },
     "catalog": {
       "title": "Kurs Kataloğu",
@@ -380,7 +383,8 @@
       "course": "kurs",
       "courses": "kurs",
       "no_results": "Kurs bulunamadı",
-      "clear_filters": "Filtreleri Temizle"
+      "clear_filters": "Filtreleri Temizle",
+      "external": "partner kurumlardan"
     },
     "course": {
       "enroll": "Şimdi Kaydol",

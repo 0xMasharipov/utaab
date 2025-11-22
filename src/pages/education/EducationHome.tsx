@@ -4,11 +4,14 @@ import { Search, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 import { EducationNavbar } from '@/components/education/EducationNavbar';
 import { CutiiAIPanel } from '@/components/education/CutiiAIPanel';
+import { ExternalCourseCard } from '@/components/education/ExternalCourseCard';
+import { externalCourses } from '@/data/externalCourses';
 
 export const EducationHome = () => {
   const { t, i18n } = useTranslation();
@@ -103,9 +106,38 @@ export const EducationHome = () => {
         </div>
       </section>
 
+      {/* Open Educational Resources Section */}
+      <section className="py-20 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-3xl font-bold mb-2">
+                {t('education.home.open_resources')}
+              </h2>
+              <p className="text-muted-foreground">
+                {t('education.home.open_resources_subtitle')}
+              </p>
+            </div>
+            <Badge variant="secondary" className="text-sm hidden sm:flex">
+              {t('education.home.mit_partnership')}
+            </Badge>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {externalCourses.map((course) => (
+              <ExternalCourseCard
+                key={course.id}
+                course={course}
+                onClick={() => navigate(course.externalUrl)}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Categories Section */}
       {categories && categories.length > 0 && (
-        <section className="py-20 px-6">
+        <section className="py-20 px-6 bg-muted/30">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl font-bold mb-12 text-center">{t('education.home.categories')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -130,7 +162,7 @@ export const EducationHome = () => {
 
       {/* Featured Courses Section */}
       {featuredCourses && featuredCourses.length > 0 && (
-        <section className="py-20 px-6 bg-muted/30">
+        <section className="py-20 px-6">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl font-bold mb-12 text-center">{t('education.home.featured')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

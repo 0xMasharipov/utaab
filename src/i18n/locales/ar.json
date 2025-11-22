@@ -358,7 +358,10 @@
       "search_placeholder": "البحث عن الدورات...",
       "featured": "الدورات المميزة",
       "categories": "تصفح حسب الفئة",
-      "cta": "استكشف الدورات"
+      "cta": "استكشف الدورات",
+      "open_resources": "موارد تعليمية مفتوحة",
+      "open_resources_subtitle": "دورات عالمية المستوى من مؤسسات رائدة",
+      "mit_partnership": "مجاني • شراكة MIT"
     },
     "catalog": {
       "title": "كتالوج الدورات",
@@ -380,7 +383,8 @@
       "course": "دورة",
       "courses": "دورات",
       "no_results": "لم يتم العثور على دورات",
-      "clear_filters": "مسح المرشحات"
+      "clear_filters": "مسح المرشحات",
+      "external": "من مؤسسات شريكة"
     },
     "course": {
       "enroll": "سجل الآن",

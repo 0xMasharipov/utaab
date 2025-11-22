@@ -27,6 +27,22 @@ export const BlockchainAndMoney = () => {
     setCurrentLecture(lecture);
   }, []);
 
+  // SEO Meta Tags
+  useEffect(() => {
+    document.title = 'Blockchain and Money - MIT OpenCourseWare | UTAAB EDU';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 
+        'Watch all 24 lectures from MIT\'s Blockchain and Money course taught by Prof. Gary Gensler. Free educational resource from MIT OpenCourseWare covering blockchain technology, cryptocurrencies, and financial systems.'
+      );
+    } else {
+      const meta = document.createElement('meta');
+      meta.name = 'description';
+      meta.content = 'Watch all 24 lectures from MIT\'s Blockchain and Money course taught by Prof. Gary Gensler. Free educational resource from MIT OpenCourseWare covering blockchain technology, cryptocurrencies, and financial systems.';
+      document.head.appendChild(meta);
+    }
+  }, []);
+
   const handleLectureSelect = (id: number) => {
     const lecture = mitBlockchainLectures.find(l => l.id === id);
     if (lecture) {
