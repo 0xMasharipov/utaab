@@ -12,6 +12,7 @@
     "account": "Аккаунт",
     "studentSignIn": "Вход студента",
     "studentRegister": "Регистрация студента",
+    "studentAuthOptions": "Вход студента | Регистрация",
     "adminSignIn": "Вход администратора"
   },
   "auth": {
