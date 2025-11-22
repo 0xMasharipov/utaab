@@ -36,6 +36,7 @@ import { KVKKRequest } from "./pages/KVKKRequest";
 import { PrivacyPolicy } from "./pages/PrivacyPolicy";
 import { TermsOfService } from "./pages/TermsOfService";
 import { AdminDashboard as OldAdminDashboard } from "./pages/education/AdminDashboard";
+import { BlockchainAndMoney } from "./pages/education/BlockchainAndMoney";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +57,7 @@ function App() {
             <Route path="/education/sign-in" element={<EducationSignIn />} />
             <Route path="/education/profile" element={<UserProfile />} />
             <Route path="/education/instructor/:id" element={<InstructorProfile />} />
+            <Route path="/education/blockchain-and-money" element={<BlockchainAndMoney />} />
             <Route path="/profile" element={<Profile />} />
             
             {/* Separate Admin Authentication */}
