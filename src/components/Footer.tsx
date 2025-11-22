@@ -57,7 +57,7 @@ export const Footer = ({
   };
   return <footer className="relative py-12 sm:py-16 border-t border-white/10">
       <div className="section-container">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12 mb-8 sm:mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-10 md:gap-12 mb-8 sm:mb-12">
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3 mb-3 sm:mb-4">
@@ -88,8 +88,46 @@ export const Footer = ({
                   </button>
                 </li>)}
               <li>
-                <button onClick={onPrivacyClick} className="text-muted-foreground hover:text-accent transition-colors">
-                  {t('footer.privacyCenter')}
+              </li>
+            </ul>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <h4 className="text-lg font-semibold text-foreground mb-4">
+              {t('footer.legal', 'Legal')}
+            </h4>
+            <ul className="space-y-2">
+              <li>
+                <a
+                  href="/privacy-policy"
+                  className="text-muted-foreground hover:text-accent transition-colors"
+                >
+                  {t('footer.privacyPolicy', 'Privacy Policy')}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/terms-of-service"
+                  className="text-muted-foreground hover:text-accent transition-colors"
+                >
+                  {t('footer.termsOfService', 'Terms of Service')}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/kvkk-request"
+                  className="text-muted-foreground hover:text-accent transition-colors"
+                >
+                  {t('footer.kvkkRequest', 'KVKK Request')}
+                </a>
+              </li>
+              <li>
+                <button
+                  onClick={onPrivacyClick}
+                  className="text-muted-foreground hover:text-accent transition-colors text-left"
+                >
+                  {t('footer.privacyCenter', 'Privacy Center')}
                 </button>
               </li>
             </ul>
