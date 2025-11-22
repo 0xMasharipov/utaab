@@ -252,7 +252,7 @@ export const Navbar = () => {
                   Student
                 </div>
                 <DropdownMenuItem
-                  onClick={() => { closeMobileMenu(); navigate('/education/signin'); }}
+                  onClick={() => { closeMobileMenu(); navigate('/education/sign-in'); }}
                   className="cursor-pointer px-4 py-2 rounded-xl hover:bg-white/10"
                 >
                   {t('nav.studentAuthOptions')}
@@ -391,12 +391,12 @@ export const Navbar = () => {
 
                   <button
                     role="menuitem"
-                    onClick={() => { closeMobileMenu(); setTimeout(() => navigate('/education/signin'), 200); }}
+                    onClick={() => { closeMobileMenu(); setTimeout(() => navigate('/education/sign-in'), 200); }}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
                         closeMobileMenu();
-                        setTimeout(() => navigate('/education/signin'), 200);
+                        setTimeout(() => navigate('/education/sign-in'), 200);
                       }
                     }}
                     className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
