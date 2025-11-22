@@ -270,7 +270,7 @@ export const UserProfile = () => {
     <div className="min-h-screen bg-background gradient-mesh">
       <EducationNavbar />
       
-      <div className="section-container py-8 md:py-12">
+      <div className="section-container pt-24 md:pt-28 pb-8 md:pb-12">
         {/* Profile Header */}
         <div className="glass-strong rounded-3xl p-6 md:p-8 mb-6">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
