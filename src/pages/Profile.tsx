@@ -128,7 +128,7 @@ export default function Profile() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="glass-strong border-b border-white/10">
+      <div className="glass-strong border-b border-white/10 pt-24 md:pt-28">
         <div className="container mx-auto px-6 py-8">
           <Button
             variant="ghost"
