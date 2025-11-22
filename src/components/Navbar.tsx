@@ -156,7 +156,15 @@ export const Navbar = () => {
             className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity"
             aria-label="UTAA Blockchain - Home"
           >
-            <img src={logo} alt="UTAA Blockchain" className="h-8 sm:h-10 w-auto" />
+            <img 
+              src={logo} 
+              alt="UTAA Blockchain" 
+              className="h-8 sm:h-10 w-auto" 
+              width="40" 
+              height="40"
+              fetchPriority="high"
+              decoding="async"
+            />
             <BrandText 
               variant="navbar-mobile" 
               className="sm:hidden"
