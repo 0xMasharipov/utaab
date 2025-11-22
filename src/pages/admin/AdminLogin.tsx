@@ -305,20 +305,22 @@ export default function AdminLogin() {
                 </Button>
               </div>
             </div>
-            <div className="space-y-2">
-              <Label>Security Verification</Label>
-              <TurnstileWidget
-                onVerify={setCaptchaToken}
-                onError={() => setCaptchaToken("")}
-                onExpire={() => setCaptchaToken("")}
-                theme="dark"
-              />
-            </div>
+            {requireCaptcha && (
+              <div className="space-y-2">
+                <Label>Security Verification</Label>
+                <TurnstileWidget
+                  onVerify={setCaptchaToken}
+                  onError={() => setCaptchaToken("")}
+                  onExpire={() => setCaptchaToken("")}
+                  theme="dark"
+                />
+              </div>
+            )}
 
             <Button
               type="submit"
               className="w-full"
-              disabled={isLoading || !captchaToken}
+              disabled={isLoading || (requireCaptcha && !captchaToken)}
             >
               <Mail className="w-4 h-4 mr-2" />
               {isLoading ? "Signing in..." : "Sign In with Email"}
