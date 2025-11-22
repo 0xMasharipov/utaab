@@ -1,43 +1,45 @@
+import { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
-import { EducationHome } from "./pages/education/EducationHome";
-import { CourseCatalog } from "./pages/education/CourseCatalog";
-import { CourseDetail } from "./pages/education/CourseDetail";
-import { CourseLearn } from "./pages/education/CourseLearn";
-import { EducationRegister } from "./pages/education/EducationRegister";
-import { EducationSignIn } from "./pages/education/EducationSignIn";
-import { InstructorProfile } from "./pages/education/InstructorProfile";
-import { UserProfile } from "./pages/education/UserProfile";
-import { AdminLayout } from "./components/admin/AdminLayout";
-import { AdminOverview } from "./pages/education/admin/AdminOverview";
-import { AdminCourses } from "./pages/education/admin/AdminCourses";
-import { AdminAnnouncements } from "./pages/education/admin/AdminAnnouncements";
-import { AdminMessages } from "./pages/education/admin/AdminMessages";
-import { AdminMedia } from "./pages/education/admin/AdminMedia";
-import { AdminUsers } from "./pages/education/admin/AdminUsers";
-import { AdminSettings } from "./pages/education/admin/AdminSettings";
-import { AdminAuditLog } from "./pages/education/admin/AdminAuditLog";
-import { AdminSecurity } from "./pages/education/admin/AdminSecurity";
-import AdminLogin from "./pages/admin/AdminLogin";
-import AdminEvents from "./pages/admin/AdminEvents";
-import AdminSiteContent from "./pages/admin/AdminSiteContent";
-import AdminUsersNew from "./pages/admin/AdminUsers";
-import AdminCommunities from "./pages/admin/AdminCommunities";
-import AdminCommunityDetail from "./pages/admin/AdminCommunityDetail";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import AdminSettingsNew from "./pages/admin/AdminSettingsNew";
-import AdminSubtitles from "./pages/admin/AdminSubtitles";
-import Profile from "./pages/Profile";
-import { KVKKRequest } from "./pages/KVKKRequest";
-import { PrivacyPolicy } from "./pages/PrivacyPolicy";
-import { TermsOfService } from "./pages/TermsOfService";
-import { AdminDashboard as OldAdminDashboard } from "./pages/education/AdminDashboard";
-import { BlockchainAndMoney } from "./pages/education/BlockchainAndMoney";
+
+// Lazy load all route components for better code splitting
+const Index = lazy(() => import("./pages/Index"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const EducationHome = lazy(() => import("./pages/education/EducationHome").then(m => ({ default: m.EducationHome })));
+const CourseCatalog = lazy(() => import("./pages/education/CourseCatalog").then(m => ({ default: m.CourseCatalog })));
+const CourseDetail = lazy(() => import("./pages/education/CourseDetail").then(m => ({ default: m.CourseDetail })));
+const CourseLearn = lazy(() => import("./pages/education/CourseLearn").then(m => ({ default: m.CourseLearn })));
+const EducationRegister = lazy(() => import("./pages/education/EducationRegister").then(m => ({ default: m.EducationRegister })));
+const EducationSignIn = lazy(() => import("./pages/education/EducationSignIn").then(m => ({ default: m.EducationSignIn })));
+const InstructorProfile = lazy(() => import("./pages/education/InstructorProfile").then(m => ({ default: m.InstructorProfile })));
+const UserProfile = lazy(() => import("./pages/education/UserProfile").then(m => ({ default: m.UserProfile })));
+const AdminLayout = lazy(() => import("./components/admin/AdminLayout").then(m => ({ default: m.AdminLayout })));
+const AdminOverview = lazy(() => import("./pages/education/admin/AdminOverview").then(m => ({ default: m.AdminOverview })));
+const AdminCourses = lazy(() => import("./pages/education/admin/AdminCourses").then(m => ({ default: m.AdminCourses })));
+const AdminAnnouncements = lazy(() => import("./pages/education/admin/AdminAnnouncements").then(m => ({ default: m.AdminAnnouncements })));
+const AdminMessages = lazy(() => import("./pages/education/admin/AdminMessages").then(m => ({ default: m.AdminMessages })));
+const AdminMedia = lazy(() => import("./pages/education/admin/AdminMedia").then(m => ({ default: m.AdminMedia })));
+const AdminUsers = lazy(() => import("./pages/education/admin/AdminUsers").then(m => ({ default: m.AdminUsers })));
+const AdminSettings = lazy(() => import("./pages/education/admin/AdminSettings").then(m => ({ default: m.AdminSettings })));
+const AdminAuditLog = lazy(() => import("./pages/education/admin/AdminAuditLog").then(m => ({ default: m.AdminAuditLog })));
+const AdminSecurity = lazy(() => import("./pages/education/admin/AdminSecurity").then(m => ({ default: m.AdminSecurity })));
+const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
+const AdminEvents = lazy(() => import("./pages/admin/AdminEvents"));
+const AdminSiteContent = lazy(() => import("./pages/admin/AdminSiteContent"));
+const AdminUsersNew = lazy(() => import("./pages/admin/AdminUsers"));
+const AdminCommunities = lazy(() => import("./pages/admin/AdminCommunities"));
+const AdminCommunityDetail = lazy(() => import("./pages/admin/AdminCommunityDetail"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const AdminSettingsNew = lazy(() => import("./pages/admin/AdminSettingsNew"));
+const AdminSubtitles = lazy(() => import("./pages/admin/AdminSubtitles"));
+const Profile = lazy(() => import("./pages/Profile"));
+const KVKKRequest = lazy(() => import("./pages/KVKKRequest").then(m => ({ default: m.KVKKRequest })));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy").then(m => ({ default: m.PrivacyPolicy })));
+const TermsOfService = lazy(() => import("./pages/TermsOfService").then(m => ({ default: m.TermsOfService })));
+const BlockchainAndMoney = lazy(() => import("./pages/education/BlockchainAndMoney").then(m => ({ default: m.BlockchainAndMoney })));
 
 const queryClient = new QueryClient();
 
@@ -48,7 +50,8 @@ function App() {
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
+          <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>}>
+            <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/education" element={<EducationHome />} />
             <Route path="/education/courses" element={<CourseCatalog />} />
@@ -101,6 +104,7 @@ function App() {
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </Suspense>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
