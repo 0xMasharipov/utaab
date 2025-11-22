@@ -958,6 +958,36 @@ export type Database = {
         }
         Relationships: []
       }
+      lecture_subtitles: {
+        Row: {
+          id: string
+          lecture_id: number
+          subtitle_ar: string | null
+          subtitle_en: string | null
+          subtitle_ru: string | null
+          subtitle_tr: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          lecture_id: number
+          subtitle_ar?: string | null
+          subtitle_en?: string | null
+          subtitle_ru?: string | null
+          subtitle_tr?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          lecture_id?: number
+          subtitle_ar?: string | null
+          subtitle_en?: string | null
+          subtitle_ru?: string | null
+          subtitle_tr?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       lesson_progress: {
         Row: {
           completed: boolean | null
@@ -1499,6 +1529,57 @@ export type Database = {
           target_audience?: string | null
           updated_at?: string | null
           version?: number | null
+        }
+        Relationships: []
+      }
+      subtitle_jobs: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          created_by: string | null
+          error_message: string | null
+          generated_files: Json | null
+          id: string
+          lecture_id: number
+          lecture_title: string
+          metadata: Json | null
+          progress: number | null
+          started_at: string | null
+          status: string
+          updated_at: string | null
+          video_url: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          error_message?: string | null
+          generated_files?: Json | null
+          id?: string
+          lecture_id: number
+          lecture_title: string
+          metadata?: Json | null
+          progress?: number | null
+          started_at?: string | null
+          status?: string
+          updated_at?: string | null
+          video_url: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          error_message?: string | null
+          generated_files?: Json | null
+          id?: string
+          lecture_id?: number
+          lecture_title?: string
+          metadata?: Json | null
+          progress?: number | null
+          started_at?: string | null
+          status?: string
+          updated_at?: string | null
+          video_url?: string
         }
         Relationships: []
       }
