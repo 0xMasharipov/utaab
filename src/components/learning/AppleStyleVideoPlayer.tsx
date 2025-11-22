@@ -1,18 +1,25 @@
 import { useRef, useState, useEffect } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize, Settings } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Maximize, Settings, Subtitles } from 'lucide-react';
 
 interface AppleStyleVideoPlayerProps {
   videoUrl: string;
   title?: string;
   onVideoEnd?: () => void;
   autoplay?: boolean;
+  subtitles?: {
+    en?: string;
+    tr?: string;
+    ru?: string;
+    ar?: string;
+  };
 }
 
 export const AppleStyleVideoPlayer = ({ 
   videoUrl, 
   title, 
   onVideoEnd,
-  autoplay = false 
+  autoplay = false,
+  subtitles
 }: AppleStyleVideoPlayerProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -26,6 +33,9 @@ export const AppleStyleVideoPlayer = ({
   const [showControls, setShowControls] = useState(true);
   const [showSpeedMenu, setShowSpeedMenu] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showCaptionsMenu, setShowCaptionsMenu] = useState(false);
+  const [selectedCaption, setSelectedCaption] = useState<string>('en');
+  const [captionsEnabled, setCaptionsEnabled] = useState(true);
   
   const inactivityTimerRef = useRef<NodeJS.Timeout>();
 
@@ -180,6 +190,23 @@ export const AppleStyleVideoPlayer = ({
     }
   };
 
+  // Manage caption tracks
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const tracks = video.textTracks;
+    
+    for (let i = 0; i < tracks.length; i++) {
+      const track = tracks[i];
+      if (track.language === selectedCaption && captionsEnabled) {
+        track.mode = 'showing';
+      } else {
+        track.mode = 'hidden';
+      }
+    }
+  }, [selectedCaption, captionsEnabled]);
+
   const formatTime = (seconds: number) => {
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
@@ -206,7 +233,45 @@ export const AppleStyleVideoPlayer = ({
         className="w-full h-full"
         onClick={togglePlay}
         autoPlay={autoplay}
-      />
+        crossOrigin="anonymous"
+      >
+        {subtitles?.en && (
+          <track
+            kind="subtitles"
+            src={subtitles.en}
+            srcLang="en"
+            label="English"
+            default={selectedCaption === 'en'}
+          />
+        )}
+        {subtitles?.tr && (
+          <track
+            kind="subtitles"
+            src={subtitles.tr}
+            srcLang="tr"
+            label="Türkçe"
+            default={selectedCaption === 'tr'}
+          />
+        )}
+        {subtitles?.ru && (
+          <track
+            kind="subtitles"
+            src={subtitles.ru}
+            srcLang="ru"
+            label="Русский"
+            default={selectedCaption === 'ru'}
+          />
+        )}
+        {subtitles?.ar && (
+          <track
+            kind="subtitles"
+            src={subtitles.ar}
+            srcLang="ar"
+            label="العربية"
+            default={selectedCaption === 'ar'}
+          />
+        )}
+      </video>
 
       {/* Center Play Icon */}
       <div 
@@ -302,6 +367,55 @@ export const AppleStyleVideoPlayer = ({
                 </div>
               )}
             </div>
+
+            {/* Captions Control */}
+            {subtitles && (
+              <div className="relative">
+                <button
+                  onClick={() => setShowCaptionsMenu(!showCaptionsMenu)}
+                  className={`text-white hover:text-accent transition-colors flex items-center gap-1 ${
+                    captionsEnabled ? 'text-accent' : ''
+                  }`}
+                  aria-label="Toggle captions"
+                >
+                  <Subtitles className="h-5 w-5" />
+                </button>
+
+                {showCaptionsMenu && (
+                  <div className="absolute bottom-full right-0 mb-2 bg-black/90 backdrop-blur-xl rounded-lg border border-white/20 overflow-hidden min-w-[140px]">
+                    <button
+                      onClick={() => {
+                        setCaptionsEnabled(!captionsEnabled);
+                        setShowCaptionsMenu(false);
+                      }}
+                      className="block w-full px-4 py-2 text-sm font-montserrat text-left hover:bg-white/10 transition-colors text-white"
+                    >
+                      {captionsEnabled ? 'Disable CC' : 'Enable CC'}
+                    </button>
+                    
+                    <div className="h-px bg-white/20 my-1" />
+                    
+                    {Object.entries(subtitles).map(([lang, url]) => (
+                      url && (
+                        <button
+                          key={lang}
+                          onClick={() => {
+                            setSelectedCaption(lang);
+                            setCaptionsEnabled(true);
+                            setShowCaptionsMenu(false);
+                          }}
+                          className={`block w-full px-4 py-2 text-sm font-montserrat text-left hover:bg-white/10 transition-colors ${
+                            selectedCaption === lang ? 'text-accent' : 'text-white'
+                          }`}
+                        >
+                          {lang.toUpperCase()}
+                        </button>
+                      )
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
             <button
               onClick={toggleFullscreen}

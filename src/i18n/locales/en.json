@@ -415,6 +415,12 @@
       "open_resources_subtitle": "World-class courses from leading institutions",
       "mit_partnership": "Free • MIT Partnership"
     },
+    "video": {
+      "captions": "Captions",
+      "disable_cc": "Disable CC",
+      "enable_cc": "Enable CC",
+      "select_language": "Select Caption Language"
+    },
     "catalog": {
       "title": "Course Catalog",
       "filters": "Filters",
