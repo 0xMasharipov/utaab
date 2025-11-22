@@ -127,14 +127,19 @@ export const AppleStyleVideoPlayer = ({
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, []);
 
-  const togglePlay = () => {
+  const togglePlay = async () => {
     if (videoRef.current) {
       if (isPlaying) {
         videoRef.current.pause();
+        setIsPlaying(false);
       } else {
-        videoRef.current.play();
+        try {
+          await videoRef.current.play();
+          setIsPlaying(true);
+        } catch (error) {
+          console.error('Failed to play video:', error);
+        }
       }
-      setIsPlaying(!isPlaying);
     }
   };
 
@@ -233,7 +238,6 @@ export const AppleStyleVideoPlayer = ({
         className="w-full h-full"
         onClick={togglePlay}
         autoPlay={autoplay}
-        crossOrigin="anonymous"
       >
         {subtitles?.en && (
           <track
