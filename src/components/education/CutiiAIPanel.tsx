@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Bot, Send, X, Minimize2, Maximize2, Loader2 } from 'lucide-react';
+import { Bot, Send, X, Minimize2, Maximize2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
@@ -8,6 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { TypewriterText } from './TypewriterText';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -241,7 +242,7 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent
-          className={`p-0 gap-0 border border-white/30 ${
+          className={`p-0 gap-0 border border-white/30 cutii-ai-dialog ${
             isMobile || isMaximized 
               ? 'w-screen h-screen max-w-none rounded-none' 
               : 'max-w-none'
@@ -249,9 +250,10 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
           style={
             isMobile || isMaximized
               ? {
-                  background: 'rgba(15, 23, 42, 0.95)',
-                  backdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
-                  WebkitBackdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
+                  background: 'radial-gradient(ellipse at 20% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, rgba(147, 51, 234, 0.06) 0%, transparent 50%), rgba(15, 23, 42, 0.95)',
+                  backdropFilter: 'blur(32px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(32px) saturate(180%)',
+                  animation: 'liquidGlass 10s ease-in-out infinite',
                 }
               : {
                   width: `${size.width}px`,
@@ -259,10 +261,11 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
                   left: `${position.x}px`,
                   top: `${position.y}px`,
                   transform: 'none',
-                  background: 'rgba(15, 23, 42, 0.95)',
-                  backdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
-                  WebkitBackdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
+                  background: 'radial-gradient(ellipse at 20% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, rgba(147, 51, 234, 0.06) 0%, transparent 50%), rgba(15, 23, 42, 0.95)',
+                  backdropFilter: 'blur(32px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(32px) saturate(180%)',
                   position: 'fixed',
+                  animation: 'liquidGlass 10s ease-in-out infinite',
                 }
           }
           onPointerDownOutside={(e) => e.preventDefault()}
@@ -310,13 +313,19 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
                   className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[80%] rounded-2xl px-4 py-2 ${
+                    className={`max-w-[80%] rounded-2xl px-4 py-2 animate-fade-in ${
                       message.role === 'user'
                         ? 'bg-primary text-primary-foreground'
                         : 'glass'
                     }`}
                   >
-                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                    <p className="text-sm">
+                      {message.role === 'assistant' && idx === messages.length - 1 && !isLoading ? (
+                        <TypewriterText text={message.content} />
+                      ) : (
+                        <span className="whitespace-pre-wrap">{message.content}</span>
+                      )}
+                    </p>
                     <span className="text-xs opacity-70 mt-1 block">
                       {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
@@ -325,8 +334,10 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
               ))}
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="glass rounded-2xl px-4 py-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                  <div className="glass rounded-2xl px-4 py-3 flex items-center gap-1">
+                    <div className="w-2 h-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <div className="w-2 h-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <div className="w-2 h-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: '300ms' }} />
                   </div>
                 </div>
               )}
@@ -352,11 +363,7 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
                 size="icon"
                 className="btn-primary"
               >
-                {isLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Send className="h-4 w-4" />
-                )}
+                <Send className="h-4 w-4" />
               </Button>
             </div>
             <p className="text-xs text-muted-foreground mt-2 text-center">

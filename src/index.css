@@ -144,6 +144,22 @@
     }
   }
   
+  @keyframes liquidGlass {
+    0%, 100% {
+      background-position: 0% 50%;
+      background-size: 200% 200%;
+    }
+    50% {
+      background-position: 100% 50%;
+      background-size: 200% 200%;
+    }
+  }
+  
+  /* Hide default dialog close button for CUTII AI */
+  .cutii-ai-dialog > button[aria-label="Close"] {
+    display: none;
+  }
+  
   /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
