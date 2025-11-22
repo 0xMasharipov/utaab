@@ -5,8 +5,10 @@ import { LecturePlaylist } from '@/components/learning/LecturePlaylist';
 import { mitBlockchainLectures, MITLecture } from '@/data/mitOcwLectures';
 import { Info, ChevronLeft, ChevronRight, Menu } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export const BlockchainAndMoney = () => {
+  const { t, i18n } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentLecture, setCurrentLecture] = useState<MITLecture>(mitBlockchainLectures[0]);
   const [isPlaylistVisible, setIsPlaylistVisible] = useState(true);
@@ -29,19 +31,17 @@ export const BlockchainAndMoney = () => {
 
   // SEO Meta Tags
   useEffect(() => {
-    document.title = 'Blockchain and Money - MIT OpenCourseWare | UTAAB EDU';
+    document.title = t('education.mitOcw.pageTitle');
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
-      metaDescription.setAttribute('content', 
-        'Watch all 24 lectures from MIT\'s Blockchain and Money course taught by Prof. Gary Gensler. Free educational resource from MIT OpenCourseWare covering blockchain technology, cryptocurrencies, and financial systems.'
-      );
+      metaDescription.setAttribute('content', t('education.mitOcw.metaDescription'));
     } else {
       const meta = document.createElement('meta');
       meta.name = 'description';
-      meta.content = 'Watch all 24 lectures from MIT\'s Blockchain and Money course taught by Prof. Gary Gensler. Free educational resource from MIT OpenCourseWare covering blockchain technology, cryptocurrencies, and financial systems.';
+      meta.content = t('education.mitOcw.metaDescription');
       document.head.appendChild(meta);
     }
-  }, []);
+  }, [t, i18n.language]);
 
   const handleLectureSelect = (id: number) => {
     const lecture = mitBlockchainLectures.find(l => l.id === id);
@@ -94,32 +94,31 @@ export const BlockchainAndMoney = () => {
               />
               <div className="h-8 w-px bg-white/20" />
               <span className="text-muted-foreground font-montserrat text-sm">
-                MIT Sloan School of Management
+                {t('education.mitOcw.schoolName')}
               </span>
             </div>
             
             <h1 className="text-4xl md:text-5xl font-montserrat font-bold text-foreground mb-4">
-              Blockchain and Money
+              {t('education.mitOcw.courseTitle')}
             </h1>
             
             <p className="text-lg text-muted-foreground max-w-3xl mb-4 font-montserrat">
-              Explore the fundamental principles of blockchain technology, cryptocurrencies, 
-              and their implications for the future of money and financial systems.
+              {t('education.mitOcw.courseDescription')}
             </p>
             
             <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground font-montserrat">
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-foreground">Instructor:</span>
-                Prof. Gary Gensler
+                <span className="font-semibold text-foreground">{t('education.mitOcw.instructor')}:</span>
+                {t('education.mitOcw.instructorName')}
               </div>
               <div className="h-4 w-px bg-white/20" />
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-foreground">Course:</span>
-                15.S12 (Fall 2018)
+                <span className="font-semibold text-foreground">{t('education.mitOcw.course')}:</span>
+                {t('education.mitOcw.courseCode')}
               </div>
               <div className="h-4 w-px bg-white/20" />
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-foreground">Lectures:</span>
+                <span className="font-semibold text-foreground">{t('education.mitOcw.lectures')}:</span>
                 {mitBlockchainLectures.length}
               </div>
             </div>
@@ -138,7 +137,7 @@ export const BlockchainAndMoney = () => {
               className="lg:hidden w-full glass rounded-xl p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
             >
               <span className="font-montserrat font-semibold text-foreground">
-                Course Lectures
+                {t('education.mitOcw.courseLectures')}
               </span>
               <Menu className="h-5 w-5 text-accent" />
             </button>
@@ -148,7 +147,7 @@ export const BlockchainAndMoney = () => {
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <span className="text-accent font-montserrat text-sm font-semibold">
-                    Lecture {currentLecture.id.toString().padStart(2, '0')}
+                    {t('education.mitOcw.lectureNumber', { number: currentLecture.id.toString().padStart(2, '0') })}
                   </span>
                   <h2 className="text-2xl md:text-3xl font-montserrat font-bold text-foreground mt-1">
                     {currentLecture.title}
@@ -181,7 +180,7 @@ export const BlockchainAndMoney = () => {
                 className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-montserrat text-foreground"
               >
                 <ChevronLeft className="h-5 w-5" />
-                Previous
+                {t('education.mitOcw.previous')}
               </button>
 
               <button
@@ -189,7 +188,7 @@ export const BlockchainAndMoney = () => {
                 disabled={!hasNext}
                 className="flex items-center gap-2 px-6 py-3 rounded-xl bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-montserrat text-white"
               >
-                Next
+                {t('education.mitOcw.next')}
                 <ChevronRight className="h-5 w-5" />
               </button>
             </div>
@@ -211,38 +210,36 @@ export const BlockchainAndMoney = () => {
             <Info className="h-6 w-6 text-accent flex-shrink-0 mt-1" />
             <div className="space-y-3 text-sm text-muted-foreground font-montserrat">
               <p className="font-semibold text-foreground text-base">
-                MIT OpenCourseWare Attribution
+                {t('education.mitOcw.attribution.title')}
               </p>
               <p>
-                These videos are from MIT OpenCourseWare course{' '}
+                {t('education.mitOcw.attribution.videoSource')}{' '}
                 <a 
                   href="https://ocw.mit.edu/courses/15-s12-blockchain-and-money-fall-2018/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-accent hover:underline"
                 >
-                  15.S12 "Blockchain and Money"
+                  {t('education.mitOcw.attribution.courseName')}
                 </a>{' '}
-                taught by Prof. Gary Gensler (Fall 2018).
+                {t('education.mitOcw.attribution.taughtBy')}
               </p>
               <p>
-                <span className="font-semibold text-foreground">License:</span>{' '}
-                Creative Commons BY-NC-SA 4.0
+                <span className="font-semibold text-foreground">{t('education.mitOcw.attribution.license')}:</span>{' '}
+                {t('education.mitOcw.attribution.licenseType')}
                 <br />
-                <span className="font-semibold text-foreground">Source:</span>{' '}
+                <span className="font-semibold text-foreground">{t('education.mitOcw.attribution.source')}:</span>{' '}
                 <a 
                   href="https://ocw.mit.edu"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-accent hover:underline"
                 >
-                  MIT OpenCourseWare
+                  {t('education.mitOcw.attribution.mitOcw')}
                 </a>
               </p>
               <p className="text-xs">
-                UTAAB EDU streams this content directly from archive.org for non-commercial 
-                educational purposes. All rights remain with MIT. This course is made available 
-                under a Creative Commons license, which allows for free use with proper attribution.
+                {t('education.mitOcw.attribution.disclaimer')}
               </p>
             </div>
           </div>

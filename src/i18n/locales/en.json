@@ -421,6 +421,34 @@
       "enable_cc": "Enable CC",
       "select_language": "Select Caption Language"
     },
+    "mitOcw": {
+      "pageTitle": "Blockchain and Money - MIT OpenCourseWare | UTAAB EDU",
+      "metaDescription": "Watch all 24 lectures from MIT's Blockchain and Money course taught by Prof. Gary Gensler. Free educational resource from MIT OpenCourseWare covering blockchain technology, cryptocurrencies, and financial systems.",
+      "schoolName": "MIT Sloan School of Management",
+      "courseTitle": "Blockchain and Money",
+      "courseDescription": "Explore the fundamental principles of blockchain technology, cryptocurrencies, and their implications for the future of money and financial systems.",
+      "instructor": "Instructor",
+      "instructorName": "Prof. Gary Gensler",
+      "course": "Course",
+      "courseCode": "15.S12 (Fall 2018)",
+      "lectures": "Lectures",
+      "courseLectures": "Course Lectures",
+      "lectureNumber": "Lecture {{number}}",
+      "nowPlaying": "Now Playing",
+      "previous": "Previous",
+      "next": "Next",
+      "attribution": {
+        "title": "MIT OpenCourseWare Attribution",
+        "videoSource": "These videos are from MIT OpenCourseWare course",
+        "courseName": "15.S12 \"Blockchain and Money\"",
+        "taughtBy": "taught by Prof. Gary Gensler (Fall 2018).",
+        "license": "License",
+        "licenseType": "Creative Commons BY-NC-SA 4.0",
+        "source": "Source",
+        "mitOcw": "MIT OpenCourseWare",
+        "disclaimer": "UTAAB EDU streams this content directly from archive.org for non-commercial educational purposes. All rights remain with MIT. This course is made available under a Creative Commons license, which allows for free use with proper attribution."
+      }
+    },
     "catalog": {
       "title": "Course Catalog",
       "filters": "Filters",
