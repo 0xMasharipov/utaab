@@ -7,7 +7,7 @@ interface HoneypotFieldProps {
 
 export const HoneypotField = ({ value, onChange }: HoneypotFieldProps) => {
   return (
-    <div className="absolute -left-[9999px] -top-[9999px]" aria-hidden="true">
+    <div className="absolute -left-[9999px] -top-[9999px]">
       <Input
         type="text"
         name="website"
