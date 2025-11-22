@@ -31,6 +31,7 @@ import AdminCommunities from "./pages/admin/AdminCommunities";
 import AdminCommunityDetail from "./pages/admin/AdminCommunityDetail";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminSettingsNew from "./pages/admin/AdminSettingsNew";
+import AdminSubtitles from "./pages/admin/AdminSubtitles";
 import Profile from "./pages/Profile";
 import { KVKKRequest } from "./pages/KVKKRequest";
 import { PrivacyPolicy } from "./pages/PrivacyPolicy";
@@ -76,6 +77,7 @@ function App() {
               <Route path="announcements" element={<AdminAnnouncements />} />
               <Route path="messages" element={<AdminMessages />} />
               <Route path="media" element={<AdminMedia />} />
+              <Route path="subtitles" element={<AdminSubtitles />} />
               <Route path="settings" element={<AdminSettingsNew />} />
               <Route path="audit" element={<AdminAuditLog />} />
               <Route path="security" element={<AdminSecurity />} />
