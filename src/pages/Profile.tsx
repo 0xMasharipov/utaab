@@ -201,37 +201,37 @@ export default function Profile() {
       {/* Main Content */}
       <div className="container mx-auto px-6 py-8">
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="glass-panel">
-            <TabsTrigger value="overview" className="gap-2">
+          <TabsList className="glass-panel w-full overflow-x-auto flex-nowrap justify-start gap-1 p-1.5">
+            <TabsTrigger value="overview" className="gap-2 flex-shrink-0 snap-start">
               <User className="h-4 w-4" />
               Overview
             </TabsTrigger>
-            <TabsTrigger value="courses" className="gap-2">
+            <TabsTrigger value="courses" className="gap-2 flex-shrink-0 snap-start">
               <BookOpen className="h-4 w-4" />
               Courses
             </TabsTrigger>
-            <TabsTrigger value="certificates" className="gap-2">
+            <TabsTrigger value="certificates" className="gap-2 flex-shrink-0 snap-start">
               <Award className="h-4 w-4" />
               Certificates
             </TabsTrigger>
-            <TabsTrigger value="saved" className="gap-2">
+            <TabsTrigger value="saved" className="gap-2 flex-shrink-0 snap-start">
               <Bookmark className="h-4 w-4" />
               Saved
             </TabsTrigger>
-            <TabsTrigger value="notifications" className="gap-2">
+            <TabsTrigger value="notifications" className="gap-2 flex-shrink-0 snap-start">
               <Bell className="h-4 w-4" />
               Notifications
             </TabsTrigger>
-            <TabsTrigger value="settings" className="gap-2">
+            <TabsTrigger value="settings" className="gap-2 flex-shrink-0 snap-start">
               <Settings className="h-4 w-4" />
               Settings
             </TabsTrigger>
-            <TabsTrigger value="privacy" className="gap-2">
+            <TabsTrigger value="privacy" className="gap-2 flex-shrink-0 snap-start">
               <Shield className="h-4 w-4" />
               Privacy
             </TabsTrigger>
             {isAdmin && (
-              <TabsTrigger value="admin" className="gap-2 border-l border-white/10 ml-2">
+              <TabsTrigger value="admin" className="gap-2 border-l border-white/10 ml-2 flex-shrink-0 snap-start">
                 <Shield className="h-4 w-4 text-primary" />
                 Admin
               </TabsTrigger>
