@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Shield, Eye, EyeOff, Mail } from "lucide-react";
-import { TurnstileWidget } from "@/components/security/TurnstileWidget";
 import { useSecurity } from "@/hooks/useSecurity";
 import { Separator } from "@/components/ui/separator";
 
@@ -20,10 +19,8 @@ export default function AdminLogin() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState<string>("");
   const [failedAttempts, setFailedAttempts] = useState(0);
-  const { config, verifyCaptcha, checkRateLimit, logSecurityEvent } = useSecurity();
-  const requireCaptcha = config.captchaEnabled || failedAttempts >= 3;
+  const { checkRateLimit, logSecurityEvent } = useSecurity();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,31 +37,6 @@ export default function AdminLogin() {
         });
         setIsLoading(false);
         return;
-      }
-
-      // Verify CAPTCHA if required
-      if (requireCaptcha) {
-        if (!captchaToken) {
-          toast({
-            title: t("common.error"),
-            description: t("auth.captchaRequired"),
-            variant: "destructive",
-          });
-          setIsLoading(false);
-          return;
-        }
-
-        const captchaValid = await verifyCaptcha(captchaToken);
-        if (!captchaValid) {
-          toast({
-            title: t("common.error"),
-            description: t("auth.captchaFailed"),
-            variant: "destructive",
-          });
-          setCaptchaToken("");
-          setIsLoading(false);
-          return;
-        }
       }
 
       // Sign in
@@ -127,7 +99,6 @@ export default function AdminLogin() {
         description: errorMessage,
         variant: "destructive",
       });
-      setCaptchaToken("");
     } finally {
       setIsLoading(false);
     }
@@ -305,22 +276,11 @@ export default function AdminLogin() {
                 </Button>
               </div>
             </div>
-            {requireCaptcha && (
-              <div className="space-y-2">
-                <Label>Security Verification</Label>
-                <TurnstileWidget
-                  onVerify={setCaptchaToken}
-                  onError={() => setCaptchaToken("")}
-                  onExpire={() => setCaptchaToken("")}
-                  theme="dark"
-                />
-              </div>
-            )}
 
             <Button
               type="submit"
               className="w-full"
-              disabled={isLoading || (requireCaptcha && !captchaToken)}
+              disabled={isLoading}
             >
               <Mail className="w-4 h-4 mr-2" />
               {isLoading ? "Signing in..." : "Sign In with Email"}

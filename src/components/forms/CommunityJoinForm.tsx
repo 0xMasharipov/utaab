@@ -19,7 +19,6 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
 import { mapError } from '@/lib/errorUtils';
-import { TurnstileWidget } from '@/components/security/TurnstileWidget';
 import { useSecurity } from '@/hooks/useSecurity';
 
 const createSchema = (t: any) => z.object({
@@ -50,8 +49,7 @@ export const CommunityJoinForm = () => {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState<string>("");
-  const { verifyCaptcha, checkRateLimit, logSecurityEvent } = useSecurity();
+  const { checkRateLimit, logSecurityEvent } = useSecurity();
   const [formData, setFormData] = useState<Partial<FormData>>({
     interests: [],
     preferred_tracks: [],
@@ -153,21 +151,6 @@ export const CommunityJoinForm = () => {
 
     setIsSubmitting(true);
     try {
-      // Verify CAPTCHA
-      if (!captchaToken) {
-        toast.error('Please complete the security verification');
-        setIsSubmitting(false);
-        return;
-      }
-
-      const captchaValid = await verifyCaptcha(captchaToken);
-      if (!captchaValid) {
-        toast.error('Security verification failed. Please try again.');
-        setCaptchaToken("");
-        setIsSubmitting(false);
-        return;
-      }
-
       // Check rate limit
       const rateLimitCheck = await checkRateLimit(formData.email || 'unknown', 'community_application', 3);
       if (!rateLimitCheck.allowed) {
@@ -188,7 +171,6 @@ export const CommunityJoinForm = () => {
         utm_campaign: urlParams.get('utm_campaign') || undefined,
         referrer: document.referrer || undefined,
         user_agent: navigator.userAgent,
-        captcha_token: captchaToken,
       };
 
       // Call edge function for server-side validation and rate limiting
@@ -227,7 +209,6 @@ export const CommunityJoinForm = () => {
       await logSecurityEvent('community_application_failed', 'medium', { email: formData.email });
       // Error details are sanitized by mapError to prevent information leakage
       toast.error(mapError(error));
-      setCaptchaToken("");
     } finally {
       setIsSubmitting(false);
     }
@@ -669,16 +650,6 @@ export const CommunityJoinForm = () => {
                 <p className="font-medium text-foreground mb-2">{t('join.nonProfitTitle')}</p>
                 <p>{t('join.nonProfitDescription')}</p>
               </div>
-
-              <div className="space-y-2">
-                <Label>Security Verification</Label>
-                <TurnstileWidget
-                  onVerify={setCaptchaToken}
-                  onError={() => setCaptchaToken("")}
-                  onExpire={() => setCaptchaToken("")}
-                  theme="dark"
-                />
-              </div>
             </div>
 
             <div className="flex gap-3">
@@ -686,7 +657,7 @@ export const CommunityJoinForm = () => {
                 <ChevronLeft className="mr-2 h-5 w-5" />
                 {t('join.back')}
               </Button>
-              <Button type="submit" className="btn-primary flex-1" disabled={isSubmitting || !captchaToken}>
+              <Button type="submit" className="btn-primary flex-1" disabled={isSubmitting}>
                 {isSubmitting ? t('join.submitting') : t('join.submit')}
               </Button>
             </div>
