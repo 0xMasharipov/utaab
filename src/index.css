@@ -155,6 +155,20 @@
     }
   }
   
+  /* Hide scrollbar for horizontal tab lists */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Safe area padding for notched devices */
+  .pb-safe {
+    padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+  }
+  
   /* Hide default dialog close button for CUTII AI */
   .cutii-ai-dialog > button[aria-label="Close"] {
     display: none;

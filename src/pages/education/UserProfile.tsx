@@ -338,32 +338,32 @@ export const UserProfile = () => {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="glass-strong p-1.5 rounded-2xl flex-wrap h-auto">
-            <TabsTrigger value="overview" className="rounded-xl">
+          <TabsList className="glass-strong p-1.5 rounded-2xl w-full overflow-x-auto flex-nowrap justify-start">
+            <TabsTrigger value="overview" className="rounded-xl flex-shrink-0 snap-start">
               <Eye className="h-4 w-4 mr-2" />
               Overview
             </TabsTrigger>
-            <TabsTrigger value="courses" className="rounded-xl">
+            <TabsTrigger value="courses" className="rounded-xl flex-shrink-0 snap-start">
               <BookOpen className="h-4 w-4 mr-2" />
               My Courses
             </TabsTrigger>
-            <TabsTrigger value="certificates" className="rounded-xl">
+            <TabsTrigger value="certificates" className="rounded-xl flex-shrink-0 snap-start">
               <Award className="h-4 w-4 mr-2" />
               Certificates
             </TabsTrigger>
-            <TabsTrigger value="saved" className="rounded-xl">
+            <TabsTrigger value="saved" className="rounded-xl flex-shrink-0 snap-start">
               <Bookmark className="h-4 w-4 mr-2" />
               Saved
             </TabsTrigger>
-            <TabsTrigger value="notifications" className="rounded-xl">
+            <TabsTrigger value="notifications" className="rounded-xl flex-shrink-0 snap-start">
               <Bell className="h-4 w-4 mr-2" />
               Notifications
             </TabsTrigger>
-            <TabsTrigger value="settings" className="rounded-xl">
+            <TabsTrigger value="settings" className="rounded-xl flex-shrink-0 snap-start">
               <Settings className="h-4 w-4 mr-2" />
               Settings
             </TabsTrigger>
-            <TabsTrigger value="privacy" className="rounded-xl">
+            <TabsTrigger value="privacy" className="rounded-xl flex-shrink-0 snap-start">
               <Shield className="h-4 w-4 mr-2" />
               Privacy
             </TabsTrigger>

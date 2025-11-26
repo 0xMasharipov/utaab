@@ -208,29 +208,33 @@ export const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-30 bg-background/95 backdrop-blur-lg">
-          <div className="pt-20 p-6 space-y-2">
-            {sidebarItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = location.pathname === item.path;
-              return (
-                <button
-                  key={item.path}
-                  onClick={() => {
-                    navigate(item.path);
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className={cn(
-                    'w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all',
-                    isActive
-                      ? 'bg-primary/20 text-primary'
-                      : 'hover:bg-white/5 text-muted-foreground'
-                  )}
-                >
-                  <Icon className="h-5 w-5" />
-                  <span className="text-sm font-medium">{item.label}</span>
-                </button>
-              );
-            })}
+          {/* Scrollable container with safe area */}
+          <div className="pt-20 pb-safe h-full overflow-y-auto">
+            <div className="p-4 space-y-1">
+              {sidebarItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = location.pathname === item.path;
+                return (
+                  <button
+                    key={item.path}
+                    onClick={() => {
+                      navigate(item.path);
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className={cn(
+                      'w-full flex items-center gap-3 px-4 py-3.5 min-h-[44px] rounded-xl transition-all',
+                      isActive
+                        ? 'bg-primary/20 text-primary'
+                        : 'hover:bg-white/5 text-muted-foreground hover:text-foreground',
+                      'active:bg-white/10'
+                    )}
+                  >
+                    <Icon className="h-5 w-5 flex-shrink-0" />
+                    <span className="text-sm font-medium">{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}
