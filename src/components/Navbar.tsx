@@ -35,7 +35,7 @@ export const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 40);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -144,7 +144,7 @@ export const Navbar = () => {
       <div 
         className={`rounded-full px-3 sm:px-4 md:px-6 py-3 sm:py-4 border border-white/10 ${isScrolled ? 'shadow-lg' : ''}`}
         style={{
-          background: 'rgba(0, 0, 0, 0.6)',
+          background: isScrolled ? 'rgba(0, 0, 0, 0.75)' : 'rgba(0, 0, 0, 0.6)',
           backdropFilter: 'blur(12px) saturate(180%)',
           WebkitBackdropFilter: 'blur(12px) saturate(180%)',
         }}
@@ -179,8 +179,12 @@ export const Navbar = () => {
             />
           </button>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6">
+          {/* Desktop Navigation - Hidden in hero, visible when scrolled */}
+          <div className={`hidden md:flex items-center gap-6 transition-all duration-300 ${
+            isScrolled 
+              ? 'opacity-100 pointer-events-auto translate-y-0' 
+              : 'opacity-0 pointer-events-none translate-y-2'
+          }`}>
             {navItems.map((item) => (
               <button
                 key={item.key}
