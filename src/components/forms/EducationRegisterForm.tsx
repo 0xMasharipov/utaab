@@ -19,7 +19,6 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
 import { mapError } from '@/lib/errorUtils';
-import { TurnstileWidget } from '@/components/security/TurnstileWidget';
 import { HoneypotField } from '@/components/security/HoneypotField';
 import { useSecurity } from '@/hooks/useSecurity';
 
@@ -57,11 +56,9 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
   const [completed, setCompleted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState<string>("");
   const [honeypot, setHoneypot] = useState("");
   const [failedAttempts, setFailedAttempts] = useState(0);
-  const { config, verifyCaptcha, checkRateLimit, validateFormTiming, logSecurityEvent } = useSecurity();
-  const requireCaptcha = config.captchaEnabled || failedAttempts >= 2;
+  const { checkRateLimit, validateFormTiming, logSecurityEvent } = useSecurity();
   const [formData, setFormData] = useState<Partial<FormData>>({
     preferred_language: i18n.language,
     focus_areas: [],
@@ -199,31 +196,6 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
           return;
         }
 
-        // Verify CAPTCHA if required
-        if (requireCaptcha) {
-          if (!captchaToken) {
-            toast({
-              title: 'Error',
-              description: t('auth.captchaRequired'),
-              variant: 'destructive',
-            });
-            setIsSubmitting(false);
-            return;
-          }
-
-          const captchaValid = await verifyCaptcha(captchaToken);
-          if (!captchaValid) {
-            toast({
-              title: 'Error',
-              description: t('auth.captchaFailed'),
-              variant: 'destructive',
-            });
-            setCaptchaToken("");
-            setIsSubmitting(false);
-            return;
-          }
-        }
-
         const { data, error } = await supabase.auth.signInWithPassword({
           email: formData.email.trim().toLowerCase(),
           password: formData.password,
@@ -245,7 +217,6 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
             description: errorMessage,
             variant: 'destructive',
           });
-          setCaptchaToken("");
           setIsSubmitting(false);
           return;
         }
@@ -265,7 +236,6 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
           description: mapError(error),
           variant: 'destructive',
         });
-        setCaptchaToken("");
       } finally {
         setIsSubmitting(false);
       }
@@ -311,31 +281,6 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
         return;
       }
 
-      // Verify CAPTCHA
-      if (requireCaptcha) {
-        if (!captchaToken) {
-          toast({
-            title: 'Error',
-            description: t('auth.captchaRequired'),
-            variant: 'destructive',
-          });
-          setIsSubmitting(false);
-          return;
-        }
-
-        const captchaValid = await verifyCaptcha(captchaToken);
-        if (!captchaValid) {
-          toast({
-            title: 'Error',
-            description: t('auth.captchaFailed'),
-            variant: 'destructive',
-          });
-          setCaptchaToken("");
-          setIsSubmitting(false);
-          return;
-        }
-      }
-
       const schema = createSchema(t);
       const validatedData = schema.parse(formData);
 
@@ -366,7 +311,6 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
           description: errorMessage,
           variant: 'destructive',
         });
-        setCaptchaToken("");
         setIsSubmitting(false);
         return;
       }
@@ -407,7 +351,6 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
         description: mapError(error),
         variant: 'destructive',
       });
-      setCaptchaToken("");
     } finally {
       setIsSubmitting(false);
     }
@@ -502,22 +445,10 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
             </div>
           </div>
 
-          {requireCaptcha && (
-            <div className="space-y-2">
-              <Label>Security Verification</Label>
-              <TurnstileWidget
-                onVerify={setCaptchaToken}
-                onError={() => setCaptchaToken("")}
-                onExpire={() => setCaptchaToken("")}
-                theme="dark"
-              />
-            </div>
-          )}
-
           <Button 
             type="submit" 
             className="btn-primary w-full" 
-            disabled={isSubmitting || (requireCaptcha && !captchaToken)}
+            disabled={isSubmitting}
           >
             {isSubmitting ? t('education.registration.signingIn') : t('education.registration.signIn')}
           </Button>
@@ -909,18 +840,6 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
               </div>
             </div>
 
-            {requireCaptcha && (
-              <div className="space-y-2">
-                <Label>Security Verification</Label>
-                <TurnstileWidget
-                  onVerify={setCaptchaToken}
-                  onError={() => setCaptchaToken("")}
-                  onExpire={() => setCaptchaToken("")}
-                  theme="dark"
-                />
-              </div>
-            )}
-
             <div className="flex gap-3">
               <Button type="button" onClick={handleBack} variant="outline" className="flex-1 glass hover:bg-white/10">
                 <ChevronLeft className="mr-2 h-5 w-5" />
@@ -929,7 +848,7 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
               <Button 
                 type="submit" 
                 className="btn-primary flex-1" 
-                disabled={isSubmitting || (requireCaptcha && !captchaToken)}
+                disabled={isSubmitting}
               >
                 {isSubmitting ? 'Creating Account...' : t('education.registration.createAccount')}
               </Button>
