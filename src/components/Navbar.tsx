@@ -142,11 +142,17 @@ export const Navbar = () => {
       }`}
     >
       <div 
-        className={`rounded-full px-3 sm:px-4 md:px-6 py-3 sm:py-4 border border-white/10 ${isScrolled ? 'shadow-lg' : ''}`}
+        className={`rounded-full px-3 sm:px-4 md:px-6 py-3 sm:py-4 border transition-all duration-300 ${
+          isScrolled 
+            ? 'border-white/15 shadow-lg shadow-primary/10' 
+            : 'border-white/10'
+        }`}
         style={{
-          background: isScrolled ? 'rgba(0, 0, 0, 0.75)' : 'rgba(0, 0, 0, 0.6)',
-          backdropFilter: 'blur(12px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+          background: isScrolled 
+            ? 'rgba(10, 10, 20, 0.85)' 
+            : 'rgba(10, 25, 60, 0.35)',
+          backdropFilter: 'blur(16px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(16px) saturate(180%)',
         }}
       >
         <div className="flex items-center justify-between">
