@@ -142,7 +142,7 @@ export const Navbar = () => {
       }`}
     >
       <div 
-        className={`rounded-full px-3 sm:px-4 md:px-6 py-3 sm:py-4 border transition-all duration-300 ${
+        className={`rounded-full px-4 sm:px-5 md:px-8 py-3 sm:py-4 border transition-all duration-300 ${
           isScrolled 
             ? 'border-white/20 shadow-xl shadow-primary/15' 
             : 'border-white/10 shadow-lg shadow-primary/5'
@@ -294,7 +294,7 @@ export const Navbar = () => {
             {/* Join Button */}
             <Button
               onClick={() => scrollToSection('join')}
-              className="btn-primary-compact hidden sm:inline-flex"
+              className="btn-primary-compact hidden sm:inline-flex mr-1"
               size="sm"
             >
               {t('nav.join')}
