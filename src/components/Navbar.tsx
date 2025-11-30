@@ -291,7 +291,7 @@ export const Navbar = () => {
             {/* Join Button */}
             <Button
               onClick={() => scrollToSection('join')}
-              className="btn-primary hidden sm:inline-flex"
+              className="btn-primary-compact hidden sm:inline-flex"
               size="sm"
             >
               {t('nav.join')}
