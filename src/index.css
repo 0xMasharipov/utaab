@@ -109,7 +109,20 @@
   }
   
   .btn-navbar-cta {
-    @apply bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 h-9 rounded-full font-semibold text-sm transition-all duration-300 hover:shadow-[0_0_20px_hsl(var(--primary)/0.4)] whitespace-nowrap;
+    @apply bg-primary text-primary-foreground px-4 py-2 h-9 rounded-full font-semibold text-sm whitespace-nowrap;
+    transition: transform 0.25s ease, 
+                box-shadow 0.25s ease, 
+                background-color 0.25s ease;
+    will-change: transform, box-shadow;
+  }
+  
+  .btn-navbar-cta:hover {
+    @apply bg-primary/90 shadow-[0_0_20px_hsl(var(--primary)/0.4)];
+    transform: translateY(-1px);
+  }
+  
+  .btn-navbar-cta:active {
+    transform: translateY(0);
   }
   
   /* Section container */
