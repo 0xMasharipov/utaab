@@ -103,7 +103,9 @@ serve(async (req) => {
     await supabaseAdmin.rpc('log_security_event', {
       _event_type: 'user_lookup',
       _severity: 'info',
+      _ip: null,
       _user_id: user.id,
+      _user_agent: null,
       _endpoint: 'lookup-user-by-email',
       _details: { lookup_email: email, found_user_id: foundUser.id }
     });
