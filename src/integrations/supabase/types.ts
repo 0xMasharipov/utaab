@@ -1604,6 +1604,87 @@ export type Database = {
         }
         Relationships: []
       }
+      utaab_rate_limits: {
+        Row: {
+          banned_until: string | null
+          created_at: string | null
+          id: string
+          identifier: string
+          request_count: number | null
+          tier: string
+          updated_at: string | null
+          violation_count: number | null
+          window_start: string | null
+        }
+        Insert: {
+          banned_until?: string | null
+          created_at?: string | null
+          id?: string
+          identifier: string
+          request_count?: number | null
+          tier: string
+          updated_at?: string | null
+          violation_count?: number | null
+          window_start?: string | null
+        }
+        Update: {
+          banned_until?: string | null
+          created_at?: string | null
+          id?: string
+          identifier?: string
+          request_count?: number | null
+          tier?: string
+          updated_at?: string | null
+          violation_count?: number | null
+          window_start?: string | null
+        }
+        Relationships: []
+      }
+      utaab_verifications: {
+        Row: {
+          behavior_data: Json | null
+          challenges_passed: string[] | null
+          created_at: string | null
+          fingerprint_hash: string | null
+          id: string
+          ip_address: unknown
+          pow_difficulty: number | null
+          pow_solution: string | null
+          risk_score: number | null
+          session_id: string
+          user_agent: string | null
+          verdict: string
+        }
+        Insert: {
+          behavior_data?: Json | null
+          challenges_passed?: string[] | null
+          created_at?: string | null
+          fingerprint_hash?: string | null
+          id?: string
+          ip_address?: unknown
+          pow_difficulty?: number | null
+          pow_solution?: string | null
+          risk_score?: number | null
+          session_id: string
+          user_agent?: string | null
+          verdict: string
+        }
+        Update: {
+          behavior_data?: Json | null
+          challenges_passed?: string[] | null
+          created_at?: string | null
+          fingerprint_hash?: string | null
+          id?: string
+          ip_address?: unknown
+          pow_difficulty?: number | null
+          pow_solution?: string | null
+          risk_score?: number | null
+          session_id?: string
+          user_agent?: string | null
+          verdict?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -1612,6 +1693,7 @@ export type Database = {
       cleanup_expired_admin_sessions: { Args: never; Returns: undefined }
       cleanup_old_rate_limits: { Args: never; Returns: undefined }
       cleanup_old_security_events: { Args: never; Returns: undefined }
+      cleanup_old_utaab_records: { Args: never; Returns: undefined }
       ensure_admin_role: { Args: { admin_email: string }; Returns: undefined }
       generate_certificate_number: { Args: never; Returns: string }
       get_security_metrics: {
