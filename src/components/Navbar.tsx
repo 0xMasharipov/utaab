@@ -137,9 +137,7 @@ export const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-2 sm:top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
-        isScrolled ? 'w-[96%] sm:w-[95%] max-w-6xl' : 'w-[92%] sm:w-[90%] max-w-5xl'
-      }`}
+      className="fixed top-2 sm:top-4 left-1/2 -translate-x-1/2 z-50 w-[96%] sm:w-[95%] max-w-6xl transition-[transform,opacity] duration-300"
     >
       <div 
         className={`rounded-full px-4 sm:px-5 md:px-8 py-3 sm:py-4 border transition-all duration-300 ${
@@ -158,11 +156,12 @@ export const Navbar = () => {
             : '0 4px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
         }}
       >
-        <div className="flex items-center justify-between">
-          {/* Logo */}
+        {/* Grid layout: Logo | Center Nav | Right Actions */}
+        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
+          {/* Logo - Left column (fixed) */}
           <button
             onClick={() => scrollToSection('hero')}
-            className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity"
+            className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity flex-shrink-0"
             aria-label="UTAAB - Home"
           >
             <img 
@@ -188,25 +187,33 @@ export const Navbar = () => {
             />
           </button>
 
-          {/* Desktop Navigation - Hidden in hero, visible when scrolled */}
-          <div className={`hidden md:flex items-center gap-6 transition-all duration-300 ${
-            isScrolled 
-              ? 'opacity-100 pointer-events-auto translate-y-0' 
-              : 'opacity-0 pointer-events-none translate-y-2'
-          }`}>
-            {navItems.map((item) => (
-              <button
-                key={item.key}
-                onClick={() => scrollToSection(item.id)}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {t(`nav.${item.key}`)}
-              </button>
-            ))}
+          {/* Desktop Navigation - Center column (independent space) */}
+          <div className="hidden md:flex items-center justify-center">
+            <div 
+              className={`flex items-center gap-6 transition-all duration-300 ${
+                isScrolled 
+                  ? 'opacity-100 pointer-events-auto translate-y-0' 
+                  : 'opacity-0 pointer-events-none -translate-y-1'
+              }`}
+              style={{ willChange: 'opacity, transform' }}
+            >
+              {navItems.map((item) => (
+                <button
+                  key={item.key}
+                  onClick={() => scrollToSection(item.id)}
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
+                >
+                  {t(`nav.${item.key}`)}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Right side - Education + Language + Account + Join Button */}
-          <div className="flex items-center gap-2">
+          {/* Spacer for mobile (when nav is hidden) */}
+          <div className="md:hidden" />
+
+          {/* Right side - Actions + Join Button (fixed column) */}
+          <div className="flex items-center gap-2 flex-shrink-0" style={{ transform: 'translateZ(0)' }}>
             {/* Education Button */}
             <Button
               onClick={handleEducationClick}
