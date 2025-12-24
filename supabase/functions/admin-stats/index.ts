@@ -1,12 +1,29 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+// Allowed origins for CORS
+const allowedOrigins = [
+  'https://nxbjgqdehvxszqjoxumx.lovableproject.com',
+  'https://id.preview.lovableproject.com',
+  Deno.env.get('SITE_URL') || '',
+].filter(Boolean);
+
+function getCorsHeaders(req: Request) {
+  const origin = req.headers.get('origin') || '';
+  const isAllowed = allowedOrigins.some(allowed => 
+    origin === allowed || origin.endsWith('.lovableproject.com') || origin.includes('localhost')
+  );
+  
+  return {
+    'Access-Control-Allow-Origin': isAllowed ? origin : allowedOrigins[0],
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Credentials': 'true',
+  };
+}
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+  
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -170,7 +187,7 @@ serve(async (req) => {
     console.error('Error fetching admin stats:', error);
     return new Response(
       JSON.stringify({ error: 'Failed to fetch stats' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { status: 500, headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' } }
     );
   }
 });
