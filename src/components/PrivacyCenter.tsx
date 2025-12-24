@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
 import { mapError } from '@/lib/errorUtils';
+import { UtaabCaptcha, UtaabCaptchaRef } from '@/components/security/UtaabCaptcha';
 
 interface PrivacyCenterProps {
   isOpen: boolean;
@@ -33,6 +34,8 @@ export const PrivacyCenter = ({ isOpen, onClose }: PrivacyCenterProps) => {
     requestType: '',
     details: '',
   });
+  const [utaabToken, setUtaabToken] = useState<string | null>(null);
+  const utaabRef = useRef<UtaabCaptchaRef>(null);
 
   const handleSave = () => {
     const consentData = {
@@ -54,6 +57,11 @@ export const PrivacyCenter = ({ isOpen, onClose }: PrivacyCenterProps) => {
       return;
     }
 
+    if (!utaabToken) {
+      toast.error(t('auth.captchaRequired'));
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const { error } = await supabase.functions.invoke('submit-kvkk-request', {
@@ -63,6 +71,7 @@ export const PrivacyCenter = ({ isOpen, onClose }: PrivacyCenterProps) => {
           request_type: dataRequestForm.requestType,
           details: dataRequestForm.details,
           locale: i18n.language,
+          utaab_token: utaabToken,
         },
       });
 
@@ -70,6 +79,10 @@ export const PrivacyCenter = ({ isOpen, onClose }: PrivacyCenterProps) => {
 
       toast.success(t('kvkk.requestForm.successTitle'));
       setDataRequestForm({ fullName: '', email: '', requestType: '', details: '' });
+      setUtaabToken(null);
+      if (utaabRef.current) {
+        utaabRef.current.reset();
+      }
     } catch (error: any) {
       // Error details are sanitized by mapError to prevent information leakage
       toast.error(mapError(error));
@@ -365,10 +378,19 @@ export const PrivacyCenter = ({ isOpen, onClose }: PrivacyCenterProps) => {
                             />
                           </div>
 
+                          {/* UTAAB Anti-bot Verification */}
+                          <UtaabCaptcha
+                            ref={utaabRef}
+                            onVerify={(token) => setUtaabToken(token)}
+                            onError={() => toast.error(t('auth.captchaFailed'))}
+                            mode="visible"
+                            difficulty="adaptive"
+                          />
+
                           <Button
                             type="submit"
                             className="btn-primary w-full"
-                            disabled={isSubmitting}
+                            disabled={isSubmitting || !utaabToken}
                           >
                             {isSubmitting ? t('common.submitting') : t('kvkk.requestForm.submit')}
                           </Button>

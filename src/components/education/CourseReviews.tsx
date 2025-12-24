@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Star, ThumbsUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
 import { SafeContent } from '@/components/common/SafeContent';
+import { UtaabCaptcha, UtaabCaptchaRef } from '@/components/security/UtaabCaptcha';
 
 interface CourseReviewsProps {
   courseId: string;
@@ -24,6 +25,8 @@ export const CourseReviews = ({ courseId, isEnrolled }: CourseReviewsProps) => {
   const [hoverRating, setHoverRating] = useState(0);
   const [comment, setComment] = useState('');
   const [showReviewForm, setShowReviewForm] = useState(false);
+  const [utaabToken, setUtaabToken] = useState<string | null>(null);
+  const utaabRef = useRef<UtaabCaptchaRef>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -128,6 +131,14 @@ export const CourseReviews = ({ courseId, isEnrolled }: CourseReviewsProps) => {
       });
       return;
     }
+    if (!utaabToken) {
+      toast({
+        title: "Verification required",
+        description: "Please complete the verification",
+        variant: "destructive",
+      });
+      return;
+    }
     submitReview.mutate();
   };
 
@@ -198,10 +209,24 @@ export const CourseReviews = ({ courseId, isEnrolled }: CourseReviewsProps) => {
                 className="glass min-h-[100px]"
               />
             </div>
+            
+            {/* UTAAB Anti-bot Verification */}
+            <UtaabCaptcha
+              ref={utaabRef}
+              onVerify={(token) => setUtaabToken(token)}
+              onError={() => toast({
+                title: "Verification failed",
+                description: "Please try again",
+                variant: "destructive",
+              })}
+              mode="invisible"
+              difficulty="low"
+            />
+
             <div className="flex gap-2">
               <Button
                 onClick={handleSubmit}
-                disabled={submitReview.isPending || rating === 0}
+                disabled={submitReview.isPending || rating === 0 || !utaabToken}
                 className="btn-primary"
               >
                 {submitReview.isPending ? 'Submitting...' : (userReview ? 'Update Review' : 'Submit Review')}
@@ -211,6 +236,8 @@ export const CourseReviews = ({ courseId, isEnrolled }: CourseReviewsProps) => {
                   setShowReviewForm(false);
                   setRating(userReview?.rating || 0);
                   setComment(userReview?.comment || '');
+                  setUtaabToken(null);
+                  if (utaabRef.current) utaabRef.current.reset();
                 }}
                 variant="outline"
               >

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,7 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
 import { mapError } from '@/lib/errorUtils';
+import { UtaabCaptcha, UtaabCaptchaRef } from '@/components/security/UtaabCaptcha';
 
 const createSchema = (t: any) => z.object({
   full_name: z.string().trim().min(1, { message: t('kvkk.requestForm.validation.nameRequired') }),
@@ -36,6 +37,8 @@ export const KVKKRequestForm = () => {
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState<Partial<FormData>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [utaabToken, setUtaabToken] = useState<string | null>(null);
+  const utaabRef = useRef<UtaabCaptchaRef>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,6 +46,12 @@ export const KVKKRequestForm = () => {
     try {
       const schema = createSchema(t);
       const validatedData = schema.parse(formData);
+
+      // Check UTAAB verification
+      if (!utaabToken) {
+        toast.error(t('auth.captchaRequired'));
+        return;
+      }
 
       setIsSubmitting(true);
 
@@ -54,6 +63,7 @@ export const KVKKRequestForm = () => {
           request_type: validatedData.request_type,
           details: validatedData.details,
           locale: i18n.language,
+          utaab_token: utaabToken,
         },
       });
 
@@ -200,9 +210,18 @@ export const KVKKRequestForm = () => {
             <span>{t('kvkk.requestForm.contact')} privacy@utaablockchain.org</span>
           </div>
         </div>
+
+        {/* UTAAB Anti-bot Verification */}
+        <UtaabCaptcha
+          ref={utaabRef}
+          onVerify={(token) => setUtaabToken(token)}
+          onError={() => toast.error(t('auth.captchaFailed'))}
+          mode="visible"
+          difficulty="adaptive"
+        />
       </div>
 
-      <Button type="submit" className="btn-primary w-full" disabled={isSubmitting}>
+      <Button type="submit" className="btn-primary w-full" disabled={isSubmitting || !utaabToken}>
         {isSubmitting ? 'Submitting...' : t('kvkk.requestForm.submit')}
       </Button>
     </form>

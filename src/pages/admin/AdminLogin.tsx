@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Shield, Eye, EyeOff, Mail } from "lucide-react";
 import { useSecurity } from "@/hooks/useSecurity";
 import { Separator } from "@/components/ui/separator";
+import { UtaabCaptcha, UtaabCaptchaRef } from "@/components/security/UtaabCaptcha";
 
 export default function AdminLogin() {
   const { t } = useTranslation();
@@ -21,9 +22,22 @@ export default function AdminLogin() {
   const [isLoading, setIsLoading] = useState(false);
   const [failedAttempts, setFailedAttempts] = useState(0);
   const { checkRateLimit, logSecurityEvent } = useSecurity();
+  const [utaabToken, setUtaabToken] = useState<string | null>(null);
+  const utaabRef = useRef<UtaabCaptchaRef>(null);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Check UTAAB verification
+    if (!utaabToken) {
+      toast({
+        title: t("common.error"),
+        description: t("auth.captchaRequired"),
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -277,10 +291,23 @@ export default function AdminLogin() {
               </div>
             </div>
 
+            {/* UTAAB Anti-bot Verification */}
+            <UtaabCaptcha
+              ref={utaabRef}
+              onVerify={(token) => setUtaabToken(token)}
+              onError={() => toast({
+                title: t("common.error"),
+                description: t("auth.captchaFailed"),
+                variant: "destructive",
+              })}
+              mode="interactive"
+              difficulty="high"
+            />
+
             <Button
               type="submit"
               className="w-full"
-              disabled={isLoading}
+              disabled={isLoading || !utaabToken}
             >
               <Mail className="w-4 h-4 mr-2" />
               {isLoading ? "Signing in..." : "Sign In with Email"}
