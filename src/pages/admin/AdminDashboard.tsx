@@ -172,166 +172,201 @@ export default function AdminDashboard() {
   useEffect(() => {
     fetchStats();
 
-    // Subscribe to realtime changes for key tables
-    const channel = supabase
-      .channel('admin-dashboard-realtime')
-      // New user registrations
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'education_profiles' },
-        () => {
-          setStats(prev => ({
-            ...prev,
-            systemHealth: {
-              ...prev.systemHealth,
-              totalUsers: (prev.systemHealth?.totalUsers || 0) + 1,
-              newUsersThisWeek: (prev.systemHealth?.newUsersThisWeek || 0) + 1,
-            }
-          }));
-          setLastUpdated(new Date());
-        }
-      )
-      // New enrollments
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'enrollments' },
-        () => {
-          setStats(prev => ({
-            ...prev,
-            engagement: {
-              ...prev.engagement,
-              totalEnrollments: (prev.engagement?.totalEnrollments || 0) + 1,
-              inProgressCourses: (prev.engagement?.inProgressCourses || 0) + 1,
-            }
-          }));
-          setLastUpdated(new Date());
-        }
-      )
-      // Enrollment completions
-      .on(
-        'postgres_changes',
-        { event: 'UPDATE', schema: 'public', table: 'enrollments' },
-        (payload) => {
-          if (payload.new && (payload.new as any).completed && !(payload.old as any)?.completed) {
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+
+    try {
+      // Subscribe to realtime changes for key tables
+      channel = supabase
+        .channel('admin-dashboard-realtime')
+        // New user registrations
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'education_profiles' },
+          () => {
+            setStats(prev => ({
+              ...prev,
+              systemHealth: {
+                ...prev.systemHealth,
+                totalUsers: (prev.systemHealth?.totalUsers || 0) + 1,
+                newUsersThisWeek: (prev.systemHealth?.newUsersThisWeek || 0) + 1,
+              }
+            }));
+            setLastUpdated(new Date());
+          }
+        )
+        // New enrollments
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'enrollments' },
+          () => {
             setStats(prev => ({
               ...prev,
               engagement: {
                 ...prev.engagement,
-                completedCourses: (prev.engagement?.completedCourses || 0) + 1,
-                inProgressCourses: Math.max(0, (prev.engagement?.inProgressCourses || 0) - 1),
+                totalEnrollments: (prev.engagement?.totalEnrollments || 0) + 1,
+                inProgressCourses: (prev.engagement?.inProgressCourses || 0) + 1,
               }
             }));
             setLastUpdated(new Date());
           }
-        }
-      )
-      // New courses
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'courses' },
-        (payload) => {
-          const newCourse = payload.new as any;
-          setStats(prev => ({
-            ...prev,
-            contentMetrics: {
-              ...prev.contentMetrics,
-              totalCourses: (prev.contentMetrics?.totalCourses || 0) + 1,
-              publishedCourses: newCourse?.is_published 
-                ? (prev.contentMetrics?.publishedCourses || 0) + 1 
-                : prev.contentMetrics?.publishedCourses || 0,
-              draftCourses: !newCourse?.is_published 
-                ? (prev.contentMetrics?.draftCourses || 0) + 1 
-                : prev.contentMetrics?.draftCourses || 0,
+        )
+        // Enrollment completions
+        .on(
+          'postgres_changes',
+          { event: 'UPDATE', schema: 'public', table: 'enrollments' },
+          (payload) => {
+            if (payload.new && (payload.new as any).completed && !(payload.old as any)?.completed) {
+              setStats(prev => ({
+                ...prev,
+                engagement: {
+                  ...prev.engagement,
+                  completedCourses: (prev.engagement?.completedCourses || 0) + 1,
+                  inProgressCourses: Math.max(0, (prev.engagement?.inProgressCourses || 0) - 1),
+                }
+              }));
+              setLastUpdated(new Date());
             }
-          }));
-          setLastUpdated(new Date());
-        }
-      )
-      // Course updates (publish/unpublish)
-      .on(
-        'postgres_changes',
-        { event: 'UPDATE', schema: 'public', table: 'courses' },
-        (payload) => {
-          const newData = payload.new as any;
-          const oldData = payload.old as any;
-          if (newData?.is_published !== oldData?.is_published) {
-            const delta = newData.is_published ? 1 : -1;
+          }
+        )
+        // New courses
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'courses' },
+          (payload) => {
+            const newCourse = payload.new as any;
             setStats(prev => ({
               ...prev,
               contentMetrics: {
                 ...prev.contentMetrics,
-                publishedCourses: (prev.contentMetrics?.publishedCourses || 0) + delta,
-                draftCourses: (prev.contentMetrics?.draftCourses || 0) - delta,
+                totalCourses: (prev.contentMetrics?.totalCourses || 0) + 1,
+                publishedCourses: newCourse?.is_published 
+                  ? (prev.contentMetrics?.publishedCourses || 0) + 1 
+                  : prev.contentMetrics?.publishedCourses || 0,
+                draftCourses: !newCourse?.is_published 
+                  ? (prev.contentMetrics?.draftCourses || 0) + 1 
+                  : prev.contentMetrics?.draftCourses || 0,
               }
             }));
             setLastUpdated(new Date());
           }
-        }
-      )
-      // New certificates
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'certificates' },
-        () => {
-          setStats(prev => ({
-            ...prev,
-            engagement: {
-              ...prev.engagement,
-              certificatesIssued: (prev.engagement?.certificatesIssued || 0) + 1,
+        )
+        // Course updates (publish/unpublish)
+        .on(
+          'postgres_changes',
+          { event: 'UPDATE', schema: 'public', table: 'courses' },
+          (payload) => {
+            const newData = payload.new as any;
+            const oldData = payload.old as any;
+            if (newData?.is_published !== oldData?.is_published) {
+              const delta = newData.is_published ? 1 : -1;
+              setStats(prev => ({
+                ...prev,
+                contentMetrics: {
+                  ...prev.contentMetrics,
+                  publishedCourses: (prev.contentMetrics?.publishedCourses || 0) + delta,
+                  draftCourses: (prev.contentMetrics?.draftCourses || 0) - delta,
+                }
+              }));
+              setLastUpdated(new Date());
             }
-          }));
-          setLastUpdated(new Date());
-        }
-      )
-      // Security events
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'security_events' },
-        (payload) => {
-          const newEvent = payload.new as any;
-          setStats(prev => ({
-            ...prev,
-            security: {
-              ...prev.security,
-              eventsLast24h: (prev.security?.eventsLast24h || 0) + 1,
-              criticalEventsLast24h: newEvent?.severity === 'critical' 
-                ? (prev.security?.criticalEventsLast24h || 0) + 1 
-                : prev.security?.criticalEventsLast24h || 0,
-            }
-          }));
-          setLastUpdated(new Date());
-        }
-      )
-      // Announcements
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'announcements' },
-        () => {
-          // For announcements, just refetch to get accurate active count
-          fetchStats();
-        }
-      )
-      // Communities
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'communities' },
-        () => {
-          setStats(prev => ({
-            ...prev,
-            communities: {
-              ...prev.communities,
-              total: (prev.communities?.total || 0) + 1,
-            }
-          }));
-          setLastUpdated(new Date());
-        }
-      )
-      .subscribe((status) => {
-        setIsLive(status === 'SUBSCRIBED');
-      });
+          }
+        )
+        // New certificates
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'certificates' },
+          () => {
+            setStats(prev => ({
+              ...prev,
+              engagement: {
+                ...prev.engagement,
+                certificatesIssued: (prev.engagement?.certificatesIssued || 0) + 1,
+              }
+            }));
+            setLastUpdated(new Date());
+          }
+        )
+        // Security events
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'security_events' },
+          (payload) => {
+            const newEvent = payload.new as any;
+            setStats(prev => ({
+              ...prev,
+              security: {
+                ...prev.security,
+                eventsLast24h: (prev.security?.eventsLast24h || 0) + 1,
+                criticalEventsLast24h: newEvent?.severity === 'critical' 
+                  ? (prev.security?.criticalEventsLast24h || 0) + 1 
+                  : prev.security?.criticalEventsLast24h || 0,
+              }
+            }));
+            setLastUpdated(new Date());
+          }
+        )
+        // Announcements - use incremental update instead of refetch
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'announcements' },
+          () => {
+            setStats(prev => ({
+              ...prev,
+              announcements: {
+                ...prev.announcements,
+                total: (prev.announcements?.total || 0) + 1,
+              }
+            }));
+            setLastUpdated(new Date());
+          }
+        )
+        .on(
+          'postgres_changes',
+          { event: 'DELETE', schema: 'public', table: 'announcements' },
+          () => {
+            setStats(prev => ({
+              ...prev,
+              announcements: {
+                ...prev.announcements,
+                total: Math.max(0, (prev.announcements?.total || 0) - 1),
+              }
+            }));
+            setLastUpdated(new Date());
+          }
+        )
+        // Communities
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'communities' },
+          () => {
+            setStats(prev => ({
+              ...prev,
+              communities: {
+                ...prev.communities,
+                total: (prev.communities?.total || 0) + 1,
+              }
+            }));
+            setLastUpdated(new Date());
+          }
+        )
+        .subscribe((status, err) => {
+          console.log('Realtime subscription status:', status, err);
+          if (status === 'SUBSCRIBED') {
+            setIsLive(true);
+          } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+            setIsLive(false);
+            console.error('Realtime subscription error:', err);
+          }
+        });
+    } catch (error) {
+      console.error('Failed to setup realtime subscription:', error);
+      setIsLive(false);
+    }
 
     return () => {
-      supabase.removeChannel(channel);
+      if (channel) {
+        supabase.removeChannel(channel).catch(console.error);
+      }
     };
   }, []);
 
