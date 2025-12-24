@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Search, MoreVertical, Edit, Trash2, Eye, Calendar, Megaphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,9 +13,17 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
+import { AnnouncementFormDialog } from '@/components/admin/AnnouncementFormDialog';
+import { DeleteConfirmDialog } from '@/components/admin/DeleteConfirmDialog';
+import { toast } from 'sonner';
 
 export const AdminAnnouncements = () => {
+  const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState('');
+  const [formDialogOpen, setFormDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedAnnouncement, setSelectedAnnouncement] = useState<any>(null);
+  const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
 
   const { data: announcements, isLoading } = useQuery({
     queryKey: ['admin-announcements'],
@@ -29,9 +37,42 @@ export const AdminAnnouncements = () => {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: async (announcementId: string) => {
+      const { error } = await supabase.from('announcements').delete().eq('id', announcementId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-announcements'] });
+      toast.success('Announcement deleted successfully');
+      setDeleteDialogOpen(false);
+      setSelectedAnnouncement(null);
+    },
+    onError: (error: any) => {
+      toast.error('Failed to delete announcement: ' + error.message);
+    },
+  });
+
   const filteredAnnouncements = announcements?.filter((announcement) =>
     announcement.title_en?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleCreate = () => {
+    setSelectedAnnouncement(null);
+    setFormMode('create');
+    setFormDialogOpen(true);
+  };
+
+  const handleEdit = (announcement: any) => {
+    setSelectedAnnouncement(announcement);
+    setFormMode('edit');
+    setFormDialogOpen(true);
+  };
+
+  const handleDelete = (announcement: any) => {
+    setSelectedAnnouncement(announcement);
+    setDeleteDialogOpen(true);
+  };
 
   const getVisibilityBadge = (visibility: string) => {
     const colors = {
@@ -55,7 +96,7 @@ export const AdminAnnouncements = () => {
           <h1 className="text-3xl font-bold">Announcements</h1>
           <p className="text-muted-foreground">Manage platform announcements and updates</p>
         </div>
-        <Button className="btn-primary">
+        <Button className="btn-primary" onClick={handleCreate}>
           <Plus className="h-4 w-4 mr-2" />
           Create Announcement
         </Button>
@@ -117,15 +158,18 @@ export const AdminAnnouncements = () => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="glass-strong">
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleEdit(announcement)}>
                         <Eye className="h-4 w-4 mr-2" />
                         Preview
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleEdit(announcement)}>
                         <Edit className="h-4 w-4 mr-2" />
                         Edit
                       </DropdownMenuItem>
-                      <DropdownMenuItem className="text-red-400">
+                      <DropdownMenuItem 
+                        className="text-red-400"
+                        onClick={() => handleDelete(announcement)}
+                      >
                         <Trash2 className="h-4 w-4 mr-2" />
                         Delete
                       </DropdownMenuItem>
@@ -143,7 +187,7 @@ export const AdminAnnouncements = () => {
               <p className="text-muted-foreground mb-4">
                 Create your first announcement to reach your audience
               </p>
-              <Button className="btn-primary">
+              <Button className="btn-primary" onClick={handleCreate}>
                 <Plus className="h-4 w-4 mr-2" />
                 Create Announcement
               </Button>
@@ -151,6 +195,24 @@ export const AdminAnnouncements = () => {
           </Card>
         )}
       </div>
+
+      {/* Form Dialog */}
+      <AnnouncementFormDialog
+        open={formDialogOpen}
+        onOpenChange={setFormDialogOpen}
+        announcement={selectedAnnouncement}
+        mode={formMode}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <DeleteConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={() => selectedAnnouncement && deleteMutation.mutate(selectedAnnouncement.id)}
+        title="Delete Announcement"
+        description={`Are you sure you want to delete "${selectedAnnouncement?.title_en}"? This action cannot be undone.`}
+        isDeleting={deleteMutation.isPending}
+      />
     </div>
   );
 };

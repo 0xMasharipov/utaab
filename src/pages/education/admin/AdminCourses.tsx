@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Search, Filter, MoreVertical, Edit, Trash2, Eye, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,11 +19,20 @@ import {
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
+import { CourseFormDialog } from '@/components/admin/CourseFormDialog';
+import { DeleteConfirmDialog } from '@/components/admin/DeleteConfirmDialog';
+import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 export const AdminCourses = () => {
-  const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [formDialogOpen, setFormDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState<any>(null);
+  const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
 
   const { data: courses, isLoading } = useQuery({
     queryKey: ['admin-courses', statusFilter],
@@ -41,9 +49,46 @@ export const AdminCourses = () => {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: async (courseId: string) => {
+      const { error } = await supabase.from('courses').delete().eq('id', courseId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-courses'] });
+      toast.success('Course deleted successfully');
+      setDeleteDialogOpen(false);
+      setSelectedCourse(null);
+    },
+    onError: (error: any) => {
+      toast.error('Failed to delete course: ' + error.message);
+    },
+  });
+
   const filteredCourses = courses?.filter((course) =>
     course.title_en?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleCreate = () => {
+    setSelectedCourse(null);
+    setFormMode('create');
+    setFormDialogOpen(true);
+  };
+
+  const handleEdit = (course: any) => {
+    setSelectedCourse(course);
+    setFormMode('edit');
+    setFormDialogOpen(true);
+  };
+
+  const handleDelete = (course: any) => {
+    setSelectedCourse(course);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleView = (course: any) => {
+    navigate(`/education/course/${course.slug}`);
+  };
 
   const getStatusBadge = (isPublished: boolean) => {
     return isPublished ? (
@@ -61,7 +106,7 @@ export const AdminCourses = () => {
           <h1 className="text-3xl font-bold">Courses</h1>
           <p className="text-muted-foreground">Manage your education platform courses</p>
         </div>
-        <Button className="btn-primary">
+        <Button className="btn-primary" onClick={handleCreate}>
           <Plus className="h-4 w-4 mr-2" />
           Create Course
         </Button>
@@ -133,15 +178,18 @@ export const AdminCourses = () => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="glass-strong">
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleView(course)}>
                         <Eye className="h-4 w-4 mr-2" />
                         View
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleEdit(course)}>
                         <Edit className="h-4 w-4 mr-2" />
                         Edit
                       </DropdownMenuItem>
-                      <DropdownMenuItem className="text-red-400">
+                      <DropdownMenuItem 
+                        className="text-red-400"
+                        onClick={() => handleDelete(course)}
+                      >
                         <Trash2 className="h-4 w-4 mr-2" />
                         Delete
                       </DropdownMenuItem>
@@ -159,7 +207,7 @@ export const AdminCourses = () => {
               <p className="text-muted-foreground mb-4">
                 {searchQuery ? 'Try adjusting your search' : 'Get started by creating your first course'}
               </p>
-              <Button className="btn-primary">
+              <Button className="btn-primary" onClick={handleCreate}>
                 <Plus className="h-4 w-4 mr-2" />
                 Create Course
               </Button>
@@ -167,6 +215,24 @@ export const AdminCourses = () => {
           </Card>
         )}
       </div>
+
+      {/* Form Dialog */}
+      <CourseFormDialog
+        open={formDialogOpen}
+        onOpenChange={setFormDialogOpen}
+        course={selectedCourse}
+        mode={formMode}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <DeleteConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={() => selectedCourse && deleteMutation.mutate(selectedCourse.id)}
+        title="Delete Course"
+        description={`Are you sure you want to delete "${selectedCourse?.title_en}"? This action cannot be undone.`}
+        isDeleting={deleteMutation.isPending}
+      />
     </div>
   );
 };

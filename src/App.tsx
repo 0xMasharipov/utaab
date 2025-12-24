@@ -88,13 +88,13 @@ function App() {
             
             {/* Legacy admin routes - redirect to new structure */}
             <Route path="/education/admin/*" element={<AdminLayout />}>
-              <Route index element={<AdminDashboard />} />
+              <Route index element={<AdminOverview />} />
               <Route path="courses" element={<AdminCourses />} />
               <Route path="announcements" element={<AdminAnnouncements />} />
               <Route path="messages" element={<AdminMessages />} />
               <Route path="media" element={<AdminMedia />} />
-              <Route path="users" element={<AdminUsers />} />
-              <Route path="settings" element={<AdminSettings />} />
+              <Route path="users" element={<AdminUsersNew />} />
+              <Route path="settings" element={<AdminSettingsNew />} />
               <Route path="audit" element={<AdminAuditLog />} />
               <Route path="security" element={<AdminSecurity />} />
             </Route>

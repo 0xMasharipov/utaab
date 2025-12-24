@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -7,15 +7,27 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Search, Calendar, MapPin, Edit, Copy, Trash2, Eye } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Plus, Search, Calendar, MapPin, Edit, Trash2, Eye, MoreVertical } from "lucide-react";
 import { format } from "date-fns";
+import { EventFormDialog } from "@/components/admin/EventFormDialog";
+import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
+import { toast } from "sonner";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function AdminEvents() {
-  const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
+  const { i18n } = useTranslation();
+  const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [formDialogOpen, setFormDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
 
   const { data: events, isLoading } = useQuery({
     queryKey: ['admin-events', statusFilter],
@@ -35,11 +47,48 @@ export default function AdminEvents() {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: async (eventId: string) => {
+      const { error } = await supabase.from('events').delete().eq('id', eventId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-events'] });
+      toast.success('Event deleted successfully');
+      setDeleteDialogOpen(false);
+      setSelectedEvent(null);
+    },
+    onError: (error: any) => {
+      toast.error('Failed to delete event: ' + error.message);
+    },
+  });
+
   const filteredEvents = events?.filter(event => {
     const titleKey = `title_${i18n.language}` as keyof typeof event;
     const title = (event[titleKey] as string) || event.title_en || '';
     return String(title).toLowerCase().includes(searchQuery.toLowerCase());
   });
+
+  const handleCreate = () => {
+    setSelectedEvent(null);
+    setFormMode('create');
+    setFormDialogOpen(true);
+  };
+
+  const handleEdit = (event: any) => {
+    setSelectedEvent(event);
+    setFormMode('edit');
+    setFormDialogOpen(true);
+  };
+
+  const handleDelete = (event: any) => {
+    setSelectedEvent(event);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleView = (event: any) => {
+    window.open(`/events/${event.slug}`, '_blank');
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -55,10 +104,10 @@ export default function AdminEvents() {
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">{t("events.title", "Events")}</h1>
+          <h1 className="text-3xl font-bold">Events</h1>
           <p className="text-muted-foreground">Manage your events and announcements</p>
         </div>
-        <Button onClick={() => navigate("/admin/events/new")}>
+        <Button onClick={handleCreate}>
           <Plus className="mr-2 h-4 w-4" />
           Create Event
         </Button>
@@ -107,7 +156,7 @@ export default function AdminEvents() {
             <p className="text-muted-foreground mb-4">
               Get started by creating your first event
             </p>
-            <Button onClick={() => navigate("/admin/events/new")}>
+            <Button onClick={handleCreate}>
               <Plus className="mr-2 h-4 w-4" />
               Create Event
             </Button>
@@ -138,34 +187,35 @@ export default function AdminEvents() {
                             <Badge className={getStatusColor(event.visibility)}>
                               {event.visibility}
                             </Badge>
-                            {event.tags?.map((tag) => (
+                            {event.tags?.map((tag: string) => (
                               <Badge key={tag} variant="outline">{tag}</Badge>
                             ))}
                           </div>
                         </div>
-                        <div className="flex gap-2">
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={() => navigate(`/admin/events/${event.id}`)}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={() => navigate(`/admin/events/${event.id}/duplicate`)}
-                          >
-                            <Copy className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={() => window.open(`/events/${event.slug}`, '_blank')}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                        </div>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm">
+                              <MoreVertical className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => handleView(event)}>
+                              <Eye className="h-4 w-4 mr-2" />
+                              View
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleEdit(event)}>
+                              <Edit className="h-4 w-4 mr-2" />
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem 
+                              className="text-red-400"
+                              onClick={() => handleDelete(event)}
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                       <div className="flex gap-4 text-sm text-muted-foreground">
                         <div className="flex items-center gap-1">
@@ -187,6 +237,24 @@ export default function AdminEvents() {
           })}
         </div>
       )}
+
+      {/* Form Dialog */}
+      <EventFormDialog
+        open={formDialogOpen}
+        onOpenChange={setFormDialogOpen}
+        event={selectedEvent}
+        mode={formMode}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <DeleteConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={() => selectedEvent && deleteMutation.mutate(selectedEvent.id)}
+        title="Delete Event"
+        description={`Are you sure you want to delete "${selectedEvent?.title_en}"? This action cannot be undone.`}
+        isDeleting={deleteMutation.isPending}
+      />
     </div>
   );
 }
