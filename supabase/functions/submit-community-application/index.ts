@@ -41,7 +41,8 @@ const applicationSchema = z.object({
   kvkk_consent_version: z.string(),
   locale: z.string().max(10),
   honeypot: z.string().max(0),
-  form_start_time: z.number().optional(), // Bot detection: form load timestamp
+  form_start_time: z.number().optional(),
+  utaab_token: z.string().optional(),
   utm_source: z.string().trim().max(255).optional().nullable(),
   utm_medium: z.string().trim().max(255).optional().nullable(),
   utm_campaign: z.string().trim().max(255).optional().nullable(),

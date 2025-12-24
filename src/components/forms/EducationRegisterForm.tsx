@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -21,6 +21,7 @@ import { z } from 'zod';
 import { mapError } from '@/lib/errorUtils';
 import { HoneypotField } from '@/components/security/HoneypotField';
 import { useSecurity } from '@/hooks/useSecurity';
+import { UtaabCaptcha, UtaabCaptchaRef } from '@/components/security/UtaabCaptcha';
 
 const createBaseSchema = (t: any) => z.object({
   email: z.string().trim().email({ message: t('education.registration.validation.emailInvalid') }),
@@ -69,6 +70,8 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
     role: undefined,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [utaabToken, setUtaabToken] = useState<string | null>(null);
+  const utaabRef = useRef<UtaabCaptchaRef>(null);
 
   const focusAreaOptions = [
     'interestSolidity', 'interestRust', 'interestZK', 'interestL2',
@@ -182,6 +185,16 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
         return;
       }
 
+      // Check UTAAB for sign-in
+      if (!utaabToken) {
+        toast({
+          title: 'Error',
+          description: t('auth.captchaRequired'),
+          variant: 'destructive',
+        });
+        return;
+      }
+
       setIsSubmitting(true);
       try {
         // Check rate limit
@@ -244,6 +257,16 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
 
     // Handle sign up mode
     if (!validateStep(3)) return;
+
+    // Check UTAAB for sign-up
+    if (!utaabToken) {
+      toast({
+        title: 'Error',
+        description: t('auth.captchaRequired'),
+        variant: 'destructive',
+      });
+      return;
+    }
 
     // Honeypot check (bot detection)
     if (honeypot) {
@@ -445,10 +468,23 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
             </div>
           </div>
 
+          {/* UTAAB Anti-bot Verification */}
+          <UtaabCaptcha
+            ref={utaabRef}
+            onVerify={(token) => setUtaabToken(token)}
+            onError={() => toast({
+              title: 'Error',
+              description: t('auth.captchaFailed'),
+              variant: 'destructive',
+            })}
+            mode="interactive"
+            difficulty="adaptive"
+          />
+
           <Button 
             type="submit" 
             className="btn-primary w-full" 
-            disabled={isSubmitting}
+            disabled={isSubmitting || !utaabToken}
           >
             {isSubmitting ? t('education.registration.signingIn') : t('education.registration.signIn')}
           </Button>

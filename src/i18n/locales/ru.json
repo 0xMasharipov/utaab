@@ -325,7 +325,19 @@
     "submitting": "Отправка...",
     "save": "Сохранить",
     "cancel": "Отмена",
-    "soon": "Скоро"
+    "soon": "Скоро",
+    "retry": "Повторить"
+  },
+  "utaab": {
+    "verifying": "Проверка...",
+    "verified": "Подтверждено",
+    "humanConfirmed": "Человек подтверждён",
+    "verifyHuman": "Подтвердите, что вы человек",
+    "verificationFailed": "Проверка не удалась",
+    "tryAgain": "Попробуйте снова",
+    "clickToVerify": "Нажмите, чтобы подтвердить что вы человек",
+    "verify": "Подтвердить",
+    "solvingChallenge": "Решение вычислительной задачи..."
   },
   "footer": {
     "brand": "UTAA Blockchain",

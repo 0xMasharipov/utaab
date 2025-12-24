@@ -28,6 +28,7 @@ const requestSchema = z.object({
   request_type: z.enum(['access', 'correction', 'deletion', 'portability', 'objection']),
   details: z.string().trim().min(10).max(2000),
   locale: z.string().max(10),
+  utaab_token: z.string().optional(),
 });
 
 // Persistent rate limiting using database

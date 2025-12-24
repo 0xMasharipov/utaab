@@ -325,7 +325,19 @@
     "submitting": "Gönderiliyor...",
     "save": "Kaydet",
     "cancel": "İptal",
-    "soon": "Yakında"
+    "soon": "Yakında",
+    "retry": "Tekrar Dene"
+  },
+  "utaab": {
+    "verifying": "Doğrulanıyor...",
+    "verified": "Doğrulandı",
+    "humanConfirmed": "İnsan doğrulandı",
+    "verifyHuman": "İnsan olduğunuzu doğrulayın",
+    "verificationFailed": "Doğrulama Başarısız",
+    "tryAgain": "Lütfen tekrar deneyin",
+    "clickToVerify": "İnsan olduğunuzu doğrulamak için tıklayın",
+    "verify": "Doğrula",
+    "solvingChallenge": "Hesaplama görevi çözülüyor..."
   },
   "footer": {
     "brand": "UTAA Blockchain",
