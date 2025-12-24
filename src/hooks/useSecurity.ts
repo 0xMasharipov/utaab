@@ -13,22 +13,27 @@ export const useSecurity = () => {
   });
   const [formStartTime] = useState(Date.now());
 
-  // Load security config
+  // Load security config via edge function (not directly from DB to avoid exposing sensitive config)
   useEffect(() => {
     const loadConfig = async () => {
-      const { data } = await supabase
-        .from('security_settings')
-        .select('*')
-        .in('setting_key', ['captcha_enabled', 'min_form_completion_time']);
+      try {
+        const { data, error } = await supabase.functions.invoke('get-public-security-config');
 
-      if (data) {
-        const captchaSetting = data.find((s) => s.setting_key === 'captcha_enabled');
-        const timingSetting = data.find((s) => s.setting_key === 'min_form_completion_time');
+        if (error) {
+          console.error('Failed to load security config:', error);
+          // Keep defaults on error
+          return;
+        }
 
-        setConfig({
-          captchaEnabled: (captchaSetting?.setting_value as any)?.enabled ?? true,
-          minFormTime: (timingSetting?.setting_value as any)?.seconds ?? 2,
-        });
+        if (data) {
+          setConfig({
+            captchaEnabled: data.captchaEnabled ?? true,
+            minFormTime: data.minFormTime ?? 2,
+          });
+        }
+      } catch (error) {
+        console.error('Security config error:', error);
+        // Keep defaults on error
       }
     };
 
