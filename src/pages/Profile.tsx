@@ -78,8 +78,8 @@ export default function Profile() {
       const userRoles = rolesData?.map((r: any) => r.role) || [];
       setRoles(userRoles);
       
-      // Check if user is root admin
-      setIsAdmin(authUser.email === '0xz2n@gmail.com' && userRoles.includes('admin'));
+      // UI-only admin check - actual authorization is enforced server-side via RLS policies and edge functions
+      setIsAdmin(userRoles.includes('admin'));
     } catch (error: any) {
       toast.error('Failed to load profile: ' + error.message);
     } finally {
