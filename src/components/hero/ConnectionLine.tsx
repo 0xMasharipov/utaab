@@ -1,5 +1,5 @@
-import { useRef, useMemo } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useMemo } from 'react';
+import { Line } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface ConnectionLineProps {
@@ -15,8 +15,6 @@ export const ConnectionLine = ({
   color = '#4a9eff',
   opacity = 0.4,
 }: ConnectionLineProps) => {
-  const lineRef = useRef<THREE.Line>(null);
-
   const points = useMemo(() => {
     const startVec = new THREE.Vector3(...start);
     const endVec = new THREE.Vector3(...end);
@@ -26,7 +24,7 @@ export const ConnectionLine = ({
       .addVectors(startVec, endVec)
       .multiplyScalar(0.5);
     
-    // Add slight curve offset
+    // Add slight curve offset for visual interest
     midPoint.y += 0.2;
     midPoint.z += 0.1;
     
@@ -34,28 +32,13 @@ export const ConnectionLine = ({
     return curve.getPoints(20);
   }, [start, end]);
 
-  const geometry = useMemo(() => {
-    const geo = new THREE.BufferGeometry().setFromPoints(points);
-    return geo;
-  }, [points]);
-
-  useFrame((state) => {
-    if (lineRef.current) {
-      const material = lineRef.current.material as THREE.LineBasicMaterial;
-      // Subtle pulse effect
-      material.opacity = opacity + Math.sin(state.clock.elapsedTime * 2) * 0.1;
-    }
-  });
-
   return (
-    <line ref={lineRef as any}>
-      <bufferGeometry attach="geometry" {...geometry} />
-      <lineBasicMaterial
-        color={color}
-        transparent
-        opacity={opacity}
-        linewidth={1}
-      />
-    </line>
+    <Line
+      points={points}
+      color={color}
+      lineWidth={1}
+      transparent
+      opacity={opacity}
+    />
   );
 };
