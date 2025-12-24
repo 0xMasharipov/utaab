@@ -41,7 +41,7 @@ export default function AdminUsers() {
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [newInvite, setNewInvite] = useState({
     email: '',
-    role: 'user',
+    role: 'moderator',
   });
 
   useEffect(() => {
@@ -100,7 +100,7 @@ export default function AdminUsers() {
 
       toast.success('Invitation sent successfully');
       setInviteDialogOpen(false);
-      setNewInvite({ email: '', role: 'user' });
+      setNewInvite({ email: '', role: 'moderator' });
     } catch (error: any) {
       toast.error('Failed to send invitation: ' + error.message);
     }
