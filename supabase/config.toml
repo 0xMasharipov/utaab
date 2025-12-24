@@ -17,3 +17,6 @@ verify_jwt = true
 
 [functions.check-admin-status]
 verify_jwt = true
+
+[functions.utaab-verify]
+verify_jwt = false
