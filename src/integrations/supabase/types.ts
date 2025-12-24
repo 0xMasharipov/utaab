@@ -1647,7 +1647,13 @@ export type Database = {
       provision_root_admin: { Args: never; Returns: undefined }
     }
     Enums: {
-      app_role: "admin" | "instructor" | "student" | "community_admin"
+      app_role:
+        | "admin"
+        | "instructor"
+        | "student"
+        | "community_admin"
+        | "moderator"
+        | "user"
       course_language: "en" | "tr" | "ru" | "ar"
       course_level: "beginner" | "intermediate" | "advanced"
     }
@@ -1777,7 +1783,14 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "instructor", "student", "community_admin"],
+      app_role: [
+        "admin",
+        "instructor",
+        "student",
+        "community_admin",
+        "moderator",
+        "user",
+      ],
       course_language: ["en", "tr", "ru", "ar"],
       course_level: ["beginner", "intermediate", "advanced"],
     },
