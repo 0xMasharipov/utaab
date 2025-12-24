@@ -1,6 +1,6 @@
-import { Suspense, useRef, useMemo } from 'react';
+import { Suspense, useRef, useMemo, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Float, Stars, Environment } from '@react-three/drei';
+import { Float, Stars } from '@react-three/drei';
 import * as THREE from 'three';
 
 // Glass cube with inner blue glow
@@ -205,6 +205,16 @@ const CameraController = () => {
   const mousePosition = useRef({ x: 0, y: 0 });
   const targetPosition = useRef({ x: 0, y: 0 });
 
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      mousePosition.current.x = (e.clientX / window.innerWidth - 0.5) * 2;
+      mousePosition.current.y = -(e.clientY / window.innerHeight - 0.5) * 2;
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   useFrame(() => {
     // Smooth camera movement
     targetPosition.current.x += (mousePosition.current.x * 0.5 - targetPosition.current.x) * 0.02;
@@ -214,14 +224,6 @@ const CameraController = () => {
     camera.position.y = targetPosition.current.y;
     camera.lookAt(0, 0, 0);
   });
-
-  // Update mouse position
-  if (typeof window !== 'undefined') {
-    window.addEventListener('mousemove', (e) => {
-      mousePosition.current.x = (e.clientX / window.innerWidth - 0.5) * 2;
-      mousePosition.current.y = -(e.clientY / window.innerHeight - 0.5) * 2;
-    });
-  }
 
   return null;
 };
@@ -265,8 +267,6 @@ const Scene = () => {
       <pointLight position={[-10, -10, -5]} intensity={0.5} color="#3b82f6" />
       <pointLight position={[0, 0, 5]} intensity={0.3} color="#93c5fd" />
       
-      {/* Environment for glass reflections */}
-      <Environment preset="night" />
 
       {/* Stars background */}
       <Stars
