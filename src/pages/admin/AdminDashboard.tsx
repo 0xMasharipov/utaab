@@ -28,53 +28,23 @@ interface Stats {
 export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats>({});
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [user, setUser] = useState<any>(null);
 
+  // AdminLayout already verified admin status, so we just fetch stats directly
   useEffect(() => {
-    // Get current user
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!user) return;
-
-    // Use check-admin-status edge function for server-side admin verification
-    const checkAdminStatus = async () => {
+    const fetchStats = async () => {
       try {
-        const { data, error } = await supabase.functions.invoke('check-admin-status');
+        const { data, error } = await supabase.functions.invoke('admin-stats');
         if (error) throw error;
-        setIsAdmin(data?.isAdmin || false);
-        
-        // Only fetch stats if user is confirmed admin
-        if (data?.isAdmin) {
-          fetchStats();
-        } else {
-          setLoading(false);
-        }
+        setStats(data || {});
       } catch (error: any) {
-        console.error('Admin check failed:', error);
-        setIsAdmin(false);
+        toast.error('Failed to load dashboard stats: ' + error.message);
+      } finally {
         setLoading(false);
       }
     };
 
-    checkAdminStatus();
-  }, [user]);
-
-  const fetchStats = async () => {
-    try {
-      const { data, error } = await supabase.functions.invoke('admin-stats');
-      if (error) throw error;
-      setStats(data || {});
-    } catch (error: any) {
-      toast.error('Failed to load dashboard stats: ' + error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    fetchStats();
+  }, []);
 
   if (loading) {
     return (
