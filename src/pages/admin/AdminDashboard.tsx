@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -52,6 +53,92 @@ function AnimatedStat({ value, className }: { value: number | string; className?
     >
       {value}
     </span>
+  );
+}
+
+// Skeleton for stat cards
+function StatCardSkeleton() {
+  return (
+    <Card className="glass-panel p-6">
+      <div className="flex items-center gap-3">
+        <Skeleton className="h-8 w-8 rounded-lg" />
+        <div className="space-y-2">
+          <Skeleton className="h-7 w-14" />
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-3 w-16" />
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+// Full dashboard skeleton
+function DashboardSkeleton() {
+  return (
+    <div className="space-y-6">
+      {/* Header Skeleton */}
+      <div className="flex items-center justify-between">
+        <div className="space-y-2">
+          <Skeleton className="h-9 w-36" />
+          <Skeleton className="h-5 w-64" />
+        </div>
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-4 w-12" />
+          <Skeleton className="h-4 w-28" />
+          <Skeleton className="h-8 w-8 rounded" />
+        </div>
+      </div>
+
+      {/* System Health Section - 5 cards */}
+      <div>
+        <Skeleton className="h-6 w-32 mb-4" />
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+          {[...Array(5)].map((_, i) => <StatCardSkeleton key={i} />)}
+        </div>
+      </div>
+
+      {/* Content Metrics Section - 4 cards */}
+      <div>
+        <Skeleton className="h-6 w-36 mb-4" />
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {[...Array(4)].map((_, i) => <StatCardSkeleton key={i} />)}
+        </div>
+      </div>
+
+      {/* Engagement Section - 4 cards */}
+      <div>
+        <Skeleton className="h-6 w-28 mb-4" />
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {[...Array(4)].map((_, i) => <StatCardSkeleton key={i} />)}
+        </div>
+      </div>
+
+      {/* Top Courses Section */}
+      <div>
+        <Skeleton className="h-6 w-52 mb-4" />
+        <Card className="glass-panel p-6">
+          <div className="space-y-4">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Skeleton className="w-8 h-8 rounded-full" />
+                  <Skeleton className="h-4 w-48" />
+                </div>
+                <Skeleton className="h-4 w-24" />
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
+
+      {/* Security Section - 2 cards */}
+      <div>
+        <Skeleton className="h-6 w-24 mb-4" />
+        <div className="grid gap-4 md:grid-cols-2">
+          {[...Array(2)].map((_, i) => <StatCardSkeleton key={i} />)}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -249,11 +336,7 @@ export default function AdminDashboard() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   const { systemHealth, contentMetrics, engagement, security, announcements, communities } = stats;
