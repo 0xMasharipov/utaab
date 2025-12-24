@@ -2,6 +2,14 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
+import { lazy, Suspense } from 'react';
+
+// Lazy load the 3D scene for better performance
+const BlockchainScene = lazy(() => 
+  import('@/components/three/BlockchainScene').then(module => ({ 
+    default: module.BlockchainScene 
+  }))
+);
 
 export const Hero = () => {
   const { t } = useTranslation();
@@ -39,14 +47,18 @@ export const Hero = () => {
   };
 
   return (
-    <section id="hero" className="relative min-h-screen flex items-center justify-center dynamic-gradient overflow-hidden">
-      {/* Enhanced animated background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px] animate-float" />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-accent/15 rounded-full blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/5 rounded-full blur-[120px] animate-float" style={{ animationDelay: '4s' }} />
-      </div>
+    <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* 3D Blockchain Background */}
+      <Suspense fallback={
+        <div className="absolute inset-0 dynamic-gradient">
+          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px] animate-float" />
+          <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-accent/15 rounded-full blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
+        </div>
+      }>
+        <BlockchainScene />
+      </Suspense>
 
+      {/* Content overlay */}
       <div className="section-container relative z-10 text-center py-24 sm:py-28 md:py-32">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
