@@ -1,155 +1,201 @@
-import { Suspense, useRef } from 'react';
+import { Suspense, useRef, useMemo } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Float, Stars } from '@react-three/drei';
+import { Float, Stars, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 
-// Blockchain cube component
-const BlockchainCube = ({ position, scale = 1, rotationSpeed = 0.005 }: { 
+// Glass cube with inner blue glow
+const GlassCube = ({ position, scale = 1, rotationSpeed = 0.005 }: { 
   position: [number, number, number]; 
   scale?: number;
   rotationSpeed?: number;
 }) => {
-  const meshRef = useRef<THREE.Mesh>(null);
-  const edgesRef = useRef<THREE.LineSegments>(null);
+  const groupRef = useRef<THREE.Group>(null);
+  const innerRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x += rotationSpeed;
-      meshRef.current.rotation.y += rotationSpeed * 1.5;
+    if (groupRef.current) {
+      groupRef.current.rotation.x += rotationSpeed;
+      groupRef.current.rotation.y += rotationSpeed * 1.5;
     }
-    if (edgesRef.current) {
-      edgesRef.current.rotation.x += rotationSpeed;
-      edgesRef.current.rotation.y += rotationSpeed * 1.5;
+    // Pulsing glow effect
+    if (innerRef.current) {
+      const material = innerRef.current.material as THREE.MeshStandardMaterial;
+      material.emissiveIntensity = 1.2 + Math.sin(state.clock.elapsedTime * 2 + position[0]) * 0.5;
     }
   });
 
   return (
-    <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
-      <group position={position}>
-        {/* Solid cube with transparency */}
-        <mesh ref={meshRef} scale={scale}>
+    <Float speed={2} rotationIntensity={0.3} floatIntensity={0.8}>
+      <group ref={groupRef} position={position}>
+        {/* Outer glass shell */}
+        <mesh scale={scale}>
           <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial
-            color="#1a5fb4"
+          <meshPhysicalMaterial
+            color="#ffffff"
+            transmission={0.92}
+            roughness={0.05}
+            thickness={0.5}
+            ior={1.5}
             transparent
-            opacity={0.15}
-            side={THREE.DoubleSide}
+            opacity={0.25}
+            envMapIntensity={1}
+            clearcoat={1}
+            clearcoatRoughness={0.1}
           />
         </mesh>
-        {/* Glowing edges */}
-        <lineSegments ref={edgesRef} scale={scale}>
+        
+        {/* Inner glowing blue core */}
+        <mesh ref={innerRef} scale={scale * 0.55}>
+          <boxGeometry args={[1, 1, 1]} />
+          <meshStandardMaterial
+            color="#3b82f6"
+            emissive="#60a5fa"
+            emissiveIntensity={1.5}
+            transparent
+            opacity={0.85}
+          />
+        </mesh>
+        
+        {/* Glowing wireframe edges */}
+        <lineSegments scale={scale * 1.02}>
           <edgesGeometry args={[new THREE.BoxGeometry(1, 1, 1)]} />
-          <lineBasicMaterial color="#60a5fa" linewidth={2} />
+          <lineBasicMaterial color="#93c5fd" transparent opacity={0.6} />
         </lineSegments>
       </group>
     </Float>
   );
 };
 
-// Network lines connecting cubes
-const NetworkLines = ({ points }: { points: [number, number, number][] }) => {
-  const groupRef = useRef<THREE.Group>(null);
-  
-  // Create line geometry
-  const linePoints = points.map(p => new THREE.Vector3(...p));
-  
-  return (
-    <group ref={groupRef}>
-      {linePoints.slice(0, -1).map((point, i) => {
-        const nextPoint = linePoints[i + 1];
-        const direction = new THREE.Vector3().subVectors(nextPoint, point);
-        const length = direction.length();
-        const midPoint = new THREE.Vector3().addVectors(point, nextPoint).multiplyScalar(0.5);
-        
-        return (
-          <mesh key={i} position={midPoint}>
-            <cylinderGeometry args={[0.01, 0.01, length, 8]} />
-            <meshStandardMaterial
-              color="#3b82f6"
-              transparent
-              opacity={0.6}
-              emissive="#3b82f6"
-              emissiveIntensity={0.3}
-            />
-          </mesh>
-        );
-      })}
-    </group>
-  );
-};
+// Glass pipe connecting two points
+const GlassPipe = ({ start, end }: { start: THREE.Vector3; end: THREE.Vector3 }) => {
+  const { midPoint, length, quaternion } = useMemo(() => {
+    const mid = new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5);
+    const direction = new THREE.Vector3().subVectors(end, start);
+    const len = direction.length();
+    
+    // Calculate rotation to align cylinder with direction
+    const up = new THREE.Vector3(0, 1, 0);
+    const quat = new THREE.Quaternion().setFromUnitVectors(up, direction.clone().normalize());
+    
+    return { midPoint: mid, length: len, quaternion: quat };
+  }, [start, end]);
 
-// Floating particles
-const ParticleField = ({ count = 200 }: { count?: number }) => {
-  const points = useRef<THREE.Points>(null);
-
-  const positions = new Float32Array(count * 3);
-  const colors = new Float32Array(count * 3);
-
-  for (let i = 0; i < count; i++) {
-    positions[i * 3] = (Math.random() - 0.5) * 20;
-    positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
-    positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
-
-    // Blue-ish colors
-    colors[i * 3] = 0.2 + Math.random() * 0.2;
-    colors[i * 3 + 1] = 0.4 + Math.random() * 0.3;
-    colors[i * 3 + 2] = 0.8 + Math.random() * 0.2;
-  }
+  const innerRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
-    if (points.current) {
-      points.current.rotation.y += 0.0005;
-      points.current.rotation.x += 0.0002;
+    if (innerRef.current) {
+      const material = innerRef.current.material as THREE.MeshStandardMaterial;
+      material.emissiveIntensity = 1.5 + Math.sin(state.clock.elapsedTime * 3 + start.x) * 0.5;
     }
   });
 
   return (
-    <points ref={points}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={count}
-          array={positions}
-          itemSize={3}
+    <group position={midPoint} quaternion={quaternion}>
+      {/* Outer glass tube */}
+      <mesh>
+        <cylinderGeometry args={[0.06, 0.06, length, 16, 1, true]} />
+        <meshPhysicalMaterial
+          color="#ffffff"
+          transmission={0.88}
+          roughness={0.1}
+          thickness={0.2}
+          ior={1.4}
+          transparent
+          opacity={0.35}
+          side={THREE.DoubleSide}
         />
-        <bufferAttribute
-          attach="attributes-color"
-          count={count}
-          array={colors}
-          itemSize={3}
+      </mesh>
+      
+      {/* Inner glowing core */}
+      <mesh ref={innerRef}>
+        <cylinderGeometry args={[0.025, 0.025, length, 8]} />
+        <meshStandardMaterial
+          color="#3b82f6"
+          emissive="#60a5fa"
+          emissiveIntensity={2}
         />
-      </bufferGeometry>
-      <pointsMaterial
-        size={0.05}
-        vertexColors
-        transparent
-        opacity={0.8}
-        sizeAttenuation
-      />
-    </points>
+      </mesh>
+    </group>
   );
 };
 
-// Network nodes (small glowing spheres)
-const NetworkNode = ({ position }: { position: [number, number, number] }) => {
+// Glass pipes network
+const GlassPipes = ({ connections }: { connections: [THREE.Vector3, THREE.Vector3][] }) => {
+  return (
+    <group>
+      {connections.map((connection, i) => (
+        <GlassPipe key={i} start={connection[0]} end={connection[1]} />
+      ))}
+    </group>
+  );
+};
+
+// Single glowing spherical particle
+const GlowingParticle = ({ position, delay = 0 }: { position: [number, number, number]; delay?: number }) => {
   const meshRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
     if (meshRef.current) {
-      const scale = 1 + Math.sin(state.clock.elapsedTime * 2 + position[0]) * 0.2;
+      // Pulsing scale
+      const scale = 0.7 + Math.sin(state.clock.elapsedTime * 2.5 + delay) * 0.3;
       meshRef.current.scale.setScalar(scale);
+      
+      // Gentle floating motion
+      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 0.8 + delay) * 0.15;
+      meshRef.current.position.x = position[0] + Math.cos(state.clock.elapsedTime * 0.6 + delay) * 0.1;
+      
+      // Update emissive intensity
+      const material = meshRef.current.material as THREE.MeshStandardMaterial;
+      material.emissiveIntensity = 2 + Math.sin(state.clock.elapsedTime * 3 + delay) * 1;
     }
   });
 
   return (
     <mesh ref={meshRef} position={position}>
-      <sphereGeometry args={[0.08, 16, 16]} />
+      <sphereGeometry args={[0.04, 16, 16]} />
       <meshStandardMaterial
         color="#60a5fa"
         emissive="#3b82f6"
-        emissiveIntensity={0.5}
+        emissiveIntensity={2.5}
+        transparent
+        opacity={0.9}
       />
     </mesh>
+  );
+};
+
+// Particle field with spherical glowing particles
+const GlowingParticleField = ({ count = 100 }: { count?: number }) => {
+  const particles = useMemo(() => {
+    const positions: { position: [number, number, number]; delay: number }[] = [];
+    for (let i = 0; i < count; i++) {
+      positions.push({
+        position: [
+          (Math.random() - 0.5) * 18,
+          (Math.random() - 0.5) * 18,
+          (Math.random() - 0.5) * 18
+        ],
+        delay: Math.random() * Math.PI * 2
+      });
+    }
+    return positions;
+  }, [count]);
+
+  const groupRef = useRef<THREE.Group>(null);
+
+  useFrame(() => {
+    if (groupRef.current) {
+      groupRef.current.rotation.y += 0.0003;
+      groupRef.current.rotation.x += 0.0001;
+    }
+  });
+
+  return (
+    <group ref={groupRef}>
+      {particles.map((particle, i) => (
+        <GlowingParticle key={i} position={particle.position} delay={particle.delay} />
+      ))}
+    </group>
   );
 };
 
@@ -157,10 +203,15 @@ const NetworkNode = ({ position }: { position: [number, number, number] }) => {
 const CameraController = () => {
   const { camera } = useThree();
   const mousePosition = useRef({ x: 0, y: 0 });
+  const targetPosition = useRef({ x: 0, y: 0 });
 
   useFrame(() => {
-    camera.position.x += (mousePosition.current.x * 0.5 - camera.position.x) * 0.02;
-    camera.position.y += (mousePosition.current.y * 0.5 - camera.position.y) * 0.02;
+    // Smooth camera movement
+    targetPosition.current.x += (mousePosition.current.x * 0.5 - targetPosition.current.x) * 0.02;
+    targetPosition.current.y += (mousePosition.current.y * 0.5 - targetPosition.current.y) * 0.02;
+    
+    camera.position.x = targetPosition.current.x;
+    camera.position.y = targetPosition.current.y;
     camera.lookAt(0, 0, 0);
   });
 
@@ -189,70 +240,60 @@ const Scene = () => {
     [-3, -0.5, -4],
   ];
 
-  // Node positions (between cubes)
-  const nodePositions: [number, number, number][] = [
-    [-0.5, 0, -1.5],
-    [1, 0.5, -2],
-    [-2.5, -0.5, -1],
-    [0.5, -1.5, -2],
-    [-1.5, 1.5, -2.5],
-    [2.5, -0.5, -1.5],
-  ];
+  // Convert to Vector3 for pipe connections
+  const cubeVectors = cubePositions.map(p => new THREE.Vector3(...p));
 
-  // Connection lines
-  const connections = [
-    [cubePositions[0], cubePositions[2]],
-    [cubePositions[1], cubePositions[3]],
-    [cubePositions[2], cubePositions[4]],
-    [cubePositions[3], cubePositions[5]],
-    [cubePositions[4], cubePositions[6]],
-    [cubePositions[0], cubePositions[5]],
-    [cubePositions[1], cubePositions[4]],
-    [cubePositions[5], cubePositions[7]],
+  // Connection lines between cubes
+  const connections: [THREE.Vector3, THREE.Vector3][] = [
+    [cubeVectors[0], cubeVectors[2]],
+    [cubeVectors[1], cubeVectors[3]],
+    [cubeVectors[2], cubeVectors[4]],
+    [cubeVectors[3], cubeVectors[5]],
+    [cubeVectors[4], cubeVectors[6]],
+    [cubeVectors[0], cubeVectors[5]],
+    [cubeVectors[1], cubeVectors[4]],
+    [cubeVectors[5], cubeVectors[7]],
   ];
 
   return (
     <>
       <CameraController />
       
-      {/* Ambient and directional lighting */}
-      <ambientLight intensity={0.3} />
-      <pointLight position={[10, 10, 10]} intensity={0.5} color="#60a5fa" />
-      <pointLight position={[-10, -10, -5]} intensity={0.3} color="#1a5fb4" />
+      {/* Enhanced lighting for glass effect */}
+      <ambientLight intensity={0.4} />
+      <pointLight position={[10, 10, 10]} intensity={0.8} color="#60a5fa" />
+      <pointLight position={[-10, -10, -5]} intensity={0.5} color="#3b82f6" />
+      <pointLight position={[0, 0, 5]} intensity={0.3} color="#93c5fd" />
+      
+      {/* Environment for glass reflections */}
+      <Environment preset="night" />
 
       {/* Stars background */}
       <Stars
         radius={50}
         depth={50}
-        count={1000}
+        count={800}
         factor={2}
-        saturation={0}
+        saturation={0.2}
         fade
-        speed={0.5}
+        speed={0.3}
       />
 
-      {/* Blockchain cubes */}
+      {/* Glass cubes with inner glow */}
       {cubePositions.map((pos, i) => (
-        <BlockchainCube
+        <GlassCube
           key={i}
           position={pos}
-          scale={0.6 + Math.random() * 0.4}
-          rotationSpeed={0.003 + Math.random() * 0.004}
+          scale={0.7 + Math.random() * 0.3}
+          rotationSpeed={0.003 + Math.random() * 0.003}
         />
       ))}
 
-      {/* Network nodes */}
-      {nodePositions.map((pos, i) => (
-        <NetworkNode key={i} position={pos} />
-      ))}
+      {/* Glass pipes connecting cubes */}
+      <GlassPipes connections={connections} />
 
-      {/* Connection lines */}
-      {connections.map((points, i) => (
-        <NetworkLines key={i} points={points as [number, number, number][]} />
-      ))}
-
-      {/* Particle field */}
-      <ParticleField count={150} />
+      {/* Glowing spherical particles */}
+      <GlowingParticleField count={80} />
     </>
   );
 };
