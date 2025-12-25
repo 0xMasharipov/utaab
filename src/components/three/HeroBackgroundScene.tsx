@@ -1,4 +1,4 @@
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { useMemo, useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 
@@ -255,13 +255,20 @@ const Scene = () => {
 
 // Exported component
 export const HeroBackgroundScene = () => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
   return (
-    <div className="absolute inset-0 -z-10">
+    <div 
+      className={`absolute inset-0 -z-10 transition-opacity duration-1000 ease-out ${
+        isLoaded ? 'opacity-100' : 'opacity-0'
+      }`}
+    >
       <Canvas
         camera={{ position: [0, 0, 3.5], fov: 75, near: 0.1, far: 1000 }}
         dpr={[1, 2]}
         style={{ background: '#000000' }}
         gl={{ antialias: true, alpha: false }}
+        onCreated={() => setIsLoaded(true)}
       >
         <color attach="background" args={['#000000']} />
         <Scene />
