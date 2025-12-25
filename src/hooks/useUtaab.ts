@@ -147,6 +147,8 @@ export function useUtaab(config: UtaabConfig = {}): UseUtaabReturn {
         }
       }
 
+      console.log('[UTAAB] Sending verification request...', { sessionId: sessionIdRef.current, endpoint });
+
       const { data, error } = await supabase.functions.invoke('utaab-verify', {
         body: {
           sessionId: sessionIdRef.current,
@@ -159,8 +161,19 @@ export function useUtaab(config: UtaabConfig = {}): UseUtaabReturn {
       });
 
       if (error) {
+        console.error('[UTAAB] Edge function error:', error);
+        // Check for specific error types
+        if (error.message?.includes('Failed to send') || error.message?.includes('fetch')) {
+          throw new Error('Network error - please check your connection and try again');
+        }
         throw new Error(error.message || 'Verification failed');
       }
+
+      if (!data) {
+        throw new Error('No response from verification service');
+      }
+
+      console.log('[UTAAB] Verification response:', { verdict: data.verdict, riskScore: data.riskScore });
 
       const { success, verdict, riskScore, token, challenge, pow, message } = data;
 
@@ -180,11 +193,19 @@ export function useUtaab(config: UtaabConfig = {}): UseUtaabReturn {
     } catch (error) {
       console.error('[UTAAB] Verification error:', error);
       
+      // Provide user-friendly error messages
+      let errorMessage = 'Verification failed';
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        errorMessage = 'Network error - please check your connection';
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
       setState(prev => ({
         ...prev,
         isLoading: false,
         verdict: 'fail',
-        error: error instanceof Error ? error.message : 'Verification failed'
+        error: errorMessage
       }));
 
       return false;
