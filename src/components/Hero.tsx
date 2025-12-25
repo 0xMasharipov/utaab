@@ -4,10 +4,10 @@ import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
 import { lazy, Suspense } from 'react';
 
-// Lazy load the 3D Earth scene for better performance
-const EarthBlockchainScene = lazy(() => 
-  import('@/components/three/EarthBlockchainScene').then(module => ({ 
-    default: module.EarthBlockchainScene 
+// Lazy load the 3D scene for better performance
+const HeroBackgroundScene = lazy(() => 
+  import('@/components/three/HeroBackgroundScene').then(module => ({ 
+    default: module.HeroBackgroundScene 
   }))
 );
 
@@ -48,11 +48,11 @@ export const Hero = () => {
 
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
-      {/* 3D Earth Blockchain Background */}
+      {/* 3D Blockchain Background */}
       <Suspense fallback={
         <div className="absolute inset-0 bg-black" />
       }>
-        <EarthBlockchainScene />
+        <HeroBackgroundScene />
       </Suspense>
 
       {/* Content overlay */}
