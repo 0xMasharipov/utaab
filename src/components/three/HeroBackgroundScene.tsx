@@ -2,12 +2,13 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { useMemo, useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 
-// Dot-composed globe
+// Dot-composed globe with imperative geometry
 const BlockchainGlobe = ({ dotCount = 5000 }: { dotCount?: number }) => {
   const pointsRef = useRef<THREE.Points>(null);
   
-  const positions = useMemo(() => {
-    const pos = new Float32Array(dotCount * 3);
+  const geometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const positions = new Float32Array(dotCount * 3);
     const radius = 1;
     
     for (let i = 0; i < dotCount; i++) {
@@ -15,11 +16,13 @@ const BlockchainGlobe = ({ dotCount = 5000 }: { dotCount?: number }) => {
       const phi = Math.acos(1 - 2 * (i + 0.5) / dotCount);
       const theta = Math.PI * (1 + Math.sqrt(5)) * i;
       
-      pos[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-      pos[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-      pos[i * 3 + 2] = radius * Math.cos(phi);
+      positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+      positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+      positions[i * 3 + 2] = radius * Math.cos(phi);
     }
-    return pos;
+    
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    return geo;
   }, [dotCount]);
 
   useFrame(() => {
@@ -29,16 +32,10 @@ const BlockchainGlobe = ({ dotCount = 5000 }: { dotCount?: number }) => {
   });
 
   return (
-    <points ref={pointsRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          args={[positions, 3]}
-        />
-      </bufferGeometry>
+    <points ref={pointsRef} geometry={geometry}>
       <pointsMaterial
         color="#00F0FF"
-        size={0.01}
+        size={0.015}
         transparent
         opacity={0.8}
         sizeAttenuation
@@ -101,7 +98,7 @@ const OrbitingBlocks = ({ blockRefs }: { blockRefs: React.MutableRefObject<THREE
   );
 };
 
-// Connection lines between blocks (Delaunay-style)
+// Connection lines between blocks with imperative geometry
 const ConnectionLines = ({ blockRefs }: { blockRefs: React.MutableRefObject<THREE.Mesh[]> }) => {
   const lineRef = useRef<THREE.LineSegments>(null);
   
@@ -116,6 +113,13 @@ const ConnectionLines = ({ blockRefs }: { blockRefs: React.MutableRefObject<THRE
     conn.push([0, 3], [0, 7], [2, 5], [2, 8], [4, 7], [4, 9], [6, 9], [1, 6], [3, 8], [5, 0]);
     return conn;
   }, []);
+
+  const geometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const positions = new Float32Array(connections.length * 2 * 3);
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    return geo;
+  }, [connections.length]);
 
   useFrame(() => {
     if (lineRef.current && blockRefs.current.length === 10) {
@@ -137,49 +141,47 @@ const ConnectionLines = ({ blockRefs }: { blockRefs: React.MutableRefObject<THRE
   });
 
   return (
-    <lineSegments ref={lineRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          args={[new Float32Array(connections.length * 2 * 3), 3]}
-        />
-      </bufferGeometry>
+    <lineSegments ref={lineRef} geometry={geometry}>
       <lineBasicMaterial
         color="white"
         transparent
         opacity={0.3}
-        linewidth={1}
       />
     </lineSegments>
   );
 };
 
-// Ambient drifting particles
+// Ambient drifting particles with imperative geometry
 const AmbientParticles = ({ count = 150 }: { count?: number }) => {
   const pointsRef = useRef<THREE.Points>(null);
+  const velocitiesRef = useRef<Float32Array | null>(null);
   
-  const { positions, velocities } = useMemo(() => {
-    const pos = new Float32Array(count * 3);
-    const vel = new Float32Array(count * 3);
+  const geometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const positions = new Float32Array(count * 3);
+    const velocities = new Float32Array(count * 3);
     
     for (let i = 0; i < count; i++) {
       // Distribute in a large cube around the scene
-      pos[i * 3] = (Math.random() - 0.5) * 8;
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 6;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 6;
+      positions[i * 3] = (Math.random() - 0.5) * 8;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 6;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 6;
       
       // Random slow drift direction
-      vel[i * 3] = (Math.random() - 0.5) * 0.001;
-      vel[i * 3 + 1] = (Math.random() - 0.5) * 0.001;
-      vel[i * 3 + 2] = (Math.random() - 0.5) * 0.001;
+      velocities[i * 3] = (Math.random() - 0.5) * 0.001;
+      velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.001;
+      velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.001;
     }
     
-    return { positions: pos, velocities: vel };
+    velocitiesRef.current = velocities;
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    return geo;
   }, [count]);
 
   useFrame(() => {
-    if (pointsRef.current) {
+    if (pointsRef.current && velocitiesRef.current) {
       const posAttr = pointsRef.current.geometry.attributes.position as THREE.BufferAttribute;
+      const velocities = velocitiesRef.current;
       
       for (let i = 0; i < count; i++) {
         let x = posAttr.getX(i) + velocities[i * 3];
@@ -199,18 +201,12 @@ const AmbientParticles = ({ count = 150 }: { count?: number }) => {
   });
 
   return (
-    <points ref={pointsRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          args={[positions, 3]}
-        />
-      </bufferGeometry>
+    <points ref={pointsRef} geometry={geometry}>
       <pointsMaterial
         color="white"
         size={0.008}
         transparent
-        opacity={0.1}
+        opacity={0.15}
         sizeAttenuation
       />
     </points>
