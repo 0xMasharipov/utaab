@@ -250,14 +250,14 @@ export const HeroBackgroundScene = () => {
 
   return (
     <div 
-      className={`absolute inset-0 -z-10 transition-opacity duration-1000 ease-out ${
+      className={`absolute inset-0 -z-10 transition-opacity duration-1000 ease-out pointer-events-none ${
         isLoaded ? 'opacity-100' : 'opacity-0'
       }`}
     >
       <Canvas
-        camera={{ position: [0, 0, 3.5], fov: 75, near: 0.1, far: 1000 }}
+        camera={{ position: [0, 0.3, 4], fov: 75, near: 0.1, far: 1000 }}
         dpr={[1, 2]}
-        style={{ background: '#000000' }}
+        style={{ background: '#000000', pointerEvents: 'none' }}
         gl={{ antialias: true, alpha: false }}
         onCreated={() => setIsLoaded(true)}
       >
