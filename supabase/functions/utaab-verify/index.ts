@@ -5,22 +5,27 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const allowedOrigins = [
   'https://nxbjgqdehvxszqjoxumx.lovableproject.com',
   Deno.env.get('SITE_URL'),
-].filter(Boolean);
+].filter(Boolean) as string[];
 
-// Add preview domains pattern
-const previewDomainPattern = /^https:\/\/[a-z0-9-]+\.lovableproject\.com$/;
-const idPreviewPattern = /^https:\/\/id\.preview\.lovableproject\.com$/;
+// Patterns to match all Lovable preview domains and localhost
+const lovableDomainPatterns = [
+  /^https:\/\/[a-z0-9-]+\.lovableproject\.com$/,
+  /^https:\/\/[a-z0-9-]+\.preview\.lovableproject\.com$/,
+  /^https:\/\/id-[a-z0-9]+\.lovableproject\.com$/,
+  /^http:\/\/localhost:\d+$/,
+];
 
 function getCorsHeaders(req: Request) {
   const origin = req.headers.get('origin') || '';
   
-  // Check if origin is allowed
+  // Check if origin matches allowed list or patterns
   const isAllowed = allowedOrigins.includes(origin) || 
-                    previewDomainPattern.test(origin) || 
-                    idPreviewPattern.test(origin);
+                    lovableDomainPatterns.some(pattern => pattern.test(origin));
+  
+  console.log('[UTAAB] CORS check - Origin:', origin, 'Allowed:', isAllowed);
   
   return {
-    'Access-Control-Allow-Origin': isAllowed ? origin : allowedOrigins[0] || '*',
+    'Access-Control-Allow-Origin': isAllowed ? origin : (allowedOrigins[0] || '*'),
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
   };
