@@ -31,6 +31,46 @@ const requestSchema = z.object({
   utaab_token: z.string().optional(),
 });
 
+// Validate UTAAB token against database
+async function validateUtaabToken(
+  supabase: any,
+  token: string,
+  options?: { markAsUsed?: boolean }
+): Promise<{ valid: boolean; error?: string; verification?: any }> {
+  if (!token) {
+    return { valid: false, error: 'Missing UTAAB token' };
+  }
+
+  // Check token exists, is valid, and not expired
+  const { data: verification, error } = await supabase
+    .from('utaab_verifications')
+    .select('*')
+    .eq('token', token)
+    .eq('verdict', 'pass')
+    .is('used_at', null)
+    .gte('expires_at', new Date().toISOString())
+    .maybeSingle();
+
+  if (error) {
+    console.error('[UTAAB] Token validation error:', error);
+    return { valid: false, error: 'Token validation failed' };
+  }
+
+  if (!verification) {
+    return { valid: false, error: 'Invalid or expired token' };
+  }
+
+  // Mark token as used (one-time use)
+  if (options?.markAsUsed) {
+    await supabase
+      .from('utaab_verifications')
+      .update({ used_at: new Date().toISOString() })
+      .eq('id', verification.id);
+  }
+
+  return { valid: true, verification };
+}
+
 // Persistent rate limiting using database
 async function checkRateLimit(
   supabase: any,
@@ -102,6 +142,19 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     );
+
+    // Validate UTAAB token if provided
+    if (validated.utaab_token) {
+      const tokenResult = await validateUtaabToken(supabase, validated.utaab_token, { markAsUsed: true });
+      if (!tokenResult.valid) {
+        console.log('[UTAAB] Token validation failed:', tokenResult.error);
+        return new Response(
+          JSON.stringify({ error: 'Bot verification failed. Please try again.' }),
+          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      console.log('[UTAAB] Token validated successfully');
+    }
     
     // Rate limiting by email (5 requests per hour) - persistent
     const allowed = await checkRateLimit(supabase, validated.email, 'kvkk-request', 5, 3600000);

@@ -1645,6 +1645,7 @@ export type Database = {
           behavior_data: Json | null
           challenges_passed: string[] | null
           created_at: string | null
+          expires_at: string | null
           fingerprint_hash: string | null
           id: string
           ip_address: unknown
@@ -1652,6 +1653,8 @@ export type Database = {
           pow_solution: string | null
           risk_score: number | null
           session_id: string
+          token: string | null
+          used_at: string | null
           user_agent: string | null
           verdict: string
         }
@@ -1659,6 +1662,7 @@ export type Database = {
           behavior_data?: Json | null
           challenges_passed?: string[] | null
           created_at?: string | null
+          expires_at?: string | null
           fingerprint_hash?: string | null
           id?: string
           ip_address?: unknown
@@ -1666,6 +1670,8 @@ export type Database = {
           pow_solution?: string | null
           risk_score?: number | null
           session_id: string
+          token?: string | null
+          used_at?: string | null
           user_agent?: string | null
           verdict: string
         }
@@ -1673,6 +1679,7 @@ export type Database = {
           behavior_data?: Json | null
           challenges_passed?: string[] | null
           created_at?: string | null
+          expires_at?: string | null
           fingerprint_hash?: string | null
           id?: string
           ip_address?: unknown
@@ -1680,6 +1687,8 @@ export type Database = {
           pow_solution?: string | null
           risk_score?: number | null
           session_id?: string
+          token?: string | null
+          used_at?: string | null
           user_agent?: string | null
           verdict?: string
         }
