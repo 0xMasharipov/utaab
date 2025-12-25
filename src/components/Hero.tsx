@@ -62,7 +62,7 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 sm:mb-6 text-glow-soft leading-tight px-2">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 sm:mb-6 text-glow-hero leading-tight px-2">
             {t('hero.title')}
           </h1>
         </motion.div>
@@ -71,7 +71,7 @@ export const Hero = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-semibold mb-6 sm:mb-8 text-accent px-2"
+          className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-semibold mb-6 sm:mb-8 text-accent text-glow-accent px-2"
         >
           {subtitleWords.map((word, wordIndex) => (
             <span key={wordIndex} className="inline-block mr-3">
@@ -92,7 +92,7 @@ export const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8 sm:mb-12 px-4"
+          className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground text-glow-muted max-w-3xl mx-auto mb-8 sm:mb-12 px-4"
         >
           {t('hero.description')}
         </motion.p>
