@@ -24,7 +24,7 @@ const BlockchainGlobe = ({ dotCount = 5000 }: { dotCount?: number }) => {
 
   useFrame(() => {
     if (pointsRef.current) {
-      pointsRef.current.rotation.y += 0.005;
+      pointsRef.current.rotation.y += 0.002;
     }
   });
 
@@ -38,7 +38,7 @@ const BlockchainGlobe = ({ dotCount = 5000 }: { dotCount?: number }) => {
       </bufferGeometry>
       <pointsMaterial
         color="#00F0FF"
-        size={0.015}
+        size={0.01}
         transparent
         opacity={0.8}
         sizeAttenuation
@@ -53,9 +53,9 @@ const OrbitingBlocks = ({ blockRefs }: { blockRefs: React.MutableRefObject<THREE
   
   const blockData = useMemo(() => {
     return Array.from({ length: 10 }, (_, i) => ({
-      radiusX: 0.8 + Math.random() * 0.4,
-      radiusY: 0.6 + Math.random() * 0.4,
-      radiusZ: 0.7 + Math.random() * 0.3,
+      radiusX: 1.6 + Math.random() * 0.4,
+      radiusY: 1.4 + Math.random() * 0.4,
+      radiusZ: 1.5 + Math.random() * 0.4,
       phaseOffset: (i / 10) * Math.PI * 2,
       tiltX: (Math.random() - 0.5) * 0.5,
       tiltZ: (Math.random() - 0.5) * 0.5,
@@ -63,7 +63,7 @@ const OrbitingBlocks = ({ blockRefs }: { blockRefs: React.MutableRefObject<THREE
   }, []);
 
   useFrame(({ clock }) => {
-    const time = clock.getElapsedTime() * 0.003 * 60; // Convert to radians/frame equivalent
+    const time = clock.getElapsedTime() * 0.001 * 60; // Slower orbital motion
     
     blockRefs.current.forEach((mesh, i) => {
       if (mesh) {
@@ -74,8 +74,8 @@ const OrbitingBlocks = ({ blockRefs }: { blockRefs: React.MutableRefObject<THREE
         mesh.position.y = Math.sin(angle * 0.7) * data.tiltX + Math.sin(angle) * data.radiusY * 0.3;
         mesh.position.z = Math.sin(angle) * data.radiusZ;
         
-        mesh.rotation.x += 0.01;
-        mesh.rotation.y += 0.005;
+        mesh.rotation.x += 0.003;
+        mesh.rotation.y += 0.002;
       }
     });
   });
@@ -210,7 +210,7 @@ const AmbientParticles = ({ count = 150 }: { count?: number }) => {
         color="white"
         size={0.008}
         transparent
-        opacity={0.15}
+        opacity={0.1}
         sizeAttenuation
       />
     </points>
@@ -234,9 +234,10 @@ const Scene = () => {
 
   return (
     <>
-      {/* Minimal white lighting */}
+      {/* Minimal white lighting with rim light for depth */}
       <ambientLight color="white" intensity={0.5} />
       <directionalLight color="white" intensity={0.2} position={[5, 3, 5]} />
+      <directionalLight color="white" intensity={0.15} position={[-5, -3, -5]} />
       
       {/* Scene elements */}
       <BlockchainGlobe dotCount={globeDotCount} />
