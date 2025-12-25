@@ -373,7 +373,7 @@ serve(async (req) => {
       token = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    // Log verification attempt
+    // Log verification attempt and store token for server-side validation
     await supabase.from('utaab_verifications').insert({
       session_id: body.sessionId,
       fingerprint_hash: body.fingerprint?.hash,
@@ -384,7 +384,9 @@ serve(async (req) => {
       behavior_data: body.behavior,
       verdict: verdict,
       ip_address: clientIp,
-      user_agent: userAgent
+      user_agent: userAgent,
+      token: token, // Store token for server-side validation
+      expires_at: token ? new Date(Date.now() + 3600000).toISOString() : null // 1 hour expiry
     });
 
     // Generate PoW challenge if needed

@@ -90,7 +90,48 @@ const requestSchema = z.object({
     title: z.string().optional(),
     description: z.string().optional(),
   }).optional(),
+  utaab_token: z.string().optional(),
 });
+
+// Validate UTAAB token against database
+async function validateUtaabToken(
+  supabase: any,
+  token: string,
+  options?: { markAsUsed?: boolean }
+): Promise<{ valid: boolean; error?: string; verification?: any }> {
+  if (!token) {
+    return { valid: false, error: 'Missing UTAAB token' };
+  }
+
+  // Check token exists, is valid, and not expired
+  const { data: verification, error } = await supabase
+    .from('utaab_verifications')
+    .select('*')
+    .eq('token', token)
+    .eq('verdict', 'pass')
+    .is('used_at', null)
+    .gte('expires_at', new Date().toISOString())
+    .maybeSingle();
+
+  if (error) {
+    console.error('[UTAAB] Token validation error:', error);
+    return { valid: false, error: 'Token validation failed' };
+  }
+
+  if (!verification) {
+    return { valid: false, error: 'Invalid or expired token' };
+  }
+
+  // Mark token as used (one-time use) - for chat, don't mark as used to allow session reuse
+  if (options?.markAsUsed) {
+    await supabase
+      .from('utaab_verifications')
+      .update({ used_at: new Date().toISOString() })
+      .eq('id', verification.id);
+  }
+
+  return { valid: true, verification };
+}
 
 // Enhanced dangerous patterns for prompt injection detection
 const dangerousPatterns = [
@@ -207,7 +248,20 @@ serve(async (req) => {
     
     // Validate input structure
     const validated = requestSchema.parse(body);
-    const { messages, courseContext, lessonContext } = validated;
+    const { messages, courseContext, lessonContext, utaab_token } = validated;
+
+    // Validate UTAAB token if provided (for first message verification)
+    if (utaab_token) {
+      const tokenResult = await validateUtaabToken(supabase, utaab_token, { markAsUsed: false });
+      if (!tokenResult.valid) {
+        console.log('[UTAAB] Token validation failed:', tokenResult.error);
+        return new Response(
+          JSON.stringify({ error: 'Bot verification failed. Please refresh and try again.' }),
+          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      console.log('[UTAAB] Token validated successfully');
+    }
 
     // Check for prompt injection attempts with logging
     for (const msg of messages) {

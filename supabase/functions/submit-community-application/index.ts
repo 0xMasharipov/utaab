@@ -25,31 +25,70 @@ function getCorsHeaders(req: Request) {
 const applicationSchema = z.object({
   full_name: z.string().trim().min(1).max(100),
   email: z.string().trim().email().max(255),
-  telegram: z.string().trim().max(100).optional().nullable(),
-  department: z.string().trim().min(1).max(100),
-  country: z.string().trim().max(100).optional().nullable(),
-  city: z.string().trim().max(100).optional().nullable(),
-  experience_level: z.enum(['beginner', 'intermediate', 'advanced']),
-  interests: z.array(z.string()).min(1).max(10),
-  github_url: z.string().trim().url().max(255).optional().nullable(),
-  portfolio_url: z.string().trim().url().max(255).optional().nullable(),
-  linkedin_url: z.string().trim().url().max(255).optional().nullable(),
-  availability_hours: z.number().int().min(1).max(168),
-  preferred_tracks: z.array(z.string()).min(1).max(5),
-  motivation: z.string().trim().min(300).max(500),
-  kvkk_consent: z.boolean().refine(val => val === true),
-  kvkk_consent_version: z.string(),
+  telegram: z.string().trim().max(100).optional(),
+  department: z.enum(['development', 'design', 'marketing', 'education', 'research', 'community', 'other']),
+  country: z.string().max(100).optional(),
+  city: z.string().max(100).optional(),
+  experience_level: z.enum(['beginner', 'intermediate', 'advanced', 'expert']),
+  interests: z.array(z.string().max(50)).min(1).max(10),
+  github_url: z.string().url().max(500).optional().or(z.literal('')),
+  portfolio_url: z.string().url().max(500).optional().or(z.literal('')),
+  linkedin_url: z.string().url().max(500).optional().or(z.literal('')),
+  preferred_tracks: z.array(z.string().max(50)).min(1).max(5),
+  motivation: z.string().trim().min(50).max(2000),
+  availability_hours: z.number().min(1).max(40),
+  kvkk_consent: z.literal(true),
+  kvkk_consent_version: z.string().max(10),
   locale: z.string().max(10),
-  honeypot: z.string().max(0),
+  honeypot: z.string().max(0).optional(),
+  utm_source: z.string().max(100).optional(),
+  utm_medium: z.string().max(100).optional(),
+  utm_campaign: z.string().max(100).optional(),
+  referrer: z.string().max(500).optional(),
+  submission_time: z.number().optional(),
   form_start_time: z.number().optional(),
   utaab_token: z.string().optional(),
-  utm_source: z.string().trim().max(255).optional().nullable(),
-  utm_medium: z.string().trim().max(255).optional().nullable(),
-  utm_campaign: z.string().trim().max(255).optional().nullable(),
-  referrer: z.string().trim().max(500).optional().nullable(),
-  ip_address: z.string().max(45).optional().nullable(),
-  user_agent: z.string().max(500).optional().nullable(),
 });
+
+// Validate UTAAB token against database
+async function validateUtaabToken(
+  supabase: any,
+  token: string,
+  options?: { markAsUsed?: boolean }
+): Promise<{ valid: boolean; error?: string; verification?: any }> {
+  if (!token) {
+    return { valid: false, error: 'Missing UTAAB token' };
+  }
+
+  // Check token exists, is valid, and not expired
+  const { data: verification, error } = await supabase
+    .from('utaab_verifications')
+    .select('*')
+    .eq('token', token)
+    .eq('verdict', 'pass')
+    .is('used_at', null)
+    .gte('expires_at', new Date().toISOString())
+    .maybeSingle();
+
+  if (error) {
+    console.error('[UTAAB] Token validation error:', error);
+    return { valid: false, error: 'Token validation failed' };
+  }
+
+  if (!verification) {
+    return { valid: false, error: 'Invalid or expired token' };
+  }
+
+  // Mark token as used (one-time use)
+  if (options?.markAsUsed) {
+    await supabase
+      .from('utaab_verifications')
+      .update({ used_at: new Date().toISOString() })
+      .eq('id', verification.id);
+  }
+
+  return { valid: true, verification };
+}
 
 // Persistent rate limiting using database
 async function checkRateLimit(
@@ -140,6 +179,19 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     );
+
+    // Validate UTAAB token if provided
+    if (validated.utaab_token) {
+      const tokenResult = await validateUtaabToken(supabase, validated.utaab_token, { markAsUsed: true });
+      if (!tokenResult.valid) {
+        console.log('[UTAAB] Token validation failed:', tokenResult.error);
+        return new Response(
+          JSON.stringify({ error: 'Bot verification failed. Please try again.' }),
+          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      console.log('[UTAAB] Token validated successfully');
+    }
     
     // Rate limiting by email (3 submissions per hour) - persistent
     const allowed = await checkRateLimit(supabase, validated.email, 'community-application', 3, 3600000);
@@ -176,8 +228,6 @@ serve(async (req) => {
         utm_medium: validated.utm_medium,
         utm_campaign: validated.utm_campaign,
         referrer: validated.referrer,
-        ip_address: validated.ip_address,
-        user_agent: validated.user_agent,
       }])
       .select()
       .single();
