@@ -33,9 +33,7 @@ const BlockchainGlobe = ({ dotCount = 5000 }: { dotCount?: number }) => {
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          count={dotCount}
-          array={positions}
-          itemSize={3}
+          args={[positions, 3]}
         />
       </bufferGeometry>
       <pointsMaterial
@@ -143,9 +141,7 @@ const ConnectionLines = ({ blockRefs }: { blockRefs: React.MutableRefObject<THRE
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          count={connections.length * 2}
-          array={new Float32Array(connections.length * 2 * 3)}
-          itemSize={3}
+          args={[new Float32Array(connections.length * 2 * 3), 3]}
         />
       </bufferGeometry>
       <lineBasicMaterial
@@ -207,9 +203,7 @@ const AmbientParticles = ({ count = 150 }: { count?: number }) => {
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          count={count}
-          array={positions}
-          itemSize={3}
+          args={[positions, 3]}
         />
       </bufferGeometry>
       <pointsMaterial
