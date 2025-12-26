@@ -9,8 +9,9 @@ const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 const BlockchainGlobe = ({ dotCount = isMobile ? 2000 : 4000 }) => {
   const pointsRef = useRef<THREE.Points>(null);
   
-  const positions = useMemo(() => {
-    const pos = new Float32Array(dotCount * 3);
+  const geometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const positions = new Float32Array(dotCount * 3);
     const radius = 1.0;
     
     // Fibonacci sphere distribution for even spacing
@@ -21,12 +22,13 @@ const BlockchainGlobe = ({ dotCount = isMobile ? 2000 : 4000 }) => {
       const radiusAtY = Math.sqrt(1 - y * y);
       const theta = phi * i;
       
-      pos[i * 3] = Math.cos(theta) * radiusAtY * radius;
-      pos[i * 3 + 1] = y * radius;
-      pos[i * 3 + 2] = Math.sin(theta) * radiusAtY * radius;
+      positions[i * 3] = Math.cos(theta) * radiusAtY * radius;
+      positions[i * 3 + 1] = y * radius;
+      positions[i * 3 + 2] = Math.sin(theta) * radiusAtY * radius;
     }
     
-    return pos;
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    return geo;
   }, [dotCount]);
 
   useFrame(() => {
@@ -36,15 +38,7 @@ const BlockchainGlobe = ({ dotCount = isMobile ? 2000 : 4000 }) => {
   });
 
   return (
-    <points ref={pointsRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={positions.length / 3}
-          array={positions}
-          itemSize={3}
-        />
-      </bufferGeometry>
+    <points ref={pointsRef} geometry={geometry}>
       <pointsMaterial
         size={0.012}
         color="#00F0FF"
@@ -125,11 +119,16 @@ const ConnectionLines = ({ blocksRef }: { blocksRef: React.MutableRefObject<THRE
     ];
   }, []);
 
-  const positions = useMemo(() => new Float32Array(connections.length * 6), [connections]);
+  const geometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const positions = new Float32Array(connections.length * 6);
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    return geo;
+  }, [connections.length]);
 
   useFrame(() => {
     if (lineRef.current && blocksRef.current.length === 8) {
-      const posArray = lineRef.current.geometry.attributes.position.array as Float32Array;
+      const posArray = geometry.attributes.position.array as Float32Array;
       
       connections.forEach(([a, b], i) => {
         const blockA = blocksRef.current[a];
@@ -145,20 +144,12 @@ const ConnectionLines = ({ blocksRef }: { blocksRef: React.MutableRefObject<THRE
         }
       });
       
-      lineRef.current.geometry.attributes.position.needsUpdate = true;
+      geometry.attributes.position.needsUpdate = true;
     }
   });
 
   return (
-    <lineSegments ref={lineRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={positions.length / 3}
-          array={positions}
-          itemSize={3}
-        />
-      </bufferGeometry>
+    <lineSegments ref={lineRef} geometry={geometry}>
       <lineBasicMaterial
         color="#FFFFFF"
         transparent
@@ -174,11 +165,16 @@ const GlobeToBlockConnections = ({ blocksRef }: { blocksRef: React.MutableRefObj
   const lineRef = useRef<THREE.LineSegments>(null);
   const connectionCount = 6;
   
-  const positions = useMemo(() => new Float32Array(connectionCount * 6), []);
+  const geometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const positions = new Float32Array(connectionCount * 6);
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    return geo;
+  }, []);
 
   useFrame(() => {
     if (lineRef.current && blocksRef.current.length >= connectionCount) {
-      const posArray = lineRef.current.geometry.attributes.position.array as Float32Array;
+      const posArray = geometry.attributes.position.array as Float32Array;
       const globeRadius = 1.0;
       
       for (let i = 0; i < connectionCount; i++) {
@@ -203,20 +199,12 @@ const GlobeToBlockConnections = ({ blocksRef }: { blocksRef: React.MutableRefObj
         }
       }
       
-      lineRef.current.geometry.attributes.position.needsUpdate = true;
+      geometry.attributes.position.needsUpdate = true;
     }
   });
 
   return (
-    <lineSegments ref={lineRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={positions.length / 3}
-          array={positions}
-          itemSize={3}
-        />
-      </bufferGeometry>
+    <lineSegments ref={lineRef} geometry={geometry}>
       <lineBasicMaterial
         color="#FFFFFF"
         transparent
@@ -230,28 +218,33 @@ const GlobeToBlockConnections = ({ blocksRef }: { blocksRef: React.MutableRefObj
 // AmbientParticles: Minimal soft white particles for depth
 const AmbientParticles = ({ count = isMobile ? 50 : 100 }) => {
   const pointsRef = useRef<THREE.Points>(null);
+  const velocitiesRef = useRef<Float32Array | null>(null);
   
-  const { positions, velocities } = useMemo(() => {
-    const pos = new Float32Array(count * 3);
-    const vel = new Float32Array(count * 3);
+  const geometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const positions = new Float32Array(count * 3);
+    const velocities = new Float32Array(count * 3);
     const spread = 8;
     
     for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * spread;
-      pos[i * 3 + 1] = (Math.random() - 0.5) * spread;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * spread;
+      positions[i * 3] = (Math.random() - 0.5) * spread;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * spread;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * spread;
       
-      vel[i * 3] = (Math.random() - 0.5) * 0.0008;
-      vel[i * 3 + 1] = (Math.random() - 0.5) * 0.0008;
-      vel[i * 3 + 2] = (Math.random() - 0.5) * 0.0008;
+      velocities[i * 3] = (Math.random() - 0.5) * 0.0008;
+      velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.0008;
+      velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.0008;
     }
     
-    return { positions: pos, velocities: vel };
+    velocitiesRef.current = velocities;
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    return geo;
   }, [count]);
 
   useFrame(() => {
-    if (pointsRef.current) {
-      const posArray = pointsRef.current.geometry.attributes.position.array as Float32Array;
+    if (pointsRef.current && velocitiesRef.current) {
+      const posArray = geometry.attributes.position.array as Float32Array;
+      const velocities = velocitiesRef.current;
       const halfSpread = 4;
       
       for (let i = 0; i < count; i++) {
@@ -266,20 +259,12 @@ const AmbientParticles = ({ count = isMobile ? 50 : 100 }) => {
         }
       }
       
-      pointsRef.current.geometry.attributes.position.needsUpdate = true;
+      geometry.attributes.position.needsUpdate = true;
     }
   });
 
   return (
-    <points ref={pointsRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={positions.length / 3}
-          array={positions}
-          itemSize={3}
-        />
-      </bufferGeometry>
+    <points ref={pointsRef} geometry={geometry}>
       <pointsMaterial
         size={0.006}
         color="#FFFFFF"
