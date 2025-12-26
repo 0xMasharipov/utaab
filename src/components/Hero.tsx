@@ -5,11 +5,7 @@ import { ChevronRight } from 'lucide-react';
 import { lazy, Suspense } from 'react';
 
 // Lazy load the 3D scene for better performance
-const HeroBackgroundScene = lazy(() => 
-  import('@/components/three/HeroBackgroundScene').then(module => ({ 
-    default: module.HeroBackgroundScene 
-  }))
-);
+const HeroBackgroundScene = lazy(() => import('@/components/three/HeroBackgroundScene'));
 
 export const Hero = () => {
   const { t } = useTranslation();

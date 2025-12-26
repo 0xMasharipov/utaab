@@ -1,96 +1,111 @@
+import { useRef, useMemo, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useMemo, useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 
-// Dot-composed globe with imperative geometry
-const BlockchainGlobe = ({ dotCount = 5000 }: { dotCount?: number }) => {
+// Detect mobile for performance optimization
+const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
+// BlockchainGlobe: Spherical globe made of neon blue glowing dots
+const BlockchainGlobe = ({ dotCount = isMobile ? 2000 : 4000 }) => {
   const pointsRef = useRef<THREE.Points>(null);
   
-  const geometry = useMemo(() => {
-    const geo = new THREE.BufferGeometry();
-    const positions = new Float32Array(dotCount * 3);
-    const radius = 1;
+  const positions = useMemo(() => {
+    const pos = new Float32Array(dotCount * 3);
+    const radius = 1.0;
+    
+    // Fibonacci sphere distribution for even spacing
+    const phi = Math.PI * (3 - Math.sqrt(5)); // Golden angle
     
     for (let i = 0; i < dotCount; i++) {
-      // Fibonacci sphere distribution for even spacing
-      const phi = Math.acos(1 - 2 * (i + 0.5) / dotCount);
-      const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+      const y = 1 - (i / (dotCount - 1)) * 2; // y goes from 1 to -1
+      const radiusAtY = Math.sqrt(1 - y * y);
+      const theta = phi * i;
       
-      positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-      positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-      positions[i * 3 + 2] = radius * Math.cos(phi);
+      pos[i * 3] = Math.cos(theta) * radiusAtY * radius;
+      pos[i * 3 + 1] = y * radius;
+      pos[i * 3 + 2] = Math.sin(theta) * radiusAtY * radius;
     }
     
-    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    return geo;
+    return pos;
   }, [dotCount]);
 
   useFrame(() => {
     if (pointsRef.current) {
-      pointsRef.current.rotation.y += 0.002;
+      pointsRef.current.rotation.y += 0.0015; // Extremely slow rotation
     }
   });
 
   return (
-    <points ref={pointsRef} geometry={geometry}>
+    <points ref={pointsRef}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={positions.length / 3}
+          array={positions}
+          itemSize={3}
+        />
+      </bufferGeometry>
       <pointsMaterial
+        size={0.012}
         color="#00F0FF"
-        size={0.015}
         transparent
-        opacity={0.8}
+        opacity={0.7}
         sizeAttenuation
+        depthWrite={false}
       />
     </points>
   );
 };
 
-// Orbiting matte blocks
-const OrbitingBlocks = ({ blockRefs }: { blockRefs: React.MutableRefObject<THREE.Mesh[]> }) => {
-  const groupRef = useRef<THREE.Group>(null);
+// OrbitingBlocks: Small matte white cubes orbiting the globe
+const OrbitingBlocks = ({ blocksRef }: { blocksRef: React.MutableRefObject<THREE.Mesh[]> }) => {
+  const blockCount = 8;
   
-  const blockData = useMemo(() => {
-    return Array.from({ length: 10 }, (_, i) => ({
-      radiusX: 1.6 + Math.random() * 0.4,
-      radiusY: 1.4 + Math.random() * 0.4,
-      radiusZ: 1.5 + Math.random() * 0.4,
-      phaseOffset: (i / 10) * Math.PI * 2,
-      tiltX: (Math.random() - 0.5) * 0.5,
-      tiltZ: (Math.random() - 0.5) * 0.5,
+  const orbitalData = useMemo(() => {
+    return Array.from({ length: blockCount }, (_, i) => ({
+      radiusX: 2.0 + Math.random() * 0.4,
+      radiusY: 1.8 + Math.random() * 0.4,
+      radiusZ: 1.9 + Math.random() * 0.4,
+      speed: 0.0008 + Math.random() * 0.0002,
+      offset: (i / blockCount) * Math.PI * 2,
+      tiltX: (Math.random() - 0.5) * 0.3,
+      tiltZ: (Math.random() - 0.5) * 0.3,
     }));
   }, []);
 
-  useFrame(({ clock }) => {
-    const time = clock.getElapsedTime() * 0.001 * 60; // Slower orbital motion
+  useFrame((state) => {
+    const time = state.clock.elapsedTime;
     
-    blockRefs.current.forEach((mesh, i) => {
-      if (mesh) {
-        const data = blockData[i];
-        const angle = time + data.phaseOffset;
+    blocksRef.current.forEach((block, i) => {
+      if (block) {
+        const data = orbitalData[i];
+        const angle = time * data.speed * 60 + data.offset;
         
-        mesh.position.x = Math.cos(angle) * data.radiusX;
-        mesh.position.y = Math.sin(angle * 0.7) * data.tiltX + Math.sin(angle) * data.radiusY * 0.3;
-        mesh.position.z = Math.sin(angle) * data.radiusZ;
+        block.position.x = Math.cos(angle) * data.radiusX;
+        block.position.y = Math.sin(angle * 0.7 + data.tiltX) * data.radiusY * 0.3;
+        block.position.z = Math.sin(angle) * data.radiusZ;
         
-        mesh.rotation.x += 0.003;
-        mesh.rotation.y += 0.002;
+        // Extremely slow self-rotation
+        block.rotation.x += 0.002;
+        block.rotation.y += 0.001;
       }
     });
   });
 
   return (
-    <group ref={groupRef}>
-      {blockData.map((_, i) => (
+    <group>
+      {orbitalData.map((_, i) => (
         <mesh
           key={i}
           ref={(el) => {
-            if (el) blockRefs.current[i] = el;
+            if (el) blocksRef.current[i] = el;
           }}
         >
-          <boxGeometry args={[0.05, 0.05, 0.05]} />
+          <boxGeometry args={[0.06, 0.04, 0.04]} />
           <meshStandardMaterial
-            color="#E0E0E0"
-            roughness={0.8}
-            metalness={0.1}
+            color="#D8D8D8"
+            roughness={0.9}
+            metalness={0.05}
           />
         </mesh>
       ))}
@@ -98,154 +113,212 @@ const OrbitingBlocks = ({ blockRefs }: { blockRefs: React.MutableRefObject<THREE
   );
 };
 
-// Connection lines between blocks with imperative geometry
-const ConnectionLines = ({ blockRefs }: { blockRefs: React.MutableRefObject<THREE.Mesh[]> }) => {
+// ConnectionLines: Thin white lines connecting blocks to each other
+const ConnectionLines = ({ blocksRef }: { blocksRef: React.MutableRefObject<THREE.Mesh[]> }) => {
   const lineRef = useRef<THREE.LineSegments>(null);
   
-  // Define connections (triangulated pattern)
   const connections = useMemo(() => {
-    const conn: [number, number][] = [];
-    // Create a ring connection
-    for (let i = 0; i < 10; i++) {
-      conn.push([i, (i + 1) % 10]);
-    }
-    // Add cross connections for triangulation
-    conn.push([0, 3], [0, 7], [2, 5], [2, 8], [4, 7], [4, 9], [6, 9], [1, 6], [3, 8], [5, 0]);
-    return conn;
+    // Ring connections + geometric cross-connections
+    return [
+      [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0],
+      [0, 4], [1, 5], [2, 6], [3, 7],
+    ];
   }, []);
 
-  const geometry = useMemo(() => {
-    const geo = new THREE.BufferGeometry();
-    const positions = new Float32Array(connections.length * 2 * 3);
-    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    return geo;
-  }, [connections.length]);
+  const positions = useMemo(() => new Float32Array(connections.length * 6), [connections]);
 
   useFrame(() => {
-    if (lineRef.current && blockRefs.current.length === 10) {
-      const positions = lineRef.current.geometry.attributes.position as THREE.BufferAttribute;
-      let idx = 0;
+    if (lineRef.current && blocksRef.current.length === 8) {
+      const posArray = lineRef.current.geometry.attributes.position.array as Float32Array;
       
-      connections.forEach(([a, b]) => {
-        const meshA = blockRefs.current[a];
-        const meshB = blockRefs.current[b];
+      connections.forEach(([a, b], i) => {
+        const blockA = blocksRef.current[a];
+        const blockB = blocksRef.current[b];
         
-        if (meshA && meshB) {
-          positions.setXYZ(idx++, meshA.position.x, meshA.position.y, meshA.position.z);
-          positions.setXYZ(idx++, meshB.position.x, meshB.position.y, meshB.position.z);
+        if (blockA && blockB) {
+          posArray[i * 6] = blockA.position.x;
+          posArray[i * 6 + 1] = blockA.position.y;
+          posArray[i * 6 + 2] = blockA.position.z;
+          posArray[i * 6 + 3] = blockB.position.x;
+          posArray[i * 6 + 4] = blockB.position.y;
+          posArray[i * 6 + 5] = blockB.position.z;
         }
       });
       
-      positions.needsUpdate = true;
+      lineRef.current.geometry.attributes.position.needsUpdate = true;
     }
   });
 
   return (
-    <lineSegments ref={lineRef} geometry={geometry}>
+    <lineSegments ref={lineRef}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={positions.length / 3}
+          array={positions}
+          itemSize={3}
+        />
+      </bufferGeometry>
       <lineBasicMaterial
-        color="white"
+        color="#FFFFFF"
         transparent
-        opacity={0.3}
+        opacity={0.25}
+        depthWrite={false}
       />
     </lineSegments>
   );
 };
 
-// Ambient drifting particles with imperative geometry
-const AmbientParticles = ({ count = 150 }: { count?: number }) => {
-  const pointsRef = useRef<THREE.Points>(null);
-  const velocitiesRef = useRef<Float32Array | null>(null);
+// GlobeToBlockConnections: Lines connecting blocks to nearest globe surface
+const GlobeToBlockConnections = ({ blocksRef }: { blocksRef: React.MutableRefObject<THREE.Mesh[]> }) => {
+  const lineRef = useRef<THREE.LineSegments>(null);
+  const connectionCount = 6;
   
-  const geometry = useMemo(() => {
-    const geo = new THREE.BufferGeometry();
-    const positions = new Float32Array(count * 3);
-    const velocities = new Float32Array(count * 3);
-    
-    for (let i = 0; i < count; i++) {
-      // Distribute in a large cube around the scene
-      positions[i * 3] = (Math.random() - 0.5) * 8;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 6;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 6;
-      
-      // Random slow drift direction
-      velocities[i * 3] = (Math.random() - 0.5) * 0.001;
-      velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.001;
-      velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.001;
-    }
-    
-    velocitiesRef.current = velocities;
-    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    return geo;
-  }, [count]);
+  const positions = useMemo(() => new Float32Array(connectionCount * 6), []);
 
   useFrame(() => {
-    if (pointsRef.current && velocitiesRef.current) {
-      const posAttr = pointsRef.current.geometry.attributes.position as THREE.BufferAttribute;
-      const velocities = velocitiesRef.current;
+    if (lineRef.current && blocksRef.current.length >= connectionCount) {
+      const posArray = lineRef.current.geometry.attributes.position.array as Float32Array;
+      const globeRadius = 1.0;
       
-      for (let i = 0; i < count; i++) {
-        let x = posAttr.getX(i) + velocities[i * 3];
-        let y = posAttr.getY(i) + velocities[i * 3 + 1];
-        let z = posAttr.getZ(i) + velocities[i * 3 + 2];
+      for (let i = 0; i < connectionCount; i++) {
+        const block = blocksRef.current[i];
         
-        // Wrap around if too far
-        if (Math.abs(x) > 4) x *= -0.9;
-        if (Math.abs(y) > 3) y *= -0.9;
-        if (Math.abs(z) > 3) z *= -0.9;
-        
-        posAttr.setXYZ(i, x, y, z);
+        if (block) {
+          // Block position
+          posArray[i * 6] = block.position.x;
+          posArray[i * 6 + 1] = block.position.y;
+          posArray[i * 6 + 2] = block.position.z;
+          
+          // Nearest point on globe surface (normalized direction * radius)
+          const len = Math.sqrt(
+            block.position.x ** 2 + 
+            block.position.y ** 2 + 
+            block.position.z ** 2
+          );
+          
+          posArray[i * 6 + 3] = (block.position.x / len) * globeRadius;
+          posArray[i * 6 + 4] = (block.position.y / len) * globeRadius;
+          posArray[i * 6 + 5] = (block.position.z / len) * globeRadius;
+        }
       }
       
-      posAttr.needsUpdate = true;
+      lineRef.current.geometry.attributes.position.needsUpdate = true;
     }
   });
 
   return (
-    <points ref={pointsRef} geometry={geometry}>
-      <pointsMaterial
-        color="white"
-        size={0.008}
+    <lineSegments ref={lineRef}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={positions.length / 3}
+          array={positions}
+          itemSize={3}
+        />
+      </bufferGeometry>
+      <lineBasicMaterial
+        color="#FFFFFF"
         transparent
         opacity={0.15}
+        depthWrite={false}
+      />
+    </lineSegments>
+  );
+};
+
+// AmbientParticles: Minimal soft white particles for depth
+const AmbientParticles = ({ count = isMobile ? 50 : 100 }) => {
+  const pointsRef = useRef<THREE.Points>(null);
+  
+  const { positions, velocities } = useMemo(() => {
+    const pos = new Float32Array(count * 3);
+    const vel = new Float32Array(count * 3);
+    const spread = 8;
+    
+    for (let i = 0; i < count; i++) {
+      pos[i * 3] = (Math.random() - 0.5) * spread;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * spread;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * spread;
+      
+      vel[i * 3] = (Math.random() - 0.5) * 0.0008;
+      vel[i * 3 + 1] = (Math.random() - 0.5) * 0.0008;
+      vel[i * 3 + 2] = (Math.random() - 0.5) * 0.0008;
+    }
+    
+    return { positions: pos, velocities: vel };
+  }, [count]);
+
+  useFrame(() => {
+    if (pointsRef.current) {
+      const posArray = pointsRef.current.geometry.attributes.position.array as Float32Array;
+      const halfSpread = 4;
+      
+      for (let i = 0; i < count; i++) {
+        posArray[i * 3] += velocities[i * 3];
+        posArray[i * 3 + 1] += velocities[i * 3 + 1];
+        posArray[i * 3 + 2] += velocities[i * 3 + 2];
+        
+        // Wrap around boundaries
+        for (let j = 0; j < 3; j++) {
+          if (posArray[i * 3 + j] > halfSpread) posArray[i * 3 + j] = -halfSpread;
+          if (posArray[i * 3 + j] < -halfSpread) posArray[i * 3 + j] = halfSpread;
+        }
+      }
+      
+      pointsRef.current.geometry.attributes.position.needsUpdate = true;
+    }
+  });
+
+  return (
+    <points ref={pointsRef}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={positions.length / 3}
+          array={positions}
+          itemSize={3}
+        />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.006}
+        color="#FFFFFF"
+        transparent
+        opacity={0.12}
         sizeAttenuation
+        depthWrite={false}
       />
     </points>
   );
 };
 
-// Main scene
+// Scene: Orchestrates all 3D elements with proper lighting
 const Scene = () => {
-  const blockRefs = useRef<THREE.Mesh[]>([]);
-  const [isMobile, setIsMobile] = useState(false);
-  
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  const particleCount = isMobile ? 75 : 150;
-  const globeDotCount = isMobile ? 2500 : 5000;
+  const blocksRef = useRef<THREE.Mesh[]>([]);
 
   return (
     <>
-      {/* Minimal white lighting with rim light for depth */}
-      <ambientLight color="white" intensity={0.5} />
-      <directionalLight color="white" intensity={0.2} position={[5, 3, 5]} />
-      <directionalLight color="white" intensity={0.15} position={[-5, -3, -5]} />
+      {/* Pure black background */}
+      <color attach="background" args={['#000000']} />
       
-      {/* Scene elements */}
-      <BlockchainGlobe dotCount={globeDotCount} />
-      <OrbitingBlocks blockRefs={blockRefs} />
-      <ConnectionLines blockRefs={blockRefs} />
-      <AmbientParticles count={particleCount} />
+      {/* Neutral white lighting */}
+      <ambientLight intensity={0.4} />
+      <directionalLight position={[5, 3, 5]} intensity={0.15} />
+      {/* Rim lighting for depth separation */}
+      <directionalLight position={[-5, -3, -5]} intensity={0.12} />
+      
+      {/* Main elements */}
+      <BlockchainGlobe />
+      <OrbitingBlocks blocksRef={blocksRef} />
+      <ConnectionLines blocksRef={blocksRef} />
+      <GlobeToBlockConnections blocksRef={blocksRef} />
+      <AmbientParticles />
     </>
   );
 };
 
-// Exported component
-export const HeroBackgroundScene = () => {
+// Main component with Canvas
+const HeroBackgroundScene = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (
@@ -255,15 +328,16 @@ export const HeroBackgroundScene = () => {
       }`}
     >
       <Canvas
-        camera={{ position: [0, 0.3, 4], fov: 75, near: 0.1, far: 1000 }}
+        camera={{ position: [0, 0.2, 4.5], fov: 70, near: 0.1, far: 1000 }}
         dpr={[1, 2]}
         style={{ background: '#000000', pointerEvents: 'none' }}
         gl={{ antialias: true, alpha: false }}
         onCreated={() => setIsLoaded(true)}
       >
-        <color attach="background" args={['#000000']} />
         <Scene />
       </Canvas>
     </div>
   );
 };
+
+export default HeroBackgroundScene;
