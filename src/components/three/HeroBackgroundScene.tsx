@@ -57,9 +57,9 @@ const OrbitingBlocks = ({ blocksRef }: { blocksRef: React.MutableRefObject<THREE
   const blockData = useMemo(() => {
     return Array.from({ length: 8 }, (_, i) => ({
       id: i,
-      radiusX: 2.0 + Math.random() * 0.4,
-      radiusY: 1.8 + Math.random() * 0.4,
-      radiusZ: 1.9 + Math.random() * 0.4,
+      radiusX: 2.8 + Math.random() * 0.4,
+      radiusY: 2.6 + Math.random() * 0.4,
+      radiusZ: 2.7 + Math.random() * 0.4,
       speed: 0.0008 + Math.random() * 0.0002,
       offset: (i / 8) * Math.PI * 2,
       tiltX: (Math.random() - 0.5) * 0.3,
