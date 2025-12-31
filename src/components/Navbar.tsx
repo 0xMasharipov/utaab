@@ -12,6 +12,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from '@/assets/logo.png';
 import { BrandText } from '@/components/common/BrandText';
+import { ChristmasLights } from '@/components/holiday/ChristmasLights';
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -139,6 +140,11 @@ export const Navbar = () => {
     <nav
       className="fixed top-2 sm:top-4 left-1/2 -translate-x-1/2 z-50 w-[96%] sm:w-[95%] max-w-6xl transition-[transform,opacity] duration-300"
     >
+      {/* Christmas LED Lights */}
+      <div className="absolute inset-x-4 -top-1 pointer-events-none z-10">
+        <ChristmasLights />
+      </div>
+      
       <div 
         className={`rounded-full px-4 sm:px-5 md:px-8 py-3 sm:py-4 border transition-all duration-300 ${
           isScrolled 

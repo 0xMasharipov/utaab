@@ -242,12 +242,50 @@
     display: none;
   }
   
+  /* Snowfall animation */
+  @keyframes snowfall {
+    0% {
+      transform: translateY(-10px) translateX(0);
+      opacity: var(--tw-opacity, 0.4);
+    }
+    25% {
+      transform: translateY(25vh) translateX(calc(var(--drift-amount, 15px) * 0.5));
+    }
+    50% {
+      transform: translateY(50vh) translateX(var(--drift-amount, 15px));
+    }
+    75% {
+      transform: translateY(75vh) translateX(calc(var(--drift-amount, 15px) * 0.3));
+    }
+    100% {
+      transform: translateY(105vh) translateX(calc(var(--drift-amount, 15px) * -0.5));
+      opacity: 0;
+    }
+  }
+
+  /* LED pulse animation */
+  @keyframes led-pulse {
+    0%, 100% {
+      opacity: 0.6;
+      filter: brightness(0.85);
+    }
+    50% {
+      opacity: 1;
+      filter: brightness(1.15);
+    }
+  }
+
   /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+    }
+    
+    .snowflake,
+    .led-bulb {
+      animation: none !important;
     }
   }
 }

@@ -12,12 +12,14 @@ import { Footer } from '@/components/Footer';
 import { PrivacyPopup } from '@/components/PrivacyPopup';
 import { PrivacyCenter } from '@/components/PrivacyCenter';
 import { FloatingPrivacyButton } from '@/components/FloatingPrivacyButton';
+import { HolidayEffects } from '@/components/holiday/HolidayEffects';
 
 const Index = () => {
   const [isPrivacyCenterOpen, setIsPrivacyCenterOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <HolidayEffects />
       <Navbar />
       <Hero />
       <Stats />
