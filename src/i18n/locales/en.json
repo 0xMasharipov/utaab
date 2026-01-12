@@ -88,6 +88,10 @@
     "upcoming": "Upcoming Events",
     "past": "Past Events",
     "noEvents": "No events scheduled yet",
+    "noUpcoming": "No upcoming events at the moment",
+    "onlineEvent": "Online Event",
+    "capacity": "{{count}} seats available",
+    "rsvp": "RSVP Now",
     "attendees": "{{count}} attendees",
     "register": "Register",
     "event1": {

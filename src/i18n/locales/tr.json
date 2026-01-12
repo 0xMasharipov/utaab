@@ -88,6 +88,10 @@
     "upcoming": "Yaklaşan Etkinlikler",
     "past": "Geçmiş Etkinlikler",
     "noEvents": "Henüz planlanmış etkinlik yok",
+    "noUpcoming": "Şu anda yaklaşan etkinlik bulunmuyor",
+    "onlineEvent": "Çevrimiçi Etkinlik",
+    "capacity": "{{count}} kişilik kapasite",
+    "rsvp": "Katıl",
     "attendees": "{{count}} katılımcı",
     "register": "Kaydol",
     "event1": {

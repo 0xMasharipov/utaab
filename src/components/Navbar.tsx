@@ -219,13 +219,13 @@ export const Navbar = () => {
           <div className="md:hidden" />
 
           {/* Right side - Actions + Join Button (fixed column) */}
-          <div className="flex items-center gap-2 flex-shrink-0" style={{ transform: 'translateZ(0)' }}>
+          <div className="flex items-center gap-2 flex-shrink-0 min-w-fit" style={{ transform: 'translateZ(0)' }}>
             {/* Education Button */}
             <Button
               onClick={handleEducationClick}
               variant="ghost"
               size="sm"
-              className="glass hover:bg-white/10 rounded-full px-4 hidden md:inline-flex"
+              className="glass hover:bg-white/10 rounded-full px-4 hidden md:inline-flex min-w-[140px] justify-center"
             >
               {t('education.title')}
             </Button>
@@ -236,10 +236,10 @@ export const Navbar = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="glass hover:bg-white/10 rounded-full px-3"
+                  className="glass hover:bg-white/10 rounded-full px-3 min-w-[52px] justify-center"
                   aria-label="Select language"
                 >
-                  <Globe className="h-4 w-4 mr-2" />
+                  <Globe className="h-4 w-4 sm:mr-2" />
                   <span className="hidden sm:inline">{currentLanguage.flag}</span>
                 </Button>
               </DropdownMenuTrigger>
@@ -307,7 +307,7 @@ export const Navbar = () => {
             {/* Join Button */}
             <Button
               onClick={() => scrollToSection('join')}
-              className="btn-navbar-cta hidden sm:inline-flex"
+              className="btn-navbar-cta hidden sm:inline-flex min-w-[120px] justify-center"
             >
               {t('nav.join')}
             </Button>
