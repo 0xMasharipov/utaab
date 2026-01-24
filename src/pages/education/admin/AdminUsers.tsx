@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { UserPlus, Search, Filter, MoreVertical, Shield, Ban, Mail } from 'lucide-react';
+import { UserPlus, Search, Filter, MoreVertical, Shield, Ban, Mail, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import {
   Select,
@@ -20,12 +21,39 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
+import { RoleManagementDialog } from '@/components/admin/RoleManagementDialog';
+
+// Role badge colors
+const ROLE_COLORS: Record<string, string> = {
+  admin: 'bg-red-500/20 text-red-400 border-red-500/50',
+  moderator: 'bg-amber-500/20 text-amber-400 border-amber-500/50',
+  instructor: 'bg-blue-500/20 text-blue-400 border-blue-500/50',
+  community_admin: 'bg-purple-500/20 text-purple-400 border-purple-500/50',
+  student: 'bg-green-500/20 text-green-400 border-green-500/50',
+  user: 'bg-gray-500/20 text-gray-400 border-gray-500/50',
+};
+
+interface UserRole {
+  role: string;
+}
+
+interface UserProfile {
+  id: string;
+  user_id: string;
+  full_name: string;
+  department: string;
+  role: string;
+  created_at: string;
+  user_roles: UserRole[];
+}
 
 export const AdminUsers = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
+  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
+  const [isRoleDialogOpen, setIsRoleDialogOpen] = useState(false);
 
-  const { data: profiles, isLoading } = useQuery({
+  const { data: profiles, isLoading, refetch } = useQuery({
     queryKey: ['admin-profiles'],
     queryFn: async () => {
       const { data: profilesData, error } = await supabase
@@ -34,7 +62,8 @@ export const AdminUsers = () => {
         .order('created_at', { ascending: false });
       if (error) throw error;
 
-      // Fetch user roles separately
+      // Fetch user roles for all profiles
+      // Admins can now see all roles thanks to the new RLS policy
       const profilesWithRoles = await Promise.all(
         (profilesData || []).map(async (profile) => {
           const { data: rolesData } = await supabase
@@ -45,15 +74,32 @@ export const AdminUsers = () => {
         })
       );
       
-      return profilesWithRoles;
+      return profilesWithRoles as UserProfile[];
     },
   });
 
+  // Count roles for stats
+  const roleStats = profiles?.reduce((acc, profile) => {
+    profile.user_roles?.forEach((r) => {
+      acc[r.role] = (acc[r.role] || 0) + 1;
+    });
+    return acc;
+  }, {} as Record<string, number>) || {};
+
   const filteredProfiles = profiles?.filter((profile) => {
     const matchesSearch = profile.full_name?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesRole = roleFilter === 'all' || profile.user_roles?.some((r: any) => r.role === roleFilter);
+    const matchesRole = roleFilter === 'all' || profile.user_roles?.some((r) => r.role === roleFilter);
     return matchesSearch && matchesRole;
   });
+
+  const handleManageRoles = (profile: UserProfile) => {
+    setSelectedUser(profile);
+    setIsRoleDialogOpen(true);
+  };
+
+  const handleRoleUpdated = () => {
+    refetch();
+  };
 
   return (
     <div className="space-y-6">
@@ -67,6 +113,54 @@ export const AdminUsers = () => {
           <UserPlus className="h-4 w-4 mr-2" />
           Invite User
         </Button>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Card className="glass">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Total Users</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2">
+              <Users className="h-5 w-5 text-primary" />
+              <span className="text-2xl font-bold">{profiles?.length || 0}</span>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="glass">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Admins</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-red-400" />
+              <span className="text-2xl font-bold">{roleStats['admin'] || 0}</span>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="glass">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Moderators</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-amber-400" />
+              <span className="text-2xl font-bold">{roleStats['moderator'] || 0}</span>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="glass">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Instructors</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-blue-400" />
+              <span className="text-2xl font-bold">{roleStats['instructor'] || 0}</span>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Filters */}
@@ -91,6 +185,9 @@ export const AdminUsers = () => {
                 <SelectItem value="all">All Roles</SelectItem>
                 <SelectItem value="admin">Admin</SelectItem>
                 <SelectItem value="moderator">Moderator</SelectItem>
+                <SelectItem value="instructor">Instructor</SelectItem>
+                <SelectItem value="community_admin">Community Admin</SelectItem>
+                <SelectItem value="student">Student</SelectItem>
                 <SelectItem value="user">User</SelectItem>
               </SelectContent>
             </Select>
@@ -118,13 +215,22 @@ export const AdminUsers = () => {
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
                         <h3 className="font-semibold truncate">{profile.full_name}</h3>
                         {profile.user_roles && profile.user_roles.length > 0 && (
-                          <Badge className="bg-primary/20 text-primary border-primary/50">
-                            <Shield className="h-3 w-3 mr-1" />
-                            {(profile.user_roles[0] as any).role}
-                          </Badge>
+                          <div className="flex gap-1 flex-wrap">
+                            {profile.user_roles.map((r, idx) => (
+                              <Badge 
+                                key={idx} 
+                                className={`text-xs ${ROLE_COLORS[r.role] || ROLE_COLORS.user}`}
+                              >
+                                {r.role === 'community_admin' ? 'Community' : r.role.charAt(0).toUpperCase() + r.role.slice(1)}
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
+                        {(!profile.user_roles || profile.user_roles.length === 0) && (
+                          <Badge className={ROLE_COLORS.user}>No Roles</Badge>
                         )}
                       </div>
                       <div className="space-y-1 text-sm text-muted-foreground">
@@ -140,14 +246,15 @@ export const AdminUsers = () => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="glass-strong">
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleManageRoles(profile)}>
                         <Shield className="h-4 w-4 mr-2" />
-                        Change Role
+                        Manage Roles
                       </DropdownMenuItem>
                       <DropdownMenuItem>
                         <Mail className="h-4 w-4 mr-2" />
                         Send Email
                       </DropdownMenuItem>
+                      <DropdownMenuSeparator />
                       <DropdownMenuItem className="text-red-400">
                         <Ban className="h-4 w-4 mr-2" />
                         Deactivate
@@ -174,6 +281,14 @@ export const AdminUsers = () => {
           </Card>
         )}
       </div>
+
+      {/* Role Management Dialog */}
+      <RoleManagementDialog
+        user={selectedUser}
+        open={isRoleDialogOpen}
+        onOpenChange={setIsRoleDialogOpen}
+        onRoleUpdated={handleRoleUpdated}
+      />
     </div>
   );
 };
