@@ -50,34 +50,59 @@ export default function AdminUsers() {
 
   const fetchData = async () => {
     try {
-      // Fetch all users with roles
+      // Fetch all profiles
       const { data: profilesData, error: profilesError } = await supabase
         .from('education_profiles')
-        .select('*, user_roles(role)')
+        .select('*')
         .order('created_at', { ascending: false });
 
       if (profilesError) throw profilesError;
-      setUsers(profilesData || []);
+
+      // Fetch roles for each profile separately (no FK relationship exists)
+      const profilesWithRoles = await Promise.all(
+        (profilesData || []).map(async (profile) => {
+          const { data: rolesData } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', profile.user_id);
+          return { ...profile, user_roles: rolesData || [] };
+        })
+      );
+
+      setUsers(profilesWithRoles);
 
       // Filter admins and community admins
-      const adminsList = profilesData?.filter((p: any) =>
+      const adminsList = profilesWithRoles.filter((p: any) =>
         p.user_roles?.some((r: any) => r.role === 'admin')
-      ) || [];
-      const communityAdminsList = profilesData?.filter((p: any) =>
+      );
+      const communityAdminsList = profilesWithRoles.filter((p: any) =>
         p.user_roles?.some((r: any) => r.role === 'community_admin')
-      ) || [];
+      );
 
       setAdmins(adminsList);
       setCommunityAdmins(communityAdminsList);
 
-      // Fetch admin sessions
+      // Fetch admin sessions separately (no FK join)
       const { data: sessionsData, error: sessionsError } = await supabase
         .from('admin_sessions')
-        .select('*, education_profiles!inner(full_name, email:user_id)')
+        .select('*')
         .order('created_at', { ascending: false });
 
       if (sessionsError) throw sessionsError;
-      setSessions(sessionsData || []);
+
+      // Enrich sessions with profile names
+      const enrichedSessions = await Promise.all(
+        (sessionsData || []).map(async (session) => {
+          const { data: profileData } = await supabase
+            .from('education_profiles')
+            .select('full_name')
+            .eq('user_id', session.user_id)
+            .single();
+          return { ...session, education_profiles: profileData };
+        })
+      );
+
+      setSessions(enrichedSessions);
     } catch (error: any) {
       toast.error('Failed to load users: ' + error.message);
     } finally {
