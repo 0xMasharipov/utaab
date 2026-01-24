@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, UserPlus, Mail, Shield, Users as UsersIcon, Clock } from 'lucide-react';
+import { Search, UserPlus, Mail, Shield, Users as UsersIcon, Clock, Eye, FileUser, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -30,15 +30,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function AdminUsers() {
   const [users, setUsers] = useState<any[]>([]);
   const [admins, setAdmins] = useState<any[]>([]);
   const [communityAdmins, setCommunityAdmins] = useState<any[]>([]);
   const [sessions, setSessions] = useState<any[]>([]);
+  const [applicants, setApplicants] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+  const [previewApplicant, setPreviewApplicant] = useState<any>(null);
+  const [previewDialogOpen, setPreviewDialogOpen] = useState(false);
   const [newInvite, setNewInvite] = useState({
     email: '',
     role: 'moderator',
@@ -103,11 +107,25 @@ export default function AdminUsers() {
       );
 
       setSessions(enrichedSessions);
+
+      // Fetch community applicants
+      const { data: applicantsData, error: applicantsError } = await supabase
+        .from('community_applications')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (applicantsError) throw applicantsError;
+      setApplicants(applicantsData || []);
     } catch (error: any) {
       toast.error('Failed to load users: ' + error.message);
     } finally {
       setLoading(false);
     }
+  };
+
+  const openApplicantPreview = (applicant: any) => {
+    setPreviewApplicant(applicant);
+    setPreviewDialogOpen(true);
   };
 
   const handleSendInvite = async () => {
@@ -159,6 +177,12 @@ export default function AdminUsers() {
   const filteredUsers = users.filter((user) =>
     user.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     user.email?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const filteredApplicants = applicants.filter((applicant) =>
+    applicant.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    applicant.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    applicant.department?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   if (loading) {
@@ -240,7 +264,7 @@ export default function AdminUsers() {
       </div>
 
       {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-5">
         <Card className="glass-panel p-6">
           <div className="flex items-center gap-3">
             <UsersIcon className="h-8 w-8 text-primary" />
@@ -277,6 +301,15 @@ export default function AdminUsers() {
             </div>
           </div>
         </Card>
+        <Card className="glass-panel p-6">
+          <div className="flex items-center gap-3">
+            <FileUser className="h-8 w-8 text-primary" />
+            <div>
+              <div className="text-2xl font-bold">{applicants.length}</div>
+              <p className="text-sm text-muted-foreground">Applicants</p>
+            </div>
+          </div>
+        </Card>
       </div>
 
       {/* Tabs */}
@@ -286,6 +319,7 @@ export default function AdminUsers() {
           <TabsTrigger value="admins">Admins</TabsTrigger>
           <TabsTrigger value="community">Community Admins</TabsTrigger>
           <TabsTrigger value="sessions">Sessions</TabsTrigger>
+          <TabsTrigger value="applicants">Applicants</TabsTrigger>
         </TabsList>
 
         <TabsContent value="all">
@@ -407,7 +441,214 @@ export default function AdminUsers() {
             </Table>
           </Card>
         </TabsContent>
+
+        <TabsContent value="applicants">
+          <Card className="glass-panel">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Department</TableHead>
+                  <TableHead>Experience</TableHead>
+                  <TableHead>Applied</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredApplicants.map((applicant) => (
+                  <TableRow key={applicant.id}>
+                    <TableCell className="font-medium">{applicant.full_name}</TableCell>
+                    <TableCell>{applicant.email}</TableCell>
+                    <TableCell>{applicant.department || 'N/A'}</TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{applicant.experience_level || 'N/A'}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      {new Date(applicant.created_at).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="gap-1"
+                        onClick={() => openApplicantPreview(applicant)}
+                      >
+                        <Eye className="h-4 w-4" />
+                        View
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {filteredApplicants.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                      No applicants found
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </Card>
+        </TabsContent>
       </Tabs>
+
+      {/* Applicant Preview Dialog */}
+      <Dialog open={previewDialogOpen} onOpenChange={setPreviewDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh]">
+          <DialogHeader>
+            <DialogTitle>Applicant Details</DialogTitle>
+          </DialogHeader>
+          {previewApplicant && (
+            <ScrollArea className="max-h-[70vh] pr-4">
+              <div className="space-y-6">
+                {/* Personal Information */}
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-lg border-b pb-2">Personal Information</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-muted-foreground text-xs">Full Name</Label>
+                      <p className="font-medium">{previewApplicant.full_name}</p>
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground text-xs">Email</Label>
+                      <p className="font-medium">{previewApplicant.email}</p>
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground text-xs">Telegram</Label>
+                      <p className="font-medium">{previewApplicant.telegram || 'N/A'}</p>
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground text-xs">Department</Label>
+                      <p className="font-medium">{previewApplicant.department || 'N/A'}</p>
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground text-xs">Country</Label>
+                      <p className="font-medium">{previewApplicant.country || 'N/A'}</p>
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground text-xs">City</Label>
+                      <p className="font-medium">{previewApplicant.city || 'N/A'}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Experience & Interests */}
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-lg border-b pb-2">Experience & Interests</h3>
+                  <div>
+                    <Label className="text-muted-foreground text-xs">Experience Level</Label>
+                    <div className="mt-1">
+                      <Badge>{previewApplicant.experience_level || 'N/A'}</Badge>
+                    </div>
+                  </div>
+                  {previewApplicant.interests && previewApplicant.interests.length > 0 && (
+                    <div>
+                      <Label className="text-muted-foreground text-xs">Interests</Label>
+                      <div className="flex flex-wrap gap-2 mt-1">
+                        {previewApplicant.interests.map((interest: string) => (
+                          <Badge key={interest} variant="secondary">{interest}</Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {previewApplicant.preferred_tracks && previewApplicant.preferred_tracks.length > 0 && (
+                    <div>
+                      <Label className="text-muted-foreground text-xs">Preferred Tracks</Label>
+                      <div className="flex flex-wrap gap-2 mt-1">
+                        {previewApplicant.preferred_tracks.map((track: string) => (
+                          <Badge key={track} variant="outline">{track}</Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Links */}
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-lg border-b pb-2">Links</h3>
+                  <div className="grid grid-cols-1 gap-3">
+                    {previewApplicant.github_url && (
+                      <a
+                        href={previewApplicant.github_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-primary hover:underline"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        GitHub: {previewApplicant.github_url}
+                      </a>
+                    )}
+                    {previewApplicant.portfolio_url && (
+                      <a
+                        href={previewApplicant.portfolio_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-primary hover:underline"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        Portfolio: {previewApplicant.portfolio_url}
+                      </a>
+                    )}
+                    {previewApplicant.linkedin_url && (
+                      <a
+                        href={previewApplicant.linkedin_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-primary hover:underline"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        LinkedIn: {previewApplicant.linkedin_url}
+                      </a>
+                    )}
+                    {!previewApplicant.github_url && !previewApplicant.portfolio_url && !previewApplicant.linkedin_url && (
+                      <p className="text-muted-foreground">No links provided</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Availability & Motivation */}
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-lg border-b pb-2">Availability & Motivation</h3>
+                  <div>
+                    <Label className="text-muted-foreground text-xs">Weekly Availability</Label>
+                    <p className="font-medium">{previewApplicant.availability_hours || 'N/A'} hours</p>
+                  </div>
+                  {previewApplicant.motivation && (
+                    <div>
+                      <Label className="text-muted-foreground text-xs">Motivation</Label>
+                      <p className="mt-1 text-sm bg-muted/50 p-3 rounded-md">{previewApplicant.motivation}</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Meta Information */}
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-lg border-b pb-2">Application Details</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-muted-foreground text-xs">Applied On</Label>
+                      <p className="font-medium">
+                        {new Date(previewApplicant.created_at).toLocaleString()}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground text-xs">Language</Label>
+                      <p className="font-medium">{previewApplicant.locale?.toUpperCase() || 'EN'}</p>
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground text-xs">KVKK Consent</Label>
+                      <Badge variant={previewApplicant.kvkk_consent ? "default" : "destructive"}>
+                        {previewApplicant.kvkk_consent ? 'Accepted' : 'Not Accepted'}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ScrollArea>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
