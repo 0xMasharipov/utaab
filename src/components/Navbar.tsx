@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 import logo from '@/assets/logo.png';
 import { BrandText } from '@/components/common/BrandText';
 
@@ -190,9 +191,9 @@ export const Navbar = () => {
           </button>
 
           {/* Desktop Navigation - Center column (independent space) */}
-          <div className="hidden md:flex items-center justify-center">
+          <div className="hidden md:flex items-center justify-center overflow-hidden">
             <div 
-              className={`flex items-center gap-6 transition-all duration-300 ${
+              className={`flex items-center gap-4 lg:gap-6 max-w-full overflow-hidden transition-all duration-300 ${
                 isScrolled 
                   ? 'opacity-100 pointer-events-auto translate-y-0' 
                   : 'opacity-0 pointer-events-none -translate-y-1'
@@ -203,7 +204,7 @@ export const Navbar = () => {
                 <button
                   key={item.key}
                   onClick={() => scrollToSection(item.id)}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors navbar-text-truncate"
                 >
                   {t(`nav.${item.key}`)}
                 </button>
@@ -215,15 +216,18 @@ export const Navbar = () => {
           <div className="md:hidden" />
 
           {/* Right side - Actions + Join Button (fixed column) */}
-          <div className="flex items-center gap-2 flex-shrink-0 min-w-fit" style={{ transform: 'translateZ(0)' }}>
+          <div className={cn(
+            "flex items-center gap-2 flex-shrink-0",
+            isRTL && "flex-row-reverse"
+          )} style={{ transform: 'translateZ(0)' }}>
             {/* Education Button */}
             <Button
               onClick={handleEducationClick}
               variant="ghost"
               size="sm"
-              className="glass hover:bg-white/10 rounded-full px-4 hidden md:inline-flex min-w-[140px] justify-center"
+              className="glass hover:bg-white/10 rounded-full px-3 hidden md:inline-flex max-w-[140px] justify-center truncate"
             >
-              {t('education.title')}
+              {t('nav.educationShort')}
             </Button>
             
             {/* Language Selector */}
@@ -240,7 +244,7 @@ export const Navbar = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                align="end"
+                align={isRTL ? "start" : "end"}
                 className="glass-strong border-white/20 backdrop-blur-2xl rounded-2xl min-w-[180px] z-[100]"
               >
                 {languages.map((lang) => (
@@ -253,7 +257,7 @@ export const Navbar = () => {
                         : 'hover:bg-white/10'
                     }`}
                   >
-                    <span className="mr-2">{lang.flag}</span>
+                    <span className={isRTL ? "ml-2" : "mr-2"}>{lang.flag}</span>
                     <span>{lang.name}</span>
                   </DropdownMenuItem>
                 ))}
@@ -266,16 +270,16 @@ export const Navbar = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="glass hover:bg-white/10 rounded-full px-3 hidden md:inline-flex"
+                  className="glass hover:bg-white/10 rounded-full px-3 hidden lg:inline-flex"
                   aria-label="Account menu"
                 >
-                  <User className="h-4 w-4 mr-1" />
-                  <span className="text-sm">{t('nav.account')}</span>
-                  <ChevronDown className="h-3 w-3 ml-1" />
+                  <User className="h-4 w-4" />
+                  <span className="text-sm hidden xl:inline mx-1 max-w-[80px] truncate">{t('nav.account')}</span>
+                  <ChevronDown className="h-3 w-3" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                align="end"
+                align={isRTL ? "start" : "end"}
                 className="glass-strong border-white/20 backdrop-blur-2xl rounded-2xl min-w-[200px] z-[100]"
               >
                 <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
@@ -303,9 +307,9 @@ export const Navbar = () => {
             {/* Join Button */}
             <Button
               onClick={() => scrollToSection('join')}
-              className="btn-navbar-cta hidden sm:inline-flex min-w-[120px] justify-center"
+              className="btn-navbar-cta hidden sm:inline-flex max-w-[130px] justify-center truncate"
             >
-              {t('nav.join')}
+              {t('nav.joinShort')}
             </Button>
 
             {/* Mobile Menu Toggle */}
