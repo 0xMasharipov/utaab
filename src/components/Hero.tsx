@@ -3,12 +3,14 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
 import { lazy, Suspense } from 'react';
+import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 
 // Lazy load the 3D scene for better performance
 const HeroBackgroundScene = lazy(() => import('@/components/three/HeroBackgroundScene'));
 
 export const Hero = () => {
   const { t } = useTranslation();
+  const { getTransitionClasses } = useLanguageTransition();
 
   const scrollToJoin = () => {
     const element = document.getElementById('join');
@@ -58,7 +60,7 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 sm:mb-6 text-glow-hero leading-tight px-2">
+          <h1 className={getTransitionClasses("text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 sm:mb-6 text-glow-hero leading-tight px-2")}>
             {t('hero.title')}
           </h1>
         </motion.div>
@@ -67,7 +69,7 @@ export const Hero = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-semibold mb-6 sm:mb-8 text-accent text-glow-accent px-2"
+          className={getTransitionClasses("text-xl sm:text-2xl md:text-4xl lg:text-5xl font-semibold mb-6 sm:mb-8 text-accent text-glow-accent px-2")}
         >
           {subtitleWords.map((word, wordIndex) => (
             <span key={wordIndex} className="inline-block mr-3">
@@ -88,7 +90,7 @@ export const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground text-glow-muted max-w-3xl mx-auto mb-8 sm:mb-12 px-4"
+          className={getTransitionClasses("text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground text-glow-muted max-w-3xl mx-auto mb-8 sm:mb-12 px-4")}
         >
           {t('hero.description')}
         </motion.p>
@@ -98,7 +100,7 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <Button onClick={scrollToJoin} className="btn-primary text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 group min-h-[44px]">
+          <Button onClick={scrollToJoin} className={getTransitionClasses("btn-primary text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 group min-h-[44px]")}>
             {t('hero.cta')}
             <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </Button>

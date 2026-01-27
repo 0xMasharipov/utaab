@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Linkedin, Instagram, Twitter, Send } from 'lucide-react';
 import logo from '@/assets/logo.png';
 import { BrandText } from '@/components/common/BrandText';
+import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 interface FooterProps {
   onPrivacyClick: () => void;
 }
@@ -13,6 +14,7 @@ export const Footer = ({
   const {
     t
   } = useTranslation();
+  const { getTransitionClasses } = useLanguageTransition();
   const quickLinks = [{
     key: 'community',
     id: 'community'
@@ -71,19 +73,19 @@ export const Footer = ({
               />
               <BrandText variant="footer" />
             </div>
-            <p className="text-muted-foreground leading-relaxed text-base text-left">
+            <p className={getTransitionClasses("text-muted-foreground leading-relaxed text-base text-left")}>
               {t('footer.description')}
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-semibold text-foreground mb-4">
+            <h4 className={getTransitionClasses("text-lg font-semibold text-foreground mb-4")}>
               {t('footer.quickLinks')}
             </h4>
             <ul className="space-y-2">
               {quickLinks.map(link => <li key={link.key}>
-                  <button onClick={() => scrollToSection(link.id)} className="text-muted-foreground hover:text-accent transition-colors">
+                  <button onClick={() => scrollToSection(link.id)} className={getTransitionClasses("text-muted-foreground hover:text-accent transition-colors")}>
                     {t(`nav.${link.key}`)}
                   </button>
                 </li>)}
@@ -94,7 +96,7 @@ export const Footer = ({
 
           {/* Legal */}
           <div>
-            <h4 className="text-lg font-semibold text-foreground mb-4">
+            <h4 className={getTransitionClasses("text-lg font-semibold text-foreground mb-4")}>
               {t('footer.legal', 'Legal')}
             </h4>
             <ul className="space-y-2">
@@ -135,7 +137,7 @@ export const Footer = ({
 
           {/* Social */}
           <div>
-            <h4 className="text-lg font-semibold text-foreground mb-4">
+            <h4 className={getTransitionClasses("text-lg font-semibold text-foreground mb-4")}>
               {t('footer.social')}
             </h4>
             <div className="flex flex-wrap gap-3">
@@ -157,7 +159,7 @@ export const Footer = ({
 
           {/* Newsletter */}
           <div>
-            <h4 className="text-lg font-semibold text-foreground mb-4">
+            <h4 className={getTransitionClasses("text-lg font-semibold text-foreground mb-4")}>
               {t('footer.newsletter')}
             </h4>
             <div className="flex flex-col sm:flex-row gap-2">
@@ -172,10 +174,10 @@ export const Footer = ({
         {/* Bottom */}
         <div className="pt-8 border-t border-white/10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-muted-foreground text-sm">
+            <p className={getTransitionClasses("text-muted-foreground text-sm")}>
               © {new Date().getFullYear()} {t('footer.brand')}. {t('footer.rights')}
             </p>
-            <p className="text-muted-foreground text-sm">
+            <p className={getTransitionClasses("text-muted-foreground text-sm")}>
               {t('footer.disclaimer')}
             </p>
           </div>

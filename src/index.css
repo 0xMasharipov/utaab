@@ -246,4 +246,25 @@
   .navbar-text-truncate {
     @apply truncate max-w-[100px] md:max-w-[120px] lg:max-w-none;
   }
+  
+  /* Language transition utilities */
+  .lang-transition {
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+  }
+  
+  .lang-transitioning {
+    opacity: 0.3;
+    transform: translateY(2px);
+  }
+  
+  /* Respect reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .lang-transition {
+      transition: none;
+    }
+    .lang-transitioning {
+      opacity: 1;
+      transform: none;
+    }
+  }
 }
