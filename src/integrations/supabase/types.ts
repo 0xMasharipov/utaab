@@ -391,8 +391,11 @@ export type Database = {
       }
       community_applications: {
         Row: {
+          approved_at: string | null
+          approved_by: string | null
           availability_hours: number
           city: string | null
+          converted_user_id: string | null
           country: string | null
           created_at: string
           department: string
@@ -403,6 +406,8 @@ export type Database = {
           honeypot: string | null
           id: string
           interests: string[]
+          invite_expires_at: string | null
+          invite_token: string | null
           ip_address: unknown
           kvkk_consent: boolean
           kvkk_consent_timestamp: string
@@ -413,6 +418,7 @@ export type Database = {
           portfolio_url: string | null
           preferred_tracks: string[]
           referrer: string | null
+          status: string
           submission_count: number | null
           telegram: string | null
           updated_at: string
@@ -422,8 +428,11 @@ export type Database = {
           utm_source: string | null
         }
         Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
           availability_hours: number
           city?: string | null
+          converted_user_id?: string | null
           country?: string | null
           created_at?: string
           department: string
@@ -434,6 +443,8 @@ export type Database = {
           honeypot?: string | null
           id?: string
           interests: string[]
+          invite_expires_at?: string | null
+          invite_token?: string | null
           ip_address?: unknown
           kvkk_consent?: boolean
           kvkk_consent_timestamp?: string
@@ -444,6 +455,7 @@ export type Database = {
           portfolio_url?: string | null
           preferred_tracks: string[]
           referrer?: string | null
+          status?: string
           submission_count?: number | null
           telegram?: string | null
           updated_at?: string
@@ -453,8 +465,11 @@ export type Database = {
           utm_source?: string | null
         }
         Update: {
+          approved_at?: string | null
+          approved_by?: string | null
           availability_hours?: number
           city?: string | null
+          converted_user_id?: string | null
           country?: string | null
           created_at?: string
           department?: string
@@ -465,6 +480,8 @@ export type Database = {
           honeypot?: string | null
           id?: string
           interests?: string[]
+          invite_expires_at?: string | null
+          invite_token?: string | null
           ip_address?: unknown
           kvkk_consent?: boolean
           kvkk_consent_timestamp?: string
@@ -475,6 +492,7 @@ export type Database = {
           portfolio_url?: string | null
           preferred_tracks?: string[]
           referrer?: string | null
+          status?: string
           submission_count?: number | null
           telegram?: string | null
           updated_at?: string

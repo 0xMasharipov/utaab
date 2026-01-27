@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, UserPlus, Mail, Shield, Users as UsersIcon, Clock, Eye, FileUser, ExternalLink } from 'lucide-react';
+import { Search, UserPlus, Mail, Shield, Users as UsersIcon, Clock, Eye, FileUser, ExternalLink, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -31,6 +31,15 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { ApplicantConversionDialog } from '@/components/admin/ApplicantConversionDialog';
+
+// Status badge configuration
+const STATUS_BADGES: Record<string, { variant: 'default' | 'secondary' | 'destructive' | 'outline'; label: string }> = {
+  pending: { variant: 'outline', label: 'Pending' },
+  approved: { variant: 'secondary', label: 'Approved' },
+  rejected: { variant: 'destructive', label: 'Rejected' },
+  converted: { variant: 'default', label: 'Converted' },
+};
 
 export default function AdminUsers() {
   const [users, setUsers] = useState<any[]>([]);
@@ -40,9 +49,12 @@ export default function AdminUsers() {
   const [applicants, setApplicants] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [previewApplicant, setPreviewApplicant] = useState<any>(null);
   const [previewDialogOpen, setPreviewDialogOpen] = useState(false);
+  const [conversionDialogOpen, setConversionDialogOpen] = useState(false);
+  const [selectedApplicantForConversion, setSelectedApplicantForConversion] = useState<any>(null);
   const [newInvite, setNewInvite] = useState({
     email: '',
     role: 'moderator',
@@ -128,6 +140,16 @@ export default function AdminUsers() {
     setPreviewDialogOpen(true);
   };
 
+  const openConversionDialog = (applicant: any) => {
+    setSelectedApplicantForConversion(applicant);
+    setConversionDialogOpen(true);
+  };
+
+  const getStatusBadge = (status: string) => {
+    const config = STATUS_BADGES[status] || STATUS_BADGES.pending;
+    return <Badge variant={config.variant}>{config.label}</Badge>;
+  };
+
   const handleSendInvite = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -179,11 +201,14 @@ export default function AdminUsers() {
     user.email?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const filteredApplicants = applicants.filter((applicant) =>
-    applicant.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    applicant.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    applicant.department?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredApplicants = applicants.filter((applicant) => {
+    const matchesSearch = 
+      applicant.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      applicant.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      applicant.department?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || applicant.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
   if (loading) {
     return (
@@ -443,6 +468,28 @@ export default function AdminUsers() {
         </TabsContent>
 
         <TabsContent value="applicants">
+          {/* Status Filter for Applicants */}
+          <div className="flex items-center gap-4 mb-4">
+            <div className="flex items-center gap-2">
+              <Filter className="h-4 w-4 text-muted-foreground" />
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Statuses</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="approved">Approved</SelectItem>
+                  <SelectItem value="rejected">Rejected</SelectItem>
+                  <SelectItem value="converted">Converted</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="text-sm text-muted-foreground">
+              {filteredApplicants.length} applicant{filteredApplicants.length !== 1 ? 's' : ''}
+            </div>
+          </div>
+
           <Card className="glass-panel">
             <Table>
               <TableHeader>
@@ -451,6 +498,7 @@ export default function AdminUsers() {
                   <TableHead>Email</TableHead>
                   <TableHead>Department</TableHead>
                   <TableHead>Experience</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead>Applied</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
@@ -464,25 +512,39 @@ export default function AdminUsers() {
                     <TableCell>
                       <Badge variant="outline">{applicant.experience_level || 'N/A'}</Badge>
                     </TableCell>
+                    <TableCell>{getStatusBadge(applicant.status || 'pending')}</TableCell>
                     <TableCell>
                       {new Date(applicant.created_at).toLocaleDateString()}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="gap-1"
-                        onClick={() => openApplicantPreview(applicant)}
-                      >
-                        <Eye className="h-4 w-4" />
-                        View
-                      </Button>
+                      <div className="flex items-center justify-end gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="gap-1"
+                          onClick={() => openApplicantPreview(applicant)}
+                        >
+                          <Eye className="h-4 w-4" />
+                          View
+                        </Button>
+                        {applicant.status === 'pending' && (
+                          <Button
+                            variant="default"
+                            size="sm"
+                            className="gap-1"
+                            onClick={() => openConversionDialog(applicant)}
+                          >
+                            <UserPlus className="h-4 w-4" />
+                            Convert
+                          </Button>
+                        )}
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
                 {filteredApplicants.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                    <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
                       No applicants found
                     </TableCell>
                   </TableRow>
@@ -637,6 +699,10 @@ export default function AdminUsers() {
                       <p className="font-medium">{previewApplicant.locale?.toUpperCase() || 'EN'}</p>
                     </div>
                     <div>
+                      <Label className="text-muted-foreground text-xs">Status</Label>
+                      {getStatusBadge(previewApplicant.status || 'pending')}
+                    </div>
+                    <div>
                       <Label className="text-muted-foreground text-xs">KVKK Consent</Label>
                       <Badge variant={previewApplicant.kvkk_consent ? "default" : "destructive"}>
                         {previewApplicant.kvkk_consent ? 'Accepted' : 'Not Accepted'}
@@ -644,11 +710,35 @@ export default function AdminUsers() {
                     </div>
                   </div>
                 </div>
+
+                {/* Action Buttons for Pending Applications */}
+                {previewApplicant.status === 'pending' && (
+                  <div className="pt-4 border-t">
+                    <Button
+                      className="w-full gap-2"
+                      onClick={() => {
+                        setPreviewDialogOpen(false);
+                        openConversionDialog(previewApplicant);
+                      }}
+                    >
+                      <UserPlus className="h-4 w-4" />
+                      Convert to User
+                    </Button>
+                  </div>
+                )}
               </div>
             </ScrollArea>
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Applicant Conversion Dialog */}
+      <ApplicantConversionDialog
+        applicant={selectedApplicantForConversion}
+        open={conversionDialogOpen}
+        onOpenChange={setConversionDialogOpen}
+        onSuccess={fetchData}
+      />
     </div>
   );
 }
