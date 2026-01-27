@@ -388,9 +388,9 @@ export default function AdminDashboard() {
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <div className={cn(
               "w-2 h-2 rounded-full",
-              isLive ? "bg-green-500 animate-pulse" : "bg-muted-foreground"
+              (!loading || isLive) ? "bg-green-500 animate-pulse" : "bg-yellow-500 animate-pulse"
             )} />
-            <span>{isLive ? 'Live' : 'Connecting...'}</span>
+            <span>{(!loading || isLive) ? 'Connected' : 'Connecting...'}</span>
           </div>
           <span className="text-sm text-muted-foreground">
             Updated: {lastUpdated.toLocaleTimeString()}

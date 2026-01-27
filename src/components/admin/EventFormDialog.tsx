@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
+import { ImageUpload } from './ImageUpload';
 
 interface EventFormDialogProps {
   open: boolean;
@@ -46,6 +47,7 @@ export function EventFormDialog({ open, onOpenChange, event, mode }: EventFormDi
     visibility: 'draft',
     capacity: 0,
     rsvp_link: '',
+    cover_image: null as string | null,
   });
 
   useEffect(() => {
@@ -66,6 +68,7 @@ export function EventFormDialog({ open, onOpenChange, event, mode }: EventFormDi
         visibility: event.visibility || 'draft',
         capacity: event.capacity || 0,
         rsvp_link: event.rsvp_link || '',
+        cover_image: event.cover_image || null,
       });
     } else {
       setFormData({
@@ -84,6 +87,7 @@ export function EventFormDialog({ open, onOpenChange, event, mode }: EventFormDi
         visibility: 'draft',
         capacity: 0,
         rsvp_link: '',
+        cover_image: null,
       });
     }
   }, [event, mode, open]);
@@ -210,6 +214,18 @@ export function EventFormDialog({ open, onOpenChange, event, mode }: EventFormDi
               value={formData.description_en}
               onChange={(e) => setFormData({ ...formData, description_en: e.target.value })}
               rows={4}
+            />
+          </div>
+
+          {/* Cover Image Upload */}
+          <div>
+            <Label>Cover Image</Label>
+            <ImageUpload
+              value={formData.cover_image}
+              onChange={(url) => setFormData({ ...formData, cover_image: url })}
+              accept="image/*"
+              folder="events"
+              label="Upload Cover Image"
             />
           </div>
 

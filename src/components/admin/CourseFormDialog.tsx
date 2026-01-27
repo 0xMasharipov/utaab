@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
+import { ImageUpload } from './ImageUpload';
 
 interface CourseFormDialogProps {
   open: boolean;
@@ -44,6 +45,8 @@ export function CourseFormDialog({ open, onOpenChange, course, mode }: CourseFor
     is_published: boolean;
     is_free: boolean;
     price: number;
+    hero_image: string | null;
+    promo_video: string | null;
   }>({
     title_en: '',
     title_tr: '',
@@ -57,6 +60,8 @@ export function CourseFormDialog({ open, onOpenChange, course, mode }: CourseFor
     is_published: false,
     is_free: true,
     price: 0,
+    hero_image: null,
+    promo_video: null,
   });
 
   useEffect(() => {
@@ -74,6 +79,8 @@ export function CourseFormDialog({ open, onOpenChange, course, mode }: CourseFor
         is_published: course.is_published || false,
         is_free: course.is_free ?? true,
         price: course.price || 0,
+        hero_image: course.hero_image || null,
+        promo_video: course.promo_video || null,
       });
     } else {
       setFormData({
@@ -89,6 +96,8 @@ export function CourseFormDialog({ open, onOpenChange, course, mode }: CourseFor
         is_published: false,
         is_free: true,
         price: 0,
+        hero_image: null,
+        promo_video: null,
       });
     }
   }, [course, mode, open]);
@@ -211,6 +220,30 @@ export function CourseFormDialog({ open, onOpenChange, course, mode }: CourseFor
               rows={4}
               placeholder="Course description..."
             />
+          </div>
+
+          {/* Media Uploads */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>Hero Image</Label>
+              <ImageUpload
+                value={formData.hero_image}
+                onChange={(url) => setFormData({ ...formData, hero_image: url })}
+                accept="image/*"
+                folder="courses"
+                label="Upload Hero Image"
+              />
+            </div>
+            <div>
+              <Label>Promo Video (Optional)</Label>
+              <ImageUpload
+                value={formData.promo_video}
+                onChange={(url) => setFormData({ ...formData, promo_video: url })}
+                accept="video/*"
+                folder="courses"
+                label="Upload Promo Video"
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
