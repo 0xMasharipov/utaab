@@ -43,8 +43,9 @@ export const CourseReviews = ({ courseId, isEnrolled }: CourseReviewsProps) => {
   const { data: reviews, isLoading } = useQuery({
     queryKey: ['reviews', courseId, user?.id],
     queryFn: async () => {
+      // Use public_reviews view for privacy-preserving access (masks user_id for non-owners)
       const { data, error } = await supabase
-        .from('reviews')
+        .from('public_reviews')
         .select('id, course_id, rating, comment, created_at, updated_at, user_id')
         .eq('course_id', courseId)
         .order('created_at', { ascending: false });
