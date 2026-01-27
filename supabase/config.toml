@@ -23,3 +23,6 @@ verify_jwt = false
 
 [functions.manage-user-role]
 verify_jwt = false
+
+[functions.convert-applicant-to-user]
+verify_jwt = false
