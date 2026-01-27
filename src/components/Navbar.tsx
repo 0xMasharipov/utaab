@@ -13,6 +13,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import logo from '@/assets/logo.png';
 import { BrandText } from '@/components/common/BrandText';
+import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 
 
 const languages = [
@@ -34,6 +35,7 @@ export const Navbar = () => {
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
   const isRTL = i18n.language === 'ar';
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const { getTransitionClasses } = useLanguageTransition();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -204,7 +206,7 @@ export const Navbar = () => {
                 <button
                   key={item.key}
                   onClick={() => scrollToSection(item.id)}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors navbar-text-truncate"
+                  className={getTransitionClasses("text-sm font-medium text-muted-foreground hover:text-foreground transition-colors navbar-text-truncate")}
                 >
                   {t(`nav.${item.key}`)}
                 </button>
@@ -225,7 +227,7 @@ export const Navbar = () => {
               onClick={handleEducationClick}
               variant="ghost"
               size="sm"
-              className="glass hover:bg-white/10 rounded-full px-3 hidden md:inline-flex max-w-[140px] justify-center truncate"
+              className={getTransitionClasses("glass hover:bg-white/10 rounded-full px-3 hidden md:inline-flex max-w-[140px] justify-center truncate")}
             >
               {t('nav.educationShort')}
             </Button>
@@ -307,7 +309,7 @@ export const Navbar = () => {
             {/* Join Button */}
             <Button
               onClick={() => scrollToSection('join')}
-              className="btn-navbar-cta hidden sm:inline-flex max-w-[130px] justify-center truncate"
+              className={getTransitionClasses("btn-navbar-cta hidden sm:inline-flex max-w-[130px] justify-center truncate")}
             >
               {t('nav.joinShort')}
             </Button>

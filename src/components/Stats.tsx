@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, useInView } from 'framer-motion';
+import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 
 interface StatItemProps {
   value: number;
@@ -46,7 +47,7 @@ const StatItem = ({ value, label, suffix = '+' }: StatItemProps) => {
       <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-glow mb-3 sm:mb-4">
         {count}{suffix}
       </div>
-      <div className="text-base sm:text-lg md:text-xl text-muted-foreground">{label}</div>
+      <div className="text-base sm:text-lg md:text-xl text-muted-foreground lang-transition">{label}</div>
     </motion.div>
   );
 };
