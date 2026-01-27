@@ -1,192 +1,190 @@
 
-## Plan: Add Smooth Language Transition Animations
+
+## Plan: Convert Approved Applicants to Education Platform Users
 
 ### Overview
-Implement elegant, cinematic language transition animations that provide visual feedback when users switch between languages. The text content will smoothly fade out and fade back in with subtle motion, creating a polished user experience.
+Implement a secure feature that allows admins to approve community applicants and convert them into education platform users. This includes two options:
+1. **Send Invite** - Create an invitation that applicants can use to register with pre-filled data
+2. **Auto-Create Account** - Automatically create an account with a temporary password and send credentials
 
 ---
 
-## Solution Architecture
+## Database Changes
 
-```text
-LANGUAGE TRANSITION FLOW
-┌─────────────────────────────────────────────────────────────────────┐
-│  User clicks language  →  Trigger fade-out  →  Change language     │
-│                        →  Wait for transition  →  Fade-in new text │
-└─────────────────────────────────────────────────────────────────────┘
+### Add Status Tracking to community_applications Table
+
+```sql
+-- Add approval workflow columns
+ALTER TABLE public.community_applications 
+ADD COLUMN IF NOT EXISTS status text NOT NULL DEFAULT 'pending',
+ADD COLUMN IF NOT EXISTS approved_at timestamptz,
+ADD COLUMN IF NOT EXISTS approved_by uuid REFERENCES auth.users(id),
+ADD COLUMN IF NOT EXISTS converted_user_id uuid,
+ADD COLUMN IF NOT EXISTS invite_token text,
+ADD COLUMN IF NOT EXISTS invite_expires_at timestamptz;
+
+-- Add index for status filtering
+CREATE INDEX IF NOT EXISTS idx_community_applications_status 
+ON public.community_applications(status);
+
+-- Add constraint for valid statuses
+ALTER TABLE public.community_applications 
+ADD CONSTRAINT valid_application_status 
+CHECK (status IN ('pending', 'approved', 'rejected', 'converted'));
 ```
 
 ---
 
-## Implementation Strategy
+## Architecture
 
-### Approach: React Context + CSS Transitions
+```text
+APPLICANT CONVERSION FLOW
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Admin Views Applicant  →  Clicks "Approve & Invite" or "Auto-Create"      │
+│                                      ↓                                       │
+│  Edge Function: convert-applicant-to-user                                   │
+│    ├─ Validates admin role                                                  │
+│    ├─ Option A: Creates invite token, sends email                           │
+│    └─ Option B: Creates auth user + education_profile, sends welcome email │
+│                                      ↓                                       │
+│  Updates community_applications status to 'approved' or 'converted'         │
+│  Logs action to audit_log                                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
 
-We'll create a language transition system that:
-1. Detects when language is changing via i18next events
-2. Applies a transitioning state to the app
-3. Uses CSS transitions for smooth opacity/transform changes
-4. Respects `prefers-reduced-motion` for accessibility
+---
+
+## Implementation Details
+
+### 1. Edge Function: `convert-applicant-to-user`
+
+**File: `supabase/functions/convert-applicant-to-user/index.ts`**
+
+Creates a new edge function that:
+- Accepts `applicationId`, `action` (invite/create), and optional `role` (student/user)
+- Validates caller has admin role using `has_role()` RPC
+- For **invite** action:
+  - Generates secure invite token
+  - Updates application with invite details
+  - Inserts into `admin_invitations` table with pre-filled data reference
+  - (Optional) Sends invite email via Resend
+- For **auto-create** action:
+  - Creates auth user with temporary password using `supabase.auth.admin.createUser()`
+  - Creates education_profile with applicant data (name, department, interests → focus_areas)
+  - Updates application status to 'converted' with converted_user_id
+  - Sends welcome email with password reset link
+- Logs all actions to audit_log
+
+### 2. Update AdminUsers.tsx
+
+**File: `src/pages/admin/AdminUsers.tsx`**
+
+Enhance the Applicants tab with:
+
+- **Status Badge Column** - Shows pending/approved/rejected/converted status
+- **Action Buttons in Preview Dialog**:
+  - "Approve & Send Invite" button
+  - "Create Account" button (auto-create with temp password)
+  - "Reject" button with confirmation
+- **Conversion Dialog** - Modal for selecting:
+  - Account role (student or user)
+  - Whether to send welcome email
+  - Confirmation of action
+- **Status Filter** - Dropdown to filter by pending/approved/rejected/converted
+- **Update Table Display** - Show status badge and converted indicator
+
+### 3. Create Conversion Dialog Component
+
+**File: `src/components/admin/ApplicantConversionDialog.tsx`**
+
+New component with:
+- Radio buttons for action type (invite vs auto-create)
+- Role selector (student, user)
+- Email notification checkbox
+- Security warnings for auto-create action
+- Loading state during conversion
+- Success/error feedback
+
+### 4. Add RLS Policies for New Columns
+
+```sql
+-- Admins can update application status
+CREATE POLICY "Admins can update application status"
+ON public.community_applications FOR UPDATE
+USING (has_role(auth.uid(), 'admin'::app_role))
+WITH CHECK (has_role(auth.uid(), 'admin'::app_role));
+```
+
+---
+
+## Security Considerations
+
+1. **Admin-Only Access** - All conversion operations require verified admin role
+2. **Server-Side Validation** - Edge function validates all inputs and permissions
+3. **Audit Logging** - Every conversion action is logged with full details
+4. **Secure Tokens** - Invite tokens are cryptographically secure (32 bytes hex)
+5. **Token Expiration** - Invite tokens expire after 48 hours
+6. **No PII Logging** - Passwords are never logged
+7. **Email Verification** - Auto-created accounts require password reset
+
+---
+
+## Data Mapping: Applicant → Education Profile
+
+| community_applications | education_profiles |
+|-----------------------|-------------------|
+| full_name | full_name |
+| email | (auth.users) |
+| department | department |
+| locale | preferred_language, locale |
+| interests | focus_areas |
+| kvkk_consent | kvkk_consent |
+| kvkk_consent_version | kvkk_consent_version |
+| - | role (default: 'student') |
 
 ---
 
 ## Files to Create/Modify
 
-### Phase 1: Create Language Transition Context
-
-**New File: `src/contexts/LanguageTransitionContext.tsx`**
-
-Create a context provider that:
-- Listens to i18next `languageChanged` events
-- Manages `isTransitioning` state with configurable duration
-- Provides `isTransitioning` boolean to consuming components
-- Handles cleanup on unmount
-
-```tsx
-// Pseudocode structure
-const LanguageTransitionContext = createContext({ isTransitioning: false });
-
-export const LanguageTransitionProvider = ({ children }) => {
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  
-  useEffect(() => {
-    const handleLanguageChanging = () => {
-      setIsTransitioning(true);
-      setTimeout(() => setIsTransitioning(false), 300);
-    };
-    
-    i18n.on('languageChanged', handleLanguageChanging);
-    return () => i18n.off('languageChanged', handleLanguageChanging);
-  }, []);
-  
-  return <Context.Provider value={{ isTransitioning }}>{children}</Context.Provider>;
-};
-```
-
-### Phase 2: Add CSS Transition Classes
-
-**File: `src/index.css`**
-
-Add utility classes for language transitions:
-- `.lang-transition` - Base transition class for text elements
-- `.lang-transitioning` - Applied during language change (fade out)
-- Support for reduced motion preferences
-
-```css
-/* Language transition utilities */
-.lang-transition {
-  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
-}
-
-.lang-transitioning {
-  opacity: 0.3;
-  transform: translateY(2px);
-}
-
-/* Respect reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .lang-transition {
-    transition: none;
-  }
-  .lang-transitioning {
-    opacity: 1;
-    transform: none;
-  }
-}
-```
-
-### Phase 3: Create Reusable Hook
-
-**New File: `src/hooks/useLanguageTransition.ts`**
-
-Create a custom hook for consuming the transition state:
-- Returns `isTransitioning` boolean
-- Returns utility function `getTransitionClass()` for easy class application
-
-### Phase 4: Integrate into App
-
-**File: `src/App.tsx`**
-
-Wrap the app with `LanguageTransitionProvider`:
-```tsx
-<QueryClientProvider client={queryClient}>
-  <LanguageTransitionProvider>
-    <TooltipProvider>
-      {/* ... existing content */}
-    </TooltipProvider>
-  </LanguageTransitionProvider>
-</QueryClientProvider>
-```
-
-### Phase 5: Update Key Components
-
-Apply transitions to main content areas:
-
-**File: `src/components/Navbar.tsx`**
-- Add transition classes to navigation items and buttons
-- Smooth text updates in mobile menu
-
-**File: `src/components/Hero.tsx`**
-- Add transition to title, subtitle, description, and CTA button
-
-**File: `src/components/Community.tsx`**
-- Add transition to section titles and feature cards
-
-**File: `src/components/Stats.tsx`**
-- Add transition to stat labels
-
-**File: `src/components/Footer.tsx`**
-- Add transition to footer links and text
+| File | Action | Description |
+|------|--------|-------------|
+| `supabase/functions/convert-applicant-to-user/index.ts` | Create | Edge function for conversion logic |
+| `src/components/admin/ApplicantConversionDialog.tsx` | Create | Conversion action dialog |
+| `src/pages/admin/AdminUsers.tsx` | Modify | Add conversion actions, status display |
+| Database Migration | Create | Add status columns to community_applications |
 
 ---
 
-## Technical Details
+## User Interface Changes
 
-### Transition Timing
-- **Fade-out duration**: 150ms
-- **Language update**: ~50ms (instant)
-- **Fade-in duration**: 150ms
-- **Total perceived time**: ~300ms
+### Applicants Tab Enhancements
 
-### CSS Classes Applied
-Components will conditionally apply:
-```tsx
-className={cn(
-  "lang-transition",
-  isTransitioning && "lang-transitioning",
-  // ... other classes
-)}
-```
+1. **Table Columns**:
+   - Name | Email | Department | Experience | Status | Applied | Actions
 
-### Accessibility Considerations
-- Respects `prefers-reduced-motion` media query
-- No animations for users who prefer reduced motion
-- Transitions are subtle (opacity + slight Y movement)
-- No jarring movements or layout shifts
+2. **Status Badges**:
+   - 🟡 Pending (yellow outline)
+   - 🟢 Approved (green)
+   - 🔴 Rejected (red/destructive)
+   - ✅ Converted (primary)
 
----
+3. **Preview Dialog Actions**:
+   - Current: View button only
+   - New: View + Approve/Reject/Convert buttons
 
-## Summary of Changes
-
-| File | Change Type | Description |
-|------|-------------|-------------|
-| `src/contexts/LanguageTransitionContext.tsx` | Create | Context provider for transition state |
-| `src/hooks/useLanguageTransition.ts` | Create | Custom hook for consuming transition |
-| `src/index.css` | Modify | Add CSS transition utilities |
-| `src/App.tsx` | Modify | Wrap with LanguageTransitionProvider |
-| `src/components/Navbar.tsx` | Modify | Apply transition classes to nav items |
-| `src/components/Hero.tsx` | Modify | Apply transition to hero content |
-| `src/components/Community.tsx` | Modify | Apply transition to section content |
-| `src/components/Stats.tsx` | Modify | Apply transition to stat labels |
-| `src/components/Footer.tsx` | Modify | Apply transition to footer content |
+4. **Conversion Dialog**:
+   - Action selection (Invite / Auto-Create)
+   - Role assignment
+   - Email notification toggle
+   - Confirm button with security notice
 
 ---
 
-## Expected Outcome
+## Technical Notes
 
-- When users switch languages, text content smoothly fades out with a subtle downward motion
-- New language text fades in with upward motion, creating a "swap" effect
-- Transitions are fast (300ms total) to feel responsive
-- Users who prefer reduced motion see instant language changes
-- No layout shifts or jumpy behavior during transitions
-- Consistent animation across all translated content
+- Uses existing CORS headers pattern from other edge functions
+- Leverages `supabase.auth.admin.createUser()` for auto-creation
+- Reuses existing `admin_invitations` table for invite workflow
+- Follows established patterns from `manage-user-role` edge function
+- Integrates with existing audit logging system
+
