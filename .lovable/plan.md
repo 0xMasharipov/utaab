@@ -1,147 +1,192 @@
 
-## Plan: Fix Navbar Text Overflow and Language-Related Graphical Bugs
+## Plan: Add Smooth Language Transition Animations
 
-### Problem Summary
-When users change languages, text content overflows outside the navbar bounds or overlaps with the logo and other content. This is especially problematic with:
-- Russian translations (significantly longer than English)
-- Arabic RTL text (mixed direction issues)
-- Dynamic button widths causing layout shifts
-
----
-
-## Root Causes
-
-1. **Fixed minimum widths are insufficient** for longer translations (Russian has 2x longer text)
-2. **No text truncation or ellipsis** on navbar buttons when text exceeds space
-3. **Center navigation flex container** can overflow into logo/button areas
-4. **Account dropdown** shows full text without overflow handling
-5. **Missing max-width constraints** on buttons and nav links
+### Overview
+Implement elegant, cinematic language transition animations that provide visual feedback when users switch between languages. The text content will smoothly fade out and fade back in with subtle motion, creating a polished user experience.
 
 ---
 
 ## Solution Architecture
 
 ```text
-NAVBAR LAYOUT (CSS Grid)
+LANGUAGE TRANSITION FLOW
 ┌─────────────────────────────────────────────────────────────────────┐
-│  [Logo+Brand]  │  [───── Center Nav ─────]  │  [─ Right Actions ─] │
-│   fixed 140px  │  flex with overflow:hidden │   flex-shrink-0      │
-│   flex-shrink-0│  truncate long items       │   max-w constraints  │
+│  User clicks language  →  Trigger fade-out  →  Change language     │
+│                        →  Wait for transition  →  Fade-in new text │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Implementation Details
+## Implementation Strategy
 
-### Phase 1: Fix Right Actions Container
+### Approach: React Context + CSS Transitions
 
-**File: `src/components/Navbar.tsx`**
+We'll create a language transition system that:
+1. Detects when language is changing via i18next events
+2. Applies a transitioning state to the app
+3. Uses CSS transitions for smooth opacity/transform changes
+4. Respects `prefers-reduced-motion` for accessibility
 
-**1.1 Update Join Button**
-- Remove fixed `min-w-[120px]` 
-- Add `max-w-[150px]` with `truncate` class for text overflow
-- Use shorter translation keys for navbar-specific buttons
+---
 
-**1.2 Update Education Button**
-- Remove fixed `min-w-[140px]`
-- Add `max-w-[160px]` with `truncate` class
-- Ensure text ellipsis when too long
+## Files to Create/Modify
 
-**1.3 Update Account Dropdown Trigger**
-- Hide "Account" text on tablet, show icon-only
-- Add `max-w-[100px] truncate` for desktop view
+### Phase 1: Create Language Transition Context
 
-### Phase 2: Fix Center Navigation Overflow
+**New File: `src/contexts/LanguageTransitionContext.tsx`**
 
-**2.1 Add overflow container to center nav**
+Create a context provider that:
+- Listens to i18next `languageChanged` events
+- Manages `isTransitioning` state with configurable duration
+- Provides `isTransitioning` boolean to consuming components
+- Handles cleanup on unmount
+
 ```tsx
-<div className="hidden md:flex items-center justify-center overflow-hidden">
-  <div className="flex items-center gap-4 lg:gap-6 max-w-full overflow-hidden">
-    {navItems.map((item) => (
-      <button className="text-sm font-medium truncate max-w-[100px] lg:max-w-none ...">
+// Pseudocode structure
+const LanguageTransitionContext = createContext({ isTransitioning: false });
+
+export const LanguageTransitionProvider = ({ children }) => {
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  
+  useEffect(() => {
+    const handleLanguageChanging = () => {
+      setIsTransitioning(true);
+      setTimeout(() => setIsTransitioning(false), 300);
+    };
+    
+    i18n.on('languageChanged', handleLanguageChanging);
+    return () => i18n.off('languageChanged', handleLanguageChanging);
+  }, []);
+  
+  return <Context.Provider value={{ isTransitioning }}>{children}</Context.Provider>;
+};
 ```
 
-**2.2 Responsive gap and text sizing**
-- Reduce gap on smaller desktop screens: `gap-4 lg:gap-6`
-- Add `truncate` to individual nav items with `max-w-[100px]` on medium screens
-
-### Phase 3: Add Shorter Translation Keys for Navbar
-
-**Files: All locale files (en.json, tr.json, ru.json, ar.json)**
-
-Add shorter navbar-specific translations:
-```json
-"nav": {
-  "joinShort": "Join",
-  "educationShort": "Education"
-}
-```
-
-Use these in navbar instead of full translations:
-- English: "Join" instead of "Join UTAAB"
-- Russian: "Вступить" instead of "Присоединиться к UTAAB"
-- Turkish: "Katıl" instead of "UTAAB'ye Katıl"
-- Arabic: "انضم" instead of "انضم إلى UTAAB"
-
-### Phase 4: RTL Layout Improvements
-
-**4.1 Add RTL-aware flex direction**
-```tsx
-<div className={cn(
-  "flex items-center gap-2 flex-shrink-0",
-  isRTL && "flex-row-reverse"
-)}>
-```
-
-**4.2 Fix dropdown alignment for RTL**
-Change `align="end"` to dynamically use `align={isRTL ? "start" : "end"}` for dropdowns.
-
-### Phase 5: CSS Utilities for Truncation
+### Phase 2: Add CSS Transition Classes
 
 **File: `src/index.css`**
 
-Add utility class for navbar-specific truncation:
+Add utility classes for language transitions:
+- `.lang-transition` - Base transition class for text elements
+- `.lang-transitioning` - Applied during language change (fade out)
+- Support for reduced motion preferences
+
 ```css
-.navbar-text-truncate {
-  @apply truncate max-w-[120px] md:max-w-[140px] lg:max-w-none;
+/* Language transition utilities */
+.lang-transition {
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+
+.lang-transitioning {
+  opacity: 0.3;
+  transform: translateY(2px);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .lang-transition {
+    transition: none;
+  }
+  .lang-transitioning {
+    opacity: 1;
+    transform: none;
+  }
 }
 ```
+
+### Phase 3: Create Reusable Hook
+
+**New File: `src/hooks/useLanguageTransition.ts`**
+
+Create a custom hook for consuming the transition state:
+- Returns `isTransitioning` boolean
+- Returns utility function `getTransitionClass()` for easy class application
+
+### Phase 4: Integrate into App
+
+**File: `src/App.tsx`**
+
+Wrap the app with `LanguageTransitionProvider`:
+```tsx
+<QueryClientProvider client={queryClient}>
+  <LanguageTransitionProvider>
+    <TooltipProvider>
+      {/* ... existing content */}
+    </TooltipProvider>
+  </LanguageTransitionProvider>
+</QueryClientProvider>
+```
+
+### Phase 5: Update Key Components
+
+Apply transitions to main content areas:
+
+**File: `src/components/Navbar.tsx`**
+- Add transition classes to navigation items and buttons
+- Smooth text updates in mobile menu
+
+**File: `src/components/Hero.tsx`**
+- Add transition to title, subtitle, description, and CTA button
+
+**File: `src/components/Community.tsx`**
+- Add transition to section titles and feature cards
+
+**File: `src/components/Stats.tsx`**
+- Add transition to stat labels
+
+**File: `src/components/Footer.tsx`**
+- Add transition to footer links and text
+
+---
+
+## Technical Details
+
+### Transition Timing
+- **Fade-out duration**: 150ms
+- **Language update**: ~50ms (instant)
+- **Fade-in duration**: 150ms
+- **Total perceived time**: ~300ms
+
+### CSS Classes Applied
+Components will conditionally apply:
+```tsx
+className={cn(
+  "lang-transition",
+  isTransitioning && "lang-transitioning",
+  // ... other classes
+)}
+```
+
+### Accessibility Considerations
+- Respects `prefers-reduced-motion` media query
+- No animations for users who prefer reduced motion
+- Transitions are subtle (opacity + slight Y movement)
+- No jarring movements or layout shifts
 
 ---
 
 ## Summary of Changes
 
-| File | Change |
-|------|--------|
-| `src/components/Navbar.tsx` | Add overflow handling, truncation, responsive widths, RTL fixes |
-| `src/i18n/locales/en.json` | Add `nav.joinShort`, `nav.educationShort` |
-| `src/i18n/locales/tr.json` | Add `nav.joinShort`, `nav.educationShort` |
-| `src/i18n/locales/ru.json` | Add `nav.joinShort`, `nav.educationShort` |
-| `src/i18n/locales/ar.json` | Add `nav.joinShort`, `nav.educationShort` |
-| `src/index.css` | Add navbar truncation utility |
-
----
-
-## Technical Approach
-
-1. **Text Truncation**: Use Tailwind's `truncate` class (overflow-hidden + text-ellipsis + whitespace-nowrap)
-
-2. **Max-Width Constraints**: Apply `max-w-[Xpx]` to buttons to prevent overflow
-
-3. **Responsive Design**: Use breakpoint-specific classes (`md:`, `lg:`) to allow full text on larger screens
-
-4. **Shorter Translations**: Create navbar-specific short translations for space-constrained buttons
-
-5. **RTL Support**: Conditionally apply `flex-row-reverse` and `dir="rtl"` where needed
+| File | Change Type | Description |
+|------|-------------|-------------|
+| `src/contexts/LanguageTransitionContext.tsx` | Create | Context provider for transition state |
+| `src/hooks/useLanguageTransition.ts` | Create | Custom hook for consuming transition |
+| `src/index.css` | Modify | Add CSS transition utilities |
+| `src/App.tsx` | Modify | Wrap with LanguageTransitionProvider |
+| `src/components/Navbar.tsx` | Modify | Apply transition classes to nav items |
+| `src/components/Hero.tsx` | Modify | Apply transition to hero content |
+| `src/components/Community.tsx` | Modify | Apply transition to section content |
+| `src/components/Stats.tsx` | Modify | Apply transition to stat labels |
+| `src/components/Footer.tsx` | Modify | Apply transition to footer content |
 
 ---
 
 ## Expected Outcome
 
-- Navbar text will truncate with ellipsis when translations exceed available space
-- Layout remains stable across all four languages (EN, TR, RU, AR)
-- No text overflow outside navbar bounds
-- No overlap with logo or other content
-- Proper RTL handling for Arabic
-- Smooth transitions when switching languages
+- When users switch languages, text content smoothly fades out with a subtle downward motion
+- New language text fades in with upward motion, creating a "swap" effect
+- Transitions are fast (300ms total) to feel responsive
+- Users who prefer reduced motion see instant language changes
+- No layout shifts or jumpy behavior during transitions
+- Consistent animation across all translated content
