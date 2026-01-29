@@ -1,6 +1,6 @@
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Suspense, useRef, useMemo, useState, useCallback, useEffect } from 'react';
-import * as THREE from 'three';
+import { Vector2, Color, Mesh, DoubleSide } from 'three';
 
 const vertexShader = `
   varying vec2 vUv;
@@ -60,18 +60,18 @@ const fragmentShader = `
 `;
 
 interface RippleGridProps {
-  mousePos: React.RefObject<THREE.Vector2>;
+  mousePos: React.RefObject<Vector2>;
 }
 
 const RippleGrid = ({ mousePos }: RippleGridProps) => {
-  const meshRef = useRef<THREE.Mesh>(null);
+  const meshRef = useRef<Mesh>(null);
   const { size } = useThree();
   
   const uniforms = useMemo(() => ({
     uTime: { value: 0 },
-    uMouse: { value: new THREE.Vector2(0, 0) },
-    uResolution: { value: new THREE.Vector2(size.width, size.height) },
-    uGridColor: { value: new THREE.Color('#3b82f6') },
+    uMouse: { value: new Vector2(0, 0) },
+    uResolution: { value: new Vector2(size.width, size.height) },
+    uGridColor: { value: new Color('#3b82f6') },
     uRippleRadius: { value: 0.8 },
     uGridSize: { value: 40.0 },
   }), []);
@@ -91,7 +91,7 @@ const RippleGrid = ({ mousePos }: RippleGridProps) => {
         fragmentShader={fragmentShader}
         uniforms={uniforms}
         transparent
-        side={THREE.DoubleSide}
+        side={DoubleSide}
       />
     </mesh>
   );
@@ -108,7 +108,7 @@ const Scene = ({ mousePos }: RippleGridProps) => {
 
 const HeroBackgroundScene = () => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const mousePos = useRef(new THREE.Vector2(0, 0));
+  const mousePos = useRef(new Vector2(0, 0));
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handlePointerMove = useCallback((event: PointerEvent) => {
