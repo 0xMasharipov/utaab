@@ -106,21 +106,50 @@ const Scene = ({ mousePos }: RippleGridProps) => {
   );
 };
 
+// Cache DPR to avoid forced reflow during render
+const cachedDpr = typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 1, 2) : 1;
+
 const HeroBackgroundScene = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const mousePos = useRef(new Vector2(0, 0));
   const containerRef = useRef<HTMLDivElement>(null);
+  // Cache window dimensions to avoid forced reflows on every pointer move
+  const windowSize = useRef({ width: 1, height: 1 });
+  const rafId = useRef<number>(0);
+
+  // Update cached window size only when necessary
+  useEffect(() => {
+    const updateSize = () => {
+      windowSize.current.width = window.innerWidth || 1;
+      windowSize.current.height = window.innerHeight || 1;
+    };
+    updateSize();
+    window.addEventListener('resize', updateSize, { passive: true });
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
 
   const handlePointerMove = useCallback((event: PointerEvent) => {
-    mousePos.current.set(
-      (event.clientX / window.innerWidth) * 2 - 1,
-      -(event.clientY / window.innerHeight) * 2 + 1
-    );
+    // Cancel any pending RAF to avoid stacking
+    if (rafId.current) {
+      cancelAnimationFrame(rafId.current);
+    }
+    // Batch the update in the next animation frame to avoid forced reflows
+    rafId.current = requestAnimationFrame(() => {
+      mousePos.current.set(
+        (event.clientX / windowSize.current.width) * 2 - 1,
+        -(event.clientY / windowSize.current.height) * 2 + 1
+      );
+    });
   }, []);
 
   useEffect(() => {
-    window.addEventListener('pointermove', handlePointerMove);
-    return () => window.removeEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove);
+      if (rafId.current) {
+        cancelAnimationFrame(rafId.current);
+      }
+    };
   }, [handlePointerMove]);
 
   return (
@@ -140,7 +169,7 @@ const HeroBackgroundScene = () => {
           near: 0.1,
           far: 100
         }}
-        dpr={Math.min(window.devicePixelRatio, 2)}
+        dpr={cachedDpr}
         gl={{ 
           antialias: true,
           alpha: true
