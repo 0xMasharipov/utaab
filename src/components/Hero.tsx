@@ -13,13 +13,25 @@ const useDeferredLoad = (delay = 100) => {
   const [shouldLoad, setShouldLoad] = useState(false);
   
   useEffect(() => {
-    // Use requestIdleCallback if available, otherwise setTimeout
-    if ('requestIdleCallback' in window) {
-      const id = window.requestIdleCallback(() => setShouldLoad(true), { timeout: delay });
-      return () => window.cancelIdleCallback(id);
+    // Wait for the page to be fully interactive before loading heavy 3D scene
+    // This ensures TTI is not blocked by Three.js initialization
+    const loadAfterInteractive = () => {
+      if ('requestIdleCallback' in window) {
+        const id = window.requestIdleCallback(() => setShouldLoad(true), { timeout: 2000 });
+        return () => window.cancelIdleCallback(id);
+      } else {
+        const timer = setTimeout(() => setShouldLoad(true), delay);
+        return () => clearTimeout(timer);
+      }
+    };
+    
+    // Defer loading until after the page has finished initial parsing and layout
+    if (document.readyState === 'complete') {
+      return loadAfterInteractive();
     } else {
-      const timer = setTimeout(() => setShouldLoad(true), delay);
-      return () => clearTimeout(timer);
+      const handleLoad = () => loadAfterInteractive();
+      window.addEventListener('load', handleLoad, { once: true });
+      return () => window.removeEventListener('load', handleLoad);
     }
   }, [delay]);
   
@@ -29,7 +41,7 @@ const useDeferredLoad = (delay = 100) => {
 export const Hero = () => {
   const { t } = useTranslation();
   const { getTransitionClasses } = useLanguageTransition();
-  const shouldLoadScene = useDeferredLoad(150); // Defer 3D scene loading
+  const shouldLoadScene = useDeferredLoad(500); // Defer 3D scene until after TTI
 
   const scrollToJoin = () => {
     const element = document.getElementById('join');
