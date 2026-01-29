@@ -2,15 +2,34 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState, useEffect } from 'react';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 
-// Lazy load the 3D scene for better performance
+// Lazy load the 3D scene for better performance - deferred until after initial paint
 const HeroBackgroundScene = lazy(() => import('@/components/three/HeroBackgroundScene'));
+
+// Hook to defer loading heavy components until after initial render
+const useDeferredLoad = (delay = 100) => {
+  const [shouldLoad, setShouldLoad] = useState(false);
+  
+  useEffect(() => {
+    // Use requestIdleCallback if available, otherwise setTimeout
+    if ('requestIdleCallback' in window) {
+      const id = window.requestIdleCallback(() => setShouldLoad(true), { timeout: delay });
+      return () => window.cancelIdleCallback(id);
+    } else {
+      const timer = setTimeout(() => setShouldLoad(true), delay);
+      return () => clearTimeout(timer);
+    }
+  }, [delay]);
+  
+  return shouldLoad;
+};
 
 export const Hero = () => {
   const { t } = useTranslation();
   const { getTransitionClasses } = useLanguageTransition();
+  const shouldLoadScene = useDeferredLoad(150); // Defer 3D scene loading
 
   const scrollToJoin = () => {
     const element = document.getElementById('join');
@@ -46,12 +65,15 @@ export const Hero = () => {
 
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
-      {/* 3D Blockchain Background */}
-      <Suspense fallback={
-        <div className="absolute inset-0 bg-black" />
-      }>
-        <HeroBackgroundScene />
-      </Suspense>
+      {/* 3D Blockchain Background - deferred loading */}
+      {shouldLoadScene && (
+        <Suspense fallback={
+          <div className="absolute inset-0 bg-black" />
+        }>
+          <HeroBackgroundScene />
+        </Suspense>
+      )}
+      {!shouldLoadScene && <div className="absolute inset-0 bg-black" />}
 
       {/* Content overlay */}
       <div className="section-container relative z-10 text-center py-24 sm:py-28 md:py-32">
