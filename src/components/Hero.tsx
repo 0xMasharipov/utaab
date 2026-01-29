@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
 import { lazy, Suspense, useState, useEffect } from 'react';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Lazy load the 3D scene for better performance - deferred until after initial paint
 const HeroBackgroundScene = lazy(() => import('@/components/three/HeroBackgroundScene'));
@@ -41,7 +42,9 @@ const useDeferredLoad = (delay = 100) => {
 export const Hero = () => {
   const { t } = useTranslation();
   const { getTransitionClasses } = useLanguageTransition();
-  const shouldLoadScene = useDeferredLoad(500); // Defer 3D scene until after TTI
+  const isMobile = useIsMobile();
+  // Skip Three.js on mobile to save ~215KB and improve TTI
+  const shouldLoadScene = useDeferredLoad(500) && !isMobile;
 
   const scrollToJoin = () => {
     const element = document.getElementById('join');
