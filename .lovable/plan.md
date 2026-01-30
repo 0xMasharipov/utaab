@@ -1,223 +1,127 @@
 
-# Mobile Performance Optimization Plan
+# Admin Panel IP Address and Registered Users Display Plan
+
+## Overview
+
+This plan addresses three requirements:
+1. Show IP addresses on the Security section
+2. Show IP addresses on the Audit Log section
+3. Show all registered users in the Users & Roles "All Users" tab
 
 ## Current State Analysis
 
-Based on my exploration, the following optimizations have already been implemented:
-- Logo image optimized to 80x80 WebP format (`logo-small.webp`)
-- Non-blocking font loading using the `media="print"` trick
-- Preload hint for the logo in `index.html`
-- Deferred Three.js loading using `requestIdleCallback` 
-- All routes are lazy-loaded in `App.tsx`
-- Tailwind CSS purging is properly configured
+### 1. Security Section (`AdminSecurity.tsx`)
+- **IP addresses are already displayed** in the Security Events table (line 328-329)
+- The query fetches `ip_address` from `security_events` table
+- However, the current data shows `ip_address: <nil>` for most events because the edge functions are not capturing IP addresses properly
 
-However, these optimizations have **not yet been published**, which is why the audit still shows the old metrics. Additionally, there are several remaining issues that need addressing.
+### 2. Audit Log Section (`AdminAuditLog.tsx`)
+- The `audit_log` table has an `ip_address` column (confirmed from schema)
+- Currently shows **masked IP addresses** (lines 149-152) using format: `XX.XX.***.***.***`
+- The masking is intentional for privacy but may be too aggressive
 
----
+### 3. Users & Roles Section (`AdminUsers.tsx`)
+- Currently only displays users from `education_profiles` table
+- This only shows users who completed the education registration form
+- **Missing**: Users who signed up but didn't complete the education profile
 
-## Issue-by-Issue Action Plan
+## Changes Required
 
-### 1. Avoid Multiple Page Redirects (Est. savings: 780ms)
-**Root Cause:** Traffic is being redirected from `utaab.lovable.app` to `utaab.org`, adding 780ms latency.
+### Change 1: Audit Log - Show Full IP Addresses for Admins
 
-**Solution:** Set `utaab.org` as the primary domain in project settings.
+**File:** `src/pages/education/admin/AdminAuditLog.tsx`
 
-**Action Required:**
-- Navigate to Project Settings > Domains
-- Set `utaab.org` as the primary domain
-- This is a configuration change, not a code change
-
----
-
-### 2. Document Request Latency (Est. savings: 60ms)
-**Root Cause:** Related to the redirect issue above.
-
-**Solution:** Resolves automatically when the primary domain redirect is fixed.
-
----
-
-### 3. First Contentful Paint (Est. savings: 4.5s)
-**Root Cause:** Render-blocking resources and large image assets.
-
-**Already Implemented:**
-- Non-blocking font loading
-- Preload hint for logo
-
-**Needs Publishing:** The current changes need to be published to take effect.
-
----
-
-### 4. Improve Image Delivery (Est. savings: 370 KiB)
-**Root Cause:** The audit is still seeing the old 1250x1250 PNG logo.
-
-**Already Implemented:**
-- Optimized logo (`logo-small.webp`) at 80x80 pixels
-- Updated `Navbar.tsx` to use the new asset
-- Preload hint added to `index.html`
-
-**Needs Publishing:** Changes need to be deployed.
-
----
-
-### 5. Largest Contentful Paint (Est. savings: 7.7s)
-**Root Cause:** Combination of render-blocking fonts, large images, and JavaScript execution.
-
-**Already Implemented:**
-- Non-blocking fonts
-- Optimized logo with preload
-
-**Additional Optimization Needed:**
-- Add `fetchpriority="high"` to the preloaded logo (already done in Navbar)
-- Ensure the Hero section renders immediately without waiting for JS
-
----
-
-### 6. Minimize Main-Thread Work (Est. savings: 3.6s)
-**Root Cause:** Heavy Three.js initialization and Framer Motion animations on mobile.
-
-**Already Implemented:**
-- Three.js is deferred using `requestIdleCallback` with 2-second timeout
-- Scene only loads after page is fully interactive
-
-**Additional Optimization Needed:**
-- Conditionally disable Three.js on mobile devices to save ~215KB of JavaScript
-- Simplify or disable complex animations on mobile using `prefers-reduced-motion`
-
----
-
-### 7. Network Dependency Tree
-**Root Cause:** Critical request chains are long.
-
-**Solution:**
-- Inline critical CSS for above-the-fold content
-- Continue using preconnect/dns-prefetch hints (already done)
-- Ensure Three.js chunk is not in the critical path (already done)
-
----
-
-### 8. Reduce Unused CSS (Est. savings: 13 KiB)
-**Analysis:** This is a false positive for SPAs. The CSS bundle contains styles for all pages, but Lighthouse only audits the homepage.
-
-**Decision:** No changes recommended - modifying this would break other pages.
-
----
-
-### 9. Reduce Unused JavaScript (Est. savings: 208 KiB)
-**Root Cause:** Three.js and Framer Motion bundles are large.
-
-**Already Implemented:**
-- All routes are lazy-loaded
-- Three.js is deferred until after page is interactive
-
-**Additional Optimization Needed:**
-- Skip loading Three.js entirely on mobile devices (saves ~215KB)
-- This provides the biggest performance win for mobile users
-
----
-
-### 10. Render Blocking Requests (Est. savings: 1,350ms)
-**Root Cause:** Font loading was blocking render.
-
-**Already Implemented:**
-- Non-blocking font loading with `media="print"` trick
-
-**Needs Publishing:** Changes are in place but not deployed.
-
----
-
-### 11. Speed Index (Est. savings: 6.0s)
-**Already Implemented:**
-- Optimized logo image
-- Non-blocking fonts
-
-**Needs Publishing:** Deploy current changes.
-
----
-
-### 12. Time to Interactive (Est. savings: 7.8s)
-**Already Implemented:**
-- Three.js deferred with `requestIdleCallback`
-- All routes lazy-loaded
-
-**Additional Optimization Needed:**
-- Disable Three.js on mobile to prevent main-thread blocking entirely
-
----
-
-### 13. Use Efficient Cache Lifetimes (Est. savings: 952 KiB)
-**Root Cause:** Server is not setting proper cache-control headers.
-
-**Solution:** Add caching headers configuration to Vite build or server configuration.
-
-**Note:** This requires server-side configuration that may be handled by the hosting platform (Lovable).
-
----
-
-## Technical Implementation Details
-
-### Change 1: Disable Three.js on Mobile Devices
-
-Update `src/components/Hero.tsx` to skip loading the Three.js scene on mobile:
-
-```text
-// Add mobile detection hook
-const useIsMobile = () => {
-  const [isMobile, setIsMobile] = useState(false);
-  
-  useEffect(() => {
-    // Check if this is a mobile device based on screen width
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-  
-  return isMobile;
-};
-
-// In Hero component:
-const isMobile = useIsMobile();
-const shouldLoadScene = useDeferredLoad(500) && !isMobile;
+Currently, IP addresses are masked too aggressively:
+```typescript
+IP: {String(log.ip_address).split('.').slice(0, 2).join('.')}.***.***.***
 ```
 
-This prevents the ~215KB Three.js bundle from loading on mobile devices, significantly improving TTI and reducing main-thread work.
-
-### Change 2: Add Inline Critical CSS
-
-Add a minimal inline style block in `index.html` to render the page skeleton immediately:
-
-```text
-<style>
-  body{background:#0a0a0f;color:#fafafa;font-family:system-ui,sans-serif}
-  #root{min-height:100vh}
-  .loading-skeleton{display:flex;align-items:center;justify-content:center;min-height:100vh}
-</style>
+Change to show full IP address for admin visibility (admins need full IP for security auditing):
+```typescript
+IP: {log.ip_address}
 ```
 
-This ensures the page has a visible background immediately, improving perceived load time.
+Also add IP address as a visible column in the card display for better visibility.
 
-### Change 3: Update Vite Config for Better Code Splitting
+### Change 2: Admin Users - Add Email Column from Auth
 
-Add manual chunks configuration to separate heavy dependencies:
+**File:** `src/pages/admin/AdminUsers.tsx`
+
+The "All Users" tab needs to show user emails. Currently the table only shows:
+- Name
+- Department
+- Role
+- Joined
+
+We need to add an **Email** column. The email can be fetched using the `lookup-user-by-email` edge function or we can query the education profile email preferences.
+
+Since we don't have direct access to `auth.users`, we'll need to:
+1. Use the existing `education_profiles` data (which already has email information in preferences)
+2. Create an edge function to lookup emails securely
+
+For now, we can add the email lookup by calling the `lookup-user-by-email` edge function for each user, OR we can store email in education_profiles.
+
+**Better approach**: Query the email from the user's auth session or add email lookup via a new secure edge function that returns user emails for admin view.
+
+---
+
+## Technical Implementation
+
+### File 1: `src/pages/education/admin/AdminAuditLog.tsx`
+
+**Changes:**
+- Remove IP masking for admin view (admins need full IP for security purposes)
+- Add a dedicated IP column in the card layout
+- Add IP address badge/display
+
+### File 2: `src/pages/admin/AdminUsers.tsx`
+
+**Changes:**
+- Add "Email" column to the All Users, Admins, and Community Admins tables
+- Create an edge function or use existing lookup to get user emails
+- Fetch emails securely for admin viewing
+
+### File 3: New Edge Function - `get-user-emails` (if needed)
+
+Create an edge function that:
+- Validates admin role
+- Returns user_id -> email mapping for admin dashboard
+- Uses service_role to query auth.users
+
+---
+
+## Implementation Details
+
+### Audit Log IP Display Update
 
 ```text
-build: {
-  rollupOptions: {
-    output: {
-      manualChunks: {
-        'vendor-react': ['react', 'react-dom'],
-        'vendor-router': ['react-router-dom'],
-        'vendor-motion': ['framer-motion'],
-        'vendor-three': ['three', '@react-three/fiber', '@react-three/drei'],
-      }
-    }
-  }
-}
+// Remove masking, show full IP for admin auditing
+<p className="text-xs text-muted-foreground font-mono">
+  IP: {log.ip_address || 'N/A'}
+</p>
 ```
 
-This ensures Three.js is completely separate and only loaded when needed.
+### Users Table Email Column
+
+```text
+// Add email column to table header
+<TableHead>Email</TableHead>
+
+// Add email cell in table body
+<TableCell>{user.email || lookupEmail(user.user_id)}</TableCell>
+```
+
+### Edge Function for Email Lookup
+
+Since we need to access auth.users (which is restricted), we'll create an edge function:
+
+```text
+// supabase/functions/get-admin-users/index.ts
+- Verify caller has admin role
+- Use service_role client to query auth.users
+- Return user_id, email pairs
+- Join with education_profiles data
+```
 
 ---
 
@@ -225,36 +129,13 @@ This ensures Three.js is completely separate and only loaded when needed.
 
 | File | Change |
 |------|--------|
-| `src/components/Hero.tsx` | Add mobile detection to skip Three.js on mobile |
-| `index.html` | Add inline critical CSS for immediate render |
-| `vite.config.ts` | Add manual chunks for better code splitting |
+| `src/pages/education/admin/AdminAuditLog.tsx` | Show full IP addresses instead of masked |
+| `src/pages/admin/AdminUsers.tsx` | Add Email column, fetch emails via edge function |
+| `supabase/functions/get-admin-users/index.ts` | New edge function to get user emails for admins |
 
-## Configuration Changes Required
+## Expected Result
 
-| Setting | Action |
-|---------|--------|
-| Primary Domain | Set `utaab.org` as primary to eliminate 780ms redirect |
-| Publish | Deploy current optimizations (logo, fonts) to production |
-
-## Expected Impact
-
-After implementation and publishing:
-
-| Metric | Current | Expected |
-|--------|---------|----------|
-| Page Redirects | 780ms | 0ms |
-| Image Delivery | 370 KiB wasted | ~0 KiB wasted |
-| JS Bundle (mobile) | +215 KiB Three.js | 0 KiB (skipped) |
-| FCP | ~4.5s | ~1-2s |
-| LCP | ~7.7s | ~2-3s |
-| TTI | ~7.8s | ~2-3s |
-| Speed Index | ~6s | ~2-3s |
-
----
-
-## Recommended Order of Actions
-
-1. Approve and implement the code changes (mobile Three.js skip, critical CSS, code splitting)
-2. Publish the application to deploy all pending optimizations
-3. Set `utaab.org` as the primary domain in project settings
-4. Re-run the performance audit to verify improvements
+After implementation:
+1. **Security Section**: Already shows IP addresses (no changes needed)
+2. **Audit Log**: Will show full IP addresses in each log entry
+3. **Users & Roles**: Will show Name, Email, Department, Role, and Joined date for all registered users
