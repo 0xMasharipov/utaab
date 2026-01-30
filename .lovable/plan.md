@@ -1,48 +1,107 @@
 
-# Delete Subtitle Page from Admin Panel
+# Fix Duplicate Admin Invitation Error
 
-## Overview
+## Problem
 
-Remove the subtitle management page from the admin panel, including its route, navigation item, and page component.
+When trying to invite an admin user, you get the error:
+```
+Failed to send invitation: duplicate key value violates unique constraint "admin_invitations_email_key"
+```
+
+This happens because the `admin_invitations` table has a unique constraint on the `email` column. If an invitation already exists for that email (even if it's expired), a new invitation cannot be inserted.
+
+## Current Data
+
+The database shows existing invitations:
+- `hamzaliabdulla@gmail.com` - pending invitation (expires Feb 1, 2026)
+- `dotrue03@gmail.com` - pending invitation (expired Dec 27, 2025)
+
+## Solution
+
+Add a pre-check before inserting a new invitation that:
+1. Checks if an invitation already exists for the email
+2. If it exists and is expired, delete it and create a new one
+3. If it exists and is still pending (not expired), show a user-friendly error message
 
 ## Changes Required
 
-### 1. Remove Route and Import from App.tsx
+### File: `src/pages/admin/AdminUsers.tsx`
 
-**File:** `src/App.tsx`
+Update the `handleSendInvite` function to:
 
-Remove:
-- Line 38: The lazy import for `AdminSubtitles`
-- Line 85: The route definition `<Route path="subtitles" element={<AdminSubtitles />} />`
+```typescript
+const handleSendInvite = async () => {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Not authenticated');
 
-### 2. Remove Sidebar Navigation Item from AdminLayout.tsx
+    // Check if an invitation already exists for this email
+    const { data: existingInvite, error: checkError } = await supabase
+      .from('admin_invitations')
+      .select('id, expires_at, accepted_at')
+      .eq('email', newInvite.email)
+      .maybeSingle();
 
-**File:** `src/components/admin/AdminLayout.tsx`
+    if (checkError) throw checkError;
 
-Remove:
-- Line 19: The `Subtitles` icon import from lucide-react
-- Line 35: The sidebar navigation item `{ icon: Subtitles, label: 'Subtitles', path: '/admin/subtitles' }`
+    if (existingInvite) {
+      const isExpired = new Date(existingInvite.expires_at) < new Date();
+      const isAccepted = existingInvite.accepted_at !== null;
 
-### 3. Delete the Page Component
+      if (isAccepted) {
+        toast.error('This user has already accepted an invitation');
+        return;
+      }
 
-**File to delete:** `src/pages/admin/AdminSubtitles.tsx`
+      if (!isExpired) {
+        toast.error('An active invitation already exists for this email');
+        return;
+      }
 
-This entire file (297 lines) will be removed.
+      // Delete expired invitation before creating new one
+      const { error: deleteError } = await supabase
+        .from('admin_invitations')
+        .delete()
+        .eq('id', existingInvite.id);
 
----
+      if (deleteError) throw deleteError;
+    }
+
+    // Insert new invitation
+    const { error } = await supabase.from('admin_invitations').insert([{
+      email: newInvite.email,
+      role: newInvite.role as any,
+      invited_by: user.id,
+    }]);
+
+    if (error) throw error;
+
+    toast.success('Invitation sent successfully');
+    setInviteDialogOpen(false);
+    setNewInvite({ email: '', role: 'moderator' });
+  } catch (error: any) {
+    toast.error('Failed to send invitation: ' + error.message);
+  }
+};
+```
+
+### File: `supabase/functions/convert-applicant-to-user/index.ts`
+
+Apply the same logic to the edge function that creates invitations when converting applicants:
+
+- Before inserting into `admin_invitations`, check for existing invitations
+- Delete expired ones, block if active/accepted
 
 ## Summary
 
-| Action | File | Description |
-|--------|------|-------------|
-| Edit | `src/App.tsx` | Remove import and route |
-| Edit | `src/components/admin/AdminLayout.tsx` | Remove icon import and sidebar item |
-| Delete | `src/pages/admin/AdminSubtitles.tsx` | Remove entire file |
+| File | Change |
+|------|--------|
+| `src/pages/admin/AdminUsers.tsx` | Add duplicate check before inserting invitation |
+| `supabase/functions/convert-applicant-to-user/index.ts` | Add duplicate check before inserting invitation |
 
-## Impact
+## Result
 
-- The `/admin/subtitles` route will no longer be accessible
-- The "Subtitles" link will be removed from the admin sidebar
-- No other features depend on this page
-
-Note: The subtitle VTT files in `/public/subtitles/` and the database tables (`subtitle_jobs`, `lecture_subtitles`) will remain intact. Only the admin UI for managing subtitles will be removed.
+After this fix:
+- Expired invitations will be automatically replaced
+- Active invitations will show a clear error message
+- Accepted invitations will be blocked from re-inviting
