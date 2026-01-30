@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { UserPlus, Search, Filter, MoreVertical, Shield, Ban, Mail, Users } from 'lucide-react';
+import { UserPlus, Search, Filter, MoreVertical, Shield, Ban, Mail, Users, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,6 +22,7 @@ import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 import { RoleManagementDialog } from '@/components/admin/RoleManagementDialog';
+import { useToast } from '@/hooks/use-toast';
 
 // Role badge colors
 const ROLE_COLORS: Record<string, string> = {
@@ -33,72 +34,81 @@ const ROLE_COLORS: Record<string, string> = {
   user: 'bg-gray-500/20 text-gray-400 border-gray-500/50',
 };
 
-interface UserRole {
-  role: string;
-}
-
-interface UserProfile {
+interface AdminUser {
   id: string;
-  user_id: string;
-  full_name: string;
-  department: string;
-  role: string;
+  email: string | null;
   created_at: string;
-  user_roles: UserRole[];
+  email_confirmed_at: string | null;
+  last_sign_in_at: string | null;
+  full_name: string | null;
+  department: string | null;
+  profile_role: string | null;
+  user_roles: string[];
+  has_profile: boolean;
 }
 
 export const AdminUsers = () => {
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
-  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
+  const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
   const [isRoleDialogOpen, setIsRoleDialogOpen] = useState(false);
 
-  const { data: profiles, isLoading, refetch } = useQuery({
-    queryKey: ['admin-profiles'],
+  // Fetch all users via secure edge function
+  const { data: users, isLoading, refetch } = useQuery({
+    queryKey: ['admin-all-users'],
     queryFn: async () => {
-      const { data: profilesData, error } = await supabase
-        .from('education_profiles')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (error) throw error;
-
-      // Fetch user roles for all profiles
-      // Admins can now see all roles thanks to the new RLS policy
-      const profilesWithRoles = await Promise.all(
-        (profilesData || []).map(async (profile) => {
-          const { data: rolesData } = await supabase
-            .from('user_roles')
-            .select('role')
-            .eq('user_id', profile.user_id);
-          return { ...profile, user_roles: rolesData || [] };
-        })
-      );
+      const { data: { session } } = await supabase.auth.getSession();
       
-      return profilesWithRoles as UserProfile[];
+      if (!session?.access_token) {
+        throw new Error('Not authenticated');
+      }
+
+      const response = await supabase.functions.invoke('get-admin-users', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (response.error) {
+        throw new Error(response.error.message || 'Failed to fetch users');
+      }
+
+      return response.data.users as AdminUser[];
     },
   });
 
   // Count roles for stats
-  const roleStats = profiles?.reduce((acc, profile) => {
-    profile.user_roles?.forEach((r) => {
-      acc[r.role] = (acc[r.role] || 0) + 1;
+  const roleStats = users?.reduce((acc, user) => {
+    user.user_roles?.forEach((role) => {
+      acc[role] = (acc[role] || 0) + 1;
     });
     return acc;
   }, {} as Record<string, number>) || {};
 
-  const filteredProfiles = profiles?.filter((profile) => {
-    const matchesSearch = profile.full_name?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesRole = roleFilter === 'all' || profile.user_roles?.some((r) => r.role === roleFilter);
+  const filteredUsers = users?.filter((user) => {
+    const matchesSearch = 
+      user.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.email?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesRole = roleFilter === 'all' || user.user_roles?.includes(roleFilter);
     return matchesSearch && matchesRole;
   });
 
-  const handleManageRoles = (profile: UserProfile) => {
-    setSelectedUser(profile);
+  const handleManageRoles = (user: AdminUser) => {
+    setSelectedUser(user);
     setIsRoleDialogOpen(true);
   };
 
   const handleRoleUpdated = () => {
     refetch();
+  };
+
+  const handleRefresh = () => {
+    refetch();
+    toast({
+      title: 'Refreshed',
+      description: 'User list updated',
+    });
   };
 
   return (
@@ -109,10 +119,16 @@ export const AdminUsers = () => {
           <h1 className="text-3xl font-bold">Users & Roles</h1>
           <p className="text-muted-foreground">Manage user accounts and permissions</p>
         </div>
-        <Button className="btn-primary">
-          <UserPlus className="h-4 w-4 mr-2" />
-          Invite User
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handleRefresh} className="glass">
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Refresh
+          </Button>
+          <Button className="btn-primary">
+            <UserPlus className="h-4 w-4 mr-2" />
+            Invite User
+          </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -124,7 +140,7 @@ export const AdminUsers = () => {
           <CardContent>
             <div className="flex items-center gap-2">
               <Users className="h-5 w-5 text-primary" />
-              <span className="text-2xl font-bold">{profiles?.length || 0}</span>
+              <span className="text-2xl font-bold">{users?.length || 0}</span>
             </div>
           </CardContent>
         </Card>
@@ -170,7 +186,7 @@ export const AdminUsers = () => {
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search users..."
+                placeholder="Search by name or email..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -203,39 +219,63 @@ export const AdminUsers = () => {
               <p className="text-muted-foreground">Loading users...</p>
             </CardContent>
           </Card>
-        ) : filteredProfiles && filteredProfiles.length > 0 ? (
-          filteredProfiles.map((profile) => (
-            <Card key={profile.id} className="glass hover:shadow-lg transition-all">
+        ) : filteredUsers && filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => (
+            <Card key={user.id} className="glass hover:shadow-lg transition-all">
               <CardContent className="p-6">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-start gap-4 flex-1 min-w-0">
                     <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
                       <span className="text-lg font-bold text-primary">
-                        {profile.full_name?.charAt(0).toUpperCase()}
+                        {(user.full_name || user.email || '?').charAt(0).toUpperCase()}
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1 flex-wrap">
-                        <h3 className="font-semibold truncate">{profile.full_name}</h3>
-                        {profile.user_roles && profile.user_roles.length > 0 && (
+                        <h3 className="font-semibold truncate">
+                          {user.full_name || 'No Profile'}
+                        </h3>
+                        {user.user_roles && user.user_roles.length > 0 && (
                           <div className="flex gap-1 flex-wrap">
-                            {profile.user_roles.map((r, idx) => (
+                            {user.user_roles.map((role, idx) => (
                               <Badge 
                                 key={idx} 
-                                className={`text-xs ${ROLE_COLORS[r.role] || ROLE_COLORS.user}`}
+                                className={`text-xs ${ROLE_COLORS[role] || ROLE_COLORS.user}`}
                               >
-                                {r.role === 'community_admin' ? 'Community' : r.role.charAt(0).toUpperCase() + r.role.slice(1)}
+                                {role === 'community_admin' ? 'Community' : role.charAt(0).toUpperCase() + role.slice(1)}
                               </Badge>
                             ))}
                           </div>
                         )}
-                        {(!profile.user_roles || profile.user_roles.length === 0) && (
+                        {(!user.user_roles || user.user_roles.length === 0) && (
                           <Badge className={ROLE_COLORS.user}>No Roles</Badge>
+                        )}
+                        {!user.has_profile && (
+                          <Badge variant="outline" className="text-xs text-orange-400 border-orange-400/50">
+                            No Profile
+                          </Badge>
                         )}
                       </div>
                       <div className="space-y-1 text-sm text-muted-foreground">
-                        <p>{profile.department} • {profile.role}</p>
-                        <p>Joined {format(new Date(profile.created_at), 'MMM dd, yyyy')}</p>
+                        <p className="flex items-center gap-1.5">
+                          <Mail className="h-3.5 w-3.5" />
+                          <span className="font-mono text-xs">{user.email || 'N/A'}</span>
+                          {user.email_confirmed_at && (
+                            <Badge variant="outline" className="text-xs text-green-400 border-green-400/50 ml-1">
+                              Verified
+                            </Badge>
+                          )}
+                        </p>
+                        <p>
+                          {user.department && `${user.department} • `}
+                          {user.profile_role && `${user.profile_role} • `}
+                          Joined {format(new Date(user.created_at), 'MMM dd, yyyy')}
+                        </p>
+                        {user.last_sign_in_at && (
+                          <p className="text-xs">
+                            Last login: {format(new Date(user.last_sign_in_at), 'MMM dd, yyyy HH:mm')}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -246,7 +286,7 @@ export const AdminUsers = () => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="glass-strong">
-                      <DropdownMenuItem onClick={() => handleManageRoles(profile)}>
+                      <DropdownMenuItem onClick={() => handleManageRoles(user)}>
                         <Shield className="h-4 w-4 mr-2" />
                         Manage Roles
                       </DropdownMenuItem>
@@ -283,12 +323,19 @@ export const AdminUsers = () => {
       </div>
 
       {/* Role Management Dialog */}
-      <RoleManagementDialog
-        user={selectedUser}
-        open={isRoleDialogOpen}
-        onOpenChange={setIsRoleDialogOpen}
-        onRoleUpdated={handleRoleUpdated}
-      />
+      {selectedUser && (
+        <RoleManagementDialog
+          user={{
+            id: selectedUser.id,
+            user_id: selectedUser.id,
+            full_name: selectedUser.full_name || selectedUser.email || 'Unknown',
+            user_roles: selectedUser.user_roles.map(r => ({ role: r })),
+          }}
+          open={isRoleDialogOpen}
+          onOpenChange={setIsRoleDialogOpen}
+          onRoleUpdated={handleRoleUpdated}
+        />
+      )}
     </div>
   );
 };
