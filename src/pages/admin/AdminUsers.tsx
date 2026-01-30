@@ -155,6 +155,39 @@ export default function AdminUsers() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
+      // Check if an invitation already exists for this email
+      const { data: existingInvite, error: checkError } = await supabase
+        .from('admin_invitations')
+        .select('id, expires_at, accepted_at')
+        .eq('email', newInvite.email)
+        .maybeSingle();
+
+      if (checkError) throw checkError;
+
+      if (existingInvite) {
+        const isExpired = new Date(existingInvite.expires_at) < new Date();
+        const isAccepted = existingInvite.accepted_at !== null;
+
+        if (isAccepted) {
+          toast.error('This user has already accepted an invitation');
+          return;
+        }
+
+        if (!isExpired) {
+          toast.error('An active invitation already exists for this email');
+          return;
+        }
+
+        // Delete expired invitation before creating new one
+        const { error: deleteError } = await supabase
+          .from('admin_invitations')
+          .delete()
+          .eq('id', existingInvite.id);
+
+        if (deleteError) throw deleteError;
+      }
+
+      // Insert new invitation
       const { error } = await supabase.from('admin_invitations').insert([{
         email: newInvite.email,
         role: newInvite.role as any,

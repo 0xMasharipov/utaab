@@ -130,6 +130,54 @@ serve(async (req: Request) => {
     let result: { success: boolean; message: string; userId?: string; inviteToken?: string };
 
     if (action === "invite") {
+      // Check if an invitation already exists for this email
+      const { data: existingInvite, error: checkError } = await adminClient
+        .from("admin_invitations")
+        .select("id, expires_at, accepted_at")
+        .eq("email", application.email)
+        .maybeSingle();
+
+      if (checkError) {
+        console.error("Failed to check existing invitation:", checkError);
+        return new Response(
+          JSON.stringify({ error: "Failed to check existing invitation" }),
+          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      if (existingInvite) {
+        const isExpired = new Date(existingInvite.expires_at) < new Date();
+        const isAccepted = existingInvite.accepted_at !== null;
+
+        if (isAccepted) {
+          return new Response(
+            JSON.stringify({ error: "This user has already accepted an invitation" }),
+            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+
+        if (!isExpired) {
+          return new Response(
+            JSON.stringify({ error: "An active invitation already exists for this email" }),
+            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+
+        // Delete expired invitation before creating new one
+        const { error: deleteError } = await adminClient
+          .from("admin_invitations")
+          .delete()
+          .eq("id", existingInvite.id);
+
+        if (deleteError) {
+          console.error("Failed to delete expired invitation:", deleteError);
+          return new Response(
+            JSON.stringify({ error: "Failed to replace expired invitation" }),
+            { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+      }
+
       // Generate secure invite token
       const inviteToken = crypto.randomUUID() + crypto.randomUUID().replace(/-/g, "");
       const expiresAt = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString(); // 48 hours
