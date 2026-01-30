@@ -35,7 +35,7 @@ const AdminCommunities = lazy(() => import("./pages/admin/AdminCommunities"));
 const AdminCommunityDetail = lazy(() => import("./pages/admin/AdminCommunityDetail"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const AdminSettingsNew = lazy(() => import("./pages/admin/AdminSettingsNew"));
-const AdminSubtitles = lazy(() => import("./pages/admin/AdminSubtitles"));
+
 const Profile = lazy(() => import("./pages/Profile"));
 const KVKKRequest = lazy(() => import("./pages/KVKKRequest").then(m => ({ default: m.KVKKRequest })));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy").then(m => ({ default: m.PrivacyPolicy })));
@@ -82,7 +82,7 @@ function App() {
               <Route path="announcements" element={<AdminAnnouncements />} />
               <Route path="messages" element={<AdminMessages />} />
               <Route path="media" element={<AdminMedia />} />
-              <Route path="subtitles" element={<AdminSubtitles />} />
+              
               <Route path="settings" element={<AdminSettingsNew />} />
               <Route path="audit" element={<AdminAuditLog />} />
               <Route path="security" element={<AdminSecurity />} />
