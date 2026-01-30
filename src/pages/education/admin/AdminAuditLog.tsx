@@ -146,11 +146,9 @@ export const AdminAuditLog = () => {
                       <span className="font-medium">{log.entity_type}</span>
                       {log.entity_name && <span>: {log.entity_name}</span>}
                     </p>
-                    {log.ip_address && (
-                      <p className="text-xs text-muted-foreground">
-                        IP: {String(log.ip_address).split('.').slice(0, 2).join('.')}.***.***.***
-                      </p>
-                    )}
+                    <p className="text-xs text-muted-foreground font-mono">
+                      IP: {String(log.ip_address) || 'N/A'}
+                    </p>
                   </div>
                 </div>
               </CardContent>
