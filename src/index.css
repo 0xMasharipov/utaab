@@ -246,6 +246,26 @@
     @apply truncate max-w-[100px] md:max-w-[120px] lg:max-w-none;
   }
   
+  /* Mobile hero background */
+  .mobile-hero-gradient {
+    background:
+      radial-gradient(ellipse at 20% 50%, hsl(var(--primary) / 0.25) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, hsl(var(--accent) / 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 60% 80%, hsl(var(--primary) / 0.18) 0%, transparent 55%);
+    background-size: 200% 200%;
+    animation: mobile-hero-pulse 12s ease-in-out infinite;
+  }
+
+  .mobile-hero-grid {
+    background-image: radial-gradient(circle, hsl(var(--accent) / 0.18) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  @keyframes mobile-hero-pulse {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
   /* Language transition utilities */
   .lang-transition {
     transition: opacity 0.2s ease-out, transform 0.2s ease-out;

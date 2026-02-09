@@ -8,6 +8,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 
 // Lazy load the 3D scene for better performance - deferred until after initial paint
 const HeroBackgroundScene = lazy(() => import('@/components/three/HeroBackgroundScene'));
+import MobileHeroBackground from '@/components/three/MobileHeroBackground';
 
 // Hook to defer loading heavy components until after initial render
 const useDeferredLoad = (delay = 100) => {
@@ -88,7 +89,7 @@ export const Hero = () => {
           <HeroBackgroundScene />
         </Suspense>
       )}
-      {!shouldLoadScene && <div className="absolute inset-0 bg-black" />}
+      {!shouldLoadScene && <MobileHeroBackground />}
 
       {/* Content overlay */}
       <div className="section-container relative z-10 text-center py-24 sm:py-28 md:py-32">
