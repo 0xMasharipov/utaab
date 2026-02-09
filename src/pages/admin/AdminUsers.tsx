@@ -32,6 +32,7 @@ import {
 } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ApplicantConversionDialog } from '@/components/admin/ApplicantConversionDialog';
+import { RoleManagementDialog } from '@/components/admin/RoleManagementDialog';
 
 // Status badge configuration
 const STATUS_BADGES: Record<string, { variant: 'default' | 'secondary' | 'destructive' | 'outline'; label: string }> = {
@@ -55,6 +56,8 @@ export default function AdminUsers() {
   const [previewDialogOpen, setPreviewDialogOpen] = useState(false);
   const [conversionDialogOpen, setConversionDialogOpen] = useState(false);
   const [selectedApplicantForConversion, setSelectedApplicantForConversion] = useState<any>(null);
+  const [selectedUserForRole, setSelectedUserForRole] = useState<any>(null);
+  const [roleDialogOpen, setRoleDialogOpen] = useState(false);
   const [newInvite, setNewInvite] = useState({
     email: '',
     role: 'moderator',
@@ -389,6 +392,7 @@ export default function AdminUsers() {
                   <TableHead>Department</TableHead>
                   <TableHead>Role</TableHead>
                   <TableHead>Joined</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -399,6 +403,19 @@ export default function AdminUsers() {
                     <TableCell>{getRoleBadge(user.user_roles)}</TableCell>
                     <TableCell>
                       {new Date(user.created_at).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        title="Manage Roles"
+                        onClick={() => {
+                          setSelectedUserForRole(user);
+                          setRoleDialogOpen(true);
+                        }}
+                      >
+                        <Shield className="h-4 w-4" />
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -771,6 +788,14 @@ export default function AdminUsers() {
         open={conversionDialogOpen}
         onOpenChange={setConversionDialogOpen}
         onSuccess={fetchData}
+      />
+
+      {/* Role Management Dialog */}
+      <RoleManagementDialog
+        user={selectedUserForRole}
+        open={roleDialogOpen}
+        onOpenChange={setRoleDialogOpen}
+        onRoleUpdated={fetchData}
       />
     </div>
   );
