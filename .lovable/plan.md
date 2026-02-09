@@ -1,43 +1,48 @@
 
 
-# Add Direct Role Assignment to Main Admin Panel
+# Fix Hero Background on Mobile Devices
 
 ## Problem
-1. The duplicate invitation error has already been fixed (expired invites are now auto-deleted).
-2. However, the invitation flow is still the **only** way to grant roles from `/admin/users`. The direct role assignment dialog (`RoleManagementDialog`) exists but is only connected to the education admin panel at `/education/admin/users`.
+The hero section's 3D ripple grid background is intentionally disabled on mobile (`&& !isMobile`), leaving only a plain black `<div>`. This creates a visually empty hero on phones/tablets.
 
 ## Solution
-Wire up the existing `RoleManagementDialog` component into the main admin users page, giving admins a second way to manage roles for any registered user -- without needing to send an invitation at all.
+Replace the plain black fallback with a lightweight CSS-only animated gradient background that mirrors the brand aesthetic without loading Three.js on mobile.
 
-## Changes Required
+## Changes
 
-### File: `src/pages/admin/AdminUsers.tsx`
+### File: `src/components/Hero.tsx`
+- Keep the `!isMobile` guard for the heavy Three.js scene (preserving performance)
+- When `!shouldLoadScene`, render a new `<MobileHeroBackground />` component instead of the plain black div
 
-1. **Import** `RoleManagementDialog` from `@/components/admin/RoleManagementDialog`
-2. **Add state** for the selected user and dialog visibility:
-   - `selectedUserForRole` (the user object)
-   - `roleDialogOpen` (boolean)
-3. **Add a "Manage Roles" button** (Shield icon) to each user row in the registered users table
-4. **Render** the `RoleManagementDialog` at the bottom of the component, passing the selected user and a callback to refresh the user list on update
+### File: `src/components/three/MobileHeroBackground.tsx` (new)
+- A lightweight CSS-only component with:
+  - Animated radial gradient using brand colors (primary blue `#1a56db`, accent blue `#60a5fa`, black)
+  - Subtle floating dot grid using a CSS `radial-gradient` pattern to echo the desktop ripple grid
+  - A slow CSS animation (`gradient-flow` or similar) for visual movement
+  - No JavaScript animation libraries, no Three.js -- pure CSS for zero performance cost
 
-### No other files need to change
-The `RoleManagementDialog` component and the `manage-user-role` edge function already exist and are fully functional.
+### File: `src/index.css`
+- Add a `@keyframes mobile-hero-pulse` animation for the subtle gradient shift
+- Add `.mobile-hero-grid` utility class for the dot pattern overlay
 
-## How It Will Work
+## Visual Result
+- **Desktop**: Full interactive Three.js ripple grid (unchanged)
+- **Mobile**: Lightweight animated gradient with static dot pattern overlay, matching the blue/black brand palette
 
-- In the **Registered Users** tab, each user row will show a shield icon button
-- Clicking it opens the role management dialog showing all available roles (admin, moderator, instructor, community_admin, student, user)
-- The admin can toggle roles on/off and save -- changes go through the secure `manage-user-role` edge function
-- All changes are logged to the audit log
+## Performance Impact
+- Zero additional JS bundle size
+- CSS-only animation runs on GPU compositor thread
+- No impact on TTI or LCP metrics
 
-## Summary
+## Technical Details
+
+```
+Desktop path:  shouldLoadScene=true  --> <HeroBackgroundScene /> (Three.js)
+Mobile path:   shouldLoadScene=false --> <MobileHeroBackground /> (CSS-only)
+```
 
 | File | Change |
 |------|--------|
-| `src/pages/admin/AdminUsers.tsx` | Add RoleManagementDialog import, state, button, and dialog render |
-
-## Result
-Admins will have **two ways** to grant roles:
-1. **Invitation flow** -- for users not yet registered (with the duplicate fix already in place)
-2. **Direct role assignment** -- for users already registered, via the Manage Roles dialog
-
+| `src/components/Hero.tsx` | Import and render MobileHeroBackground when scene is skipped |
+| `src/components/three/MobileHeroBackground.tsx` | New lightweight CSS animated background |
+| `src/index.css` | Add mobile hero keyframes and dot grid utility |
