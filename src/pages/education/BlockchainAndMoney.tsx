@@ -121,9 +121,17 @@ export const BlockchainAndMoney = () => {
           <div className="animate-fade-in">
             <div className="flex items-center gap-3 mb-4">
               <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/MIT_logo.svg/180px-MIT_logo.svg.png"
+                src="/images/mit-logo.svg"
                 alt="MIT Logo"
                 className="h-12 w-auto"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  target.style.display = 'none';
+                  const fallback = document.createElement('span');
+                  fallback.textContent = 'MIT';
+                  fallback.className = 'text-2xl font-bold text-foreground tracking-wider';
+                  target.parentElement?.insertBefore(fallback, target);
+                }}
               />
               <div className="h-8 w-px bg-white/20" />
               <span className="text-muted-foreground font-montserrat text-sm">

@@ -28,6 +28,7 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [logoLoaded, setLogoLoaded] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
@@ -174,26 +175,32 @@ export const Navbar = () => {
             className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity flex-shrink-0"
             aria-label="UTAAB - Home"
           >
-            <img 
-              src={logo} 
-              alt="UTAA Blockchain" 
-              className="h-8 sm:h-10 w-auto mix-blend-lighten brightness-110" 
-              width="40" 
-              height="40"
-              fetchPriority="high"
-              decoding="async"
-            />
+            <div className="relative h-8 sm:h-10 w-8 sm:w-10 flex-shrink-0">
+              {!logoLoaded && (
+                <div className="absolute inset-0 rounded-lg bg-muted animate-pulse" />
+              )}
+              <img 
+                src={logo} 
+                alt="UTAA Blockchain" 
+                className={`h-8 sm:h-10 w-auto mix-blend-lighten brightness-110 transition-opacity duration-500 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
+                width="40" 
+                height="40"
+                fetchPriority="high"
+                decoding="async"
+                onLoad={() => setLogoLoaded(true)}
+              />
+            </div>
             <BrandText 
               variant="navbar-mobile" 
-              className="sm:hidden"
+              className={`sm:hidden transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
             />
             <BrandText 
               variant="navbar-tablet" 
-              className="hidden sm:block md:hidden"
+              className={`hidden sm:block md:hidden transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
             />
             <BrandText 
               variant="navbar-desktop" 
-              className="hidden md:block"
+              className={`hidden md:block transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
             />
           </button>
 

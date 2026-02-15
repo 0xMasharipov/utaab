@@ -29,6 +29,7 @@ export const EducationNavbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [logoLoaded, setLogoLoaded] = useState(false);
   // SECURITY NOTE: This client-side isAdmin check is for UX only (showing/hiding UI elements).
   // All actual admin operations MUST be validated server-side in edge functions.
   const [isAdmin, setIsAdmin] = useState(false);
@@ -168,18 +169,28 @@ export const EducationNavbar = () => {
             className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity"
             aria-label="UTAA Blockchain Education - Home"
           >
-            <img src={logo} alt="UTAA Blockchain" className="h-8 sm:h-10 w-auto" />
+            <div className="relative h-8 sm:h-10 w-8 sm:w-10 flex-shrink-0">
+              {!logoLoaded && (
+                <div className="absolute inset-0 rounded-lg bg-muted animate-pulse" />
+              )}
+              <img 
+                src={logo} 
+                alt="UTAA Blockchain" 
+                className={`h-8 sm:h-10 w-auto transition-opacity duration-500 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
+                onLoad={() => setLogoLoaded(true)}
+              />
+            </div>
             <BrandText 
               variant="navbar-mobile" 
-              className="sm:hidden"
+              className={`sm:hidden transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
             />
             <BrandText 
               variant="navbar-tablet" 
-              className="hidden sm:block md:hidden"
+              className={`hidden sm:block md:hidden transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
             />
             <BrandText 
               variant="navbar-desktop" 
-              className="hidden md:block"
+              className={`hidden md:block transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
             />
           </button>
 
