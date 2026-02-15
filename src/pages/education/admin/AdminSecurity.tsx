@@ -168,18 +168,24 @@ export const AdminSecurity = () => {
     }
   };
 
-  const handleTerminateSession = async (sessionId: string) => {
+  const handleTerminateSession = async (sessionId: string, targetUserId: string) => {
     try {
-      const { error } = await supabase
-        .from('admin_sessions')
-        .delete()
-        .eq('id', sessionId);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) throw new Error('Not authenticated');
 
-      if (error) throw error;
+      const res = await supabase.functions.invoke('terminate-admin-session', {
+        body: { session_id: sessionId, target_user_id: targetUserId },
+      });
 
+      if (res.error) throw res.error;
+
+      const result = res.data;
       toast({
-        title: 'Success',
-        description: 'Session terminated',
+        title: 'Session Terminated',
+        description: result.auth_revoked
+          ? 'Session terminated and user signed out immediately'
+          : 'Session deleted but auth revocation failed — user may remain active briefly',
+        variant: result.auth_revoked ? 'default' : 'destructive',
       });
 
       refetchSessions();
@@ -450,7 +456,7 @@ export const AdminSecurity = () => {
                             <Button
                               variant="destructive"
                               size="sm"
-                              onClick={() => handleTerminateSession(session.id)}
+                              onClick={() => handleTerminateSession(session.id, session.user_id)}
                             >
                               <Trash2 className="h-3 w-3 mr-1" />
                               Terminate
