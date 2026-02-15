@@ -1778,6 +1778,30 @@ export type Database = {
         }
         Relationships: []
       }
+      utaab_global_rate_limits: {
+        Row: {
+          created_at: string | null
+          endpoint: string
+          id: string
+          request_count: number | null
+          window_start: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          endpoint: string
+          id?: string
+          request_count?: number | null
+          window_start?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          endpoint?: string
+          id?: string
+          request_count?: number | null
+          window_start?: string | null
+        }
+        Relationships: []
+      }
       utaab_rate_limits: {
         Row: {
           banned_until: string | null

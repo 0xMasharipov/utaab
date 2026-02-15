@@ -13,18 +13,14 @@ const allowedOrigins = [
 const lovableDomainPatterns = [
   /^https:\/\/[a-z0-9-]+\.lovableproject\.com$/,
   /^https:\/\/[a-z0-9-]+\.preview\.lovableproject\.com$/,
-  /^https:\/\/id-[a-z0-9]+\.lovableproject\.com$/,
+  /^https:\/\/id-[a-z0-9-]+\.lovable\.app$/,
   /^http:\/\/localhost:\d+$/,
 ];
 
 function getCorsHeaders(req: Request) {
   const origin = req.headers.get('origin') || '';
-  
-  // Check if origin matches allowed list or patterns
   const isAllowed = allowedOrigins.includes(origin) || 
                     lovableDomainPatterns.some(pattern => pattern.test(origin));
-  
-  console.log('[UTAAB] CORS check - Origin:', origin, 'Allowed:', isAllowed);
   
   return {
     'Access-Control-Allow-Origin': isAllowed ? origin : (allowedOrigins[0] || '*'),
@@ -35,16 +31,19 @@ function getCorsHeaders(req: Request) {
 
 // Rate limit tiers configuration
 const RATE_LIMIT_CONFIG = {
-  tier1: { limit: 10, windowMs: 60000 },      // 10 requests/minute
-  tier2: { limit: 30, windowMs: 300000 },     // 30 requests/5min
-  tier3: { limit: 100, windowMs: 3600000 },   // 100 requests/hour
+  tier1: { limit: 10, windowMs: 60000 },
+  tier2: { limit: 30, windowMs: 300000 },
+  tier3: { limit: 100, windowMs: 3600000 },
   escalation: {
-    tempBanMs: 3600000,      // 1 hour temp ban after 3 violations
-    permBanMs: 604800000,    // 7 day ban after 5 violations
+    tempBanMs: 3600000,
+    permBanMs: 604800000,
     violationThreshold: 3,
     permBanThreshold: 5
   }
 };
+
+// Global rate limit configuration
+const GLOBAL_RATE_LIMIT = { limit: 500, windowMs: 60000 };
 
 // Risk score weights
 const RISK_WEIGHTS = {
@@ -61,6 +60,8 @@ const RISK_WEIGHTS = {
   failedPow: 35,
   ipBanned: 50,
   highRateLimit: 25,
+  fingerprintRateLimitViolation: 25,
+  globalPressure: 15,
 };
 
 interface VerifyRequest {
@@ -108,82 +109,173 @@ async function verifyProofOfWork(challenge: string, nonce: string, difficulty: n
 // Calculate risk score from fingerprint
 function calculateFingerprintRisk(fingerprint: VerifyRequest['fingerprint']): number {
   let score = 0;
-  
-  // Check for headless browser indicators
   if (!fingerprint.webglRenderer || fingerprint.webglRenderer.includes('SwiftShader')) {
     score += RISK_WEIGHTS.headlessBrowser;
   }
-  
-  // Check for missing WebGL
   if (!fingerprint.webglRenderer) {
     score += RISK_WEIGHTS.missingWebGL;
   }
-  
-  // Check screen resolution
   if (fingerprint.screenResolution) {
     const [width, height] = fingerprint.screenResolution.split('x').map(Number);
     if (width < 800 || height < 600 || width > 7680 || height > 4320) {
       score += RISK_WEIGHTS.unusualScreen;
     }
   }
-  
-  // Check audio context
   if (fingerprint.audioContext === false) {
     score += RISK_WEIGHTS.missingAudioContext;
   }
-  
-  // Check hardware concurrency (most real devices have 2-32 cores)
   if (fingerprint.hardwareConcurrency && (fingerprint.hardwareConcurrency < 2 || fingerprint.hardwareConcurrency > 128)) {
     score += 10;
   }
-  
   return score;
 }
 
 // Calculate risk score from behavior
 function calculateBehaviorRisk(behavior: VerifyRequest['behavior']): number {
   let score = 0;
-  
-  // No mouse movement is suspicious
   if (behavior.mouseMovements === 0) {
     score += RISK_WEIGHTS.noMouseMovement;
   }
-  
-  // Very low entropy suggests linear/programmatic movement
   if (behavior.mouseEntropy < 0.5 && behavior.mouseMovements > 0) {
     score += RISK_WEIGHTS.linearMouseMovement;
   }
-  
-  // Too fast form completion (under 3 seconds)
   if (behavior.timeOnPage < 3000) {
     score += RISK_WEIGHTS.tooFastFormCompletion;
   }
-  
-  // No keyboard events for a form submission
   if (behavior.keystrokeCount === 0) {
     score += RISK_WEIGHTS.noKeyboardEvents;
   }
-  
-  // Instant form focus (under 500ms)
   if (behavior.formFocusTime < 500) {
     score += RISK_WEIGHTS.instantFormFocus;
   }
-  
-  // Very regular keystroke timing (bots type uniformly)
   if (behavior.keystrokeCount > 5 && behavior.avgKeystrokeInterval > 0) {
-    const variance = behavior.avgKeystrokeInterval;
-    if (variance < 20) { // Less than 20ms variance is suspicious
+    if (behavior.avgKeystrokeInterval < 20) {
       score += 15;
     }
   }
-  
   return score;
+}
+
+// Check rate limits for a given identifier (IP or fingerprint hash)
+async function checkIdentifierRateLimit(
+  supabase: ReturnType<typeof createClient>,
+  identifier: string
+): Promise<{ violation: boolean; banned: boolean; retryAfter?: number; highestViolationCount: number }> {
+  let violation = false;
+  let highestViolationCount = 0;
+
+  for (const [tier, config] of Object.entries(RATE_LIMIT_CONFIG).filter(([k]) => k.startsWith('tier'))) {
+    const { limit, windowMs } = config as { limit: number; windowMs: number };
+    const windowStart = new Date(Date.now() - windowMs).toISOString();
+
+    const { data: existing } = await supabase
+      .from('utaab_rate_limits')
+      .select('*')
+      .eq('identifier', identifier)
+      .eq('tier', tier)
+      .gte('window_start', windowStart)
+      .single();
+
+    if (existing) {
+      if (existing.banned_until && new Date(existing.banned_until) > new Date()) {
+        return {
+          violation: true,
+          banned: true,
+          retryAfter: Math.ceil((new Date(existing.banned_until).getTime() - Date.now()) / 1000),
+          highestViolationCount: existing.violation_count
+        };
+      }
+
+      if (existing.request_count >= limit) {
+        violation = true;
+        const newViolationCount = existing.violation_count + 1;
+        highestViolationCount = Math.max(highestViolationCount, newViolationCount);
+
+        let bannedUntil = null;
+        if (newViolationCount >= RATE_LIMIT_CONFIG.escalation.permBanThreshold) {
+          bannedUntil = new Date(Date.now() + RATE_LIMIT_CONFIG.escalation.permBanMs).toISOString();
+        } else if (newViolationCount >= RATE_LIMIT_CONFIG.escalation.violationThreshold) {
+          bannedUntil = new Date(Date.now() + RATE_LIMIT_CONFIG.escalation.tempBanMs).toISOString();
+        }
+
+        await supabase
+          .from('utaab_rate_limits')
+          .update({ violation_count: newViolationCount, banned_until: bannedUntil, updated_at: new Date().toISOString() })
+          .eq('id', existing.id);
+      } else {
+        await supabase
+          .from('utaab_rate_limits')
+          .update({ request_count: existing.request_count + 1, updated_at: new Date().toISOString() })
+          .eq('id', existing.id);
+      }
+    } else {
+      await supabase.from('utaab_rate_limits').insert({
+        identifier,
+        tier,
+        request_count: 1,
+        violation_count: 0,
+        window_start: new Date().toISOString()
+      });
+    }
+  }
+
+  return { violation, banned: false, highestViolationCount };
+}
+
+// Check global endpoint rate limit and return pressure status
+async function checkGlobalRateLimit(
+  supabase: ReturnType<typeof createClient>,
+  endpoint: string,
+  clientIp: string,
+  userAgent: string
+): Promise<{ globalPressure: boolean }> {
+  const windowStart = new Date(Date.now() - GLOBAL_RATE_LIMIT.windowMs).toISOString();
+
+  const { data: existing } = await supabase
+    .from('utaab_global_rate_limits')
+    .select('*')
+    .eq('endpoint', endpoint)
+    .gte('window_start', windowStart)
+    .order('window_start', { ascending: false })
+    .limit(1)
+    .single();
+
+  let currentCount = 1;
+
+  if (existing) {
+    currentCount = existing.request_count + 1;
+    await supabase
+      .from('utaab_global_rate_limits')
+      .update({ request_count: currentCount })
+      .eq('id', existing.id);
+  } else {
+    await supabase.from('utaab_global_rate_limits').insert({
+      endpoint,
+      request_count: 1,
+      window_start: new Date().toISOString()
+    });
+  }
+
+  // Log security event if global limit breached
+  if (currentCount >= GLOBAL_RATE_LIMIT.limit) {
+    await supabase.rpc('log_security_event', {
+      _event_type: 'ddos_global_limit',
+      _severity: 'high',
+      _ip: clientIp,
+      _endpoint: endpoint,
+      _user_agent: userAgent,
+      _details: JSON.stringify({ request_count: currentCount, limit: GLOBAL_RATE_LIMIT.limit })
+    });
+  }
+
+  // Pressure if >80% of limit
+  const globalPressure = currentCount >= GLOBAL_RATE_LIMIT.limit * 0.8;
+  return { globalPressure };
 }
 
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req);
-  
-  // Handle CORS preflight
+
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -206,7 +298,6 @@ serve(async (req) => {
     const { data: isBlacklisted } = await supabase.rpc('is_ip_blacklisted', { _ip: clientIp });
     if (isBlacklisted) {
       console.log(`[UTAAB] IP ${clientIp} is blacklisted`);
-      
       await supabase.from('utaab_verifications').insert({
         session_id: body.sessionId,
         fingerprint_hash: body.fingerprint?.hash,
@@ -216,114 +307,56 @@ serve(async (req) => {
         user_agent: userAgent,
         behavior_data: body.behavior
       });
-
       return new Response(JSON.stringify({
-        success: false,
-        verdict: 'blocked',
-        message: 'Access denied',
-        riskScore: 100
-      }), {
-        status: 403,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      });
+        success: false, verdict: 'blocked', message: 'Access denied', riskScore: 100
+      }), { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
-    // Check rate limits across all tiers
-    let rateLimitViolation = false;
-    let highestViolationCount = 0;
+    // === 1. IP Rate Limiting ===
+    const ipResult = await checkIdentifierRateLimit(supabase, clientIp);
+    if (ipResult.banned) {
+      return new Response(JSON.stringify({
+        success: false, verdict: 'blocked',
+        message: 'Temporarily blocked due to excessive requests',
+        retryAfter: ipResult.retryAfter
+      }), { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
 
-    for (const [tier, config] of Object.entries(RATE_LIMIT_CONFIG).filter(([k]) => k.startsWith('tier'))) {
-      const { limit, windowMs } = config as { limit: number; windowMs: number };
-      const windowStart = new Date(Date.now() - windowMs).toISOString();
-
-      // Get or create rate limit entry
-      const { data: existing } = await supabase
-        .from('utaab_rate_limits')
-        .select('*')
-        .eq('identifier', clientIp)
-        .eq('tier', tier)
-        .gte('window_start', windowStart)
-        .single();
-
-      if (existing) {
-        // Check if banned
-        if (existing.banned_until && new Date(existing.banned_until) > new Date()) {
-          console.log(`[UTAAB] IP ${clientIp} is banned until ${existing.banned_until}`);
-          return new Response(JSON.stringify({
-            success: false,
-            verdict: 'blocked',
-            message: 'Temporarily blocked due to excessive requests',
-            retryAfter: Math.ceil((new Date(existing.banned_until).getTime() - Date.now()) / 1000)
-          }), {
-            status: 429,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-          });
-        }
-
-        // Check if over limit
-        if (existing.request_count >= limit) {
-          rateLimitViolation = true;
-          const newViolationCount = existing.violation_count + 1;
-          highestViolationCount = Math.max(highestViolationCount, newViolationCount);
-
-          // Apply ban if threshold reached
-          let bannedUntil = null;
-          if (newViolationCount >= RATE_LIMIT_CONFIG.escalation.permBanThreshold) {
-            bannedUntil = new Date(Date.now() + RATE_LIMIT_CONFIG.escalation.permBanMs).toISOString();
-          } else if (newViolationCount >= RATE_LIMIT_CONFIG.escalation.violationThreshold) {
-            bannedUntil = new Date(Date.now() + RATE_LIMIT_CONFIG.escalation.tempBanMs).toISOString();
-          }
-
-          await supabase
-            .from('utaab_rate_limits')
-            .update({
-              violation_count: newViolationCount,
-              banned_until: bannedUntil,
-              updated_at: new Date().toISOString()
-            })
-            .eq('id', existing.id);
-        } else {
-          // Increment counter
-          await supabase
-            .from('utaab_rate_limits')
-            .update({
-              request_count: existing.request_count + 1,
-              updated_at: new Date().toISOString()
-            })
-            .eq('id', existing.id);
-        }
-      } else {
-        // Create new entry
-        await supabase.from('utaab_rate_limits').insert({
-          identifier: clientIp,
-          tier: tier,
-          request_count: 1,
-          violation_count: 0,
-          window_start: new Date().toISOString()
-        });
+    // === 2. Fingerprint Rate Limiting ===
+    let fingerprintRateLimitViolation = false;
+    if (body.fingerprint?.hash) {
+      const fpResult = await checkIdentifierRateLimit(supabase, body.fingerprint.hash);
+      if (fpResult.banned) {
+        console.log(`[UTAAB] Fingerprint ${body.fingerprint.hash} is banned`);
+        return new Response(JSON.stringify({
+          success: false, verdict: 'blocked',
+          message: 'Temporarily blocked due to excessive requests',
+          retryAfter: fpResult.retryAfter
+        }), { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
       }
+      fingerprintRateLimitViolation = fpResult.violation;
     }
 
-    // Calculate total risk score
+    // === 3. Global Endpoint Rate Limiting ===
+    const { globalPressure } = await checkGlobalRateLimit(supabase, body.endpoint || 'unknown', clientIp, userAgent);
+
+    // === Calculate total risk score ===
     let riskScore = 0;
 
-    // Add rate limit risk
-    if (rateLimitViolation) {
-      riskScore += RISK_WEIGHTS.highRateLimit;
-    }
+    if (ipResult.violation) riskScore += RISK_WEIGHTS.highRateLimit;
+    if (fingerprintRateLimitViolation) riskScore += RISK_WEIGHTS.fingerprintRateLimitViolation;
+    if (globalPressure) riskScore += RISK_WEIGHTS.globalPressure;
 
-    // Calculate fingerprint risk
     if (body.fingerprint) {
       riskScore += calculateFingerprintRisk(body.fingerprint);
     } else {
-      riskScore += 30; // Missing fingerprint is suspicious
+      riskScore += 30;
     }
 
-    // Calculate behavior risk
     if (body.behavior) {
       riskScore += calculateBehaviorRisk(body.behavior);
     } else {
-      riskScore += 25; // Missing behavior data is suspicious
+      riskScore += 25;
     }
 
     // Verify proof of work if provided
@@ -340,10 +373,9 @@ serve(async (req) => {
       riskScore = Math.max(0, riskScore - (body.challengesPassed.length * 15));
     }
 
-    // Cap risk score at 100
     riskScore = Math.min(100, riskScore);
 
-    // Determine verdict based on risk score
+    // Determine verdict
     let verdict: 'pass' | 'fail' | 'challenge' | 'blocked';
     let requiredChallenge: string | null = null;
     let requiredPowDifficulty: number | null = null;
@@ -366,6 +398,15 @@ serve(async (req) => {
       verdict = 'blocked';
     }
 
+    // === 4. Adaptive PoW: force minimum difficulty 3 under global pressure ===
+    if (globalPressure && requiredPowDifficulty !== null && requiredPowDifficulty < 3) {
+      requiredPowDifficulty = 3;
+    }
+    if (globalPressure && verdict === 'pass') {
+      // Under pressure, even passing requests get a PoW challenge
+      requiredPowDifficulty = 3;
+    }
+
     // If already passed required challenges, upgrade verdict
     if (verdict === 'challenge' && body.challengesPassed?.includes(requiredChallenge!)) {
       verdict = 'pass';
@@ -380,7 +421,7 @@ serve(async (req) => {
       token = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    // Log verification attempt and store token for server-side validation
+    // Log verification
     await supabase.from('utaab_verifications').insert({
       session_id: body.sessionId,
       fingerprint_hash: body.fingerprint?.hash,
@@ -389,23 +430,20 @@ serve(async (req) => {
       pow_difficulty: body.pow?.difficulty,
       pow_solution: body.pow?.nonce,
       behavior_data: body.behavior,
-      verdict: verdict,
+      verdict,
       ip_address: clientIp,
       user_agent: userAgent,
-      token: token, // Store token for server-side validation
-      expires_at: token ? new Date(Date.now() + 3600000).toISOString() : null // 1 hour expiry
+      token,
+      expires_at: token ? new Date(Date.now() + 3600000).toISOString() : null
     });
 
     // Generate PoW challenge if needed
     let powChallenge = null;
     if (requiredPowDifficulty) {
-      powChallenge = {
-        challenge: crypto.randomUUID(),
-        difficulty: requiredPowDifficulty
-      };
+      powChallenge = { challenge: crypto.randomUUID(), difficulty: requiredPowDifficulty };
     }
 
-    console.log(`[UTAAB] Verification result for ${body.sessionId}: ${verdict} (risk: ${riskScore})`);
+    console.log(`[UTAAB] Result for ${body.sessionId}: ${verdict} (risk: ${riskScore}, globalPressure: ${globalPressure})`);
 
     return new Response(JSON.stringify({
       success: verdict === 'pass',
@@ -426,13 +464,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('[UTAAB] Error:', error);
     return new Response(JSON.stringify({
-      success: false,
-      verdict: 'fail',
-      message: 'Verification error',
-      riskScore: 0
-    }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-    });
+      success: false, verdict: 'fail', message: 'Verification error', riskScore: 0
+    }), { status: 500, headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' } });
   }
 });
