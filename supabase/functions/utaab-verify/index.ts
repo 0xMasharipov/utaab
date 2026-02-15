@@ -45,6 +45,14 @@ const RATE_LIMIT_CONFIG = {
 // Global rate limit configuration
 const GLOBAL_RATE_LIMIT = { limit: 500, windowMs: 60000 };
 
+// Timing analysis configuration
+const TIMING_ANALYSIS = {
+  minRequests: 8,
+  lookbackMs: 600000,    // 10 minutes
+  cvThreshold: 0.05,     // coefficient of variation below 5% = bot
+  banDurationMs: 86400000 // 24-hour ban
+};
+
 // Risk score weights
 const RISK_WEIGHTS = {
   missingWebGL: 15,
@@ -62,6 +70,7 @@ const RISK_WEIGHTS = {
   highRateLimit: 25,
   fingerprintRateLimitViolation: 25,
   globalPressure: 15,
+  consistentTimingPattern: 50,
 };
 
 interface VerifyRequest {
@@ -95,6 +104,80 @@ interface VerifyRequest {
   };
   challengesPassed?: string[];
   endpoint: string;
+}
+
+// Check timing pattern for bot detection
+async function checkTimingPattern(
+  supabase: ReturnType<typeof createClient>,
+  clientIp: string,
+  userAgent: string
+): Promise<{ botDetected: boolean; cv?: number }> {
+  const lookbackStart = new Date(Date.now() - TIMING_ANALYSIS.lookbackMs).toISOString();
+
+  const { data: recentRequests } = await supabase
+    .from('utaab_verifications')
+    .select('created_at')
+    .eq('ip_address', clientIp)
+    .eq('user_agent', userAgent)
+    .gte('created_at', lookbackStart)
+    .order('created_at', { ascending: false })
+    .limit(10);
+
+  if (!recentRequests || recentRequests.length < TIMING_ANALYSIS.minRequests) {
+    return { botDetected: false };
+  }
+
+  // Calculate intervals between consecutive requests (in ms)
+  const timestamps = recentRequests.map(r => new Date(r.created_at).getTime());
+  const intervals: number[] = [];
+  for (let i = 0; i < timestamps.length - 1; i++) {
+    intervals.push(timestamps[i] - timestamps[i + 1]); // descending order, so subtract next from current
+  }
+
+  if (intervals.length < TIMING_ANALYSIS.minRequests - 1) {
+    return { botDetected: false };
+  }
+
+  // Calculate coefficient of variation
+  const mean = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+  if (mean === 0) return { botDetected: false };
+
+  const variance = intervals.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / intervals.length;
+  const stdDev = Math.sqrt(variance);
+  const cv = stdDev / mean;
+
+  console.log(`[UTAAB] Timing analysis for ${clientIp}: CV=${cv.toFixed(4)}, mean=${(mean/1000).toFixed(1)}s, samples=${intervals.length}`);
+
+  if (cv < TIMING_ANALYSIS.cvThreshold) {
+    // Bot detected - auto-ban IP for 24 hours
+    await supabase.from('ip_blacklist').insert({
+      ip_address: clientIp,
+      reason: `timing_pattern_bot: UA=${userAgent.substring(0, 100)}`,
+      expires_at: new Date(Date.now() + TIMING_ANALYSIS.banDurationMs).toISOString(),
+      is_active: true
+    });
+
+    // Log security event
+    await supabase.rpc('log_security_event', {
+      _event_type: 'timing_pattern_bot_detected',
+      _severity: 'high',
+      _ip: clientIp,
+      _user_agent: userAgent,
+      _endpoint: 'utaab-verify',
+      _details: JSON.stringify({
+        cv: cv.toFixed(6),
+        mean_interval_ms: mean.toFixed(0),
+        std_dev_ms: stdDev.toFixed(0),
+        sample_count: intervals.length,
+        intervals_ms: intervals.map(i => Math.round(i))
+      })
+    });
+
+    console.log(`[UTAAB] Timing pattern bot detected! CV=${cv.toFixed(4)}, IP=${clientIp} banned for 24h`);
+    return { botDetected: true, cv };
+  }
+
+  return { botDetected: false, cv };
 }
 
 // Verify proof of work
@@ -309,6 +392,23 @@ serve(async (req) => {
       });
       return new Response(JSON.stringify({
         success: false, verdict: 'blocked', message: 'Access denied', riskScore: 100
+      }), { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+
+    // === Timing Pattern Analysis ===
+    const timingResult = await checkTimingPattern(supabase, clientIp, userAgent);
+    if (timingResult.botDetected) {
+      await supabase.from('utaab_verifications').insert({
+        session_id: body.sessionId,
+        fingerprint_hash: body.fingerprint?.hash,
+        risk_score: 100,
+        verdict: 'blocked',
+        ip_address: clientIp,
+        user_agent: userAgent,
+        behavior_data: body.behavior
+      });
+      return new Response(JSON.stringify({
+        success: false, verdict: 'blocked', message: 'Access denied due to suspicious activity patterns', riskScore: 100
       }), { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
