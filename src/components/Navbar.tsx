@@ -172,7 +172,7 @@ export const Navbar = () => {
             <img 
               src={logo} 
               alt="UTAA Blockchain" 
-              className="h-8 sm:h-10 w-auto bg-transparent mix-blend-lighten brightness-110 object-contain" 
+              className="h-8 sm:h-10 w-auto" 
               width="40" 
               height="40"
               fetchPriority="high"

@@ -1,36 +1,48 @@
 
-# Fix Navbar Logo Transparency and Mobile Hero Background
 
-## Problem 1: Logo Black Background
-The logo image (`logo-small.webp`) has a baked-in black/dark background. The current `mix-blend-screen` approach is not fully removing it. We need a stronger CSS approach.
+# Fix Hero Background on Mobile Devices
 
-### Fix
-**File: `src/components/Navbar.tsx`**
-- Replace `mix-blend-screen` with a combination approach:
-  - Use `mix-blend-lighten` (better at eliminating pure black pixels)
-  - Add `brightness(1.1)` filter to push dark pixels further toward transparent
-  - Keep `bg-transparent` and `object-contain`
+## Problem
+The hero section's 3D ripple grid background is intentionally disabled on mobile (`&& !isMobile`), leaving only a plain black `<div>`. This creates a visually empty hero on phones/tablets.
 
-## Problem 2: Mobile Hero Background Nearly Invisible
-The animated blobs exist but their opacity values (0.2-0.3) combined with `blur(100px)` make them nearly invisible on the dark background. The result looks like a plain black screen.
+## Solution
+Replace the plain black fallback with a lightweight CSS-only animated gradient background that mirrors the brand aesthetic without loading Three.js on mobile.
 
-### Fix
-**File: `src/index.css`**
-- Increase blob opacity values significantly:
-  - Blob 1: `hsl(var(--primary) / 0.3)` to `hsl(var(--primary) / 0.6)`
-  - Blob 2: `hsl(var(--accent) / 0.2)` to `hsl(var(--accent) / 0.5)`
-  - Blob 3: `hsl(217 91% 50% / 0.25)` to `hsl(217 91% 50% / 0.55)`
-  - Blob 4: `hsl(0 0% 100% / 0.04)` to `hsl(0 0% 100% / 0.08)`
-- Reduce blur slightly on some blobs (100px to 80px) so they remain visible
-- Add a base gradient underneath the blobs for a richer background
+## Changes
 
-**File: `src/components/three/MobileHeroBackground.tsx`**
-- Add a base gradient layer (`bg-gradient-to-br from-[#0a1628] via-[#0d1f3c] to-[#0a0f1a]`) underneath the blob layer so the background is never pure black
+### File: `src/components/Hero.tsx`
+- Keep the `!isMobile` guard for the heavy Three.js scene (preserving performance)
+- When `!shouldLoadScene`, render a new `<MobileHeroBackground />` component instead of the plain black div
 
-## Summary
+### File: `src/components/three/MobileHeroBackground.tsx` (new)
+- A lightweight CSS-only component with:
+  - Animated radial gradient using brand colors (primary blue `#1a56db`, accent blue `#60a5fa`, black)
+  - Subtle floating dot grid using a CSS `radial-gradient` pattern to echo the desktop ripple grid
+  - A slow CSS animation (`gradient-flow` or similar) for visual movement
+  - No JavaScript animation libraries, no Three.js -- pure CSS for zero performance cost
+
+### File: `src/index.css`
+- Add a `@keyframes mobile-hero-pulse` animation for the subtle gradient shift
+- Add `.mobile-hero-grid` utility class for the dot pattern overlay
+
+## Visual Result
+- **Desktop**: Full interactive Three.js ripple grid (unchanged)
+- **Mobile**: Lightweight animated gradient with static dot pattern overlay, matching the blue/black brand palette
+
+## Performance Impact
+- Zero additional JS bundle size
+- CSS-only animation runs on GPU compositor thread
+- No impact on TTI or LCP metrics
+
+## Technical Details
+
+```
+Desktop path:  shouldLoadScene=true  --> <HeroBackgroundScene /> (Three.js)
+Mobile path:   shouldLoadScene=false --> <MobileHeroBackground /> (CSS-only)
+```
 
 | File | Change |
 |------|--------|
-| `src/components/Navbar.tsx` | Switch to `mix-blend-lighten` + brightness filter for logo |
-| `src/index.css` | Double blob opacity values, reduce blur on some blobs |
-| `src/components/three/MobileHeroBackground.tsx` | Add base gradient layer under blobs |
+| `src/components/Hero.tsx` | Import and render MobileHeroBackground when scene is skipped |
+| `src/components/three/MobileHeroBackground.tsx` | New lightweight CSS animated background |
+| `src/index.css` | Add mobile hero keyframes and dot grid utility |
