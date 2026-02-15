@@ -1,9 +1,31 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 50" fill="none">
-  <rect x="0" y="0" width="16" height="50" fill="#A31F34"/>
-  <rect x="0" y="0" width="36" height="16" fill="#A31F34"/>
-  <rect x="52" y="0" width="16" height="50" fill="#A31F34"/>
-  <rect x="40" y="0" width="16" height="16" fill="#A31F34"/>
-  <rect x="40" y="34" width="16" height="16" fill="#A31F34"/>
-  <rect x="84" y="0" width="36" height="16" fill="#A31F34"/>
-  <rect x="96" y="0" width="16" height="50" fill="#A31F34"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 199 80" fill="#A31F34">
+  <!-- M letter -->
+  <!-- Left vertical bar -->
+  <rect x="0" y="0" width="16" height="80"/>
+  <!-- Top-left horizontal bar -->
+  <rect x="0" y="0" width="48" height="16"/>
+  <!-- Middle-left diagonal pillar -->
+  <rect x="32" y="0" width="16" height="48"/>
+  <!-- Center dip -->
+  <rect x="48" y="32" width="16" height="16"/>
+  <!-- Middle-right diagonal pillar -->
+  <rect x="64" y="0" width="16" height="48"/>
+  <!-- Top-right horizontal bar -->
+  <rect x="64" y="0" width="48" height="16"/>
+  <!-- Right vertical bar -->
+  <rect x="96" y="0" width="16" height="80"/>
+
+  <!-- I letter -->
+  <!-- Top serif -->
+  <rect x="128" y="0" width="16" height="16"/>
+  <!-- Vertical bar -->
+  <rect x="128" y="0" width="16" height="80"/>
+  <!-- Bottom serif -->
+  <rect x="128" y="64" width="16" height="16"/>
+
+  <!-- T letter -->
+  <!-- Top horizontal bar -->
+  <rect x="159" y="0" width="40" height="16"/>
+  <!-- Vertical bar (centered) -->
+  <rect x="171" y="0" width="16" height="80"/>
 </svg>
