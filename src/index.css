@@ -9,13 +9,13 @@
 @layer base {
   :root {
     /* Core Colors - Black, Blue, White palette */
-    --background: 0 0% 4%;
+    --background: 217 50% 6%;
     --foreground: 0 0% 98%;
     
-    --card: 0 0% 7%;
+    --card: 217 40% 9%;
     --card-foreground: 0 0% 98%;
     
-    --popover: 0 0% 7%;
+    --popover: 217 40% 9%;
     --popover-foreground: 0 0% 98%;
     
     /* Primary - Deep Blue */
@@ -27,7 +27,7 @@
     --secondary-foreground: 0 0% 100%;
     
     /* Muted - Dark with subtle blue */
-    --muted: 217 33% 10%;
+    --muted: 217 40% 12%;
     --muted-foreground: 217 10% 60%;
     
     /* Accent - Bright Blue */
