@@ -689,5 +689,36 @@
         }
       }
     }
+  },
+  "team": {
+    "title": "Our Team",
+    "subtitle": "The visionaries building the future of Web3 education and community",
+    "members": {
+      "zinurbek": {
+        "name": "Zinurbek Masharipo",
+        "position": "Founder",
+        "description": "Visionary leader driving UTAAB's mission to democratize blockchain education and foster Web3 innovation."
+      },
+      "yunus": {
+        "name": "Yunus Emre Erçin",
+        "position": "CTO",
+        "description": "Architecting scalable decentralized systems and leading the technical vision for next-gen Web3 infrastructure."
+      },
+      "abdulla": {
+        "name": "Abdulla Hamzali",
+        "position": "Head of Engineering",
+        "description": "Building robust smart contract ecosystems and mentoring the next generation of blockchain developers."
+      },
+      "abdulbaki": {
+        "name": "Abdulbaki Karaman",
+        "position": "CFO",
+        "description": "Strategizing sustainable tokenomics and financial frameworks for decentralized community growth."
+      },
+      "umut": {
+        "name": "Umut Tekbaş",
+        "position": "HR Manager",
+        "description": "Cultivating talent pipelines and building a diverse, inclusive Web3 community of builders and creators."
+      }
+    }
   }
 }

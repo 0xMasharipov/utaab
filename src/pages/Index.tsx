@@ -7,11 +7,13 @@ import { Learn } from '@/components/Learn';
 import { Events } from '@/components/Events';
 import { Projects } from '@/components/Projects';
 import { Resources } from '@/components/Resources';
+import { Team } from '@/components/Team';
 import { Join } from '@/components/Join';
 import { Footer } from '@/components/Footer';
 import { PrivacyPopup } from '@/components/PrivacyPopup';
 import { PrivacyCenter } from '@/components/PrivacyCenter';
 import { FloatingPrivacyButton } from '@/components/FloatingPrivacyButton';
+import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
 
 
 const Index = () => {
@@ -19,7 +21,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      
+      <AnimatedBlobBackground />
       <Navbar />
       <Hero />
       <Stats />
@@ -28,6 +30,7 @@ const Index = () => {
       <Events />
       <Projects />
       <Resources />
+      <Team />
       <Join />
       <Footer onPrivacyClick={() => setIsPrivacyCenterOpen(true)} />
       
