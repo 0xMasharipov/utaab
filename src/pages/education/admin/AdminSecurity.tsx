@@ -23,8 +23,13 @@ import {
   RefreshCw,
   TrendingUp,
   AlertCircle,
+  Users,
+  Trash2,
+  Globe,
+  Monitor,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { format, formatDistanceToNow } from 'date-fns';
 
 export const AdminSecurity = () => {
   const { toast } = useToast();
@@ -88,6 +93,21 @@ export const AdminSecurity = () => {
     },
   });
 
+  // Fetch active admin sessions
+  const { data: adminSessions, refetch: refetchSessions } = useQuery({
+    queryKey: ['admin-sessions'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('admin_sessions')
+        .select('*')
+        .gt('expires_at', new Date().toISOString())
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+    refetchInterval: 30000,
+  });
+
   const handleAddBlacklist = async () => {
     if (!newBlacklistIP || !blacklistReason) {
       toast({
@@ -139,6 +159,30 @@ export const AdminSecurity = () => {
       });
 
       refetchBlacklist();
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleTerminateSession = async (sessionId: string) => {
+    try {
+      const { error } = await supabase
+        .from('admin_sessions')
+        .delete()
+        .eq('id', sessionId);
+
+      if (error) throw error;
+
+      toast({
+        title: 'Success',
+        description: 'Session terminated',
+      });
+
+      refetchSessions();
     } catch (error: any) {
       toast({
         title: 'Error',
@@ -282,6 +326,7 @@ export const AdminSecurity = () => {
       <Tabs defaultValue="events" className="space-y-4">
         <TabsList className="glass-strong">
           <TabsTrigger value="events">Security Events</TabsTrigger>
+          <TabsTrigger value="sessions">Active Sessions</TabsTrigger>
           <TabsTrigger value="blacklist">IP Blacklist</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
@@ -339,6 +384,86 @@ export const AdminSecurity = () => {
               ) : (
                 <p className="text-muted-foreground text-center py-8">
                   No security events in the selected period
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Active Sessions Tab */}
+        <TabsContent value="sessions" className="space-y-4">
+          <Card className="glass-strong border-white/20">
+            <CardHeader>
+              <CardTitle className="text-foreground flex items-center gap-2">
+                <Users className="h-5 w-5" />
+                Active Admin Sessions
+              </CardTitle>
+              <CardDescription>
+                Currently active admin sessions with IP and device info
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {adminSessions && adminSessions.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-white/10">
+                        <TableHead className="text-foreground">User</TableHead>
+                        <TableHead className="text-foreground">IP Address</TableHead>
+                        <TableHead className="text-foreground">User Agent</TableHead>
+                        <TableHead className="text-foreground">Created</TableHead>
+                        <TableHead className="text-foreground">Expires</TableHead>
+                        <TableHead className="text-foreground">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {adminSessions.map((session: any) => (
+                        <TableRow key={session.id} className="border-white/10">
+                          <TableCell className="text-foreground font-mono text-xs">
+                            {session.user_id?.substring(0, 8)}...
+                          </TableCell>
+                          <TableCell>
+                            <span className="inline-flex items-center gap-1 text-foreground font-mono text-sm">
+                              <Globe className="h-3 w-3 text-muted-foreground" />
+                              {session.ip_address || 'N/A'}
+                            </span>
+                          </TableCell>
+                          <TableCell>
+                            <span className="inline-flex items-center gap-1 text-muted-foreground text-xs max-w-[200px] truncate">
+                              <Monitor className="h-3 w-3 flex-shrink-0" />
+                              {session.user_agent || 'N/A'}
+                            </span>
+                          </TableCell>
+                          <TableCell className="text-muted-foreground text-sm">
+                            {format(new Date(session.created_at), 'MMM dd, HH:mm')}
+                            <div className="text-xs">
+                              {formatDistanceToNow(new Date(session.created_at), { addSuffix: true })}
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-muted-foreground text-sm">
+                            {format(new Date(session.expires_at), 'MMM dd, HH:mm')}
+                            <div className="text-xs">
+                              {formatDistanceToNow(new Date(session.expires_at), { addSuffix: true })}
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => handleTerminateSession(session.id)}
+                            >
+                              <Trash2 className="h-3 w-3 mr-1" />
+                              Terminate
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              ) : (
+                <p className="text-muted-foreground text-center py-8">
+                  No active admin sessions
                 </p>
               )}
             </CardContent>

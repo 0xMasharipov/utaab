@@ -26,3 +26,6 @@ verify_jwt = false
 
 [functions.convert-applicant-to-user]
 verify_jwt = false
+
+[functions.admin-login-log]
+verify_jwt = false

@@ -89,6 +89,26 @@ export const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
   }, [navigate]);
 
   const handleSignOut = async () => {
+    try {
+      // Clean up admin session on logout
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        await supabase
+          .from('admin_sessions')
+          .delete()
+          .eq('user_id', session.user.id);
+
+        // Log logout server-side
+        await supabase.functions.invoke('admin-login-log', {
+          body: {
+            event_type: 'admin_logout',
+            email: session.user.email || '',
+          },
+        });
+      }
+    } catch (e) {
+      console.error('Logout cleanup error:', e);
+    }
     await supabase.auth.signOut();
     navigate('/education');
   };
