@@ -1,48 +1,45 @@
 
+# Refine Navbar Logo and Hero Background
 
-# Fix Hero Background on Mobile Devices
+## 1. Transparent Logo Background in Navbar
 
-## Problem
-The hero section's 3D ripple grid background is intentionally disabled on mobile (`&& !isMobile`), leaving only a plain black `<div>`. This creates a visually empty hero on phones/tablets.
+The logo image (`logo-small.webp`) may have a non-transparent background baked into the file itself. Since we cannot edit the image file directly, we will use CSS to ensure any visible background blends seamlessly with the navbar glass effect. We will also remove any unintentional background bleeding by adding `mix-blend-mode` and ensuring the `<img>` element has no background color applied.
 
-## Solution
-Replace the plain black fallback with a lightweight CSS-only animated gradient background that mirrors the brand aesthetic without loading Three.js on mobile.
+**File: `src/components/Navbar.tsx`**
+- Add `mix-blend-mode: lighten` or `screen` to the logo `<img>` tag to visually remove any dark background from the logo image
+- Add `bg-transparent` explicitly and `object-contain` for clean rendering
 
-## Changes
+## 2. Modernize Mobile Hero Background with Dynamic Blue Blobs
 
-### File: `src/components/Hero.tsx`
-- Keep the `!isMobile` guard for the heavy Three.js scene (preserving performance)
-- When `!shouldLoadScene`, render a new `<MobileHeroBackground />` component instead of the plain black div
+Replace the current static radial gradients + dot grid with animated floating blue blobs that move organically.
 
-### File: `src/components/three/MobileHeroBackground.tsx` (new)
-- A lightweight CSS-only component with:
-  - Animated radial gradient using brand colors (primary blue `#1a56db`, accent blue `#60a5fa`, black)
-  - Subtle floating dot grid using a CSS `radial-gradient` pattern to echo the desktop ripple grid
-  - A slow CSS animation (`gradient-flow` or similar) for visual movement
-  - No JavaScript animation libraries, no Three.js -- pure CSS for zero performance cost
+**File: `src/components/three/MobileHeroBackground.tsx`**
+- Add 3-4 animated blob `<div>` elements with large border-radius, blur, and brand blue colors
+- Each blob gets a different CSS animation (float, drift, morph) with staggered delays
+- Remove the static dot grid overlay (or make it very subtle)
 
-### File: `src/index.css`
-- Add a `@keyframes mobile-hero-pulse` animation for the subtle gradient shift
-- Add `.mobile-hero-grid` utility class for the dot pattern overlay
+**File: `src/index.css`**
+- Replace `.mobile-hero-gradient` with individual blob animations:
+  - `@keyframes blob-float-1` -- slow vertical drift (20s cycle)
+  - `@keyframes blob-float-2` -- diagonal drift (25s cycle)
+  - `@keyframes blob-float-3` -- horizontal drift (18s cycle)
+  - `@keyframes blob-morph` -- subtle scale/border-radius morphing (12s cycle)
+- Each blob uses `filter: blur(80-120px)` for soft edges
+- Colors: `hsl(var(--primary) / 0.3)`, `hsl(var(--accent) / 0.2)`, `hsl(217 91% 50% / 0.25)`
+- Reduce `.mobile-hero-grid` opacity to 0.08 for a very subtle texture
 
-## Visual Result
-- **Desktop**: Full interactive Three.js ripple grid (unchanged)
-- **Mobile**: Lightweight animated gradient with static dot pattern overlay, matching the blue/black brand palette
+## 3. Improve Desktop Hero Background Animations
 
-## Performance Impact
-- Zero additional JS bundle size
-- CSS-only animation runs on GPU compositor thread
-- No impact on TTI or LCP metrics
+**File: `src/components/three/HeroBackgroundScene.tsx`**
+- Smooth out the ripple animation by adjusting the lerp factor from `0.05` to `0.03` for more fluid mouse tracking
+- Slow down the ripple wave speed slightly (from `uTime * 4.0` to `uTime * 3.0`) for a more elegant feel
+- Add a subtle ambient wave animation that runs even without mouse movement
 
-## Technical Details
-
-```
-Desktop path:  shouldLoadScene=true  --> <HeroBackgroundScene /> (Three.js)
-Mobile path:   shouldLoadScene=false --> <MobileHeroBackground /> (CSS-only)
-```
+## Summary
 
 | File | Change |
 |------|--------|
-| `src/components/Hero.tsx` | Import and render MobileHeroBackground when scene is skipped |
-| `src/components/three/MobileHeroBackground.tsx` | New lightweight CSS animated background |
-| `src/index.css` | Add mobile hero keyframes and dot grid utility |
+| `src/components/Navbar.tsx` | Add blend mode + transparent bg to logo image |
+| `src/components/three/MobileHeroBackground.tsx` | Replace static gradients with animated floating blobs |
+| `src/index.css` | Add blob keyframe animations, refine grid opacity |
+| `src/components/three/HeroBackgroundScene.tsx` | Smoother lerp, slower ripple, ambient wave motion |
