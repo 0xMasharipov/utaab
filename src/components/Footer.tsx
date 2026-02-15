@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Linkedin, Instagram, Twitter, Send } from 'lucide-react';
-import logo from '@/assets/logo.png';
+import logo from '@/assets/logo-new.png';
 import { BrandText } from '@/components/common/BrandText';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 interface FooterProps {
@@ -66,7 +66,7 @@ export const Footer = ({
               <img 
                 src={logo} 
                 alt="UTAA Blockchain logo" 
-                className="h-7 sm:h-8 w-auto transition-transform hover:scale-105"
+                className="h-7 sm:h-8 w-auto transition-transform hover:scale-105 mix-blend-lighten brightness-110"
                 width="120"
                 height="32"
                 loading="eager"
