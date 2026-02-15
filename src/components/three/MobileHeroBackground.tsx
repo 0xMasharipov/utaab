@@ -1,6 +1,6 @@
 const MobileHeroBackground = () => {
   return (
-    <div className="absolute inset-0 bg-background overflow-hidden">
+    <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628] via-[#0d1f3c] to-[#0a0f1a] overflow-hidden">
       {/* Animated blob layer */}
       <div className="absolute inset-0">
         {/* Blob 1 - Primary blue, top-left drift */}
