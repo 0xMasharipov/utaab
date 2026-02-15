@@ -15,7 +15,9 @@
     "studentSignIn": "Öğrenci Girişi",
     "studentRegister": "Öğrenci Kaydı",
     "studentAuthOptions": "Öğrenci Girişi | Kaydı",
-    "adminSignIn": "Yönetici Girişi"
+    "adminSignIn": "Yönetici Girişi",
+    "blog": "Blog",
+    "team": "Ekip"
   },
   "auth": {
     "studentSignIn": "Öğrenci Girişi",
@@ -359,7 +361,10 @@
     "subscribe": "Abone Ol",
     "privacyCenter": "Gizlilik Merkezi",
     "disclaimer": "Kar amacı gütmeyen topluluk. Mali tavsiye değildir.",
-    "rights": "Tüm hakları saklıdır."
+    "rights": "Tüm hakları saklıdır.",
+    "home": "Ana Sayfa",
+    "blogLink": "Blog",
+    "teamLink": "Ekip"
   },
   "language": {
     "en": "English",
@@ -515,6 +520,21 @@
         "allRequired": "Tüm alanlar gereklidir"
       }
     }
+  },
+  "blog": {
+    "title": "UTAAB Blog",
+    "subtitle": "İçgörüler, Güncellemeler ve Web3 Yenilikleri",
+    "featured": "Öne Çıkan",
+    "readMore": "Devamını Oku",
+    "search": "Yazı ara...",
+    "noResults": "Yazı bulunamadı",
+    "backToBlog": "Bloga Dön",
+    "relatedPosts": "İlgili Yazılar",
+    "share": "Paylaş"
+  },
+  "teamPage": {
+    "title": "Ekibimiz",
+    "subtitle": "UTAAB'ın İnşaatçıları"
   },
   "team": {
     "title": "Ekibimiz",

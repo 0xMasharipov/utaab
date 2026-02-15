@@ -132,6 +132,11 @@ export const Navbar = () => {
     { key: 'resources', id: 'resources' },
   ];
 
+  const pageNavItems = [
+    { key: 'blog', path: '/blog' },
+    { key: 'team', path: '/team' },
+  ];
+
   const handleEducationClick = () => {
     closeMobileMenu();
     setTimeout(() => {
@@ -206,6 +211,15 @@ export const Navbar = () => {
                 <button
                   key={item.key}
                   onClick={() => scrollToSection(item.id)}
+                  className={getTransitionClasses("text-sm font-medium text-muted-foreground hover:text-foreground transition-colors navbar-text-truncate")}
+                >
+                  {t(`nav.${item.key}`)}
+                </button>
+              ))}
+              {pageNavItems.map((item) => (
+                <button
+                  key={item.key}
+                  onClick={() => { closeMobileMenu(); navigate(item.path); }}
                   className={getTransitionClasses("text-sm font-medium text-muted-foreground hover:text-foreground transition-colors navbar-text-truncate")}
                 >
                   {t(`nav.${item.key}`)}
@@ -395,6 +409,18 @@ export const Navbar = () => {
                           scrollToSection(item.id);
                         }
                       }}
+                      className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                    >
+                      {t(`nav.${item.key}`)}
+                    </button>
+                  ))}
+
+                  {/* Page Nav Links */}
+                  {pageNavItems.map((item) => (
+                    <button
+                      key={item.key}
+                      role="menuitem"
+                      onClick={() => { closeMobileMenu(); setTimeout(() => navigate(item.path), 200); }}
                       className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                     >
                       {t(`nav.${item.key}`)}

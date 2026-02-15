@@ -15,7 +15,9 @@
     "studentSignIn": "Вход студента",
     "studentRegister": "Регистрация студента",
     "studentAuthOptions": "Вход студента | Регистрация",
-    "adminSignIn": "Вход администратора"
+    "adminSignIn": "Вход администратора",
+    "blog": "Блог",
+    "team": "Команда"
   },
   "auth": {
     "studentSignIn": "Вход для Студентов",
@@ -359,7 +361,10 @@
     "subscribe": "Подписаться",
     "privacyCenter": "Центр Конфиденциальности",
     "disclaimer": "Некоммерческое сообщество. Не является финансовым советом.",
-    "rights": "Все права защищены."
+    "rights": "Все права защищены.",
+    "home": "Главная",
+    "blogLink": "Блог",
+    "teamLink": "Команда"
   },
   "language": {
     "en": "English",
@@ -515,6 +520,21 @@
         "allRequired": "Все поля обязательны"
       }
     }
+  },
+  "blog": {
+    "title": "Блог UTAAB",
+    "subtitle": "Аналитика, Обновления и Инновации Web3",
+    "featured": "Избранное",
+    "readMore": "Читать далее",
+    "search": "Поиск статей...",
+    "noResults": "Статьи не найдены",
+    "backToBlog": "Назад к блогу",
+    "relatedPosts": "Похожие статьи",
+    "share": "Поделиться"
+  },
+  "teamPage": {
+    "title": "Наша Команда",
+    "subtitle": "Строители UTAAB"
   },
   "team": {
     "title": "Наша Команда",

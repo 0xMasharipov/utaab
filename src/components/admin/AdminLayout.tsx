@@ -27,6 +27,7 @@ const sidebarItems = [
   { icon: Users, label: 'Communities', path: '/admin/communities' },
   { icon: Calendar, label: 'Events', path: '/admin/events' },
   { icon: BookOpen, label: 'Courses', path: '/admin/courses' },
+  { icon: FileText, label: 'Blog', path: '/admin/blog' },
   { icon: FileText, label: 'Site Content', path: '/admin/site-content' },
   { icon: Megaphone, label: 'Announcements', path: '/admin/announcements' },
   { icon: MessageSquare, label: 'Messages', path: '/admin/messages' },
