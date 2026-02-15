@@ -1,27 +1,34 @@
 
-
-# Update Navbar Logo
+# Add Organic Morphing Animation to Background Blobs
 
 ## What Changes
-Replace the current `logo-small.webp` in the navbar with the new UTAAB logo (blue diamond cross pattern).
+Add `border-radius` morphing to each blob's keyframes so they organically shift between different rounded shapes instead of staying perfectly circular. This creates a liquid, living feel.
 
-## Steps
+## How
 
-1. **Copy the uploaded image** to `src/assets/logo-new.png`
-2. **Update `src/components/Navbar.tsx`**:
-   - Change the import from `logo-small.webp` to the new logo file
-   - Remove any CSS filter workarounds (mix-blend-lighten, brightness) since the new logo has a clean transparent-friendly design on white background
-   - Keep the same sizing (`h-8 sm:h-10`)
-3. **Update `src/components/Footer.tsx`** (if it also uses the old logo) to use the new image for brand consistency
-4. **Keep the `BrandText` component** ("UTAAB") displayed alongside the new logo as before
+### Update `tailwind.config.ts` - Modify blob keyframes
+Add `borderRadius` values at each keyframe step for all 4 blob animations:
 
-## Technical Details
+```
+"blob-1": {
+  "0%, 100%": { transform: "translate(0, 0) scale(1)", borderRadius: "40% 60% 70% 30% / 40% 50% 60% 50%" },
+  "25%":      { transform: "translate(30px, -50px) scale(1.05)", borderRadius: "70% 30% 50% 50% / 30% 60% 40% 70%" },
+  "50%":      { transform: "translate(-20px, 20px) scale(0.95)", borderRadius: "50% 60% 30% 60% / 60% 40% 70% 30%" },
+  "75%":      { transform: "translate(50px, 30px) scale(1.02)", borderRadius: "30% 50% 60% 40% / 50% 70% 30% 60%" },
+}
+```
+
+Each blob gets a unique set of organic radius values so they don't all morph in sync.
+
+### Update `src/components/AnimatedBlobBackground.tsx`
+Remove the `rounded-full` class from each blob div (since `border-radius` is now driven by the keyframes).
+
+## Files Changed
 
 | File | Change |
 |------|--------|
-| `src/assets/logo-new.png` | New file - copied from upload |
-| `src/components/Navbar.tsx` | Update logo import path |
-| `src/components/Footer.tsx` | Update logo import if applicable |
+| `tailwind.config.ts` | Add `borderRadius` values to all 4 blob keyframe definitions |
+| `src/components/AnimatedBlobBackground.tsx` | Remove `rounded-full` from blob divs |
 
-The logo has a white background in the source file, so we may need `mix-blend-lighten` or similar treatment to make it blend with the dark navbar, similar to the existing approach documented in the design memory.
-
+## Visual Result
+Blobs will smoothly morph between organic, amoeba-like shapes while continuing their existing translate/scale movement. The heavy blur (80-110px) ensures the morphing looks soft and fluid rather than jagged.
