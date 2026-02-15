@@ -1,52 +1,38 @@
 
-
-# Immediate Session Termination for Admin Panel
+# Enhanced Background: Dynamic Blue Blobs for Visible Glassmorphism
 
 ## Problem
-Currently, clicking "Terminate" on an active session only deletes the `admin_sessions` row from the database. The targeted user's Supabase auth session (JWT/refresh token) remains valid -- they stay logged in and can keep using the admin panel until their token naturally expires.
+The current background color is near-black (`hsl(0 0% 4%)`) and the animated blobs have very low opacity (0.20-0.30). This makes all glassmorphism effects (glass cards, blurred buttons, frosted borders) nearly invisible -- they blend into the dark void.
 
 ## Solution
-Create a server-side edge function that forcibly revokes the user's authentication session via the Supabase Auth Admin API, then deletes the `admin_sessions` record and logs the action.
+Two changes that work together:
 
-## Changes
+### 1. Shift base background from pure black to dark navy blue
+**File:** `src/index.css`
 
-### 1. New Edge Function: `terminate-admin-session`
+Change the CSS custom properties:
+- `--background`: from `0 0% 4%` (black) to `217 50% 6%` (very dark navy blue)
+- `--card`: from `0 0% 7%` to `217 40% 9%` (dark blue-tinted card)
+- `--popover`: same shift as card
+- `--muted`: from `217 33% 10%` to `217 40% 12%`
 
-**File:** `supabase/functions/terminate-admin-session/index.ts`
+This gives a subtle blue undertone to the entire page, making glass reflections and blur visible.
 
-- Accepts `{ session_id, target_user_id }` in the request body
-- Verifies the caller is an authenticated admin (via `has_role` RPC)
-- Uses `SUPABASE_SERVICE_ROLE_KEY` to call the Auth Admin API endpoint: `POST {SUPABASE_URL}/auth/v1/admin/users/{target_user_id}/logout` -- this revokes all refresh tokens for that user, forcing immediate sign-out
-- Deletes the `admin_sessions` record
-- Logs a `session_terminated` event to `security_events` and `audit_log` with the terminating admin's info and the target user's ID
-- Returns success/failure response
+### 2. Increase blob visibility significantly
+**File:** `src/components/AnimatedBlobBackground.tsx`
 
-### 2. Update `supabase/config.toml`
+- Blob 1 (large blue): opacity from 0.30 to **0.45**, size from 500px to **600px**
+- Blob 2 (purple): opacity from 0.25 to **0.40**, size from 400px to **500px**
+- Blob 3 (bright blue): opacity from 0.20 to **0.38**, size from 450px to **550px**
+- Blob 4 (deep blue): opacity from 0.20 to **0.35**, size from 300px to **400px**
+- Add a 5th blob (cyan accent, opacity 0.30, 350px) for more coverage
+- Reduce blur slightly on some blobs (from 100-110px to 80-90px) so they have more visible color presence
 
-Add the new function entry with `verify_jwt = false` (handles auth internally).
+The combination of a blue-tinted base background + brighter, larger blobs creates a rich, layered backdrop where glass effects clearly stand out.
 
-### 3. Update `AdminSecurity.tsx` -- `handleTerminateSession`
+## Files Changed
 
-Replace the current direct database delete with a call to the new `terminate-admin-session` edge function, passing the session ID and target user ID. The function handles everything server-side.
-
-## Technical Details
-
-**Auth Admin API call (inside edge function):**
-```text
-POST {SUPABASE_URL}/auth/v1/admin/users/{user_id}/logout
-Headers:
-  Authorization: Bearer {SERVICE_ROLE_KEY}
-  apikey: {SERVICE_ROLE_KEY}
-Scope: "global" (revokes all sessions for the user)
-```
-
-This ensures the terminated user is immediately signed out -- their next API call or page refresh will fail authentication and redirect them to the login page.
-
-## Files Summary
-
-| File | Action |
+| File | Change |
 |------|--------|
-| `supabase/functions/terminate-admin-session/index.ts` | Create |
-| `supabase/config.toml` | Add function config |
-| `src/pages/education/admin/AdminSecurity.tsx` | Update terminate handler |
-
+| `src/index.css` | Shift background/card/popover/muted to dark navy tones |
+| `src/components/AnimatedBlobBackground.tsx` | Increase blob opacity, sizes, add 5th blob |
