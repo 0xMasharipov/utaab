@@ -12,6 +12,21 @@ import { useSecurity } from "@/hooks/useSecurity";
 import { Separator } from "@/components/ui/separator";
 import { UtaabCaptcha, UtaabCaptchaRef } from "@/components/security/UtaabCaptcha";
 
+const logAdminLogin = async (params: {
+  event_type: string;
+  email: string;
+  provider?: string;
+  session_token?: string;
+}) => {
+  try {
+    await supabase.functions.invoke('admin-login-log', {
+      body: params,
+    });
+  } catch (e) {
+    console.error('Failed to log admin login:', e);
+  }
+};
+
 export default function AdminLogin() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -21,7 +36,7 @@ export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [failedAttempts, setFailedAttempts] = useState(0);
-  const { checkRateLimit, logSecurityEvent } = useSecurity();
+  const { checkRateLimit } = useSecurity();
   const [utaabToken, setUtaabToken] = useState<string | null>(null);
   const utaabRef = useRef<UtaabCaptchaRef>(null);
 
@@ -61,7 +76,7 @@ export default function AdminLogin() {
 
       if (authError) {
         setFailedAttempts(prev => prev + 1);
-        await logSecurityEvent('admin_login_failed', 'medium', { email });
+        await logAdminLogin({ event_type: 'admin_login_failed', email: email.trim().toLowerCase() });
         throw authError;
       }
 
@@ -90,7 +105,7 @@ export default function AdminLogin() {
 
       if (sessionError) throw sessionError;
 
-      await logSecurityEvent('admin_login_success', 'low', { email });
+      await logAdminLogin({ event_type: 'admin_login_success', email: email.trim().toLowerCase(), session_token: sessionToken });
 
       toast({
         title: t("common.success"),
@@ -177,9 +192,11 @@ export default function AdminLogin() {
 
             if (sessionError) throw sessionError;
 
-            await logSecurityEvent('admin_login_success', 'low', { 
-              email: session.user.email,
-              provider: 'google' 
+            await logAdminLogin({ 
+              event_type: 'admin_login_success',
+              email: session.user.email || '',
+              provider: 'google',
+              session_token: sessionToken,
             });
 
             toast({
@@ -199,7 +216,7 @@ export default function AdminLogin() {
         }
       });
     }
-  }, [navigate, toast, t, logSecurityEvent]);
+  }, [navigate, toast, t]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 p-4">

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Search, Filter, Download, FileText } from 'lucide-react';
+import { Search, Filter, Download, FileText, Globe, Monitor } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -50,6 +50,9 @@ export const AdminAuditLog = () => {
       update: 'bg-blue-500/20 text-blue-400 border-blue-500/50',
       delete: 'bg-red-500/20 text-red-400 border-red-500/50',
       publish: 'bg-purple-500/20 text-purple-400 border-purple-500/50',
+      login: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50',
+      login_failed: 'bg-orange-500/20 text-orange-400 border-orange-500/50',
+      logout: 'bg-slate-500/20 text-slate-400 border-slate-500/50',
     };
     return colors[action] || 'bg-gray-500/20 text-gray-400 border-gray-500/50';
   };
@@ -92,6 +95,9 @@ export const AdminAuditLog = () => {
                 <SelectItem value="update">Update</SelectItem>
                 <SelectItem value="delete">Delete</SelectItem>
                 <SelectItem value="publish">Publish</SelectItem>
+                <SelectItem value="login">Login</SelectItem>
+                <SelectItem value="login_failed">Login Failed</SelectItem>
+                <SelectItem value="logout">Logout</SelectItem>
               </SelectContent>
             </Select>
             <Select value={entityFilter} onValueChange={setEntityFilter}>
@@ -105,6 +111,7 @@ export const AdminAuditLog = () => {
                 <SelectItem value="announcement">Announcements</SelectItem>
                 <SelectItem value="user">Users</SelectItem>
                 <SelectItem value="media">Media</SelectItem>
+                <SelectItem value="session">Sessions</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -144,11 +151,21 @@ export const AdminAuditLog = () => {
                       <span className="font-medium">{log.action}</span>
                       {' '}on{' '}
                       <span className="font-medium">{log.entity_type}</span>
-                      {log.entity_name && <span>: {log.entity_name}</span>}
+                    {log.entity_name && <span>: {log.entity_name}</span>}
                     </p>
-                    <p className="text-xs text-muted-foreground font-mono">
-                      IP: {String(log.ip_address) || 'N/A'}
-                    </p>
+                    {/* IP and User Agent display */}
+                    <div className="flex flex-wrap gap-2 mt-1">
+                      <span className="text-xs text-muted-foreground font-mono inline-flex items-center gap-1">
+                        <Globe className="h-3 w-3" />
+                        IP: {String(log.ip_address) || 'N/A'}
+                      </span>
+                      {log.user_agent && (
+                        <span className="text-xs text-muted-foreground font-mono inline-flex items-center gap-1">
+                          <Monitor className="h-3 w-3" />
+                          {log.user_agent.length > 60 ? log.user_agent.substring(0, 60) + '...' : log.user_agent}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </CardContent>
