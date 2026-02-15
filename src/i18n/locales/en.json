@@ -15,7 +15,9 @@
     "studentSignIn": "Student Sign In",
     "studentRegister": "Student Register",
     "studentAuthOptions": "Student Sign In | Register",
-    "adminSignIn": "Admin Sign In"
+    "adminSignIn": "Admin Sign In",
+    "blog": "Blog",
+    "team": "Team"
   },
   "auth": {
     "studentSignIn": "Student Sign In",
@@ -359,7 +361,10 @@
     "subscribe": "Subscribe",
     "privacyCenter": "Privacy Center",
     "disclaimer": "Non-profit community. Not financial advice.",
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "home": "Home",
+    "blogLink": "Blog",
+    "teamLink": "Team"
   },
   "language": {
     "en": "English",
@@ -689,6 +694,23 @@
         }
       }
     }
+  },
+  "blog": {
+    "title": "UTAAB Blog",
+    "subtitle": "Insights, Updates & Web3 Innovations",
+    "featured": "Featured",
+    "readMore": "Read More",
+    "search": "Search posts...",
+    "noResults": "No posts found",
+    "backToBlog": "Back to Blog",
+    "relatedPosts": "Related Posts",
+    "share": "Share",
+    "copyLink": "Copy Link",
+    "linkCopied": "Link copied!"
+  },
+  "teamPage": {
+    "title": "Our Team",
+    "subtitle": "Builders of UTAAB"
   },
   "team": {
     "title": "Our Team",

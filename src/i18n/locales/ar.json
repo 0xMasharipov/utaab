@@ -15,7 +15,9 @@
     "studentSignIn": "تسجيل دخول الطالب",
     "studentRegister": "تسجيل طالب",
     "studentAuthOptions": "تسجيل دخول الطالب | تسجيل",
-    "adminSignIn": "تسجيل دخول المشرف"
+    "adminSignIn": "تسجيل دخول المشرف",
+    "blog": "المدونة",
+    "team": "الفريق"
   },
   "auth": {
     "studentSignIn": "تسجيل دخول الطالب",
@@ -347,7 +349,10 @@
     "subscribe": "اشترك",
     "privacyCenter": "مركز الخصوصية",
     "disclaimer": "مجتمع غير ربحي. ليس نصيحة مالية.",
-    "rights": "جميع الحقوق محفوظة."
+    "rights": "جميع الحقوق محفوظة.",
+    "home": "الرئيسية",
+    "blogLink": "المدونة",
+    "teamLink": "الفريق"
   },
   "language": {
     "en": "English",
@@ -503,6 +508,21 @@
         "allRequired": "جميع الحقول مطلوبة"
       }
     }
+  },
+  "blog": {
+    "title": "مدونة UTAAB",
+    "subtitle": "رؤى وتحديثات وابتكارات Web3",
+    "featured": "مميز",
+    "readMore": "اقرأ المزيد",
+    "search": "البحث في المقالات...",
+    "noResults": "لم يتم العثور على مقالات",
+    "backToBlog": "العودة إلى المدونة",
+    "relatedPosts": "مقالات ذات صلة",
+    "share": "مشاركة"
+  },
+  "teamPage": {
+    "title": "فريقنا",
+    "subtitle": "بناة UTAAB"
   },
   "team": {
     "title": "فريقنا",

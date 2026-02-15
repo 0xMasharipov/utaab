@@ -41,6 +41,10 @@ const KVKKRequest = lazy(() => import("./pages/KVKKRequest").then(m => ({ defaul
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy").then(m => ({ default: m.PrivacyPolicy })));
 const TermsOfService = lazy(() => import("./pages/TermsOfService").then(m => ({ default: m.TermsOfService })));
 const BlockchainAndMoney = lazy(() => import("./pages/education/BlockchainAndMoney").then(m => ({ default: m.BlockchainAndMoney })));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
+const TeamPage = lazy(() => import("./pages/TeamPage"));
+const AdminBlog = lazy(() => import("./pages/admin/AdminBlog"));
 
 const queryClient = new QueryClient();
 
@@ -65,6 +69,9 @@ function App() {
             <Route path="/education/instructor/:id" element={<InstructorProfile />} />
             <Route path="/education/blockchain-and-money" element={<BlockchainAndMoney />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/team" element={<TeamPage />} />
             
             {/* Separate Admin Authentication */}
             <Route path="/admin/login" element={<AdminLogin />} />
@@ -78,6 +85,7 @@ function App() {
               <Route path="communities/:id" element={<AdminCommunityDetail />} />
               <Route path="events" element={<AdminEvents />} />
               <Route path="site-content" element={<AdminSiteContent />} />
+              <Route path="blog" element={<AdminBlog />} />
               <Route path="courses" element={<AdminCourses />} />
               <Route path="announcements" element={<AdminAnnouncements />} />
               <Route path="messages" element={<AdminMessages />} />

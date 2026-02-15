@@ -212,6 +212,162 @@ export type Database = {
         }
         Relationships: []
       }
+      blog_categories: {
+        Row: {
+          created_at: string
+          id: string
+          name_ar: string | null
+          name_en: string
+          name_ru: string | null
+          name_tr: string | null
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name_ar?: string | null
+          name_en: string
+          name_ru?: string | null
+          name_tr?: string | null
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name_ar?: string | null
+          name_en?: string
+          name_ru?: string | null
+          name_tr?: string | null
+          slug?: string
+        }
+        Relationships: []
+      }
+      blog_post_categories: {
+        Row: {
+          category_id: string
+          id: string
+          post_id: string
+        }
+        Insert: {
+          category_id: string
+          id?: string
+          post_id: string
+        }
+        Update: {
+          category_id?: string
+          id?: string
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_post_categories_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "blog_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blog_post_categories_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "blog_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blog_posts: {
+        Row: {
+          attachments: Json | null
+          author_name: string | null
+          content: Json | null
+          cover_image: string | null
+          created_at: string
+          created_by: string | null
+          excerpt_ar: string | null
+          excerpt_en: string | null
+          excerpt_ru: string | null
+          excerpt_tr: string | null
+          featured: boolean | null
+          gallery: Json | null
+          id: string
+          meta_description: string | null
+          meta_title: string | null
+          og_image: string | null
+          publish_date: string | null
+          scheduled_at: string | null
+          slug: string
+          status: string
+          tags: string[] | null
+          title_ar: string | null
+          title_en: string
+          title_ru: string | null
+          title_tr: string | null
+          updated_at: string
+          video_type: string | null
+          video_url: string | null
+        }
+        Insert: {
+          attachments?: Json | null
+          author_name?: string | null
+          content?: Json | null
+          cover_image?: string | null
+          created_at?: string
+          created_by?: string | null
+          excerpt_ar?: string | null
+          excerpt_en?: string | null
+          excerpt_ru?: string | null
+          excerpt_tr?: string | null
+          featured?: boolean | null
+          gallery?: Json | null
+          id?: string
+          meta_description?: string | null
+          meta_title?: string | null
+          og_image?: string | null
+          publish_date?: string | null
+          scheduled_at?: string | null
+          slug: string
+          status?: string
+          tags?: string[] | null
+          title_ar?: string | null
+          title_en: string
+          title_ru?: string | null
+          title_tr?: string | null
+          updated_at?: string
+          video_type?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          attachments?: Json | null
+          author_name?: string | null
+          content?: Json | null
+          cover_image?: string | null
+          created_at?: string
+          created_by?: string | null
+          excerpt_ar?: string | null
+          excerpt_en?: string | null
+          excerpt_ru?: string | null
+          excerpt_tr?: string | null
+          featured?: boolean | null
+          gallery?: Json | null
+          id?: string
+          meta_description?: string | null
+          meta_title?: string | null
+          og_image?: string | null
+          publish_date?: string | null
+          scheduled_at?: string | null
+          slug?: string
+          status?: string
+          tags?: string[] | null
+          title_ar?: string | null
+          title_en?: string
+          title_ru?: string | null
+          title_tr?: string | null
+          updated_at?: string
+          video_type?: string | null
+          video_url?: string | null
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string
