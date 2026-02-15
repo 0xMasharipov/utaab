@@ -16,8 +16,10 @@ const vertexShader = `
     vec2 mouseUv = uMouse * 0.5 + 0.5;
     float dist = distance(uv, mouseUv);
     
-    // Ripple wave effect
-    float ripple = sin(dist * 25.0 - uTime * 4.0) * exp(-dist / uRippleRadius) * 0.08;
+    // Ambient wave + Ripple wave effect
+    float ambient = sin(uv.x * 6.0 + uTime * 0.8) * cos(uv.y * 5.0 + uTime * 0.6) * 0.015;
+    float ripple = sin(dist * 25.0 - uTime * 3.0) * exp(-dist / uRippleRadius) * 0.08;
+    pos.z += ambient;
     pos.z += ripple;
     
     gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
@@ -79,7 +81,7 @@ const RippleGrid = ({ mousePos }: RippleGridProps) => {
   useFrame((state) => {
     uniforms.uTime.value = state.clock.elapsedTime;
     if (mousePos.current) {
-      uniforms.uMouse.value.lerp(mousePos.current, 0.05);
+      uniforms.uMouse.value.lerp(mousePos.current, 0.03);
     }
   });
 
