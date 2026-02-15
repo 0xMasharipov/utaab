@@ -515,5 +515,36 @@
         "allRequired": "Tüm alanlar gereklidir"
       }
     }
+  },
+  "team": {
+    "title": "Ekibimiz",
+    "subtitle": "Web3 eğitimi ve topluluk geleceğini inşa eden vizyonerler",
+    "members": {
+      "zinurbek": {
+        "name": "Zinurbek Masharipo",
+        "position": "Kurucu",
+        "description": "Blockchain eğitimini demokratikleştirme ve Web3 inovasyonunu teşvik etme misyonunu yöneten vizyon sahibi lider."
+      },
+      "yunus": {
+        "name": "Yunus Emre Erçin",
+        "position": "CTO",
+        "description": "Ölçeklenebilir merkeziyetsiz sistemler tasarlayan ve yeni nesil Web3 altyapısının teknik vizyonunu yöneten uzman."
+      },
+      "abdulla": {
+        "name": "Abdulla Hamzali",
+        "position": "Mühendislik Başkanı",
+        "description": "Güçlü akıllı sözleşme ekosistemleri kuran ve yeni nesil blockchain geliştiricilerine mentorluk yapan mühendis."
+      },
+      "abdulbaki": {
+        "name": "Abdulbaki Karaman",
+        "position": "CFO",
+        "description": "Merkeziyetsiz topluluk büyümesi için sürdürülebilir tokenomik ve finansal çerçeveler stratejisi belirleyen finans uzmanı."
+      },
+      "umut": {
+        "name": "Umut Tekbaş",
+        "position": "İK Müdürü",
+        "description": "Yetenek havuzları oluşturan ve çeşitli, kapsayıcı bir Web3 inşaatçılar ve yaratıcılar topluluğu kuran yönetici."
+      }
+    }
   }
 }

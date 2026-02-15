@@ -82,6 +82,27 @@ export default {
           "0%": { opacity: "0", transform: "scale(0.95)" },
           "100%": { opacity: "1", transform: "scale(1)" },
         },
+        "blob-1": {
+          "0%, 100%": { transform: "translate(0, 0) scale(1)" },
+          "25%": { transform: "translate(30px, -50px) scale(1.05)" },
+          "50%": { transform: "translate(-20px, 20px) scale(0.95)" },
+          "75%": { transform: "translate(50px, 30px) scale(1.02)" },
+        },
+        "blob-2": {
+          "0%, 100%": { transform: "translate(0, 0) scale(1)" },
+          "25%": { transform: "translate(-40px, 30px) scale(1.08)" },
+          "50%": { transform: "translate(30px, -40px) scale(0.92)" },
+          "75%": { transform: "translate(-20px, -20px) scale(1.04)" },
+        },
+        "blob-3": {
+          "0%, 100%": { transform: "translate(0, 0) scale(1)" },
+          "33%": { transform: "translate(40px, 30px) scale(1.06)" },
+          "66%": { transform: "translate(-30px, -50px) scale(0.96)" },
+        },
+        "blob-4": {
+          "0%, 100%": { transform: "translate(0, 0) scale(1)" },
+          "50%": { transform: "translate(-50px, 40px) scale(1.1)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -89,6 +110,10 @@ export default {
         "fade-in": "fade-in 0.6s ease-out",
         "slide-up": "slide-up 0.6s ease-out",
         "scale-in": "scale-in 0.4s ease-out",
+        "blob-1": "blob-1 20s ease-in-out infinite",
+        "blob-2": "blob-2 25s ease-in-out infinite",
+        "blob-3": "blob-3 22s ease-in-out infinite",
+        "blob-4": "blob-4 18s ease-in-out infinite",
       },
     },
   },
