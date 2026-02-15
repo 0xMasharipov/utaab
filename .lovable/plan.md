@@ -1,45 +1,36 @@
 
-# Refine Navbar Logo and Hero Background
+# Fix Navbar Logo Transparency and Mobile Hero Background
 
-## 1. Transparent Logo Background in Navbar
+## Problem 1: Logo Black Background
+The logo image (`logo-small.webp`) has a baked-in black/dark background. The current `mix-blend-screen` approach is not fully removing it. We need a stronger CSS approach.
 
-The logo image (`logo-small.webp`) may have a non-transparent background baked into the file itself. Since we cannot edit the image file directly, we will use CSS to ensure any visible background blends seamlessly with the navbar glass effect. We will also remove any unintentional background bleeding by adding `mix-blend-mode` and ensuring the `<img>` element has no background color applied.
-
+### Fix
 **File: `src/components/Navbar.tsx`**
-- Add `mix-blend-mode: lighten` or `screen` to the logo `<img>` tag to visually remove any dark background from the logo image
-- Add `bg-transparent` explicitly and `object-contain` for clean rendering
+- Replace `mix-blend-screen` with a combination approach:
+  - Use `mix-blend-lighten` (better at eliminating pure black pixels)
+  - Add `brightness(1.1)` filter to push dark pixels further toward transparent
+  - Keep `bg-transparent` and `object-contain`
 
-## 2. Modernize Mobile Hero Background with Dynamic Blue Blobs
+## Problem 2: Mobile Hero Background Nearly Invisible
+The animated blobs exist but their opacity values (0.2-0.3) combined with `blur(100px)` make them nearly invisible on the dark background. The result looks like a plain black screen.
 
-Replace the current static radial gradients + dot grid with animated floating blue blobs that move organically.
+### Fix
+**File: `src/index.css`**
+- Increase blob opacity values significantly:
+  - Blob 1: `hsl(var(--primary) / 0.3)` to `hsl(var(--primary) / 0.6)`
+  - Blob 2: `hsl(var(--accent) / 0.2)` to `hsl(var(--accent) / 0.5)`
+  - Blob 3: `hsl(217 91% 50% / 0.25)` to `hsl(217 91% 50% / 0.55)`
+  - Blob 4: `hsl(0 0% 100% / 0.04)` to `hsl(0 0% 100% / 0.08)`
+- Reduce blur slightly on some blobs (100px to 80px) so they remain visible
+- Add a base gradient underneath the blobs for a richer background
 
 **File: `src/components/three/MobileHeroBackground.tsx`**
-- Add 3-4 animated blob `<div>` elements with large border-radius, blur, and brand blue colors
-- Each blob gets a different CSS animation (float, drift, morph) with staggered delays
-- Remove the static dot grid overlay (or make it very subtle)
-
-**File: `src/index.css`**
-- Replace `.mobile-hero-gradient` with individual blob animations:
-  - `@keyframes blob-float-1` -- slow vertical drift (20s cycle)
-  - `@keyframes blob-float-2` -- diagonal drift (25s cycle)
-  - `@keyframes blob-float-3` -- horizontal drift (18s cycle)
-  - `@keyframes blob-morph` -- subtle scale/border-radius morphing (12s cycle)
-- Each blob uses `filter: blur(80-120px)` for soft edges
-- Colors: `hsl(var(--primary) / 0.3)`, `hsl(var(--accent) / 0.2)`, `hsl(217 91% 50% / 0.25)`
-- Reduce `.mobile-hero-grid` opacity to 0.08 for a very subtle texture
-
-## 3. Improve Desktop Hero Background Animations
-
-**File: `src/components/three/HeroBackgroundScene.tsx`**
-- Smooth out the ripple animation by adjusting the lerp factor from `0.05` to `0.03` for more fluid mouse tracking
-- Slow down the ripple wave speed slightly (from `uTime * 4.0` to `uTime * 3.0`) for a more elegant feel
-- Add a subtle ambient wave animation that runs even without mouse movement
+- Add a base gradient layer (`bg-gradient-to-br from-[#0a1628] via-[#0d1f3c] to-[#0a0f1a]`) underneath the blob layer so the background is never pure black
 
 ## Summary
 
 | File | Change |
 |------|--------|
-| `src/components/Navbar.tsx` | Add blend mode + transparent bg to logo image |
-| `src/components/three/MobileHeroBackground.tsx` | Replace static gradients with animated floating blobs |
-| `src/index.css` | Add blob keyframe animations, refine grid opacity |
-| `src/components/three/HeroBackgroundScene.tsx` | Smoother lerp, slower ripple, ambient wave motion |
+| `src/components/Navbar.tsx` | Switch to `mix-blend-lighten` + brightness filter for logo |
+| `src/index.css` | Double blob opacity values, reduce blur on some blobs |
+| `src/components/three/MobileHeroBackground.tsx` | Add base gradient layer under blobs |
