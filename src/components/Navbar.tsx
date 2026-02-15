@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import logo from '@/assets/logo-small.webp';
+import logo from '@/assets/logo-new.png';
 import { BrandText } from '@/components/common/BrandText';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 
@@ -172,7 +172,7 @@ export const Navbar = () => {
             <img 
               src={logo} 
               alt="UTAA Blockchain" 
-              className="h-8 sm:h-10 w-auto" 
+              className="h-8 sm:h-10 w-auto mix-blend-lighten brightness-110" 
               width="40" 
               height="40"
               fetchPriority="high"
