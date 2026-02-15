@@ -1,181 +1,100 @@
 
 
-# UTAAB Website Enhancement - Blog System, Team Page, and Footer Update
+# Admin Panel Security Hardening: IP Logging and Leak Prevention
 
-This plan covers a major enhancement across 4 workstreams, delivered in sequence. Each builds on the previous.
+## Problem Identified
+All admin login events currently have **NULL IP addresses and user agents** in:
+- `security_events` table (admin_login_success/failed)
+- `admin_sessions` table
+- `audit_log` table
 
----
-
-## Workstream 1: Database Schema (Blog System Backend)
-
-### New Tables
-
-**blog_posts**
-- id (uuid, PK), slug (text, unique), title_en/tr/ru/ar (text), excerpt_en/tr/ru/ar (text), content (jsonb - rich text blocks), cover_image (text - URL), gallery (jsonb - array of image URLs), video_type (text - 'embed' or 'uploaded'), video_url (text), attachments (jsonb - array of {name, url, type}), tags (text[]), author_name (text), status (text - draft/published/scheduled), publish_date (timestamptz), scheduled_at (timestamptz), meta_title (text), meta_description (text), og_image (text), featured (boolean, default false), created_by (uuid), created_at (timestamptz), updated_at (timestamptz)
-
-**blog_categories**
-- id (uuid, PK), name_en/tr/ru/ar (text), slug (text, unique), created_at (timestamptz)
-
-**blog_post_categories** (junction)
-- id (uuid, PK), post_id (uuid, FK), category_id (uuid, FK), unique(post_id, category_id)
-
-### RLS Policies
-- SELECT on blog_posts: public for status='published' AND (publish_date IS NULL OR publish_date <= now())
-- SELECT on blog_categories: public (true)
-- INSERT/UPDATE/DELETE on all blog tables: admin only via has_role()
+This is because `logSecurityEvent` runs client-side via the `useSecurity` hook, and the browser cannot reliably determine its own IP address. IP capture must happen server-side in edge functions.
 
 ---
 
-## Workstream 2: Admin Blog Management
+## Solution: Server-Side Admin Login Logging
 
-### New Files
-| File | Purpose |
-|------|---------|
-| `src/pages/admin/AdminBlog.tsx` | Blog posts list with search, filters, CRUD table |
-| `src/components/admin/BlogPostFormDialog.tsx` | Full create/edit dialog with all fields |
+### 1. New Edge Function: `admin-login-log`
 
-### AdminBlog.tsx Features
-- Table listing all posts (title, status, date, featured badge)
-- Search bar, status filter tabs (All / Draft / Published / Scheduled)
-- Create, Edit, Delete actions using existing dialog patterns
-- Uses existing DeleteConfirmDialog for deletion
+Create a new edge function that:
+- Receives login event details (email, event type, provider)
+- Extracts the client IP from request headers (`x-forwarded-for`, `x-real-ip`, or connection info)
+- Extracts the user agent from the `user-agent` header
+- Logs to `security_events` using service_role (bypasses RLS)
+- Updates the corresponding `admin_sessions` record with IP + user agent
+- Logs to `audit_log` with IP + user agent for login/logout events
 
-### BlogPostFormDialog.tsx Features
-- Title fields (4 languages)
-- Auto-generated slug from English title
-- Excerpt fields (4 languages)
-- Content textarea (rich text as JSON blocks - simple textarea initially)
-- Cover image upload (reuses ImageUpload component)
-- Gallery: multiple image uploads
-- Video: type selector (embed/uploaded) + URL field
-- Attachments: PDF upload with download preview
-- Tags: comma-separated input
-- Author name
-- Status: draft / published / scheduled
-- Scheduled date picker (shown when status = scheduled)
-- Featured toggle
-- SEO section: meta_title, meta_description, og_image
+**Key**: Uses `SUPABASE_SERVICE_ROLE_KEY` to insert into `security_events` (which only allows service_role inserts).
 
-### Route Addition
-- Add `/admin/blog` route inside AdminLayout in App.tsx
-- Add sidebar link in AdminLayout.tsx
+### 2. Update `AdminLogin.tsx`
 
----
+After successful login (both email/password and OAuth):
+- Call `admin-login-log` edge function instead of client-side `logSecurityEvent`
+- Pass event type (`admin_login_success` or `admin_login_failed`), email, and provider
+- The edge function captures IP and user agent server-side
 
-## Workstream 3: Public Blog Pages
+For failed login attempts:
+- Also call the edge function so failed attempts are logged with IP
 
-### New Files
-| File | Purpose |
-|------|---------|
-| `src/pages/Blog.tsx` | Blog listing page at /blog |
-| `src/pages/BlogPost.tsx` | Blog detail page at /blog/:slug |
-| `src/components/blog/BlogCard.tsx` | Reusable glass blog card |
-| `src/components/blog/BlogHero.tsx` | Blog post hero with cover image overlay |
-| `src/components/blog/ShareButtons.tsx` | Copy link, X, LinkedIn share |
-| `src/components/blog/PDFAttachment.tsx` | PDF download/preview section |
+### 3. Update `check-admin-status` Edge Function
 
-### Blog Listing (/blog)
-- Hero section: "UTAAB Blog" title, subtitle, glass container, animated gradient
-- Featured post: large horizontal glass card (cover image, title, excerpt, category badge, date, Read More)
-- Blog grid: 3 cols desktop, 2 tablet, 1 mobile
-- Each card: cover image with gradient overlay, title, excerpt, date, tag badges, Read More button
-- Glass search bar
-- Category filter chips (from blog_categories)
-- Pagination (12 posts per page)
-- Framer Motion fade-in animations
-- Uses AnimatedBlobBackground for consistency
+Enhance to also log the IP when admin status is verified (on each admin page load), providing an activity trail. Add IP extraction and optional activity logging.
 
-### Blog Post (/blog/:slug)
-- Hero: full-width cover image with gradient overlay, title, author, date, tags
-- Content: rendered from JSON blocks supporting headings, paragraphs, lists, code blocks, quotes, images, embedded video
-- Media support: lazy-loaded images, YouTube/Vimeo embeds, uploaded video player
-- PDF attachments: styled section with preview icon and download button
-- Share buttons: copy link, X (Twitter), LinkedIn
-- Related posts: 3 posts matching tags
-- Back to blog button
-- SEO: document.title + meta description set dynamically
+### 4. Add "Admin Logins" Tab to Audit Log Page
 
-### Route Additions
-- `/blog` and `/blog/:slug` in App.tsx
+Update `AdminAuditLog.tsx`:
+- Add a new filter option: `login` action type
+- Add `admin_login_success` and `admin_login_failed` to entity filter
+- Display IP address and user agent prominently for login entries
+- Add action filter values for login events
 
----
+### 5. Add "Admin Sessions" Section to Security Dashboard
 
-## Workstream 4: Team Page and Footer Update
+Update `AdminSecurity.tsx`:
+- Add a new tab "Active Sessions" showing current admin sessions with IP, user agent, created_at, expires_at
+- Allow admins to terminate other sessions (delete from admin_sessions)
+- Show session age and expiry countdown
 
-### Team Page (/team)
-| File | Purpose |
-|------|---------|
-| `src/pages/TeamPage.tsx` | Dedicated team page |
+### 6. Security Hardening Additions
 
-- Remove `<Team />` from Index.tsx
-- Create standalone /team page with:
-  - Hero: "Our Team" title, "Builders of UTAAB" subtitle, glass container, animated blob background
-  - Team grid: same 5 members, larger cards than homepage version
-  - Each card: circular image placeholder, name, position, description, LinkedIn icon placeholder
-  - 3 cols desktop, 2 tablet, 1 mobile
-  - Glass cards with hover lift, border glow, soft shadow
-  - Framer Motion stagger animations
-
-### Footer Update
-- Restructure Footer.tsx columns:
-  - Column 1: Logo + description (keep existing)
-  - Column 2: Navigation - Home, Projects, Blog (NEW - link to /blog), Team (NEW - link to /team), Contact
-  - Column 3: Community social links (keep existing)
-  - Column 4: Newsletter (keep existing)
-- Add Blog and Team links to all 4 locale files
-- Glass-styled footer with transparent dark background
-
-### Navbar Update
-- Add Blog link (navigates to /blog)
-- Add Team link (navigates to /team)
-- Update both desktop nav items and mobile menu
-- Add translations for nav.blog and nav.team
-
----
-
-## Translation Updates
-
-All 4 locale files (en, tr, ru, ar) will receive:
-- `nav.blog`, `nav.team` keys
-- `blog.title`, `blog.subtitle`, `blog.featured`, `blog.readMore`, `blog.search`, `blog.noResults`, `blog.backToBlog`, `blog.relatedPosts`, `blog.share`, `blog.copyLink`, `blog.linkCopied`
-- `footer.blog`, `footer.team`, `footer.home`, `footer.contact`
-- `teamPage.title`, `teamPage.subtitle` (reuses existing team member translations)
+- **Session cleanup on logout**: When admin signs out via `AdminLayout`, delete their admin_sessions record
+- **Concurrent session detection**: Log a warning event if a new session is created while an active one exists
+- **Failed attempt escalation**: After 3+ failed attempts from same IP, log as `high` severity instead of `medium`
 
 ---
 
 ## Files Summary
 
-| File | Action |
-|------|--------|
-| SQL migration | Create blog_posts, blog_categories, blog_post_categories + RLS |
-| `src/pages/admin/AdminBlog.tsx` | Create |
-| `src/components/admin/BlogPostFormDialog.tsx` | Create |
-| `src/pages/Blog.tsx` | Create |
-| `src/pages/BlogPost.tsx` | Create |
-| `src/components/blog/BlogCard.tsx` | Create |
-| `src/components/blog/BlogHero.tsx` | Create |
-| `src/components/blog/ShareButtons.tsx` | Create |
-| `src/components/blog/PDFAttachment.tsx` | Create |
-| `src/pages/TeamPage.tsx` | Create |
-| `src/pages/Index.tsx` | Remove Team import/usage |
-| `src/components/Footer.tsx` | Update columns, add Blog/Team links |
-| `src/components/Navbar.tsx` | Add Blog + Team nav items |
-| `src/components/admin/AdminLayout.tsx` | Add blog sidebar link |
-| `src/App.tsx` | Add /blog, /blog/:slug, /team, /admin/blog routes |
-| `src/i18n/locales/en.json` | Add blog + team page translations |
-| `src/i18n/locales/tr.json` | Add blog + team page translations |
-| `src/i18n/locales/ru.json` | Add blog + team page translations |
-| `src/i18n/locales/ar.json` | Add blog + team page translations |
+| File | Action | Purpose |
+|------|--------|---------|
+| `supabase/functions/admin-login-log/index.ts` | Create | Server-side IP capture and security logging |
+| `supabase/config.toml` | Update | Add admin-login-log function config (verify_jwt: false, handles auth internally) |
+| `src/pages/admin/AdminLogin.tsx` | Update | Call edge function instead of client-side logSecurityEvent |
+| `src/components/admin/AdminLayout.tsx` | Update | Delete admin_session on logout, log logout with IP |
+| `src/pages/education/admin/AdminAuditLog.tsx` | Update | Add login/logout action filters, show IP/user_agent prominently |
+| `src/pages/education/admin/AdminSecurity.tsx` | Update | Add Active Sessions tab with IP visibility and session termination |
 
 ---
 
-## Performance and SEO
+## Technical Details
 
-- All new pages lazy-loaded via React.lazy
-- Images use loading="lazy"
-- Blog posts set document.title dynamically
-- Meta description set via useEffect
-- Semantic HTML (article, section, header, nav)
-- Pagination prevents loading all posts at once
-- AnimatedBlobBackground shared across pages for visual consistency
+### IP Extraction (Edge Function)
+```text
+Priority order:
+1. x-forwarded-for header (first IP)
+2. x-real-ip header
+3. Request connection remote address
+4. Fallback: "unknown"
+```
+
+### Edge Function Auth Pattern
+- Accepts Authorization header from caller
+- Validates caller is authenticated via `getUser()`
+- Uses service_role client for privileged inserts (security_events, audit_log)
+- Extracts IP/UA from request headers
+
+### Audit Log Filter Additions
+- Action filter: add "login" option
+- Entity filter: add "session" option
+- Visual: login entries show IP badge and user agent in a monospace font
 
