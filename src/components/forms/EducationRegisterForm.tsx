@@ -543,18 +543,6 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
             {t('auth.privacyNotice')}
           </p>
 
-          <div className="text-center pt-4">
-            <p className="text-muted-foreground">
-              {t('education.registration.noAccount')}{' '}
-              <button
-                type="button"
-                onClick={() => navigate('/education/register')}
-                className="text-accent hover:underline font-medium"
-              >
-                {t('education.registration.createAccount')}
-              </button>
-            </p>
-          </div>
         </form>
       </div>
     );
