@@ -1,65 +1,54 @@
 
+# Replace 3D Hero Background with Looping Video
 
-# Refine Hero Section Spacing and Button Aesthetics
-
-## Problems
-1. Excessive vertical gaps between title ("Build your blockchain future"), subtitle ("Join our community"), description, and CTA button — margins stack to ~120px+ total whitespace
-2. The "Get Started" button uses a basic `btn-primary` pill style with no visual flair
+## Summary
+Replace the current Three.js 3D background (and CSS mobile fallback) with the uploaded video as a full-screen looping background. The video will cover all devices — mobile, tablet, and desktop — eliminating the need for the separate 3D scene and mobile fallback components.
 
 ## Changes
 
-### File: `src/components/Hero.tsx`
+### 1. Copy video to public folder
+Copy `user-uploads://Add_little_nodes_1080p_202602201534.mp4` to `public/videos/hero-bg.mp4`. Using `public/` because video files referenced via HTML `<video>` tags should not go through the Vite bundler.
 
-**Tighten spacing between elements:**
+### 2. Update `src/components/Hero.tsx`
+- Remove all Three.js lazy loading logic (`HeroBackgroundScene`, `MobileHeroBackground`, `useDeferredLoad`, `useIsMobile`)
+- Replace the conditional 3D/mobile background with a single `<video>` element:
+  - `autoPlay`, `loop`, `muted`, `playsInline` (required for mobile autoplay)
+  - `object-fit: cover` to fill the section on all screen sizes
+  - Positioned absolutely behind the content overlay
+  - Dark overlay on top of the video for text readability
+  - Fade-in transition on load
 
-| Element | Current margin | New margin |
-|---------|---------------|------------|
-| H1 (title) | `mb-4 sm:mb-6` | `mb-2 sm:mb-3` |
-| Subtitle div | `mb-6 sm:mb-8` | `mb-4 sm:mb-5` |
-| Description p | `mb-8 sm:mb-12` | `mb-6 sm:mb-8` |
-| Content wrapper | `py-24 sm:py-28 md:py-32` | `py-20 sm:py-24 md:py-28` |
-
-This reduces total internal spacing by ~40%, keeping the hero compact and cohesive.
-
-**Modernize the CTA button:**
-- Replace `btn-primary` with a custom styled button using:
-  - Gradient background: `bg-gradient-to-r from-primary via-blue-500 to-accent`
-  - Larger rounded corners: `rounded-full`
-  - Subtle glow ring on hover: `shadow-[0_0_30px_hsl(213_94%_68%/0.4)]`
-  - Slight scale-up on hover: `hover:scale-105`
-  - Smooth border: `border border-white/20`
-  - Increased padding for a bolder feel: `px-8 sm:px-10 py-4 sm:py-5`
-  - Text size bump: `text-base sm:text-lg font-semibold`
-  - Keep the animated chevron arrow
-
-### File: `src/index.css` (optional, minor)
-No changes needed — the button will use inline Tailwind classes rather than a new CSS component.
+### 3. Cleanup (optional, can be done later)
+The following files become unused and can be removed in a future cleanup:
+- `src/components/three/HeroBackgroundScene.tsx`
+- `src/components/three/MobileHeroBackground.tsx`
 
 ## Technical Details
 
-The key change in `Hero.tsx` content section:
+### Video element structure
+```html
+<video
+  autoPlay
+  loop
+  muted
+  playsInline
+  className="absolute inset-0 w-full h-full object-cover"
+  src="/videos/hero-bg.mp4"
+/>
+<!-- Semi-transparent overlay for text contrast -->
+<div className="absolute inset-0 bg-black/50" />
+```
 
-```
-mb-4 sm:mb-6  -->  mb-2 sm:mb-3   (title to subtitle gap)
-mb-6 sm:mb-8  -->  mb-4 sm:mb-5   (subtitle to description gap)  
-mb-8 sm:mb-12 -->  mb-6 sm:mb-8   (description to button gap)
-py-24 sm:py-28 md:py-32  -->  py-20 sm:py-24 md:py-28  (overall section padding)
-```
+### Key decisions
+- **`muted` + `playsInline`**: Required for autoplay on iOS/Android — browsers block autoplay of unmuted videos
+- **`object-cover`**: Ensures the video fills the entire hero section without letterboxing on any aspect ratio
+- **Dark overlay (`bg-black/50`)**: Maintains text readability over the video
+- **No device branching**: A single `<video>` element works on all screen sizes; the browser handles resolution/performance natively
+- **`public/` folder**: Video files should not be bundled by Vite — they're served as static assets
 
-Button classes change from:
-```
-btn-primary text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 group min-h-[44px]
-```
-To:
-```
-bg-gradient-to-r from-primary via-blue-500 to-accent text-white font-semibold
-text-base sm:text-lg px-8 sm:px-10 py-3.5 sm:py-4 rounded-full
-border border-white/20 
-hover:scale-105 hover:shadow-[0_0_35px_hsl(213_94%_68%/0.45)]
-transition-all duration-300 group min-h-[44px]
-```
+### Files modified
 
 | File | Change |
 |------|--------|
-| `src/components/Hero.tsx` | Reduce margins between hero text elements; restyle CTA button with gradient + glow |
-
+| `public/videos/hero-bg.mp4` | New — copied from upload |
+| `src/components/Hero.tsx` | Replace 3D/mobile background with looping `<video>` element |
