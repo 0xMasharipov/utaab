@@ -1,103 +1,110 @@
 
-# Animate Image Loading Across the Website
+# Redesign Team Page with Overlapping Card Layout
 
 ## Overview
-Create a reusable `AnimatedImage` component that wraps all `<img>` tags with a smooth fade-in + scale animation on load, plus a shimmer placeholder skeleton while loading. This replaces the current static "pop-in" behavior with a polished, professional feel.
+Complete redesign of the `/team` page using a modern overlapping card system where each team member has a large portrait image card with a frosted glass info card overlapping the bottom-right corner. Includes desktop profile modal and mobile bottom drawer.
 
-## Changes
+## New Components
 
-### 1. Create Reusable `AnimatedImage` Component
+### 1. `src/components/team/TeamOverlapCard.tsx`
+The core card component with two layers:
 
-**New file: `src/components/common/AnimatedImage.tsx`**
+**Image Card (main layer)**
+- 4:5 aspect ratio, `border-radius: 28px`
+- Subtle border: `1px solid rgba(255,255,255,0.08)`
+- Dark gradient overlay: `linear-gradient(180deg, rgba(0,0,0,0.05), rgba(0,0,0,0.45))`
+- Uses `AnimatedImage` for lazy loading with shimmer
+- Gradient fallback avatar for members without photos (UTAAB brand gradient)
 
-A drop-in replacement for `<img>` that:
-- Shows a subtle shimmer/pulse skeleton placeholder while loading
-- Fades in with a slight upward scale animation once loaded (`opacity-0 scale-95` to `opacity-100 scale-100`)
-- Accepts all standard `<img>` props plus optional `placeholderClassName` for custom skeleton sizing
-- Uses React state (`loaded`) toggled by the `onLoad` event
+**Glass Info Card (overlapping layer)**
+- Absolutely positioned at bottom-right, overlapping outside by ~24px (desktop), ~16px (tablet), ~12px (mobile)
+- ~55% width, ~30-35% height of image card
+- `border-radius: 24px`, `backdrop-blur: 14px`
+- Background: `rgba(255,255,255,0.08)`, border: `1px solid rgba(148,163,184,0.18)`
+- Content: tag label (e.g. "Leadership"), name (Montserrat 700), role, 2-line bio with `line-clamp-2`, optional LinkedIn icon button
 
-### 2. Update All Image Locations
+**Hover interaction**
+- Card lifts `translateY(-4px)` on hover with 240ms ease-out
+- Border brightens subtly
+- Respects `prefers-reduced-motion`
+- onClick opens modal (desktop) or drawer (mobile)
 
-Apply `AnimatedImage` to every static and dynamic image across the site:
+### 2. `src/components/team/TeamProfileModal.tsx`
+Desktop profile modal using Radix Dialog:
+- Glass-styled content panel
+- Larger photo, full name, role, complete bio
+- Social links (LinkedIn)
+- Smooth fade-in/scale animation
 
-| File | Images Updated |
-|------|---------------|
-| `src/components/Team.tsx` | Team member photos (5 images) |
-| `src/components/Footer.tsx` | Footer brand logo |
-| `src/components/blog/BlogCard.tsx` | Blog post cover images |
-| `src/components/education/ExternalCourseCard.tsx` | Course card hero images |
-| `src/pages/education/BlockchainAndMoney.tsx` | MIT logo in course header |
-| `src/pages/BlogPost.tsx` | Blog post cover image + inline content images |
-| `src/pages/Blog.tsx` | Featured blog post cover image |
-| `src/pages/TeamPage.tsx` | Team page member photos |
-| `src/pages/education/EducationHome.tsx` | Course hero images |
-| `src/pages/education/CourseDetail.tsx` | Course detail hero image |
-| `src/pages/education/CourseCatalog.tsx` | Course catalog hero images |
-| `src/pages/education/InstructorProfile.tsx` | Instructor course images |
-| `src/pages/admin/AdminEvents.tsx` | Event cover images |
+### 3. `src/components/team/TeamProfileDrawer.tsx`
+Mobile bottom drawer using vaul `Drawer`:
+- Same content as modal but in bottom sheet format
+- Pull-to-dismiss handle
+- Glass background styling
 
-**Note:** The Navbar and EducationNavbar logos already have a fade-in animation with shimmer placeholder -- these will remain unchanged.
+## Updated Files
 
-### 3. Component Design
+### `src/pages/TeamPage.tsx` (full rewrite)
+- Replace current layout with new overlapping card grid
+- Hero section: title + subtitle (kept from current)
+- All 5 members rendered in unified grid (no separate founder section -- founder gets a "Founder" tag on their card)
+- Grid: 3 columns (desktop >= 1200px), 2 columns (tablet 768-1199px), 1 column (mobile)
+- Gap: 28px desktop, adapts down
+- Staggered Framer Motion entrance animations
+- State management for selected member + modal/drawer open
 
+### Data Structure
 ```text
-+---------------------------+
-|  AnimatedImage             |
-|                           |
-|  [shimmer skeleton]       |  <-- visible while loading
-|  [img opacity-0]          |  <-- hidden until loaded
-|                           |
-|  onLoad fires -->         |
-|                           |
-|  [skeleton hidden]        |  <-- removed
-|  [img fade-in + scale]    |  <-- smooth 500ms transition
-+---------------------------+
+teamMembers = [
+  { key: 'zinurbek', image: zinurbekImg, tag: 'Founder' },
+  { key: 'yunus', image: yunusImg, tag: 'Leadership' },
+  { key: 'abdulla', image: abdullaImg, tag: 'Engineering' },
+  { key: 'abdulbaki', tag: 'Operations' },
+  { key: 'umut', image: umutImg, tag: 'Operations' },
+]
 ```
+Name, role, and bio pulled from i18n `team.members.[key].*`.
 
-## Technical Details
+### `src/i18n/locales/en.json` (and tr, ar, ru)
+Add `teamPage.founderTag`, `teamPage.viewProfile` keys. Keep existing `team.members.*` data unchanged.
 
-### `AnimatedImage` Component Props
-- Extends `React.ImgHTMLAttributes<HTMLImageElement>` (all native img props)
-- `placeholderClassName?: string` -- optional custom classes for the skeleton placeholder dimensions
-- `containerClassName?: string` -- optional wrapper div classes
+## Responsive Behavior
 
-### Implementation Pattern
-```tsx
-const [loaded, setLoaded] = useState(false);
+| Breakpoint | Columns | Gap | Info Overlap | Name Size |
+|------------|---------|-----|-------------|-----------|
+| >= 1200px  | 3       | 28px | 24-30px    | 20px      |
+| 768-1199px | 2       | 20px | 18-22px    | 18px      |
+| < 768px    | 1       | 16px | 12-16px    | 16-18px   |
 
-return (
-  <div className={cn("relative overflow-hidden", containerClassName)}>
-    {!loaded && (
-      <div className={cn("absolute inset-0 bg-muted animate-pulse rounded-md", placeholderClassName)} />
-    )}
-    <img
-      {...props}
-      onLoad={(e) => { setLoaded(true); props.onLoad?.(e); }}
-      className={cn(
-        "transition-all duration-500 ease-out",
-        loaded ? "opacity-100 scale-100" : "opacity-0 scale-95",
-        props.className
-      )}
-    />
-  </div>
-);
-```
+Mobile: image card slightly shorter aspect ratio to avoid long scroll. Bio clamped to 2 lines.
+
+## Performance
+- All images use `AnimatedImage` (lazy load + shimmer + fade-in)
+- `loading="lazy"` on image tags
+- Blur effects kept minimal (14-16px only on info card, not full screen)
+- `prefers-reduced-motion` media query disables hover transforms
+
+## Technical Notes
+
+### Files Created
+| File | Purpose |
+|------|---------|
+| `src/components/team/TeamOverlapCard.tsx` | Overlapping image + glass info card |
+| `src/components/team/TeamProfileModal.tsx` | Desktop profile detail modal |
+| `src/components/team/TeamProfileDrawer.tsx` | Mobile bottom drawer for profile |
 
 ### Files Modified
-
 | File | Change |
 |------|--------|
-| `src/components/common/AnimatedImage.tsx` | **New** -- reusable animated image component |
-| `src/components/Team.tsx` | Replace `<img>` with `<AnimatedImage>` |
-| `src/components/Footer.tsx` | Replace `<img>` with `<AnimatedImage>` |
-| `src/components/blog/BlogCard.tsx` | Replace `<img>` with `<AnimatedImage>` |
-| `src/components/education/ExternalCourseCard.tsx` | Replace `<img>` with `<AnimatedImage>` |
-| `src/pages/education/BlockchainAndMoney.tsx` | Replace MIT logo `<img>` with `<AnimatedImage>` |
-| `src/pages/BlogPost.tsx` | Replace cover + inline `<img>` with `<AnimatedImage>` |
-| `src/pages/Blog.tsx` | Replace featured post `<img>` with `<AnimatedImage>` |
-| `src/pages/TeamPage.tsx` | Replace `<img>` with `<AnimatedImage>` |
-| `src/pages/education/EducationHome.tsx` | Replace `<img>` with `<AnimatedImage>` |
-| `src/pages/education/CourseDetail.tsx` | Replace `<img>` with `<AnimatedImage>` |
-| `src/pages/education/CourseCatalog.tsx` | Replace `<img>` with `<AnimatedImage>` |
-| `src/pages/education/InstructorProfile.tsx` | Replace `<img>` with `<AnimatedImage>` |
-| `src/pages/admin/AdminEvents.tsx` | Replace `<img>` with `<AnimatedImage>` |
+| `src/pages/TeamPage.tsx` | Full rewrite with new card grid + modal/drawer |
+| `src/i18n/locales/en.json` | Add `teamPage.viewProfile` key |
+| `src/i18n/locales/tr.json` | Add `teamPage.viewProfile` key |
+| `src/i18n/locales/ar.json` | Add `teamPage.viewProfile` key |
+| `src/i18n/locales/ru.json` | Add `teamPage.viewProfile` key |
+
+### Dependencies Used (already installed)
+- `framer-motion` -- entrance animations
+- `vaul` -- mobile drawer
+- `@radix-ui/react-dialog` -- desktop modal
+- `lucide-react` -- icons (User, Linkedin, X)
+- Existing `AnimatedImage`, `AnimatedBlobBackground`, `useIsMobile`
