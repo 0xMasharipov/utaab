@@ -77,7 +77,7 @@ const TeamPage = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-50px' }}
-            className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5 lg:gap-7 max-w-6xl mx-auto"
+            className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-7 lg:gap-8 max-w-6xl mx-auto"
           >
             {teamMembers.map((member) => (
               <TeamOverlapCard

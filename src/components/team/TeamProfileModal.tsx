@@ -21,7 +21,7 @@ const TeamProfileModal = ({ member, open, onOpenChange }: TeamProfileModalProps)
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md p-0 border-0 bg-transparent shadow-none overflow-hidden sm:rounded-[28px] [&>button]:hidden">
-        <div className="bg-white/[0.08] backdrop-blur-2xl border border-[rgba(148,163,184,0.2)] rounded-[28px] overflow-hidden">
+        <div className="rounded-[28px] overflow-hidden border" style={{ background: 'rgba(10, 18, 40, 0.85)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderColor: 'rgba(148, 163, 184, 0.20)' }}>
           {/* Image */}
           <div className="relative aspect-[4/3] w-full overflow-hidden">
             {member.image ? (
@@ -54,13 +54,13 @@ const TeamProfileModal = ({ member, open, onOpenChange }: TeamProfileModalProps)
             <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary mb-2 block">
               {member.tag}
             </span>
-            <h2 className="font-bold text-2xl text-foreground mb-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+            <h2 className="font-bold text-2xl mb-1" style={{ fontFamily: 'Montserrat, sans-serif', color: '#F8FAFC' }}>
               {t(`team.members.${member.key}.name`)}
             </h2>
-            <p className="text-sm font-semibold text-primary/80 mb-4">
+            <p className="text-sm font-semibold mb-4" style={{ color: '#93C5FD' }}>
               {t(`team.members.${member.key}.position`)}
             </p>
-            <p className="text-sm text-muted-foreground leading-relaxed mb-6">
+            <p className="text-sm leading-relaxed mb-6" style={{ color: 'rgba(226,232,240,0.78)' }}>
               {t(`team.members.${member.key}.description`)}
             </p>
             <button
