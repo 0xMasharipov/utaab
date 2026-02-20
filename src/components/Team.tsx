@@ -4,12 +4,17 @@ import { User } from 'lucide-react';
 import GlassCard from '@/components/glass/GlassCard';
 import GlassSectionWrapper from '@/components/glass/GlassSectionWrapper';
 
+import zinurbekImg from '@/assets/team/zinurbek.png';
+import umutImg from '@/assets/team/umut.png';
+import abdullaImg from '@/assets/team/abdulla.png';
+import yunusImg from '@/assets/team/yunus.png';
+
 const teamMembers = [
-  { key: 'zinurbek', icon: '🚀' },
-  { key: 'yunus', icon: '⚡' },
-  { key: 'abdulla', icon: '🔧' },
-  { key: 'abdulbaki', icon: '📊' },
-  { key: 'umut', icon: '🤝' },
+  { key: 'zinurbek', image: zinurbekImg },
+  { key: 'yunus', image: yunusImg },
+  { key: 'abdulla', image: abdullaImg },
+  { key: 'abdulbaki' },
+  { key: 'umut', image: umutImg },
 ];
 
 const containerVariants = {
@@ -59,9 +64,18 @@ export const Team = () => {
         {teamMembers.map((member) => (
           <motion.div key={member.key} variants={cardVariants}>
             <GlassCard hover glow className="p-6 text-center group">
-              {/* Avatar placeholder */}
-              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-white/[0.08] border border-white/[0.12] flex items-center justify-center group-hover:border-accent/30 transition-colors duration-300">
-                <User className="w-8 h-8 text-muted-foreground group-hover:text-accent transition-colors duration-300" />
+              <div className="w-20 h-20 mx-auto mb-4 rounded-full p-[2px] bg-gradient-to-br from-accent/30 via-primary/20 to-accent/15">
+                <div className="w-full h-full rounded-full overflow-hidden bg-muted/20 flex items-center justify-center">
+                  {member.image ? (
+                    <img
+                      src={member.image}
+                      alt=""
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <User className="w-8 h-8 text-muted-foreground group-hover:text-accent transition-colors duration-300" />
+                  )}
+                </div>
               </div>
 
               <h3 className="text-foreground font-semibold text-lg mb-1">
