@@ -1,103 +1,83 @@
 
-# Fix Team Page Card Design: Overlap, Contrast, and Readability
 
-## Problems
-1. Info card covers too much of the portrait (face area)
-2. Light glass background (`bg-white/0.08`) makes text unreadable
-3. Too much content crammed into info card
-4. Stacked blur effects create muddy visuals
-5. Image gradient overlay not strong enough at bottom
+# Localize Missing and Incomplete Translations
 
-## Changes
+## Summary
+After auditing all 4 locale files (EN, TR, AR, RU), the pages (Privacy Policy, Terms of Service, Team, KVKK Request), and comparing key coverage, I found several categories of missing or incomplete translations.
 
-### 1. `src/components/team/TeamOverlapCard.tsx` (major rework)
+## Issues Found
 
-**Image gradient overlay** -- replace the current weak gradient with a stronger bottom-focused one:
+### 1. Missing i18n Keys (All Locales)
+The key `common.back` is used in Privacy Policy and Terms of Service pages but does not exist in any locale file. It falls back to the hardcoded string "Back".
+
+**Fix:** Add `common.back` to all 4 locale files.
+
+| Locale | Value |
+|--------|-------|
+| EN | "Back" |
+| TR | "Geri" |
+| AR | "رجوع" |
+| RU | "Назад" |
+
+### 2. Missing Keys in Non-English Locales
+The following keys exist only in `en.json` and are missing from TR, AR, and RU:
+
+- `education.admin.applications` ("Community Applications")
+- `education.admin.kvkkRequests` ("KVKK Requests")
+
+**Fix:** Add these 2 keys to `tr.json`, `ar.json`, and `ru.json`.
+
+### 3. Missing Key in English Locale
+`kvkk.requestForm.successMessage` exists in TR, AR, and RU but is missing from EN.
+
+**Fix:** Add to `en.json`:
 ```
-linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 35%, transparent 70%)
-```
-This darkens only the lower portion, keeping faces clear.
-
-**Info card positioning** -- constrain to lower 30-35% of the image card:
-- Remove `pb-4 pr-4` / `pb-5 pr-5` / `pb-6 pr-6` padding hack from the outer wrapper (currently used to create overflow space)
-- Instead, position the info card inside the image card bounds, anchored to the bottom-right with small margin
-- Use `bottom-3 right-3` (desktop: `bottom-4 right-4`) so it sits in the darkened gradient zone
-
-**Info card styling** -- switch from light glass to dark glass:
-- Background: `rgba(10, 18, 40, 0.62)` instead of `rgba(255,255,255,0.08)`
-- Backdrop blur: `blur(12px)` instead of `blur(14px)`
-- Border: `rgba(148, 163, 184, 0.20)`
-- Box shadow: `0 10px 30px rgba(0,0,0,0.35)`
-- Max height: `max-h-[140px]` desktop, `max-h-[120px]` mobile
-- Width: `w-[65%] sm:w-[52%] lg:w-[48%]`
-
-**Text colors** -- enforce high-contrast values:
-- Name: `#F8FAFC` (near-white), 16-20px, weight 700
-- Role: `#93C5FD` (light blue), 12-13px, weight 600
-- Bio: `rgba(226,232,240,0.78)`, 12px, `line-clamp-2`
-
-**Remove LinkedIn button** from card (keep it only in the modal/drawer to reduce clutter).
-
-**Hover state**:
-- Info card background strengthens to `rgba(10,18,40,0.72)`
-- Image gets `scale(1.02)` zoom
-- Border brightens
-
-**Image card** -- remove `overflow-hidden` on the outer wrapper since the info card no longer overflows. The image card div itself keeps `overflow-hidden`.
-
-### 2. `src/pages/TeamPage.tsx` (minor)
-
-Increase grid gap: `gap-6 sm:gap-7 lg:gap-8` (from `gap-4 sm:gap-5 lg:gap-7`).
-
-### 3. `src/components/team/TeamProfileModal.tsx` (minor polish)
-
-- Update modal content background to match dark glass: `rgba(10, 18, 40, 0.85)` with `blur(20px)`
-- Text colors: name `#F8FAFC`, role `#93C5FD`, bio `rgba(226,232,240,0.78)`
-
-## Technical Details
-
-### TeamOverlapCard structure (after fix)
-
-```text
-<motion.div>                          (no extra padding for overflow)
-  <div class="relative aspect-[4/5]  (image card, overflow-hidden, rounded-[28px])
-    <AnimatedImage />                 (portrait photo)
-    <div />                           (bottom gradient overlay, z-10)
-    <div class="info-card             (z-20, absolute bottom-3 right-3)
-              max-h-[140px]           (constrained height)
-              w-[48%]                 (narrower width)
-              bg-[rgba(10,18,40,0.62)](dark glass)
-              backdrop-blur-[12px]    (reduced blur)
-      <span>Tag</span>
-      <h3>Name</h3>                   (color: #F8FAFC)
-      <p>Role</p>                     (color: #93C5FD)
-      <p>Bio (2 lines)</p>            (color: rgba(226,232,240,0.78))
-    </div>
-  </div>
-</motion.div>
+"successMessage": "Your KVKK data request has been submitted. We will contact you via email with updates."
 ```
 
-### Key CSS values
+### 4. Hardcoded Date String
+"December 2024" is hardcoded in both `PrivacyPolicy.tsx` and `TermsOfService.tsx`. This should be localized.
 
-| Property | Value |
-|----------|-------|
-| Info card bg | `rgba(10, 18, 40, 0.62)` |
-| Info card blur | `blur(12px)` |
-| Info card border | `1px solid rgba(148, 163, 184, 0.20)` |
-| Info card shadow | `0 10px 30px rgba(0,0,0,0.35)` |
-| Info card max-height | 140px desktop / 120px mobile |
-| Info card width | 65% mobile / 52% tablet / 48% desktop |
-| Image gradient | `linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 35%, transparent 70%)` |
-| Name color | `#F8FAFC` |
-| Role color | `#93C5FD` |
-| Bio color | `rgba(226,232,240,0.78)` |
-| Hover bg | `rgba(10,18,40,0.72)` |
-| Hover image | `scale(1.02)` |
+**Fix:**
+- Add `legal.lastUpdatedDate` key to all locales
+- Update both page components to use `t('legal.lastUpdatedDate')`
 
-### Files Modified
+| Locale | Value |
+|--------|-------|
+| EN | "December 2024" |
+| TR | "Aralık 2024" |
+| AR | "ديسمبر 2024" |
+| RU | "Декабрь 2024" |
+
+### 5. Thin Legal Content in AR and RU
+The Arabic and Russian Privacy Policy and Terms of Service sections have significantly shorter content compared to English and Turkish. For example, EN's "Data Security" section has 6 bullet points and 2 paragraphs, while RU has a single sentence. This is a content completeness issue, not a missing-key issue.
+
+**Fix:** Expand the `legal.privacyPolicy.sections.*.content` and `legal.termsOfService.sections.*.content` values in `ar.json` and `ru.json` to match the detail level of EN. This involves rewriting ~24 content blocks (12 privacy + 12 terms sections per locale).
+
+## Files Modified
 
 | File | Change |
 |------|--------|
-| `src/components/team/TeamOverlapCard.tsx` | Rework info card position, dark glass bg, text colors, remove LinkedIn button, hover states |
-| `src/pages/TeamPage.tsx` | Increase grid gap |
-| `src/components/team/TeamProfileModal.tsx` | Match dark glass styling, fix text colors |
+| `src/i18n/locales/en.json` | Add `common.back`, `kvkk.requestForm.successMessage`, `legal.lastUpdatedDate` |
+| `src/i18n/locales/tr.json` | Add `common.back`, `education.admin.applications`, `education.admin.kvkkRequests`, `legal.lastUpdatedDate` |
+| `src/i18n/locales/ar.json` | Add `common.back`, `education.admin.applications`, `education.admin.kvkkRequests`, `legal.lastUpdatedDate`, expand all legal section content to full detail |
+| `src/i18n/locales/ru.json` | Add `common.back`, `education.admin.applications`, `education.admin.kvkkRequests`, `legal.lastUpdatedDate`, expand all legal section content to full detail |
+| `src/pages/PrivacyPolicy.tsx` | Replace hardcoded "December 2024" with `t('legal.lastUpdatedDate')` |
+| `src/pages/TermsOfService.tsx` | Replace hardcoded "December 2024" with `t('legal.lastUpdatedDate')` |
+
+## Scope of Legal Content Expansion (AR and RU)
+
+For both Arabic and Russian, the following Privacy Policy sections will be expanded to match English/Turkish detail:
+
+- `dataSecurity` -- add encryption, security assessments, access controls details
+- `yourRights` -- add full list of 10 KVKK Article 11 rights
+- `cookies` -- add cookie category breakdown
+- `thirdParty` -- add Google OAuth, cloud hosting, email, analytics details
+- `international` -- add safeguards (standard clauses, adequacy decisions)
+- `children` -- expand with minor data collection policy
+- `updates` -- add notification methods
+- `contact` -- add full contact details
+
+For Terms of Service, similar expansion for:
+- `acceptance`, `description`, `accounts`, `conduct`, `intellectual`, `educational`, `community`, `payment`, `disclaimers`, `indemnification`, `termination`, `governing`, `changes`, `contact`
+
