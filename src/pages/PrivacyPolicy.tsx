@@ -58,7 +58,7 @@ export const PrivacyPolicy = () => {
               {t('legal.privacyPolicy.title', 'Privacy Policy')}
             </h1>
             <p className="text-muted-foreground text-lg">
-              {t('legal.privacyPolicy.lastUpdated', 'Last Updated')}: December 2024
+              {t('legal.privacyPolicy.lastUpdated', 'Last Updated')}: {t('legal.lastUpdatedDate', 'December 2024')}
             </p>
           </div>
 

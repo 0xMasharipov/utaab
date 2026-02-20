@@ -352,6 +352,7 @@
   },
   "common": {
     "close": "Kapat",
+    "back": "Geri",
     "submitting": "Gönderiliyor...",
     "save": "Kaydet",
     "cancel": "İptal",
@@ -562,7 +563,9 @@
       "categories": "Kategorileri Yönet",
       "instructors": "Eğitmenleri Yönet",
       "reviews": "Değerlendirmeleri Yönet",
-      "analytics": "Analitik"
+      "analytics": "Analitik",
+      "applications": "Topluluk Başvuruları",
+      "kvkkRequests": "KVKK Talepleri"
     }
   },
   "kvkk": {
@@ -600,6 +603,7 @@
   "legal": {
     "tableOfContents": "İçindekiler",
     "relatedDocuments": "İlgili Belgeler",
+    "lastUpdatedDate": "Aralık 2024",
     "privacyPolicy": {
       "title": "Gizlilik Politikası",
       "lastUpdated": "Son Güncelleme",

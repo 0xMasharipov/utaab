@@ -352,6 +352,7 @@
   },
   "common": {
     "close": "إغلاق",
+    "back": "رجوع",
     "submitting": "جاري الإرسال...",
     "save": "حفظ",
     "cancel": "إلغاء",
@@ -562,7 +563,9 @@
       "categories": "إدارة الفئات",
       "instructors": "إدارة المدربين",
       "reviews": "إدارة التقييمات",
-      "analytics": "التحليلات"
+      "analytics": "التحليلات",
+      "applications": "طلبات المجتمع",
+      "kvkkRequests": "طلبات KVKK"
     }
   },
   "kvkk": {
