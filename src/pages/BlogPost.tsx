@@ -16,6 +16,7 @@ import GlassCard from '@/components/glass/GlassCard';
 import { PrivacyPopup } from '@/components/PrivacyPopup';
 import { PrivacyCenter } from '@/components/PrivacyCenter';
 import { FloatingPrivacyButton } from '@/components/FloatingPrivacyButton';
+import AnimatedImage from '@/components/common/AnimatedImage';
 
 interface ContentBlock {
   type: string;
@@ -41,7 +42,7 @@ const RenderBlock = ({ block }: { block: ContentBlock }) => {
     case 'image':
       return (
         <figure className="my-6">
-          <img src={block.url} alt={block.alt || ''} className="w-full rounded-xl" loading="lazy" />
+          <AnimatedImage src={block.url} alt={block.alt || ''} className="w-full rounded-xl" loading="lazy" />
           {block.alt && <figcaption className="text-center text-xs text-muted-foreground mt-2">{block.alt}</figcaption>}
         </figure>
       );
@@ -135,7 +136,7 @@ const BlogPost = () => {
         <header className="relative pt-24 pb-12">
           {post.cover_image && (
             <div className="absolute inset-0 z-0">
-              <img src={post.cover_image} alt={title} className="w-full h-full object-cover opacity-20" />
+              <AnimatedImage src={post.cover_image} alt={title} className="w-full h-full object-cover opacity-20" containerClassName="w-full h-full" />
               <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/80 to-background" />
             </div>
           )}

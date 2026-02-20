@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Linkedin, Instagram, Twitter, Send } from 'lucide-react';
 import logo from '@/assets/logo-new.png';
 import { BrandText } from '@/components/common/BrandText';
+import AnimatedImage from '@/components/common/AnimatedImage';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 import { Link } from 'react-router-dom';
 
@@ -43,11 +44,11 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3 mb-3 sm:mb-4">
-              <img
+              <AnimatedImage
                 src={logo}
                 alt="UTAA Blockchain logo"
                 className="h-7 sm:h-8 w-auto transition-transform hover:scale-105 mix-blend-lighten brightness-110"
-                width="120" height="32" loading="eager"
+                width={120} height={32} loading="eager"
               />
               <BrandText variant="footer" />
             </div>

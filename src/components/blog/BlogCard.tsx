@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Calendar } from 'lucide-react';
 import { format } from 'date-fns';
 import GlassCard from '@/components/glass/GlassCard';
+import AnimatedImage from '@/components/common/AnimatedImage';
 
 interface BlogCardProps {
   post: {
@@ -41,10 +42,11 @@ export const BlogCard = ({ post, index = 0 }: BlogCardProps) => {
         <GlassCard hover glow className="overflow-hidden group h-full">
           {post.cover_image && (
             <div className="relative h-48 overflow-hidden">
-              <img
+              <AnimatedImage
                 src={post.cover_image}
                 alt={title}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                containerClassName="w-full h-full"
                 loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />

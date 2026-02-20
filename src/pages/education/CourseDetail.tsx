@@ -13,6 +13,7 @@ import { EducationNavbar } from '@/components/education/EducationNavbar';
 import { CutiiAIPanel } from '@/components/education/CutiiAIPanel';
 import { CourseReviews } from '@/components/education/CourseReviews';
 import { SafeContent } from '@/components/common/SafeContent';
+import AnimatedImage from '@/components/common/AnimatedImage';
 
 export const CourseDetail = () => {
   const { slug } = useParams();
@@ -234,10 +235,11 @@ export const CourseDetail = () => {
                 <CardContent className="p-6">
                   {course.hero_image && (
                     <div className="aspect-video overflow-hidden rounded-lg mb-4">
-                      <img
+                      <AnimatedImage
                         src={course.hero_image}
                         alt={getCourseTitle(course)}
                         className="w-full h-full object-cover"
+                        containerClassName="w-full h-full"
                       />
                     </div>
                   )}

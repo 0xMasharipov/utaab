@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { User } from 'lucide-react';
 import GlassCard from '@/components/glass/GlassCard';
 import GlassSectionWrapper from '@/components/glass/GlassSectionWrapper';
+import AnimatedImage from '@/components/common/AnimatedImage';
 
 import zinurbekImg from '@/assets/team/zinurbek.png';
 import umutImg from '@/assets/team/umut.png';
@@ -67,10 +68,11 @@ export const Team = () => {
               <div className="w-20 h-20 mx-auto mb-4 rounded-full p-[2px] bg-gradient-to-br from-accent/30 via-primary/20 to-accent/15">
                 <div className="w-full h-full rounded-full overflow-hidden bg-muted/20 flex items-center justify-center">
                   {member.image ? (
-                    <img
+                    <AnimatedImage
                       src={member.image}
                       alt=""
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      containerClassName="w-full h-full"
                     />
                   ) : (
                     <User className="w-8 h-8 text-muted-foreground group-hover:text-accent transition-colors duration-300" />
