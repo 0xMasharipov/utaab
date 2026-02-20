@@ -105,7 +105,7 @@ export const KVKKRequestForm = () => {
           {t('kvkk.requestForm.successMessage')}
         </p>
         <p className="text-foreground text-base mb-8">
-          Meanwhile, join our community on WhatsApp to stay connected!
+          {t('kvkk.requestForm.successCommunity')}
         </p>
         
         <div className="grid gap-4 max-w-md mx-auto">
@@ -117,7 +117,7 @@ export const KVKKRequestForm = () => {
           <Button className="btn-glass w-full" asChild>
             <a href="/">
               <Home className="mr-2 h-5 w-5" />
-              Back to Home
+              {t('kvkk.requestForm.backToHome')}
             </a>
           </Button>
         </div>
@@ -222,7 +222,7 @@ export const KVKKRequestForm = () => {
       </div>
 
       <Button type="submit" className="btn-primary w-full" disabled={isSubmitting || !utaabToken}>
-        {isSubmitting ? 'Submitting...' : t('kvkk.requestForm.submit')}
+        {isSubmitting ? t('common.submitting') : t('kvkk.requestForm.submit')}
       </Button>
     </form>
   );

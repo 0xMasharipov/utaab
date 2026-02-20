@@ -135,10 +135,6 @@
       "title": "DVS — Decentralized Validation System",
       "description": "A distributed validation framework aimed at improving trust and automation across academic and administrative systems."
     },
-    "ubpoint": {
-      "title": "UB Point — University Benefit Point System",
-      "description": "A student engagement initiative designed to encourage participation and campus involvement through structured reward mechanisms."
-    },
     "did": {
       "title": "DID — Decentralized Identity System",
       "description": "A privacy-oriented identity solution built to support secure academic authentication and verification processes."
@@ -590,7 +586,8 @@
       "responseTime": "We will respond to your request within 30 days as required by KVKK.",
       "contact": "For urgent matters, contact us at:",
       "successTitle": "Request Submitted",
-      "successMessage": "Your KVKK data request has been submitted. We will contact you via email with updates.",
+      "successCommunity": "Meanwhile, join our community on WhatsApp to stay connected!",
+      "backToHome": "Back to Home",
       "validation": {
         "nameRequired": "Name is required",
         "emailRequired": "Email is required",
