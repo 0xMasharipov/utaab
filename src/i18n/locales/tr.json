@@ -135,10 +135,6 @@
       "title": "DVS — Merkezi Olmayan Doğrulama Sistemi",
       "description": "Akademik ve idari sistemlerde güven ve otomasyonu geliştirmeyi amaçlayan dağıtık bir doğrulama çerçevesi."
     },
-    "ubpoint": {
-      "title": "UB Point — Üniversite Fayda Puan Sistemi",
-      "description": "Yapılandırılmış ödül mekanizmaları aracılığıyla katılımı ve kampüs dahiliyetini teşvik etmek için tasarlanmış bir öğrenci bağlılık girişimi."
-    },
     "did": {
       "title": "DID — Merkezi Olmayan Kimlik Sistemi",
       "description": "Güvenli akademik kimlik doğrulama ve doğrulama süreçlerini desteklemek için oluşturulmuş gizlilik odaklı bir kimlik çözümü."
@@ -401,6 +397,58 @@
   "education": {
     "title": "Eğitim Platformu",
     "register": "Kayıt Ol",
+    "registration": {
+      "title": "Hesabınızı Oluşturun",
+      "subtitle": "Blockchain öğrenme yolculuğunuza başlayın",
+      "stepAccount": "Hesap",
+      "stepProfile": "Profil",
+      "stepLegal": "Yasal ve Tercihler",
+      "email": "E-posta",
+      "password": "Şifre",
+      "confirmPassword": "Şifreyi Onayla",
+      "passwordStrength": "Şifre güvenliği",
+      "showPassword": "Şifreyi göster",
+      "hidePassword": "Şifreyi gizle",
+      "preferredLanguage": "Tercih Edilen Dil",
+      "fullName": "Ad Soyad",
+      "department": "Bölüm",
+      "role": "Rol",
+      "student": "Öğrenci",
+      "instructor": "Eğitmen",
+      "focusAreas": "İlgi Alanları",
+      "selectFocusAreas": "İlgi alanlarınızı seçin",
+      "kvkkConsent": "Kişisel verilerimin KVKK (Kanun No. 6698) kapsamında işlenmesini kabul ediyorum",
+      "kvkkNotice": "KVKK Aydınlatma Metni",
+      "privacyPolicy": "Gizlilik Politikası",
+      "cookiePolicy": "Çerez Politikası",
+      "emailPreferences": "E-posta Tercihleri",
+      "emailCourseUpdates": "Kurs güncellemeleri ve duyurular",
+      "emailNewsletters": "Eğitim bültenleri",
+      "emailMarketing": "Pazarlama iletişimleri",
+      "emailNote": "İşlemsel e-postalar (onaylar, makbuzlar) devre dışı bırakılamaz",
+      "createAccount": "Hesap Oluştur",
+      "haveAccount": "Zaten hesabınız var mı?",
+      "noAccount": "Hesabınız yok mu?",
+      "signIn": "Giriş Yap",
+      "signingIn": "Giriş yapılıyor...",
+      "welcomeBack": "Tekrar Hoşgeldiniz!",
+      "signInSuccess": "Başarıyla giriş yapıldı",
+      "welcomeTitle": "Platforma Hoşgeldiniz!",
+      "welcomeMessage": "Hesabınız hazır. Kursları keşfetmeye ve öğrenme yolculuğunuza başlamaya başlayın.",
+      "gotoDashboard": "Panele Git",
+      "validation": {
+        "emailRequired": "E-posta gerekli",
+        "emailInvalid": "Geçersiz e-posta adresi",
+        "passwordRequired": "Şifre gerekli",
+        "passwordTooShort": "Şifre en az 8 karakter olmalıdır",
+        "passwordMatch": "Şifreler eşleşmeli",
+        "nameRequired": "Ad soyad gerekli",
+        "departmentRequired": "Bölüm gerekli",
+        "roleRequired": "Lütfen bir rol seçin",
+        "focusAreasRequired": "Lütfen en az bir ilgi alanı seçin",
+        "kvkkRequired": "KVKK şartlarını kabul etmelisiniz"
+      }
+    },
     "home": {
       "hero_title": "Blockchain Geliştirmeyi Öğrenin",
       "hero_subtitle": "Uzman eğitmenlerle Web3 teknolojilerinde ustalaşın",
@@ -537,6 +585,8 @@
       "contact": "Acil durumlar için bizimle iletişime geçin:",
       "successTitle": "Talep Gönderildi",
       "successMessage": "KVKK veri talebiniz gönderildi. Güncellemeler için e-posta yoluyla sizinle iletişime geçeceğiz.",
+      "successCommunity": "Bu arada, bağlantıda kalmak için WhatsApp topluluğumuza katılın!",
+      "backToHome": "Ana Sayfaya Dön",
       "validation": {
         "nameRequired": "İsim gerekli",
         "emailRequired": "E-posta gerekli",
@@ -544,6 +594,126 @@
         "typeRequired": "Lütfen bir talep türü seçin",
         "detailsRequired": "Lütfen talebiniz hakkında detay verin",
         "allRequired": "Tüm alanlar gereklidir"
+      }
+    }
+  },
+  "legal": {
+    "tableOfContents": "İçindekiler",
+    "relatedDocuments": "İlgili Belgeler",
+    "privacyPolicy": {
+      "title": "Gizlilik Politikası",
+      "lastUpdated": "Son Güncelleme",
+      "sections": {
+        "introduction": {
+          "title": "Giriş",
+          "content": "<p>UTAA Blockchain Topluluğu (\"biz\" veya \"bizim\") gizliliğinizi ve kişisel verilerinizi korumaya kararlıdır. Bu Gizlilik Politikası, platformumuzu ve hizmetlerimizi kullanırken bilgilerinizi nasıl topladığımızı, kullandığımızı, ifşa ettiğimizi ve koruduğumuzu açıklar.</p><p>Bu politika, 6698 sayılı Türk Kişisel Verilerin Korunması Kanunu (KVKK) ve uygulanabilir olduğunda GDPR dahil uluslararası veri koruma düzenlemelerine uygundur.</p>"
+        },
+        "dataCollection": {
+          "title": "Topladığımız Bilgiler",
+          "content": "<p><strong>Kişisel Bilgiler:</strong> Kayıt olduğunuzda veya hizmetlerimizi kullandığınızda adınız, e-posta adresiniz, eğitim geçmişiniz, bölümünüz, ilgi alanlarınız ve iletişim bilgileriniz gibi bilgileri toplarız.</p><p><strong>Kullanım Verileri:</strong> Platformumuzla nasıl etkileşim kurduğunuza dair IP adresi, tarayıcı türü, cihaz bilgileri, ziyaret edilen sayfalar ve zaman damgaları dahil bilgileri otomatik olarak toplarız.</p><p><strong>Kimlik Doğrulama Verileri:</strong> Üçüncü taraf sağlayıcılar (ör. Google OAuth) aracılığıyla giriş yaptığınızda, bu hizmetlerin izin verdiği temel profil bilgilerini alırız.</p><p><strong>Eğitim Verileri:</strong> Kurs kayıtları, ilerleme, sınav sonuçları, kazanılan sertifikalar ve öğrenme etkinlikleri.</p>"
+        },
+        "dataUsage": {
+          "title": "Bilgilerinizi Nasıl Kullanıyoruz",
+          "content": "<ul><li>Eğitim platformumuzu ve topluluk hizmetlerimizi sağlamak ve sürdürmek</li><li>Kaydınızı işlemek ve hesabınızı yönetmek</li><li>Kursları sunmak, ilerlemeyi takip etmek ve sertifika vermek</li><li>Etkinlikleri, atölyeleri ve topluluk faaliyetlerini organize etmek ve yönetmek</li><li>Önemli güncellemeler, duyurular ve eğitim içeriği göndermek</li><li>Analitik ve kullanıcı geri bildirimleri yoluyla hizmetlerimizi iyileştirmek</li><li>Güvenliği sağlamak ve dolandırıcılığı veya yetkisiz erişimi önlemek</li><li>Yasal yükümlülüklere uymak ve yasal haklarımızı korumak</li></ul>"
+        },
+        "dataSharing": {
+          "title": "Veri Paylaşımı ve İfşa",
+          "content": "<p><strong>Kişisel verilerinizi satmıyoruz.</strong> Bilgilerinizi şu durumlarda paylaşabiliriz:</p><ul><li><strong>Hizmet Sağlayıcılar:</strong> Platformumuzu işletmede yardımcı olan güvenilir üçüncü taraf hizmet sağlayıcılarla (barındırma, e-posta hizmetleri, analitik)</li><li><strong>Yasal Gereklilikler:</strong> Kanun, mahkeme kararı veya devlet otoritesi tarafından gerekli kılındığında</li><li><strong>Koruma:</strong> Haklarımızı, mülkümüzü, güvenliğimizi veya kullanıcılarımızınkini korumak için</li><li><strong>Rıza:</strong> Belirli amaçlar için açık rızanızla</li></ul>"
+        },
+        "dataSecurity": {
+          "title": "Veri Güvenliği",
+          "content": "<p>Kişisel verilerinizi yetkisiz erişim, değişiklik, ifşa veya imhaya karşı korumak için uygun teknik ve organizasyonel güvenlik önlemleri uyguluyoruz.</p>"
+        },
+        "yourRights": {
+          "title": "Haklarınız (KVKK Madde 11)",
+          "content": "<p>KVKK Madde 11 ve yürürlükteki veri koruma kanunları uyarınca şu haklara sahipsiniz:</p><ul><li>Kişisel verilerinizin işlenip işlenmediğini öğrenme</li><li>İşleme hakkında bilgi talep etme</li><li>Eksik veya hatalı verilerin düzeltilmesini talep etme</li><li>Verilerin silinmesini veya yok edilmesini talep etme</li><li>İşlemeye itiraz etme</li><li>Veri taşınabilirliği talep etme</li><li>Rızanızı herhangi bir zamanda geri çekme</li></ul><p>Bu haklarınızı kullanmak için <a href=\"/kvkk-request\" class=\"text-accent hover:underline\">KVKK Veri Talebi sayfamızı</a> ziyaret edin.</p>"
+        },
+        "cookies": {
+          "title": "Çerezler ve İzleme Teknolojileri",
+          "content": "<p>Deneyiminizi geliştirmek, kullanım kalıplarını analiz etmek ve hizmetlerimizi iyileştirmek için çerezler ve benzer izleme teknolojileri kullanıyoruz.</p>"
+        },
+        "thirdParty": {
+          "title": "Üçüncü Taraf Hizmetler",
+          "content": "<p>Platformumuz Google OAuth, bulut barındırma, e-posta hizmetleri ve analitik dahil üçüncü taraf hizmetlerle entegre olur. Bu üçüncü tarafların kendi gizlilik politikaları vardır.</p>"
+        },
+        "international": {
+          "title": "Uluslararası Veri Aktarımları",
+          "content": "<p>Verileriniz, hizmet sağlayıcılarımızın bulunduğu Türkiye dışındaki ülkelere aktarılabilir ve buralarda işlenebilir. Tüm sınır ötesi veri aktarımlarının KVKK Madde 9'a uygunluğunu sağlıyoruz.</p>"
+        },
+        "children": {
+          "title": "Çocukların Gizliliği",
+          "content": "<p>Hizmetlerimiz 18 yaş ve üzeri üniversite öğrencileri ve profesyoneller için tasarlanmıştır. Ebeveyn izni olmadan 18 yaşından küçük kişilerden bilerek kişisel bilgi toplamıyoruz.</p>"
+        },
+        "updates": {
+          "title": "Bu Politikadaki Güncellemeler",
+          "content": "<p>Bu Gizlilik Politikasını zaman zaman güncelleyebiliriz. Önemli değişiklikleri e-posta bildirimleri ve platformumuzda belirgin bildirimler yoluyla size bildireceğiz.</p>"
+        },
+        "contact": {
+          "title": "İletişim Bilgileri",
+          "content": "<p>Bu Gizlilik Politikası hakkında sorularınız veya veri haklarınızı kullanmak için lütfen bize ulaşın:</p><ul><li><strong>Veri Talebi Formu:</strong> <a href=\"/kvkk-request\" class=\"text-accent hover:underline\">KVKK Talebi Gönderin</a></li><li><strong>E-posta:</strong> privacy@utaab.org</li></ul>"
+        }
+      }
+    },
+    "termsOfService": {
+      "title": "Hizmet Şartları",
+      "lastUpdated": "Son Güncelleme",
+      "sections": {
+        "acceptance": {
+          "title": "Şartların Kabulü",
+          "content": "<p>UTAA Blockchain Topluluğu'na (\"UTAAB\") hoş geldiniz. Platformumuza erişerek veya hizmetlerimizi kullanarak bu Hizmet Şartlarına bağlı olmayı kabul edersiniz.</p>"
+        },
+        "description": {
+          "title": "Hizmetlerin Tanımı",
+          "content": "<p>UTAA Blockchain Topluluğu, blockchain teknolojisi üzerine eğitim kursları, topluluk forumları, etkinlikler ve sertifika programları sunan kar amacı gütmeyen bir eğitim kuruluşudur.</p><p><strong>Önemli:</strong> Tüm içerik ve hizmetler yalnızca eğitim amaçlı sunulmaktadır ve finansal, yatırım veya profesyonel tavsiye niteliği taşımaz.</p>"
+        },
+        "accounts": {
+          "title": "Kullanıcı Hesapları ve Kayıt",
+          "content": "<p>Bazı özelliklere erişmek için bir hesap oluşturmanız gerekir. Kayıt olurken doğru, güncel ve eksiksiz bilgi vermeyi, hesap güvenliğinizi sağlamayı ve hesabınızdaki tüm faaliyetler için sorumluluk almayı kabul edersiniz.</p>"
+        },
+        "conduct": {
+          "title": "Kullanıcı Davranışı ve Sorumlulukları",
+          "content": "<p>Yasaları ihlal etmemeyi, fikri mülkiyet haklarına saygı göstermeyi, zararlı yazılım yüklememeyi, diğer kullanıcılara zarar vermemeyi ve yetkisiz erişim girişiminde bulunmamayı kabul edersiniz.</p>"
+        },
+        "intellectual": {
+          "title": "Fikri Mülkiyet Hakları",
+          "content": "<p>Platformumuzdaki tüm içerik UTAA Blockchain Topluluğu'na veya lisansörlerimize aittir. Size kişisel, ticari olmayan eğitim amaçlı sınırlı bir lisans veriyoruz.</p>"
+        },
+        "educational": {
+          "title": "Eğitim İçeriği ve Lisanslar",
+          "content": "<p>Kayıt üzerine kurs materyallerine erişim için münhasır olmayan bir lisans alırsınız. Sertifikalar kişisel kullanım ve doğrulama amaçlıdır.</p>"
+        },
+        "community": {
+          "title": "Topluluk Kuralları",
+          "content": "<p>Topluluğumuz saygı, işbirliği ve yapıcı katılım üzerine kurulmuştur. Tüm üyelerden profesyonel ve saygılı olmaları beklenir.</p>"
+        },
+        "payment": {
+          "title": "Ödeme Şartları",
+          "content": "<p>Kurslarımızın ve hizmetlerimizin çoğu ücretsiz olsa da bazı premium içerikler ödeme gerektirebilir. Fiyatlar satın alma öncesi açıkça gösterilir.</p>"
+        },
+        "disclaimers": {
+          "title": "Feragatnameler ve Sorumluluk Sınırlamaları",
+          "content": "<p><strong>Yalnızca Eğitim Amaçlı:</strong> Tüm içerik \"olduğu gibi\" eğitim amaçlı sunulmaktadır. Platformumuzdaki hiçbir şey finansal, yatırım veya profesyonel tavsiye niteliği taşımaz.</p>"
+        },
+        "indemnification": {
+          "title": "Tazminat",
+          "content": "<p>Bu Şartları ihlal etmenizden, hizmetlerimizi kötüye kullanmanızdan veya üçüncü taraf haklarını ihlal etmenizden kaynaklanan tüm talep, yükümlülük ve zararlardan UTAA Blockchain Topluluğunu zararsız tutmayı kabul edersiniz.</p>"
+        },
+        "termination": {
+          "title": "Fesih",
+          "content": "<p>Bu Şartların ihlali, dolandırıcılık veya yasadışı faaliyetler, diğer kullanıcılara zarar veren davranışlar nedeniyle hizmetlerimize erişiminizi askıya alma veya sonlandırma hakkımızı saklı tutarız.</p>"
+        },
+        "governing": {
+          "title": "Yürürlükteki Hukuk ve Uyuşmazlık Çözümü",
+          "content": "<p>Bu Şartlar, Türkiye Cumhuriyeti kanunlarına tabi olacak ve bunlara göre yorumlanacaktır. Uyuşmazlıklar iyi niyetli müzakereler, arabuluculuk ve gerekirse İstanbul mahkemeleri yoluyla çözülecektir.</p>"
+        },
+        "changes": {
+          "title": "Şartlardaki Değişiklikler",
+          "content": "<p>Bu Şartları herhangi bir zamanda değiştirme hakkımızı saklı tutarız. Önemli değişiklikleri e-posta bildirimleri ve platform duyuruları yoluyla bildireceğiz.</p>"
+        },
+        "contact": {
+          "title": "İletişim Bilgileri",
+          "content": "<p>Bu Hizmet Şartları hakkında sorularınız için lütfen bize ulaşın:</p><ul><li><strong>E-posta:</strong> legal@utaab.org</li><li><strong>Adres:</strong> UTAA Blockchain Topluluğu, İstanbul, Türkiye</li></ul>"
+        }
       }
     }
   },
@@ -556,7 +726,9 @@
     "noResults": "Yazı bulunamadı",
     "backToBlog": "Bloga Dön",
     "relatedPosts": "İlgili Yazılar",
-    "share": "Paylaş"
+    "share": "Paylaş",
+    "copyLink": "Bağlantıyı Kopyala",
+    "linkCopied": "Bağlantı kopyalandı!"
   },
   "teamPage": {
     "title": "Ekibimiz",

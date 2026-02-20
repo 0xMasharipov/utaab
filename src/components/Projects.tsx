@@ -45,12 +45,6 @@ export const Projects = () => {
       status: 'planning',
     },
     {
-      titleKey: 'projects.ubpoint.title',
-      descriptionKey: 'projects.ubpoint.description',
-      tags: ['projects.tags.rewards', 'projects.tags.students', 'projects.tags.engagement'],
-      status: 'planning',
-    },
-    {
       titleKey: 'projects.did.title',
       descriptionKey: 'projects.did.description',
       tags: ['projects.tags.identity', 'projects.tags.privacy', 'projects.tags.layer2'],
@@ -124,11 +118,9 @@ export const Projects = () => {
               <Button variant="outline" className="bg-white/[0.06] border-white/[0.12] hover:bg-white/10 w-full group/btn min-h-[44px]">
                 <span className="flex items-center justify-center gap-2">
                   {t('projects.viewProject')}
-                  {project.status === 'planning' && (
-                    <span className="text-xs text-muted-foreground font-normal opacity-60">
-                      {t('projects.soon')}
-                    </span>
-                  )}
+                  <span className="text-xs text-muted-foreground font-normal opacity-60">
+                    {t('projects.soon')}
+                  </span>
                   <ExternalLink className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
                 </span>
               </Button>
