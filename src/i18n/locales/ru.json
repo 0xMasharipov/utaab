@@ -352,6 +352,7 @@
   },
   "common": {
     "close": "Закрыть",
+    "back": "Назад",
     "submitting": "Отправка...",
     "save": "Сохранить",
     "cancel": "Отмена",
@@ -562,7 +563,9 @@
       "categories": "Управление категориями",
       "instructors": "Управление инструкторами",
       "reviews": "Управление отзывами",
-      "analytics": "Аналитика"
+      "analytics": "Аналитика",
+      "applications": "Заявки в сообщество",
+      "kvkkRequests": "Запросы KVKK"
     }
   },
   "kvkk": {

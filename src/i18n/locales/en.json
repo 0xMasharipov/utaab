@@ -352,6 +352,7 @@
   },
   "common": {
     "close": "Close",
+    "back": "Back",
     "submitting": "Submitting...",
     "save": "Save",
     "cancel": "Cancel",
@@ -586,6 +587,7 @@
       "responseTime": "We will respond to your request within 30 days as required by KVKK.",
       "contact": "For urgent matters, contact us at:",
       "successTitle": "Request Submitted",
+      "successMessage": "Your KVKK data request has been submitted. We will contact you via email with updates.",
       "successCommunity": "Meanwhile, join our community on WhatsApp to stay connected!",
       "backToHome": "Back to Home",
       "validation": {
@@ -601,6 +603,7 @@
   "legal": {
     "tableOfContents": "Table of Contents",
     "relatedDocuments": "Related Documents",
+    "lastUpdatedDate": "December 2024",
     "privacyPolicy": {
       "title": "Privacy Policy",
       "lastUpdated": "Last Updated",

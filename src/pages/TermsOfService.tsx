@@ -60,7 +60,7 @@ export const TermsOfService = () => {
               {t('legal.termsOfService.title', 'Terms of Service')}
             </h1>
             <p className="text-muted-foreground text-lg">
-              {t('legal.termsOfService.lastUpdated', 'Last Updated')}: December 2024
+              {t('legal.termsOfService.lastUpdated', 'Last Updated')}: {t('legal.lastUpdatedDate', 'December 2024')}
             </p>
           </div>
 
