@@ -1,57 +1,73 @@
 
 
-# Update Team Page with Real Photos and Refined Design
+# Update Community Projects Section
 
-## Photo Mapping
-Based on the uploaded images and your description:
-- **UTAAB_Profile_Z.png** --> Zinurbek Masharipov (Founder)
-- **UTAAB_Profile_Umut.png** --> Umut Tekbas (HR Manager)
-- **UTAAB_Profile_Abdulla.png** --> Abdulla Hamzali (Head of Engineering)
-- **UTAAB_Profile_Emre.png** --> Yunus Emre Ercin (CTO)
-
-Note: Abdulbaki (CFO) does not have a photo -- will keep the icon placeholder for him.
+## Overview
+Replace the current 3 placeholder project cards with the 7 real UTAAB project cards, update all 4 locale files, and refine the component styling to match the specified design requirements.
 
 ## Changes
 
-### 1. Copy Photos to Project
-Save all 4 uploaded images to `src/assets/team/` for proper bundling:
-- `src/assets/team/zinurbek.png`
-- `src/assets/team/umut.png`
-- `src/assets/team/abdulla.png`
-- `src/assets/team/yunus.png`
+### 1. Update `src/components/Projects.tsx`
+Complete rewrite of the projects data and card rendering:
 
-### 2. Redesign TeamPage (`src/pages/TeamPage.tsx`)
-Aesthetic refinements:
-- **Founder featured card**: Zinurbek gets a larger, hero-style card at the top spanning full width with a horizontal layout (photo left, info right) and an accent border glow
-- **Leadership grid below**: Remaining 4 members in a 2x2 grid (or 4-column on large screens) with circular photos that have a subtle gradient ring border
-- **Photo styling**: `object-cover` with a glassmorphic ring border, hover scale effect
-- **Card polish**: Slightly larger padding, refined typography hierarchy, subtle gradient overlay on hover
-- **Remove the generic User icon** for members who have photos; keep it only for Abdulbaki
+- **7 project cards** with hardcoded project data (not i18n keys for tags, since tags are short labels)
+- **Status logic**: UBP and TonRa get `"underDevelopment"` status; all others get `"planning"`
+- **Status badge styling**:
+  - Under Development: soft blue gradient (`bg-blue-500/20 text-blue-400`)
+  - Planning: muted amber (`bg-yellow-500/20 text-yellow-400`)
+- **"Soon" label**: For Planning projects, a small muted gray `"Soon"` text appears next to the "View Project" button text
+- **Grid**: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3` for responsive layout
+- **Hover**: subtle card lift (`hover:-translate-y-1`) with soft shadow increase, no glow
+- **Staggered fade-in** on scroll (existing framer-motion pattern)
+- **Button**: full width on mobile, includes ExternalLink icon; Planning projects append a subtle "Soon" label
 
-### 3. Update Team Component (`src/components/Team.tsx`)
-- Add the same photo data to the homepage team section cards
-- Replace the User icon placeholder with actual photos where available
-- Keep the compact card style but swap icons for circular profile images
+### 2. Update all 4 locale files
 
-### 4. Update teamMembers Data
-Add an `image` field to each member object pointing to the imported asset, so both `Team.tsx` and `TeamPage.tsx` can use it.
+Add the new project translations and new status/tag keys.
+
+**`src/i18n/locales/en.json`** projects section becomes:
+- New status: `"underDevelopment": "Under Development"`
+- 7 projects (ubp, tonra, asn, dvs, ubpoint, did, dao) each with title + description
+- New tags: rewards, community, engagement, ton, research, academic, payments, blockchain, university, identity, validation, nodes, students, privacy, layer2, governance, dao
+- New key: `"soon": "Soon"`
+
+**`src/i18n/locales/tr.json`** -- Turkish translations for all 7 projects, tags, and statuses
+
+**`src/i18n/locales/ar.json`** -- Arabic translations for all 7 projects, tags, and statuses
+
+**`src/i18n/locales/ru.json`** -- Russian translations for all 7 projects, tags, and statuses
+
+### 3. Project Card Content (English)
+
+| # | Key | Title | Status | Tags |
+|---|-----|-------|--------|------|
+| 1 | ubp | UBP -- UTAA Blockchain Point System | Under Development | Rewards, Community, Engagement |
+| 2 | tonra | TonRa -- TON Research & Academic Network | Under Development | TON, Research, Academic |
+| 3 | asn | ASN -- Academic Settlement Network | Planning | Payments, Blockchain, University |
+| 4 | dvs | DVS -- Decentralized Validation System | Planning | Identity, Validation, Nodes |
+| 5 | ubpoint | UB Point -- University Benefit Point System | Planning | Rewards, Students, Engagement |
+| 6 | did | DID -- Decentralized Identity System | Planning | Identity, Privacy, Layer 2 |
+| 7 | dao | DAO Governance Platform | Planning | Governance, DAO, Community |
 
 ## Technical Details
 
-### File changes:
+### Projects Component Structure
+```text
+Projects.tsx
+  |-- projects array (7 items, each with status, titleKey, descriptionKey, tags[])
+  |-- Status badge: conditional class based on status string
+  |-- "Soon" label: rendered inline next to button text when status === 'planning'
+  |-- Grid: grid-cols-1 md:grid-cols-2 lg:grid-cols-3
+  |-- Cards: glass rounded-[28px] p-6 hover:-translate-y-1 transition-all
+```
+
+### Files Modified
+
 | File | Change |
 |------|--------|
-| `src/assets/team/zinurbek.png` | Copy from uploaded image |
-| `src/assets/team/umut.png` | Copy from uploaded image |
-| `src/assets/team/abdulla.png` | Copy from uploaded image |
-| `src/assets/team/yunus.png` | Copy from uploaded image |
-| `src/pages/TeamPage.tsx` | Redesign with featured founder card, real photos, refined glassmorphism styling |
-| `src/components/Team.tsx` | Add real photos to homepage team cards |
-
-### Design Details
-- Photos use `rounded-full` with a 2px gradient border ring (`border-accent/30`)
-- Founder card: horizontal layout with `lg:flex-row`, larger photo (160x160), accent glow shadow
-- Other cards: centered vertical layout, 112x112 photos
-- Hover effects: photo scales slightly (`group-hover:scale-105`), border brightens
-- Fallback: Members without photos show the existing User icon in the glass circle
+| `src/components/Projects.tsx` | Rewrite project data (7 cards), add status badge styling, add "Soon" label, refine hover/grid |
+| `src/i18n/locales/en.json` | Replace projects section with 7 projects, new tags, new statuses |
+| `src/i18n/locales/tr.json` | Turkish translations for all new content |
+| `src/i18n/locales/ar.json` | Arabic translations for all new content |
+| `src/i18n/locales/ru.json` | Russian translations for all new content |
 
