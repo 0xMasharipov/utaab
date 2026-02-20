@@ -92,13 +92,13 @@ export const Hero = () => {
       {!shouldLoadScene && <MobileHeroBackground />}
 
       {/* Content overlay */}
-      <div className="section-container relative z-10 text-center py-24 sm:py-28 md:py-32">
+      <div className="section-container relative z-10 text-center py-20 sm:py-24 md:py-28">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className={getTransitionClasses("text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 sm:mb-6 text-glow-hero leading-tight px-2")}>
+          <h1 className={getTransitionClasses("text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-2 sm:mb-3 text-glow-hero leading-tight px-2")}>
             {t('hero.title')}
           </h1>
         </motion.div>
@@ -107,7 +107,7 @@ export const Hero = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className={getTransitionClasses("text-xl sm:text-2xl md:text-4xl lg:text-5xl font-semibold mb-6 sm:mb-8 text-accent text-glow-accent px-2")}
+          className={getTransitionClasses("text-xl sm:text-2xl md:text-4xl lg:text-5xl font-semibold mb-4 sm:mb-5 text-accent text-glow-accent px-2")}
         >
           {subtitleWords.map((word, wordIndex) => (
             <span key={wordIndex} className="inline-block mr-3">
@@ -128,7 +128,7 @@ export const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className={getTransitionClasses("text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground text-glow-muted max-w-3xl mx-auto mb-8 sm:mb-12 px-4")}
+          className={getTransitionClasses("text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground text-glow-muted max-w-3xl mx-auto mb-6 sm:mb-8 px-4")}
         >
           {t('hero.description')}
         </motion.p>
@@ -138,7 +138,7 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <Button onClick={scrollToJoin} className={getTransitionClasses("btn-primary text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 group min-h-[44px]")}>
+          <Button onClick={scrollToJoin} className={getTransitionClasses("bg-gradient-to-r from-primary via-blue-500 to-accent text-white font-semibold text-base sm:text-lg px-8 sm:px-10 py-3.5 sm:py-4 rounded-full border border-white/20 hover:scale-105 hover:shadow-[0_0_35px_hsl(213_94%_68%/0.45)] transition-all duration-300 group min-h-[44px]")}>
             {t('hero.cta')}
             <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </Button>
