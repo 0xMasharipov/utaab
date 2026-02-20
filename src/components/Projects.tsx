@@ -5,30 +5,62 @@ import { useRef } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+type ProjectStatus = 'underDevelopment' | 'planning';
+
+interface Project {
+  titleKey: string;
+  descriptionKey: string;
+  tags: string[];
+  status: ProjectStatus;
+}
+
 export const Projects = () => {
   const { t } = useTranslation();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
-  // Example projects
-  const projects = [
+  const projects: Project[] = [
     {
-      titleKey: 'projects.project1.title',
-      descriptionKey: 'projects.project1.description',
-      tags: ['projects.tags.defi', 'projects.tags.layer2', 'projects.tags.identity'],
-      statusKey: 'projects.status.planning',
+      titleKey: 'projects.ubp.title',
+      descriptionKey: 'projects.ubp.description',
+      tags: ['projects.tags.rewards', 'projects.tags.community', 'projects.tags.engagement'],
+      status: 'underDevelopment',
     },
     {
-      titleKey: 'projects.project2.title',
-      descriptionKey: 'projects.project2.description',
-      tags: ['projects.tags.nft', 'projects.tags.web3', 'projects.tags.marketplace'],
-      statusKey: 'projects.status.planning',
+      titleKey: 'projects.tonra.title',
+      descriptionKey: 'projects.tonra.description',
+      tags: ['projects.tags.ton', 'projects.tags.research', 'projects.tags.academic'],
+      status: 'underDevelopment',
     },
     {
-      titleKey: 'projects.project3.title',
-      descriptionKey: 'projects.project3.description',
-      tags: ['projects.tags.dao', 'projects.tags.governance', 'projects.tags.smartContracts'],
-      statusKey: 'projects.status.planning',
+      titleKey: 'projects.asn.title',
+      descriptionKey: 'projects.asn.description',
+      tags: ['projects.tags.payments', 'projects.tags.blockchain', 'projects.tags.university'],
+      status: 'planning',
+    },
+    {
+      titleKey: 'projects.dvs.title',
+      descriptionKey: 'projects.dvs.description',
+      tags: ['projects.tags.identity', 'projects.tags.validation', 'projects.tags.nodes'],
+      status: 'planning',
+    },
+    {
+      titleKey: 'projects.ubpoint.title',
+      descriptionKey: 'projects.ubpoint.description',
+      tags: ['projects.tags.rewards', 'projects.tags.students', 'projects.tags.engagement'],
+      status: 'planning',
+    },
+    {
+      titleKey: 'projects.did.title',
+      descriptionKey: 'projects.did.description',
+      tags: ['projects.tags.identity', 'projects.tags.privacy', 'projects.tags.layer2'],
+      status: 'planning',
+    },
+    {
+      titleKey: 'projects.dao.title',
+      descriptionKey: 'projects.dao.description',
+      tags: ['projects.tags.governance', 'projects.tags.dao', 'projects.tags.community'],
+      status: 'planning',
     },
   ];
 
@@ -49,31 +81,31 @@ export const Projects = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
-              className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:bg-white/10 transition-all duration-300 group flex flex-col"
+              transition={{ duration: 0.6, delay: 0.2 + index * 0.08 }}
+              className="bg-white/[0.06] backdrop-blur-xl border border-white/[0.12] rounded-[28px] p-6 sm:p-8 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 group flex flex-col"
             >
               <div className="mb-3 sm:mb-4">
                 <span
                   className={`inline-block px-3 py-1 rounded-full text-xs sm:text-sm font-semibold ${
-                    project.statusKey === 'projects.status.active'
-                      ? 'bg-accent/20 text-accent'
+                    project.status === 'underDevelopment'
+                      ? 'bg-blue-500/20 text-blue-400'
                       : 'bg-yellow-500/20 text-yellow-400'
                   }`}
                 >
-                  {t(project.statusKey)}
+                  {t(`projects.status.${project.status}`)}
                 </span>
               </div>
 
               <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2 sm:mb-3 group-hover:text-accent transition-colors">
                 {t(project.titleKey)}
               </h3>
-              
+
               <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 flex-grow">
                 {t(project.descriptionKey)}
               </p>
@@ -82,16 +114,23 @@ export const Projects = () => {
                 {project.tags.map((tag, tagIndex) => (
                   <span
                     key={tagIndex}
-                    className="px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm glass-strong"
+                    className="px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm bg-white/[0.08] backdrop-blur-sm border border-white/[0.1]"
                   >
                     {t(tag)}
                   </span>
                 ))}
               </div>
 
-              <Button variant="outline" className="glass hover:bg-white/10 w-full group/btn min-h-[44px]">
-                {t('projects.viewProject')}
-                <ExternalLink className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+              <Button variant="outline" className="bg-white/[0.06] border-white/[0.12] hover:bg-white/10 w-full group/btn min-h-[44px]">
+                <span className="flex items-center justify-center gap-2">
+                  {t('projects.viewProject')}
+                  {project.status === 'planning' && (
+                    <span className="text-xs text-muted-foreground font-normal opacity-60">
+                      {t('projects.soon')}
+                    </span>
+                  )}
+                  <ExternalLink className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                </span>
               </Button>
             </motion.div>
           ))}
