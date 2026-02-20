@@ -113,32 +113,58 @@
     "title": "Community Projects",
     "subtitle": "Collaborative blockchain initiatives",
     "viewProject": "View Project",
+    "soon": "Soon",
     "status": {
       "active": "Active",
-      "planning": "Planning"
+      "planning": "Planning",
+      "underDevelopment": "Under Development"
     },
-    "project1": {
-      "title": "Decentralized Identity System",
-      "description": "Building a secure identity verification system on zkSync"
+    "ubp": {
+      "title": "UBP — UTAA Blockchain Point System",
+      "description": "A blockchain-based point system designed to reward contributions and active participation within the UTAAB ecosystem."
     },
-    "project2": {
-      "title": "NFT Marketplace",
-      "description": "Community-driven marketplace for digital assets"
+    "tonra": {
+      "title": "TonRa — TON Research & Academic Network",
+      "description": "A research-focused academic network built within the TON ecosystem, designed to support transparent collaboration, contribution recognition, and knowledge validation across educational communities."
     },
-    "project3": {
+    "asn": {
+      "title": "ASN — Academic Settlement Network",
+      "description": "A secure settlement layer designed to streamline university-related payment processes and improve institutional efficiency."
+    },
+    "dvs": {
+      "title": "DVS — Decentralized Validation System",
+      "description": "A distributed validation framework aimed at improving trust and automation across academic and administrative systems."
+    },
+    "ubpoint": {
+      "title": "UB Point — University Benefit Point System",
+      "description": "A student engagement initiative designed to encourage participation and campus involvement through structured reward mechanisms."
+    },
+    "did": {
+      "title": "DID — Decentralized Identity System",
+      "description": "A privacy-oriented identity solution built to support secure academic authentication and verification processes."
+    },
+    "dao": {
       "title": "DAO Governance Platform",
-      "description": "Transparent governance for community decisions"
+      "description": "A governance framework intended to enable structured and transparent community decision-making within the ecosystem."
     },
     "tags": {
-      "defi": "DeFi",
-      "layer2": "Layer 2",
+      "rewards": "Rewards",
+      "community": "Community",
+      "engagement": "Engagement",
+      "ton": "TON",
+      "research": "Research",
+      "academic": "Academic",
+      "payments": "Payments",
+      "blockchain": "Blockchain",
+      "university": "University",
       "identity": "Identity",
-      "nft": "NFT",
-      "web3": "Web3",
-      "marketplace": "Marketplace",
-      "dao": "DAO",
+      "validation": "Validation",
+      "nodes": "Nodes",
+      "students": "Students",
+      "privacy": "Privacy",
+      "layer2": "Layer 2",
       "governance": "Governance",
-      "smartContracts": "Smart Contracts"
+      "dao": "DAO"
     }
   },
   "resources": {

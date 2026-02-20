@@ -113,32 +113,58 @@
     "title": "Topluluk Projeleri",
     "subtitle": "İşbirlikçi blockchain girişimleri",
     "viewProject": "Projeyi Görüntüle",
+    "soon": "Yakında",
     "status": {
       "active": "Aktif",
-      "planning": "Planlama"
+      "planning": "Planlama",
+      "underDevelopment": "Geliştirme Aşamasında"
     },
-    "project1": {
-      "title": "Merkezi Olmayan Kimlik Sistemi",
-      "description": "zkSync üzerinde güvenli kimlik doğrulama sistemi oluşturma"
+    "ubp": {
+      "title": "UBP — UTAA Blockchain Puan Sistemi",
+      "description": "UTAAB ekosistemi içinde katkıları ve aktif katılımı ödüllendirmek için tasarlanmış blockchain tabanlı bir puan sistemi."
     },
-    "project2": {
-      "title": "NFT Pazaryeri",
-      "description": "Dijital varlıklar için topluluk odaklı pazaryeri"
+    "tonra": {
+      "title": "TonRa — TON Araştırma ve Akademik Ağ",
+      "description": "TON ekosistemi içinde inşa edilen, şeffaf işbirliğini, katkı tanınırlığını ve eğitim toplulukları genelinde bilgi doğrulamayı desteklemek için tasarlanmış araştırma odaklı bir akademik ağ."
     },
-    "project3": {
+    "asn": {
+      "title": "ASN — Akademik Uzlaşma Ağı",
+      "description": "Üniversiteyle ilgili ödeme süreçlerini kolaylaştırmak ve kurumsal verimliliği artırmak için tasarlanmış güvenli bir uzlaşma katmanı."
+    },
+    "dvs": {
+      "title": "DVS — Merkezi Olmayan Doğrulama Sistemi",
+      "description": "Akademik ve idari sistemlerde güven ve otomasyonu geliştirmeyi amaçlayan dağıtık bir doğrulama çerçevesi."
+    },
+    "ubpoint": {
+      "title": "UB Point — Üniversite Fayda Puan Sistemi",
+      "description": "Yapılandırılmış ödül mekanizmaları aracılığıyla katılımı ve kampüs dahiliyetini teşvik etmek için tasarlanmış bir öğrenci bağlılık girişimi."
+    },
+    "did": {
+      "title": "DID — Merkezi Olmayan Kimlik Sistemi",
+      "description": "Güvenli akademik kimlik doğrulama ve doğrulama süreçlerini desteklemek için oluşturulmuş gizlilik odaklı bir kimlik çözümü."
+    },
+    "dao": {
       "title": "DAO Yönetişim Platformu",
-      "description": "Topluluk kararları için şeffaf yönetişim"
+      "description": "Ekosistem içinde yapılandırılmış ve şeffaf topluluk karar alma süreçlerini mümkün kılmak için tasarlanmış bir yönetişim çerçevesi."
     },
     "tags": {
-      "defi": "DeFi",
-      "layer2": "Katman 2",
+      "rewards": "Ödüller",
+      "community": "Topluluk",
+      "engagement": "Katılım",
+      "ton": "TON",
+      "research": "Araştırma",
+      "academic": "Akademik",
+      "payments": "Ödemeler",
+      "blockchain": "Blockchain",
+      "university": "Üniversite",
       "identity": "Kimlik",
-      "nft": "NFT",
-      "web3": "Web3",
-      "marketplace": "Pazaryeri",
-      "dao": "DAO",
+      "validation": "Doğrulama",
+      "nodes": "Düğümler",
+      "students": "Öğrenciler",
+      "privacy": "Gizlilik",
+      "layer2": "Katman 2",
       "governance": "Yönetişim",
-      "smartContracts": "Akıllı Sözleşmeler"
+      "dao": "DAO"
     }
   },
   "resources": {
