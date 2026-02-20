@@ -50,7 +50,7 @@ const TeamOverlapCard = ({ member, onClick }: TeamOverlapCardProps) => {
         )}
         {/* Dark gradient overlay */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 pointer-events-none z-10"
           style={{
             background: 'linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.45) 100%)',
           }}
@@ -58,7 +58,7 @@ const TeamOverlapCard = ({ member, onClick }: TeamOverlapCardProps) => {
       </div>
 
       {/* Glass Info Card */}
-      <div className="absolute bottom-0 right-0 w-[60%] sm:w-[58%] lg:w-[55%] rounded-[20px] sm:rounded-[22px] lg:rounded-[24px] p-3.5 sm:p-4 lg:p-[18px] backdrop-blur-[14px] bg-white/[0.08] border border-[rgba(148,163,184,0.18)] shadow-xl motion-safe:group-hover:border-[rgba(148,163,184,0.28)] transition-all duration-[240ms]">
+      <div className="absolute bottom-0 right-0 z-20 w-[60%] sm:w-[58%] lg:w-[55%] rounded-[20px] sm:rounded-[22px] lg:rounded-[24px] p-3.5 sm:p-4 lg:p-[18px] backdrop-blur-[14px] bg-white/[0.08] border border-[rgba(148,163,184,0.18)] shadow-xl motion-safe:group-hover:border-[rgba(148,163,184,0.28)] transition-all duration-[240ms]">
         {/* Tag */}
         <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.12em] text-primary mb-1 block">
           {member.tag}

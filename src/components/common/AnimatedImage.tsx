@@ -12,14 +12,13 @@ const AnimatedImage = forwardRef<HTMLImageElement, AnimatedImageProps>(
 
     return (
       <div className={cn('relative overflow-hidden', containerClassName)}>
-        {!loaded && (
-          <div
-            className={cn(
-              'absolute inset-0 bg-muted animate-pulse rounded-md',
-              placeholderClassName
-            )}
-          />
-        )}
+        <div
+          className={cn(
+            'absolute inset-0 bg-muted animate-pulse rounded-md pointer-events-none transition-opacity duration-500',
+            loaded ? 'opacity-0' : 'opacity-100',
+            placeholderClassName
+          )}
+        />
         <img
           ref={ref}
           {...props}
