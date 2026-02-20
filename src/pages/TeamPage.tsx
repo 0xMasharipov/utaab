@@ -6,6 +6,7 @@ import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
 import GlassCard from '@/components/glass/GlassCard';
+import AnimatedImage from '@/components/common/AnimatedImage';
 import { PrivacyPopup } from '@/components/PrivacyPopup';
 import { PrivacyCenter } from '@/components/PrivacyCenter';
 import { FloatingPrivacyButton } from '@/components/FloatingPrivacyButton';
@@ -47,10 +48,11 @@ const MemberAvatar = ({ image, size, className = '' }: { image?: string; size: n
     <div className={`${sizeClass} rounded-full p-[3px] bg-gradient-to-br from-accent/40 via-primary/30 to-accent/20 shrink-0 ${className}`}>
       <div className="w-full h-full rounded-full overflow-hidden bg-muted/30 backdrop-blur-sm flex items-center justify-center group-hover:shadow-[0_0_30px_hsl(var(--accent)/0.2)] transition-all duration-500">
         {image ? (
-          <img
+          <AnimatedImage
             src={image}
             alt=""
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            containerClassName="w-full h-full"
           />
         ) : (
           <User className={`${iconSize} text-muted-foreground group-hover:text-accent transition-colors duration-300`} />

@@ -3,6 +3,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ExternalCourse } from "@/data/externalCourses";
 import { useTranslation } from "react-i18next";
+import AnimatedImage from "@/components/common/AnimatedImage";
 
 interface ExternalCourseCardProps {
   course: ExternalCourse;
@@ -35,10 +36,11 @@ export const ExternalCourseCard = ({ course, onClick }: ExternalCourseCardProps)
       className="glass cursor-pointer hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:border-accent/40 overflow-hidden group"
     >
       <div className="relative h-48 overflow-hidden">
-        <img
+        <AnimatedImage
           src={course.hero_image}
           alt={getLocalizedText('title')}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          containerClassName="w-full h-full"
         />
         <div className="absolute top-3 right-3 flex gap-2">
           <Badge className="bg-blue-500/90 text-white border-blue-400/50 backdrop-blur-sm">

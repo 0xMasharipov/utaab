@@ -12,6 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
 import GlassCard from '@/components/glass/GlassCard';
 import { Calendar } from 'lucide-react';
+import AnimatedImage from '@/components/common/AnimatedImage';
 import { format } from 'date-fns';
 import { PrivacyPopup } from '@/components/PrivacyPopup';
 import { PrivacyCenter } from '@/components/PrivacyCenter';
@@ -100,7 +101,7 @@ const Blog = () => {
                 <div className="grid md:grid-cols-2 gap-0">
                   {featured.cover_image && (
                     <div className="relative h-64 md:h-auto overflow-hidden">
-                      <img src={featured.cover_image} alt={featuredTitle} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                      <AnimatedImage src={featured.cover_image} alt={featuredTitle} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" containerClassName="w-full h-full" loading="lazy" />
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent to-background/60 hidden md:block" />
                     </div>
                   )}

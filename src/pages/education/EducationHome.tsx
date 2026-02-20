@@ -12,6 +12,7 @@ import { EducationNavbar } from '@/components/education/EducationNavbar';
 import { CutiiAIPanel } from '@/components/education/CutiiAIPanel';
 import { ExternalCourseCard } from '@/components/education/ExternalCourseCard';
 import { externalCourses } from '@/data/externalCourses';
+import AnimatedImage from '@/components/common/AnimatedImage';
 
 export const EducationHome = () => {
   const { t, i18n } = useTranslation();
@@ -174,10 +175,11 @@ export const EducationHome = () => {
                 >
                   {course.hero_image && (
                     <div className="aspect-video overflow-hidden">
-                      <img
+                      <AnimatedImage
                         src={course.hero_image}
                         alt={getCourseTitle(course)}
                         className="w-full h-full object-cover"
+                        containerClassName="w-full h-full"
                       />
                     </div>
                   )}

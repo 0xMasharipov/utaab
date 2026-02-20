@@ -6,6 +6,7 @@ import { mitBlockchainLectures, MITLecture } from '@/data/mitOcwLectures';
 import { Info, ChevronLeft, ChevronRight, Menu } from 'lucide-react';
 import mitLogo from '@/assets/MIT_UNI_LOGO.png';
 import { useSearchParams } from 'react-router-dom';
+import AnimatedImage from '@/components/common/AnimatedImage';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -121,7 +122,7 @@ export const BlockchainAndMoney = () => {
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="animate-fade-in">
             <div className="flex items-center gap-3 mb-4">
-              <img 
+              <AnimatedImage 
                 src={mitLogo}
                 alt="MIT Logo"
                 className="h-12 w-auto"

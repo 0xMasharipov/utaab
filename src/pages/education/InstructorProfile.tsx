@@ -7,6 +7,7 @@ import { EducationNavbar } from '@/components/education/EducationNavbar';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 import { SafeContent } from '@/components/common/SafeContent';
+import AnimatedImage from '@/components/common/AnimatedImage';
 
 export const InstructorProfile = () => {
   const { id } = useParams();
@@ -138,10 +139,11 @@ export const InstructorProfile = () => {
                 >
                   {course.hero_image && (
                     <div className="aspect-video overflow-hidden">
-                      <img
+                      <AnimatedImage
                         src={course.hero_image}
                         alt={getCourseTitle(course)}
                         className="w-full h-full object-cover"
+                        containerClassName="w-full h-full"
                       />
                     </div>
                   )}

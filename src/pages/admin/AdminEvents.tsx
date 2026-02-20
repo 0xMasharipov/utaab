@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import { EventFormDialog } from "@/components/admin/EventFormDialog";
 import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
 import { toast } from "sonner";
+import AnimatedImage from "@/components/common/AnimatedImage";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -173,7 +174,7 @@ export default function AdminEvents() {
                 <CardContent className="p-6">
                   <div className="flex gap-4">
                     {event.cover_image && (
-                      <img
+                      <AnimatedImage
                         src={event.cover_image}
                         alt={title}
                         className="w-32 h-32 object-cover rounded-lg"
