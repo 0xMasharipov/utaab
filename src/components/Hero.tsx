@@ -2,50 +2,13 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
-import { lazy, Suspense, useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
-import { useIsMobile } from '@/hooks/use-mobile';
-
-// Lazy load the 3D scene for better performance - deferred until after initial paint
-const HeroBackgroundScene = lazy(() => import('@/components/three/HeroBackgroundScene'));
-import MobileHeroBackground from '@/components/three/MobileHeroBackground';
-
-// Hook to defer loading heavy components until after initial render
-const useDeferredLoad = (delay = 100) => {
-  const [shouldLoad, setShouldLoad] = useState(false);
-  
-  useEffect(() => {
-    // Wait for the page to be fully interactive before loading heavy 3D scene
-    // This ensures TTI is not blocked by Three.js initialization
-    const loadAfterInteractive = () => {
-      if ('requestIdleCallback' in window) {
-        const id = window.requestIdleCallback(() => setShouldLoad(true), { timeout: 2000 });
-        return () => window.cancelIdleCallback(id);
-      } else {
-        const timer = setTimeout(() => setShouldLoad(true), delay);
-        return () => clearTimeout(timer);
-      }
-    };
-    
-    // Defer loading until after the page has finished initial parsing and layout
-    if (document.readyState === 'complete') {
-      return loadAfterInteractive();
-    } else {
-      const handleLoad = () => loadAfterInteractive();
-      window.addEventListener('load', handleLoad, { once: true });
-      return () => window.removeEventListener('load', handleLoad);
-    }
-  }, [delay]);
-  
-  return shouldLoad;
-};
 
 export const Hero = () => {
   const { t } = useTranslation();
   const { getTransitionClasses } = useLanguageTransition();
-  const isMobile = useIsMobile();
-  // Skip Three.js on mobile to save ~215KB and improve TTI
-  const shouldLoadScene = useDeferredLoad(500) && !isMobile;
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   const scrollToJoin = () => {
     const element = document.getElementById('join');
@@ -81,15 +44,22 @@ export const Hero = () => {
 
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
-      {/* 3D Blockchain Background - deferred loading */}
-      {shouldLoadScene && (
-        <Suspense fallback={
-          <div className="absolute inset-0 bg-black" />
-        }>
-          <HeroBackgroundScene />
-        </Suspense>
-      )}
-      {!shouldLoadScene && <MobileHeroBackground />}
+      {/* Looping video background */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        onCanPlay={() => setVideoLoaded(true)}
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{
+          opacity: videoLoaded ? 1 : 0,
+          transition: 'opacity 1s ease-in-out',
+        }}
+        src="/videos/hero-bg.mp4"
+      />
+      {/* Dark overlay for text readability */}
+      <div className="absolute inset-0 bg-black/50" />
 
       {/* Content overlay */}
       <div className="section-container relative z-10 text-center py-20 sm:py-24 md:py-28">
