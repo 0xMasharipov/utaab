@@ -1,73 +1,69 @@
 
 
-# Update Community Projects Section
+# Remove UB Point, Fix "Soon" Labels, and Complete Missing Translations
 
 ## Overview
-Replace the current 3 placeholder project cards with the 7 real UTAAB project cards, update all 4 locale files, and refine the component styling to match the specified design requirements.
+This plan covers three categories of changes: removing the UB Point project, making all project cards show "Soon" on the View Project button, and completing all missing translations across the 4 locale files.
 
 ## Changes
 
-### 1. Update `src/components/Projects.tsx`
-Complete rewrite of the projects data and card rendering:
+### 1. Remove UB Point from Projects
 
-- **7 project cards** with hardcoded project data (not i18n keys for tags, since tags are short labels)
-- **Status logic**: UBP and TonRa get `"underDevelopment"` status; all others get `"planning"`
-- **Status badge styling**:
-  - Under Development: soft blue gradient (`bg-blue-500/20 text-blue-400`)
-  - Planning: muted amber (`bg-yellow-500/20 text-yellow-400`)
-- **"Soon" label**: For Planning projects, a small muted gray `"Soon"` text appears next to the "View Project" button text
-- **Grid**: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3` for responsive layout
-- **Hover**: subtle card lift (`hover:-translate-y-1`) with soft shadow increase, no glow
-- **Staggered fade-in** on scroll (existing framer-motion pattern)
-- **Button**: full width on mobile, includes ExternalLink icon; Planning projects append a subtle "Soon" label
+**`src/components/Projects.tsx`**: Remove the UB Point entry (lines 47-51) from the projects array. This reduces the project count from 7 to 6.
 
-### 2. Update all 4 locale files
+**All 4 locale files**: Remove the `projects.ubpoint` object (title + description) and remove the `projects.tags.students` key (only used by UB Point).
 
-Add the new project translations and new status/tag keys.
+### 2. All Projects Show "Soon" on View Project Button
 
-**`src/i18n/locales/en.json`** projects section becomes:
-- New status: `"underDevelopment": "Under Development"`
-- 7 projects (ubp, tonra, asn, dvs, ubpoint, did, dao) each with title + description
-- New tags: rewards, community, engagement, ton, research, academic, payments, blockchain, university, identity, validation, nodes, students, privacy, layer2, governance, dao
-- New key: `"soon": "Soon"`
+**`src/components/Projects.tsx`**: Change the button so "Soon" label appears for ALL projects, not just "planning" ones. Remove the `project.status === 'planning'` condition from line 127 so every card displays "View Project Soon".
 
-**`src/i18n/locales/tr.json`** -- Turkish translations for all 7 projects, tags, and statuses
+### 3. Fix Hardcoded English in KVKKRequestForm
 
-**`src/i18n/locales/ar.json`** -- Arabic translations for all 7 projects, tags, and statuses
+**`src/components/forms/KVKKRequestForm.tsx`**: Replace 3 hardcoded English strings with i18n keys:
+- "Meanwhile, join our community on WhatsApp to stay connected!" --> `t('kvkk.requestForm.successCommunity')`
+- "Back to Home" --> `t('kvkk.requestForm.backToHome')`
+- "Submitting..." --> `t('common.submitting')`
 
-**`src/i18n/locales/ru.json`** -- Russian translations for all 7 projects, tags, and statuses
+Add corresponding keys to all 4 locale files.
 
-### 3. Project Card Content (English)
+### 4. Add Missing Translation Keys Across Locales
 
-| # | Key | Title | Status | Tags |
-|---|-----|-------|--------|------|
-| 1 | ubp | UBP -- UTAA Blockchain Point System | Under Development | Rewards, Community, Engagement |
-| 2 | tonra | TonRa -- TON Research & Academic Network | Under Development | TON, Research, Academic |
-| 3 | asn | ASN -- Academic Settlement Network | Planning | Payments, Blockchain, University |
-| 4 | dvs | DVS -- Decentralized Validation System | Planning | Identity, Validation, Nodes |
-| 5 | ubpoint | UB Point -- University Benefit Point System | Planning | Rewards, Students, Engagement |
-| 6 | did | DID -- Decentralized Identity System | Planning | Identity, Privacy, Layer 2 |
-| 7 | dao | DAO Governance Platform | Planning | Governance, DAO, Community |
+#### Arabic (`ar.json`) -- Missing Sections:
+- **`common.retry`**: Add `"retry": "إعادة المحاولة"`
+- **`utaab` section**: Add all 8 keys (verifying, verified, humanConfirmed, verifyHuman, verificationFailed, tryAgain, clickToVerify, verify, solvingChallenge)
+- **`education.registration` section**: Add full registration form translations (~50 keys including validation messages)
+- **`blog.copyLink` and `blog.linkCopied`**: Add missing blog keys
+- **`legal` section**: Add full Privacy Policy and Terms of Service translations (tableOfContents, relatedDocuments, privacyPolicy sections, termsOfService sections)
+
+#### Turkish (`tr.json`) -- Missing Keys:
+- **`blog.copyLink` and `blog.linkCopied`**: Add `"copyLink": "Bağlantıyı Kopyala"`, `"linkCopied": "Bağlantı kopyalandı!"`
+- **`education.registration` section**: Add full registration form translations
+- **`legal` section**: Add full Privacy Policy and Terms of Service translations
+
+#### Russian (`ru.json`) -- Missing Keys:
+- **`blog.copyLink` and `blog.linkCopied`**: Add `"copyLink": "Скопировать ссылку"`, `"linkCopied": "Ссылка скопирована!"`
+- **`education.registration` section**: Add full registration form translations
+- **`legal` section**: Add full Privacy Policy and Terms of Service translations
+
+### 5. New i18n Keys for KVKK Form (all 4 locales)
+
+| Key | EN | TR | AR | RU |
+|-----|----|----|----|----|
+| `kvkk.requestForm.successCommunity` | Meanwhile, join our community on WhatsApp to stay connected! | Bu arada, bağlantıda kalmak için WhatsApp topluluğumuza katılın! | في غضون ذلك، انضم إلى مجتمعنا على WhatsApp للبقاء على تواصل! | А пока присоединяйтесь к нашему сообществу в WhatsApp! |
+| `kvkk.requestForm.backToHome` | Back to Home | Ana Sayfaya Dön | العودة إلى الرئيسية | На главную |
 
 ## Technical Details
 
-### Projects Component Structure
-```text
-Projects.tsx
-  |-- projects array (7 items, each with status, titleKey, descriptionKey, tags[])
-  |-- Status badge: conditional class based on status string
-  |-- "Soon" label: rendered inline next to button text when status === 'planning'
-  |-- Grid: grid-cols-1 md:grid-cols-2 lg:grid-cols-3
-  |-- Cards: glass rounded-[28px] p-6 hover:-translate-y-1 transition-all
-```
-
 ### Files Modified
 
-| File | Change |
-|------|--------|
-| `src/components/Projects.tsx` | Rewrite project data (7 cards), add status badge styling, add "Soon" label, refine hover/grid |
-| `src/i18n/locales/en.json` | Replace projects section with 7 projects, new tags, new statuses |
-| `src/i18n/locales/tr.json` | Turkish translations for all new content |
-| `src/i18n/locales/ar.json` | Arabic translations for all new content |
-| `src/i18n/locales/ru.json` | Russian translations for all new content |
+| File | Changes |
+|------|---------|
+| `src/components/Projects.tsx` | Remove UB Point entry, remove status condition from "Soon" label |
+| `src/components/forms/KVKKRequestForm.tsx` | Replace 3 hardcoded English strings with `t()` calls |
+| `src/i18n/locales/en.json` | Remove ubpoint, add KVKK form keys |
+| `src/i18n/locales/tr.json` | Remove ubpoint, add KVKK form keys, add blog keys, add education.registration section, add legal section |
+| `src/i18n/locales/ar.json` | Remove ubpoint, add KVKK form keys, add utaab section, add common.retry, add blog keys, add education.registration section, add legal section |
+| `src/i18n/locales/ru.json` | Remove ubpoint, add KVKK form keys, add blog keys, add education.registration section, add legal section |
 
+### Scope Note
+The `education.registration` and `legal` sections are substantial (50+ keys each with long HTML content for legal pages). These will be fully translated to Turkish, Arabic, and Russian to ensure complete localization coverage across the entire website.
