@@ -386,9 +386,9 @@ export const Navbar = () => {
                   paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',
                   paddingLeft: 'max(1.5rem, env(safe-area-inset-left))',
                   paddingRight: 'max(1.5rem, env(safe-area-inset-right))',
-                  background: 'rgba(15, 23, 42, 0.75)',
-                  backdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
-                  WebkitBackdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
+                  background: 'rgba(10, 15, 30, 0.92)',
+                  backdropFilter: 'blur(40px) saturate(200%) brightness(0.95)',
+                  WebkitBackdropFilter: 'blur(40px) saturate(200%) brightness(0.95)',
                 }}
               >
                 {/* Close Button */}
@@ -436,53 +436,29 @@ export const Navbar = () => {
                   
                   <div className="h-px bg-white/20 my-2" />
                   
-                  <button
-                    role="menuitem"
+                  <Button
                     onClick={handleEducationClick}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        handleEducationClick();
-                      }
-                    }}
-                    className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                    className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold rounded-xl min-h-[44px]"
+                    size="lg"
                   >
                     {t('education.title')}
-                  </button>
+                  </Button>
 
                   <div className="h-px bg-white/20 my-2" />
-
-                  {/* Account Section */}
-                  <div className="px-4 py-2 text-xs font-semibold text-white/70">
-                    {t('nav.account')}
-                  </div>
 
                   <button
                     role="menuitem"
                     onClick={() => { closeMobileMenu(); setTimeout(() => navigate('/education/sign-in'), 200); }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        closeMobileMenu();
-                        setTimeout(() => navigate('/education/sign-in'), 200);
-                      }
-                    }}
-                    className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                    className="flex items-center justify-center gap-2 w-full text-base font-semibold text-white border border-white/40 hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px]"
                   >
+                    <User className="h-5 w-5" />
                     {t('nav.studentAuthOptions')}
                   </button>
 
                   <button
                     role="menuitem"
                     onClick={() => { closeMobileMenu(); setTimeout(() => navigate('/admin/login'), 200); }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        closeMobileMenu();
-                        setTimeout(() => navigate('/admin/login'), 200);
-                      }
-                    }}
-                    className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
+                    className="text-center text-sm text-white/50 hover:text-white/80 transition-all py-2 px-4 rounded-xl w-full"
                   >
                     {t('nav.adminSignIn')}
                   </button>
