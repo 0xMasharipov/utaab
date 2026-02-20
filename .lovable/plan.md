@@ -1,27 +1,57 @@
 
 
-# Update MIT University Logo to Official Version
+# Update Team Page with Real Photos and Refined Design
 
-## What Changes
-Replace the current approximate MIT logo SVG (`public/images/mit-logo.svg`) with an accurate recreation of the official MIT logo based on the MIT Brand Guide.
+## Photo Mapping
+Based on the uploaded images and your description:
+- **UTAAB_Profile_Z.png** --> Zinurbek Masharipov (Founder)
+- **UTAAB_Profile_Umut.png** --> Umut Tekbas (HR Manager)
+- **UTAAB_Profile_Abdulla.png** --> Abdulla Hamzali (Head of Engineering)
+- **UTAAB_Profile_Emre.png** --> Yunus Emre Ercin (CTO)
 
-## Current Issue
-The existing SVG is a rough approximation using basic rectangles that doesn't accurately match the official MIT logo geometry. The official logo (visible on brand.mit.edu) has a specific blocky letter design for "M", "I", and "T" with precise proportions.
+Note: Abdulbaki (CFO) does not have a photo -- will keep the icon placeholder for him.
 
-## Plan
+## Changes
 
-### 1. Replace `public/images/mit-logo.svg`
-Recreate the SVG to accurately match the official MIT logo geometry using the correct rectangular block structure visible in the Brand Guide:
-- **M**: Left vertical bar + top horizontal bar extending right, forming the letter M shape
-- **I**: Two short horizontal bars (top and bottom) with a vertical bar in the middle -- the classic serif-I block shape
-- **T**: Top horizontal bar with a centered vertical bar dropping down
+### 1. Copy Photos to Project
+Save all 4 uploaded images to `src/assets/team/` for proper bundling:
+- `src/assets/team/zinurbek.png`
+- `src/assets/team/umut.png`
+- `src/assets/team/abdulla.png`
+- `src/assets/team/yunus.png`
 
-All in MIT Red (#A31F34), matching the official brand color.
+### 2. Redesign TeamPage (`src/pages/TeamPage.tsx`)
+Aesthetic refinements:
+- **Founder featured card**: Zinurbek gets a larger, hero-style card at the top spanning full width with a horizontal layout (photo left, info right) and an accent border glow
+- **Leadership grid below**: Remaining 4 members in a 2x2 grid (or 4-column on large screens) with circular photos that have a subtle gradient ring border
+- **Photo styling**: `object-cover` with a glassmorphic ring border, hover scale effect
+- **Card polish**: Slightly larger padding, refined typography hierarchy, subtle gradient overlay on hover
+- **Remove the generic User icon** for members who have photos; keep it only for Abdulbaki
 
-### 2. No other file changes needed
-The `BlockchainAndMoney.tsx` component already references `/images/mit-logo.svg` with proper fallback handling -- only the SVG asset itself needs updating.
+### 3. Update Team Component (`src/components/Team.tsx`)
+- Add the same photo data to the homepage team section cards
+- Replace the User icon placeholder with actual photos where available
+- Keep the compact card style but swap icons for circular profile images
+
+### 4. Update teamMembers Data
+Add an `image` field to each member object pointing to the imported asset, so both `Team.tsx` and `TeamPage.tsx` can use it.
 
 ## Technical Details
 
-The new SVG will be a hand-crafted vector using `<rect>` elements to precisely reproduce the official MIT block-letter logo proportions based on the brand guide reference. The viewBox will be adjusted to properly fit the letterforms with appropriate spacing between M, I, and T.
+### File changes:
+| File | Change |
+|------|--------|
+| `src/assets/team/zinurbek.png` | Copy from uploaded image |
+| `src/assets/team/umut.png` | Copy from uploaded image |
+| `src/assets/team/abdulla.png` | Copy from uploaded image |
+| `src/assets/team/yunus.png` | Copy from uploaded image |
+| `src/pages/TeamPage.tsx` | Redesign with featured founder card, real photos, refined glassmorphism styling |
+| `src/components/Team.tsx` | Add real photos to homepage team cards |
+
+### Design Details
+- Photos use `rounded-full` with a 2px gradient border ring (`border-accent/30`)
+- Founder card: horizontal layout with `lg:flex-row`, larger photo (160x160), accent glow shadow
+- Other cards: centered vertical layout, 112x112 photos
+- Hover effects: photo scales slightly (`group-hover:scale-105`), border brightens
+- Fallback: Members without photos show the existing User icon in the glass circle
 
