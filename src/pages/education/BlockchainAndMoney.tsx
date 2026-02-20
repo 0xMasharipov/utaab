@@ -4,6 +4,7 @@ import { AppleStyleVideoPlayer } from '@/components/learning/AppleStyleVideoPlay
 import { LecturePlaylist } from '@/components/learning/LecturePlaylist';
 import { mitBlockchainLectures, MITLecture } from '@/data/mitOcwLectures';
 import { Info, ChevronLeft, ChevronRight, Menu } from 'lucide-react';
+import mitLogo from '@/assets/MIT_UNI_LOGO.png';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
@@ -121,17 +122,9 @@ export const BlockchainAndMoney = () => {
           <div className="animate-fade-in">
             <div className="flex items-center gap-3 mb-4">
               <img 
-                src="/images/mit-logo.svg"
+                src={mitLogo}
                 alt="MIT Logo"
                 className="h-12 w-auto"
-                onError={(e) => {
-                  const target = e.currentTarget;
-                  target.style.display = 'none';
-                  const fallback = document.createElement('span');
-                  fallback.textContent = 'MIT';
-                  fallback.className = 'text-2xl font-bold text-foreground tracking-wider';
-                  target.parentElement?.insertBefore(fallback, target);
-                }}
               />
               <div className="h-8 w-px bg-white/20" />
               <span className="text-muted-foreground font-montserrat text-sm">
