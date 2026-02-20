@@ -20,7 +20,7 @@ const TeamProfileModal = ({ member, open, onOpenChange }: TeamProfileModalProps)
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md p-0 border-0 bg-transparent shadow-none overflow-hidden sm:rounded-[28px]">
+      <DialogContent className="max-w-md p-0 border-0 bg-transparent shadow-none overflow-hidden sm:rounded-[28px] [&>button]:hidden">
         <div className="bg-white/[0.08] backdrop-blur-2xl border border-[rgba(148,163,184,0.2)] rounded-[28px] overflow-hidden">
           {/* Image */}
           <div className="relative aspect-[4/3] w-full overflow-hidden">
