@@ -1,94 +1,80 @@
 
+# Fix Logo Composition and Add Connected Network Ecosystem
 
-# Premium Web3 Hero Section with 3D Logo and Orbiting Nodes
+## A) Fix Center 3D Logo — Tighter Spacing
 
-## Overview
-Replace the current video-based hero with a premium Three.js scene featuring the UTAAB diamond-cross logo recreated in 3D, orbiting blockchain nodes, and a deep blue gradient background matching the reference images.
+**Problem**: Block offset is currently `0.75` units, making the 4 diamonds look like separate floating tiles instead of one unified symbol.
 
-## New Files to Create
+**Changes in `Logo3D.tsx`**:
+- Reduce block offset from `0.75` to `0.38` so blocks nearly touch with only a small negative-space cross in the middle
+- Reduce block size from `[0.6, 0.6, 0.15]` to `[0.45, 0.45, 0.12]` so the logo doesn't overpower the text
+- Keep all other properties (material, Float, micro-tilt) the same
 
-### 1. `src/components/three/Logo3D.tsx`
-- Build the UTAAB logo as 4 rounded box geometries arranged in a diamond-cross pattern (top, right, bottom, left)
-- Each block: `RoundedBox` from drei, rotated 45 degrees (PI/4 on Z axis), with slight extrusion depth (~0.15)
-- Material: `meshPhysicalMaterial` -- white color, low metalness (0.1), medium-low roughness (0.25), clearcoat (0.8)
-- Animation: subtle vertical float using `Float` from drei (speed=1.5, floatIntensity=0.3) and optional micro-tilt via useFrame (1-2 degree sine oscillation)
+Updated positions:
+```
+top:    [0, 0.38, 0]
+right:  [0.38, 0, 0]
+bottom: [0, -0.38, 0]
+left:   [-0.38, 0, 0]
+```
 
-### 2. `src/components/three/OrbitNodes.tsx`
-- 3 orbit ring layers with different radii (2.5, 3.5, 4.5) and speeds
-- Each ring contains 4-6 small rounded cubes (blockchain blocks) orbiting the center
-- Node material: frosted glass look -- white color, transmission=0.6, roughness=0.3, clearcoat=1
-- Subtle edge glow via a slightly larger transparent emissive mesh behind each node
-- Optional network lines: thin `Line` segments connecting nearby nodes with low opacity (0.15), fading in/out over time
-- On mobile (detected via `useIsMobile`): reduce node count per ring to 2-3
+## B) Rebuild OrbitNodes as Connected Ecosystem Network
 
-### 3. `src/components/three/HeroScene.tsx`
-- R3F `Canvas` wrapper with locked camera (no OrbitControls)
-- Camera: position [0, 0, 6], fov 50, fixed -- optional slow cinematic push-in (6 to 5.8 over 30s)
-- Lighting: soft ambient (0.4), one directional key light from upper-right, one cool-blue rim light from behind-left
-- Contains `Logo3D` and `OrbitNodes`
-- DPR capped at [1, 1.5] for performance
-- `pointerEvents: 'none'` on container div so it doesn't block scrolling
+**Problem**: Current nodes orbit independently with no connections — feels like random floating squares.
 
-### 4. `src/components/HeroSection.tsx` (new hero wrapper)
-Not needed -- we will update the existing `Hero.tsx` directly.
+**Complete rewrite of `OrbitNodes.tsx`** with the following architecture:
 
-## Files to Modify
+### Node System
+- All nodes stored in a single flat array with pre-computed ring assignments
+- 3 rings with different radii and speeds:
+  - Inner ring (r=1.8): 8 nodes desktop / 4 mobile, speed=0.12
+  - Mid ring (r=3.0): 12 nodes desktop / 6 mobile, speed=-0.08
+  - Outer ring (r=4.2): 10 nodes desktop / 5 mobile, speed=0.05, tilted 15deg
+- Each node gets a random Y offset (small, +/-0.3) and angle offset for organic feel
+- Nodes rendered as small `RoundedBox` with frosted glass material (same as current)
 
-### `src/components/Hero.tsx`
-- Remove the `<video>` element and dark overlay
-- Add a CSS gradient background layer matching the reference:
-  - Base: deep navy (#0a1628)
-  - Radial gradient glow on the right side (royal blue #1e3a8a at ~70% right, 50% top)
-  - Subtle vignette via inset box-shadow or pseudo-element
-  - Tiny noise overlay (CSS background-image with inline SVG noise at 2-3% opacity)
-- Lazy-load `HeroScene` with `React.lazy` + `Suspense`
-- Keep the text content (title, subtitle, description, CTA button) as a z-10 overlay below the 3D canvas center
-- Adjust section height: `h-[100vh]` on desktop, `h-[70vh]` on mobile via responsive classes
-- Add safe top padding for navbar (~pt-20)
+### Connection Lines (key new feature)
+- On every frame, compute world positions of all nodes
+- Use a proximity-based connection system: connect pairs within a distance threshold (~2.5 units)
+- Cap total connections at 60 max (40 on mobile)
+- Render connections using a single `<line>` primitive with a `BufferGeometry` updated each frame
+- Line color: `#4a9eff` at low opacity (~0.15), with gentle sine-wave opacity breathing
+
+### Pulse Animation
+- A few nodes (3-4 at a time) get a soft scale pulse (1.0 to 1.3 over 2s) cycling through the node set
+- Simulates blockchain validation/activity
+
+### Cluster Bias
+- Add slight angular clustering near the left (~PI) and right (~0) sides of the logo so visible network clusters form in those areas, giving an immediate "connected ecosystem" perception
+
+### Performance
+- Use `useRef` for node world position array — no allocations per frame
+- Single shared `BufferGeometry` for all connection lines, updated in `useFrame`
+- Node count automatically reduced on mobile via `useIsMobile()`
+- Connection distance check is O(n^2) but with n=30 max nodes, that's only ~450 checks — trivial
+
+## C) HeroScene.tsx — Minor Update
+- No structural changes needed
+- Camera, lighting, and container remain the same
 
 ## Technical Details
 
-### Logo geometry (diamond-cross pattern)
+### Connection line rendering approach
 ```text
-        [top]
-   [left]   [right]
-       [bottom]
+1. Maintain a Float32Array buffer for line positions (maxLines * 6 floats)
+2. Each frame:
+   - Compute world position of each node
+   - Find pairs within distance threshold
+   - Sort by distance, take top N pairs
+   - Write start/end positions into buffer
+   - Update drawRange on the BufferGeometry
+3. Material: LineBasicMaterial, transparent, opacity oscillates 0.08-0.18
 ```
-Each block offset by ~0.75 units from center along its axis, rotated PI/4 on Z. Using `RoundedBox` from drei with args [0.6, 0.6, 0.15] and radius 0.08.
-
-### Orbit rings layout
-```text
-Ring 1 (r=2.5): 5 nodes, speed=0.15 rad/s
-Ring 2 (r=3.5): 6 nodes, speed=-0.10 rad/s (counter-rotate)
-Ring 3 (r=4.5): 4 nodes, speed=0.08 rad/s, tilted 20deg on X
-```
-
-### CSS gradient background (matching reference)
-```css
-background: radial-gradient(ellipse at 75% 50%, #1e3a8a 0%, transparent 60%),
-            radial-gradient(ellipse at 30% 30%, #0f2557 0%, transparent 50%),
-            linear-gradient(135deg, #060e1f 0%, #0a1628 40%, #0d1f3c 100%);
-```
-Plus a subtle vignette via `box-shadow: inset 0 0 150px rgba(0,0,0,0.5)`.
-
-### Performance considerations
-- `useIsMobile()` hook to reduce node count on mobile (15 nodes desktop, 8 mobile)
-- DPR capped at 1.5
-- No heavy post-processing (no bloom, no SSAO)
-- `RoundedBox` with low segment count (2 segments)
-- Canvas `pointerEvents: 'none'` to prevent scroll blocking
-
-### Network lines (optional effect)
-- In `OrbitNodes`, every 3-4 seconds pick 2-3 random node pairs within distance threshold
-- Draw `Line` from drei with opacity animating 0 to 0.2 to 0 over 2 seconds
-- Maximum 3 active lines at once
 
 ### Files summary
 
 | File | Action |
 |------|--------|
-| `src/components/three/Logo3D.tsx` | Create -- 3D diamond-cross logo |
-| `src/components/three/OrbitNodes.tsx` | Create -- orbiting blockchain block nodes |
-| `src/components/three/HeroScene.tsx` | Create -- R3F Canvas with scene composition |
-| `src/components/Hero.tsx` | Modify -- replace video with gradient + 3D scene, keep text overlay |
-
+| `src/components/three/Logo3D.tsx` | Update — reduce block spacing and size |
+| `src/components/three/OrbitNodes.tsx` | Rewrite — ecosystem rings + proximity connections + pulse |
+| `src/components/three/HeroScene.tsx` | No changes needed |
