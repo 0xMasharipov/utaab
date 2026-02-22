@@ -171,7 +171,13 @@ export const Navbar = () => {
         <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
           {/* Logo - Left column (fixed) */}
           <button
-            onClick={() => scrollToSection('hero')}
+            onClick={() => {
+              if (window.location.pathname === '/') {
+                scrollToSection('hero');
+              } else {
+                navigate('/');
+              }
+            }}
             className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity flex-shrink-0"
             aria-label="UTAAB - Home"
           >

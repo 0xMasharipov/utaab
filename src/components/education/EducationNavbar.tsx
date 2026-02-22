@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Globe, User, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,8 +13,9 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { supabase } from '@/integrations/supabase/client';
-import logo from '@/assets/logo.png';
+import logo from '@/assets/logo-new.png';
 import { BrandText } from '@/components/common/BrandText';
+import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -40,10 +42,11 @@ export const EducationNavbar = () => {
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
   const isRTL = i18n.language === 'ar';
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const { getTransitionClasses } = useLanguageTransition();
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 40);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -56,8 +59,6 @@ export const EducationNavbar = () => {
       document.body.style.position = 'fixed';
       document.body.style.top = `-${scrollY}px`;
       document.body.style.width = '100%';
-      
-      // Focus first item
       setTimeout(() => closeButtonRef.current?.focus(), 100);
     } else {
       const scrollY = document.body.style.top;
@@ -121,7 +122,6 @@ export const EducationNavbar = () => {
       return;
     }
 
-    // Use server-side admin check to prevent client-side manipulation
     supabase.functions
       .invoke('check-admin-status')
       .then(({ data }) => {
@@ -157,77 +157,128 @@ export const EducationNavbar = () => {
 
   return (
     <nav
-      className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
-        isScrolled ? 'w-[95%] max-w-6xl' : 'w-[90%] max-w-5xl'
-      }`}
+      className="fixed top-2 sm:top-4 left-1/2 -translate-x-1/2 z-50 w-[96%] sm:w-[95%] max-w-6xl transition-[transform,opacity] duration-300"
     >
-      <div className={`glass-strong rounded-full px-6 py-4 ${isScrolled ? 'shadow-lg' : ''}`}>
-        <div className="flex items-center justify-between">
-          {/* Logo */}
+      <div
+        className={`rounded-full px-4 sm:px-5 md:px-8 py-3 sm:py-4 border transition-all duration-300 ${
+          isScrolled
+            ? 'border-white/20 shadow-xl shadow-primary/15'
+            : 'border-white/10 shadow-lg shadow-primary/5'
+        }`}
+        style={{
+          background: isScrolled
+            ? 'linear-gradient(135deg, rgba(10, 10, 20, 0.9) 0%, rgba(20, 30, 60, 0.85) 100%)'
+            : 'linear-gradient(135deg, rgba(10, 20, 50, 0.25) 0%, rgba(20, 40, 80, 0.2) 50%, rgba(10, 20, 50, 0.25) 100%)',
+          backdropFilter: 'blur(24px) saturate(200%) brightness(0.95)',
+          WebkitBackdropFilter: 'blur(24px) saturate(200%) brightness(0.95)',
+          boxShadow: isScrolled
+            ? '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+            : '0 4px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
+        }}
+      >
+        {/* Grid layout: Logo | Center Nav | Right Actions */}
+        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
+          {/* Logo - Left column */}
           <button
-            onClick={() => navigate('/education')}
-            className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity"
-            aria-label="UTAA Blockchain Education - Home"
+            onClick={() => navigate('/')}
+            className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity flex-shrink-0"
+            aria-label="UTAA Blockchain - Home"
           >
             <div className="relative h-8 sm:h-10 w-8 sm:w-10 flex-shrink-0">
               {!logoLoaded && (
                 <div className="absolute inset-0 rounded-lg bg-muted animate-pulse" />
               )}
-              <img 
-                src={logo} 
-                alt="UTAA Blockchain" 
-                className={`h-8 sm:h-10 w-auto transition-opacity duration-500 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
+              <img
+                src={logo}
+                alt="UTAA Blockchain"
+                className={`h-8 sm:h-10 w-auto mix-blend-lighten brightness-110 transition-opacity duration-500 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
+                width="40"
+                height="40"
+                fetchPriority="high"
+                decoding="async"
                 onLoad={() => setLogoLoaded(true)}
               />
             </div>
-            <BrandText 
-              variant="navbar-mobile" 
+            <BrandText
+              variant="navbar-mobile"
               className={`sm:hidden transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
             />
-            <BrandText 
-              variant="navbar-tablet" 
+            <BrandText
+              variant="navbar-tablet"
               className={`hidden sm:block md:hidden transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
             />
-            <BrandText 
-              variant="navbar-desktop" 
+            <BrandText
+              variant="navbar-desktop"
               className={`hidden md:block transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
             />
           </button>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6">
-            {navItems.map((item) => (
-              <button
-                key={item.path}
-                onClick={() => navigate(item.path)}
-                className={`text-sm font-medium transition-colors ${
-                  location.pathname === item.path
-                    ? 'text-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
+          {/* Desktop Navigation - Center column */}
+          <div className="hidden md:flex items-center justify-center overflow-hidden">
+            <div
+              className={`flex items-center gap-4 lg:gap-6 max-w-full overflow-hidden transition-all duration-300 ${
+                isScrolled
+                  ? 'opacity-100 pointer-events-auto translate-y-0'
+                  : 'opacity-0 pointer-events-none -translate-y-1'
+              }`}
+              style={{ willChange: 'opacity, transform' }}
+            >
+              {navItems.map((item) => (
+                <button
+                  key={item.path}
+                  onClick={() => navigate(item.path)}
+                  className={getTransitionClasses(
+                    `text-sm font-medium transition-colors navbar-text-truncate ${
+                      location.pathname === item.path
+                        ? 'text-foreground'
+                        : 'text-muted-foreground hover:text-foreground'
+                    }`
+                  )}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Right side - Language + User */}
-          <div className="flex items-center gap-3">
+          {/* Spacer for mobile */}
+          <div className="md:hidden" />
+
+          {/* Right side - Actions */}
+          <div
+            className={cn(
+              'flex items-center gap-2 flex-shrink-0',
+              isRTL && 'flex-row-reverse'
+            )}
+            style={{ transform: 'translateZ(0)' }}
+          >
+            {/* Main Site Button */}
+            <Button
+              onClick={() => (window.location.href = '/')}
+              variant="ghost"
+              size="sm"
+              className={getTransitionClasses(
+                'glass hover:bg-white/10 rounded-full px-3 hidden md:inline-flex max-w-[140px] justify-center truncate'
+              )}
+            >
+              Main Site
+            </Button>
+
             {/* Language Selector */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="glass hover:bg-white/10 rounded-full px-3"
+                  className="glass hover:bg-white/10 rounded-full px-3 min-w-[52px] justify-center"
                   aria-label="Select language"
                 >
-                  <Globe className="h-4 w-4 mr-2" />
+                  <Globe className="h-4 w-4 sm:mr-2" />
                   <span className="hidden sm:inline">{currentLanguage.flag}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                align="end"
+                align={isRTL ? 'start' : 'end'}
                 className="glass-strong border-white/20 backdrop-blur-2xl rounded-2xl min-w-[180px] z-[100]"
               >
                 {languages.map((lang) => (
@@ -240,7 +291,7 @@ export const EducationNavbar = () => {
                         : 'hover:bg-white/10'
                     }`}
                   >
-                    <span className="mr-2">{lang.flag}</span>
+                    <span className={isRTL ? 'ml-2' : 'mr-2'}>{lang.flag}</span>
                     <span>{lang.name}</span>
                   </DropdownMenuItem>
                 ))}
@@ -254,13 +305,13 @@ export const EducationNavbar = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="glass hover:bg-white/10 rounded-full"
+                    className="glass hover:bg-white/10 rounded-full px-3"
                   >
                     <User className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
-                  align="end"
+                  align={isRTL ? 'start' : 'end'}
                   className="glass-strong border-white/20 backdrop-blur-2xl rounded-2xl z-[100]"
                 >
                   <DropdownMenuItem onClick={() => navigate('/education/profile')}>
@@ -277,22 +328,12 @@ export const EducationNavbar = () => {
             ) : (
               <Button
                 onClick={() => navigate('/education/register')}
-                className="btn-primary hidden sm:inline-flex"
+                className="btn-navbar-cta hidden sm:inline-flex max-w-[130px] justify-center truncate"
                 size="sm"
               >
                 {t('education.register')}
               </Button>
             )}
-
-            {/* Main Site Link */}
-            <Button
-              onClick={() => (window.location.href = '/')}
-              variant="outline"
-              size="sm"
-              className="glass hidden md:inline-flex"
-            >
-              Main Site
-            </Button>
 
             {/* Mobile Menu Toggle */}
             <button
@@ -301,7 +342,7 @@ export const EducationNavbar = () => {
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isMobileMenuOpen}
-              aria-controls="mobile-menu"
+              aria-controls="education-mobile-menu"
             >
               {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -328,10 +369,10 @@ export const EducationNavbar = () => {
                 onClick={closeMobileMenu}
                 aria-hidden="true"
               />
-              
+
               {/* Menu Panel */}
               <motion.div
-                id="mobile-menu"
+                id="education-mobile-menu"
                 ref={menuRef}
                 role="menu"
                 aria-modal="true"
@@ -345,9 +386,9 @@ export const EducationNavbar = () => {
                   paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',
                   paddingLeft: 'max(1.5rem, env(safe-area-inset-left))',
                   paddingRight: 'max(1.5rem, env(safe-area-inset-right))',
-                  background: 'rgba(15, 23, 42, 0.75)',
-                  backdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
-                  WebkitBackdropFilter: 'blur(32px) saturate(200%) brightness(0.95)',
+                  background: 'rgba(10, 15, 30, 0.92)',
+                  backdropFilter: 'blur(40px) saturate(200%) brightness(0.95)',
+                  WebkitBackdropFilter: 'blur(40px) saturate(200%) brightness(0.95)',
                 }}
               >
                 {/* Close Button */}
@@ -384,31 +425,36 @@ export const EducationNavbar = () => {
                       {item.label}
                     </button>
                   ))}
-                  
+
                   <div className="h-px bg-white/20 my-2" />
-                  
+
                   <button
                     role="menuitem"
                     onClick={() => {
                       closeMobileMenu();
                       setTimeout(() => (window.location.href = '/'), prefersReducedMotion ? 0 : 200);
                     }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        closeMobileMenu();
-                        setTimeout(() => (window.location.href = '/'), prefersReducedMotion ? 0 : 200);
-                      }
-                    }}
                     className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                   >
                     Main Site
                   </button>
 
+                  <div className="h-px bg-white/20 my-2" />
+
                   {!user ? (
                     <>
-                      <div className="h-px bg-white/20 my-2" />
-                      
+                      <button
+                        role="menuitem"
+                        onClick={() => {
+                          closeMobileMenu();
+                          setTimeout(() => navigate('/education/sign-in'), prefersReducedMotion ? 0 : 200);
+                        }}
+                        className="flex items-center justify-center gap-2 w-full text-base font-semibold text-white border border-white/40 hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px]"
+                      >
+                        <User className="h-5 w-5" />
+                        Student Sign In
+                      </button>
+
                       <Button
                         onClick={() => {
                           closeMobileMenu();
@@ -422,39 +468,23 @@ export const EducationNavbar = () => {
                     </>
                   ) : (
                     <>
-                      <div className="h-px bg-white/20 my-2" />
-                      
                       <button
                         role="menuitem"
                         onClick={() => {
                           closeMobileMenu();
                           setTimeout(() => navigate('/education/profile'), prefersReducedMotion ? 0 : 200);
                         }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            closeMobileMenu();
-                            setTimeout(() => navigate('/education/profile'), prefersReducedMotion ? 0 : 200);
-                          }
-                        }}
                         className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                       >
                         <User className="h-4 w-4 mr-2" />
                         Profile
                       </button>
-                      
+
                       <button
                         role="menuitem"
                         onClick={() => {
                           closeMobileMenu();
                           setTimeout(() => handleSignOut(), prefersReducedMotion ? 0 : 200);
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            closeMobileMenu();
-                            setTimeout(() => handleSignOut(), prefersReducedMotion ? 0 : 200);
-                          }
                         }}
                         className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                       >
@@ -463,6 +493,27 @@ export const EducationNavbar = () => {
                       </button>
                     </>
                   )}
+
+                  {/* Language Switcher */}
+                  <div className="mt-4 pt-4 border-t border-white/20">
+                    <p className="text-xs text-white/70 mb-3 px-4">{t('nav.language')}</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {languages.map((lang) => (
+                        <button
+                          key={lang.code}
+                          onClick={() => changeLanguage(lang.code)}
+                          className={`flex items-center gap-2 px-4 py-3 rounded-xl min-h-[44px] transition-all ${
+                            i18n.language === lang.code
+                              ? 'bg-accent/30 text-white font-medium'
+                              : 'hover:bg-white/15 text-white'
+                          }`}
+                        >
+                          <span className="text-xl">{lang.flag}</span>
+                          <span className="text-sm">{lang.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </nav>
               </motion.div>
             </>
