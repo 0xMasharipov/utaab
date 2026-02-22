@@ -2,13 +2,14 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
-import { useState } from 'react';
+import { lazy, Suspense } from 'react';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
+
+const HeroScene = lazy(() => import('@/components/three/HeroScene'));
 
 export const Hero = () => {
   const { t } = useTranslation();
   const { getTransitionClasses } = useLanguageTransition();
-  const [videoLoaded, setVideoLoaded] = useState(false);
 
   const scrollToJoin = () => {
     const element = document.getElementById('join');
@@ -17,52 +18,50 @@ export const Hero = () => {
     }
   };
 
-  // Per-letter animation for "Join our community"
   const subtitleWords = t('hero.subtitle').split(' ');
 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.08,
-        delayChildren: 0.3,
-      },
+      transition: { staggerChildren: 0.08, delayChildren: 0.3 },
     },
   };
 
   const letterVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-      },
-    },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
 
   return (
-    <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
-      {/* Looping video background */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        onCanPlay={() => setVideoLoaded(true)}
-        className="absolute inset-0 w-full h-full object-cover"
+    <section
+      id="hero"
+      className="relative min-h-[70vh] md:min-h-screen flex items-center justify-center overflow-hidden"
+      style={{
+        background: `
+          radial-gradient(ellipse at 75% 50%, #1e3a8a 0%, transparent 60%),
+          radial-gradient(ellipse at 30% 30%, #0f2557 0%, transparent 50%),
+          linear-gradient(135deg, #060e1f 0%, #0a1628 40%, #0d1f3c 100%)
+        `,
+        boxShadow: 'inset 0 0 150px rgba(0,0,0,0.5)',
+      }}
+    >
+      {/* Noise overlay */}
+      <div
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
         style={{
-          opacity: videoLoaded ? 1 : 0,
-          transition: 'opacity 1s ease-in-out',
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          backgroundSize: '128px 128px',
         }}
-        src="/videos/hero-bg.mp4"
       />
-      {/* Dark overlay for text readability */}
-      <div className="absolute inset-0 bg-black/50" />
+
+      {/* 3D Scene */}
+      <Suspense fallback={null}>
+        <HeroScene />
+      </Suspense>
 
       {/* Content overlay */}
-      <div className="section-container relative z-10 text-center py-20 sm:py-24 md:py-28">
+      <div className="section-container relative z-10 text-center py-20 sm:py-24 md:py-28 pt-24 md:pt-20">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
