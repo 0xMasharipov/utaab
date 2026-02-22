@@ -4,10 +4,10 @@ import { RoundedBox, Float } from '@react-three/drei';
 import { Group } from 'three';
 
 const blockPositions = [
-  { pos: [0, 0.75, 0] as [number, number, number] },   // top
-  { pos: [0.75, 0, 0] as [number, number, number] },   // right
-  { pos: [0, -0.75, 0] as [number, number, number] },  // bottom
-  { pos: [-0.75, 0, 0] as [number, number, number] },  // left
+  { pos: [0, 0.38, 0] as [number, number, number] },   // top
+  { pos: [0.38, 0, 0] as [number, number, number] },   // right
+  { pos: [0, -0.38, 0] as [number, number, number] },  // bottom
+  { pos: [-0.38, 0, 0] as [number, number, number] },  // left
 ];
 
 const Logo3D = () => {
@@ -27,7 +27,7 @@ const Logo3D = () => {
         {blockPositions.map((block, i) => (
           <RoundedBox
             key={i}
-            args={[0.6, 0.6, 0.15]}
+            args={[0.45, 0.45, 0.12]}
             radius={0.08}
             smoothness={2}
             position={block.pos}
