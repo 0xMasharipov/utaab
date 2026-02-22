@@ -1,80 +1,74 @@
 
-# Fix Logo Composition and Add Connected Network Ecosystem
+# Unify Education Navbar with Main Navbar + Fix Logo Navigation
 
-## A) Fix Center 3D Logo — Tighter Spacing
+## Problem 1: Education Navbar looks different
+The EducationNavbar uses a completely different visual style from the main Navbar:
+- Different layout (flexbox vs CSS grid)
+- Different glassmorphism (simple `glass-strong` class vs the premium gradient backgrounds with blur/saturate/brightness)
+- Different logo image (`logo.png` vs `logo-new.png`)
+- Different mobile menu background (`rgba(15, 23, 42, 0.75)` with 32px blur vs `rgba(10, 15, 30, 0.92)` with 40px blur)
+- Missing scroll-based visual state transitions (hero state vs scrolled state)
+- No language transition classes
 
-**Problem**: Block offset is currently `0.75` units, making the 4 diamonds look like separate floating tiles instead of one unified symbol.
+## Problem 2: Logo doesn't navigate home from other pages
+The main Navbar logo calls `scrollToSection('hero')` which only works on the Index page. On pages like /team, clicking the logo does nothing because there's no `#hero` element on that page.
 
-**Changes in `Logo3D.tsx`**:
-- Reduce block offset from `0.75` to `0.38` so blocks nearly touch with only a small negative-space cross in the middle
-- Reduce block size from `[0.6, 0.6, 0.15]` to `[0.45, 0.45, 0.12]` so the logo doesn't overpower the text
-- Keep all other properties (material, Float, micro-tilt) the same
+## Plan
 
-Updated positions:
-```
-top:    [0, 0.38, 0]
-right:  [0.38, 0, 0]
-bottom: [0, -0.38, 0]
-left:   [-0.38, 0, 0]
-```
+### A) Fix main Navbar logo navigation (all pages)
+In `src/components/Navbar.tsx`, update the logo click handler:
+- Check if the user is on the home page (`/`)
+- If yes: scroll to hero section (current behavior)
+- If no: navigate to `/` first
 
-## B) Rebuild OrbitNodes as Connected Ecosystem Network
+### B) Unify EducationNavbar appearance with main Navbar
+Rewrite `src/components/education/EducationNavbar.tsx` to match the main Navbar's visual style while keeping its own navigation items and auth logic:
 
-**Problem**: Current nodes orbit independently with no connections — feels like random floating squares.
+**Structural changes:**
+- Switch from flexbox to CSS grid layout (`grid-cols-[auto_1fr_auto]`)
+- Use the same logo image (`logo-new.png` with `mix-blend-lighten brightness-110`)
+- Logo click navigates to `/` (main site home) instead of `/education`
 
-**Complete rewrite of `OrbitNodes.tsx`** with the following architecture:
+**Glassmorphism matching:**
+- Apply the same two-state background system:
+  - Hero state: `linear-gradient(135deg, rgba(10, 20, 50, 0.25) ...)` with 24px blur
+  - Scrolled state: `linear-gradient(135deg, rgba(10, 10, 20, 0.9) ...)` with shadow-xl
+- Same border, box-shadow, and inset highlight transitions
 
-### Node System
-- All nodes stored in a single flat array with pre-computed ring assignments
-- 3 rings with different radii and speeds:
-  - Inner ring (r=1.8): 8 nodes desktop / 4 mobile, speed=0.12
-  - Mid ring (r=3.0): 12 nodes desktop / 6 mobile, speed=-0.08
-  - Outer ring (r=4.2): 10 nodes desktop / 5 mobile, speed=0.05, tilted 15deg
-- Each node gets a random Y offset (small, +/-0.3) and angle offset for organic feel
-- Nodes rendered as small `RoundedBox` with frosted glass material (same as current)
+**Mobile menu matching:**
+- Background: `rgba(10, 15, 30, 0.92)` with 40px blur (matching main)
+- Same close button, rounded-3xl panel, border-white/30
+- Same menu item styling and spacing
+- Add language grid selector at bottom (matching main menu)
+- Add Education Platform button (blue gradient), Student Sign In button, Admin Sign In link (matching main menu structure)
 
-### Connection Lines (key new feature)
-- On every frame, compute world positions of all nodes
-- Use a proximity-based connection system: connect pairs within a distance threshold (~2.5 units)
-- Cap total connections at 60 max (40 on mobile)
-- Render connections using a single `<line>` primitive with a `BufferGeometry` updated each frame
-- Line color: `#4a9eff` at low opacity (~0.15), with gentle sine-wave opacity breathing
+**Desktop nav:**
+- Show education-specific links (Categories, All Courses, Admin) in the center column with the same scroll-based show/hide behavior
+- Keep the user auth dropdown and language selector in the right column
 
-### Pulse Animation
-- A few nodes (3-4 at a time) get a soft scale pulse (1.0 to 1.3 over 2s) cycling through the node set
-- Simulates blockchain validation/activity
+### Files to modify
 
-### Cluster Bias
-- Add slight angular clustering near the left (~PI) and right (~0) sides of the logo so visible network clusters form in those areas, giving an immediate "connected ecosystem" perception
-
-### Performance
-- Use `useRef` for node world position array — no allocations per frame
-- Single shared `BufferGeometry` for all connection lines, updated in `useFrame`
-- Node count automatically reduced on mobile via `useIsMobile()`
-- Connection distance check is O(n^2) but with n=30 max nodes, that's only ~450 checks — trivial
-
-## C) HeroScene.tsx — Minor Update
-- No structural changes needed
-- Camera, lighting, and container remain the same
-
-## Technical Details
-
-### Connection line rendering approach
-```text
-1. Maintain a Float32Array buffer for line positions (maxLines * 6 floats)
-2. Each frame:
-   - Compute world position of each node
-   - Find pairs within distance threshold
-   - Sort by distance, take top N pairs
-   - Write start/end positions into buffer
-   - Update drawRange on the BufferGeometry
-3. Material: LineBasicMaterial, transparent, opacity oscillates 0.08-0.18
-```
-
-### Files summary
-
-| File | Action |
+| File | Change |
 |------|--------|
-| `src/components/three/Logo3D.tsx` | Update — reduce block spacing and size |
-| `src/components/three/OrbitNodes.tsx` | Rewrite — ecosystem rings + proximity connections + pulse |
-| `src/components/three/HeroScene.tsx` | No changes needed |
+| `src/components/Navbar.tsx` | Fix logo click: navigate to `/` when not on home page |
+| `src/components/education/EducationNavbar.tsx` | Rewrite visual style to match main Navbar exactly |
+
+### Technical details
+
+**Logo navigation fix (Navbar.tsx):**
+```typescript
+const handleLogoClick = () => {
+  if (window.location.pathname === '/') {
+    scrollToSection('hero');
+  } else {
+    navigate('/');
+  }
+};
+```
+
+**EducationNavbar key style changes:**
+- Outer nav: `w-[96%] sm:w-[95%] max-w-6xl` (fixed width, no dynamic sizing)
+- Inner div: same gradient backgrounds with `backdropFilter: 'blur(24px) saturate(200%) brightness(0.95)'`
+- Grid layout: `grid grid-cols-[auto_1fr_auto] items-center gap-4`
+- Logo: import `logo-new.png`, add `mix-blend-lighten brightness-110`
+- Mobile panel: `background: 'rgba(10, 15, 30, 0.92)'`, `backdropFilter: 'blur(40px) saturate(200%) brightness(0.95)'`
