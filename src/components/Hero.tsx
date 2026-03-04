@@ -1,10 +1,13 @@
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const Hero = () => {
   const { t } = useTranslation();
   const [isMobile, setIsMobile] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
+
+  const handleVideoReady = useCallback(() => setVideoReady(true), []);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -29,11 +32,14 @@ export const Hero = () => {
         muted
         loop
         playsInline
+        preload="auto"
+        poster="/videos/hero-cube-poster.jpg"
+        onCanPlay={handleVideoReady}
         controlsList="nodownload nofullscreen noremoteplayback"
         disablePictureInPicture
         onContextMenu={(e) => e.preventDefault()}
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-        style={{ zIndex: 0 }}
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none transition-opacity duration-700"
+        style={{ zIndex: 0, opacity: videoReady ? 1 : 0 }}
       >
         <source src="/videos/hero-cube.mp4" type="video/mp4" />
       </video>
