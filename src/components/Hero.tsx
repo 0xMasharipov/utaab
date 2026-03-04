@@ -19,7 +19,10 @@ export const Hero = () => {
         muted
         loop
         playsInline
-        className="absolute inset-0 w-full h-full object-cover"
+        controlsList="nodownload nofullscreen noremoteplayback"
+        disablePictureInPicture
+        onContextMenu={(e) => e.preventDefault()}
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
         style={{ zIndex: 0 }}
       >
         <source src="/videos/hero-cube.mp4" type="video/mp4" />
