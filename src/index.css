@@ -61,6 +61,20 @@
   body {
     @apply bg-background text-foreground font-montserrat antialiased;
     font-feature-settings: 'kern' 1, 'liga' 1;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  img {
+    -webkit-user-drag: none;
+    user-drag: none;
+    pointer-events: none;
+  }
+
+  video {
+    pointer-events: none;
   }
   
   /* Arabic font override */
