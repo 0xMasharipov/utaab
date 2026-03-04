@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export const Hero = () => {
+  const { t } = useTranslation();
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -74,7 +76,7 @@ export const Hero = () => {
                 textTransform: 'uppercase' as const,
               }}
             >
-              CONNECT · LEARN · BUILD
+              {t('hero.tagline')}
             </span>
           </motion.div>
 
@@ -86,13 +88,12 @@ export const Hero = () => {
             className="font-montserrat leading-tight mb-4 md:mb-6"
             style={{
               fontWeight: 800,
-              fontSize: 'clamp(32px, 5.5vw, 72px)',
+              fontSize: 'clamp(36px, 6vw, 80px)',
               lineHeight: 1.1,
               color: '#1A1A1A',
             }}
           >
-            Academic Blockchain Infrastructure{' '}
-            for the{' '}
+            {t('hero.headline')}{' '}
             <span
               style={{
                 background: 'linear-gradient(135deg, #0B3C6D, #4A90E2)',
@@ -100,7 +101,7 @@ export const Hero = () => {
                 WebkitTextFillColor: 'transparent',
               }}
             >
-              Next Generation
+              {t('hero.headlineHighlight')}
             </span>
           </motion.h1>
 
@@ -116,8 +117,7 @@ export const Hero = () => {
               maxWidth: 520,
             }}
           >
-            UTAAB builds academic blockchain infrastructure connecting universities,
-            researchers and innovators through decentralized technologies.
+            {t('hero.description')}
           </motion.p>
 
           {/* Buttons */}
@@ -150,7 +150,7 @@ export const Hero = () => {
                 btn.style.boxShadow = '0 4px 20px rgba(11,60,109,0.25)';
               }}
             >
-              Join Us
+              {t('hero.joinUs')}
             </button>
 
             <button
@@ -175,7 +175,7 @@ export const Hero = () => {
                 btn.style.borderColor = 'rgba(11, 60, 109, 0.3)';
               }}
             >
-              Explore Ecosystem
+              {t('hero.explore')}
             </button>
           </motion.div>
         </div>

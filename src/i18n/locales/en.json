@@ -45,10 +45,12 @@
     "privacyNotice": "By continuing, you agree to our Privacy Policy and KVKK compliance. We use verification tools to prevent abuse."
   },
   "hero": {
-    "title": "Build your blockchain future",
-    "subtitle": "Join our community",
-    "description": "A hub for blockchain enthusiasts, professionals, and researchers to collaborate, learn, and innovate",
-    "cta": "Get Started"
+    "tagline": "CONNECT · LEARN · BUILD",
+    "headline": "Academic Blockchain Infrastructure for the",
+    "headlineHighlight": "Next Generation",
+    "description": "UTAAB builds academic blockchain infrastructure connecting universities, researchers and innovators through decentralized technologies.",
+    "joinUs": "Join Us",
+    "explore": "Explore Ecosystem"
   },
   "stats": {
     "members": "Members",

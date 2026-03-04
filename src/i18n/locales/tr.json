@@ -45,10 +45,12 @@
     "privacyNotice": "Devam ederek Gizlilik Politikamızı ve KVKK uyumluluğumuzu kabul etmiş olursunuz. Kötüye kullanımı önlemek için doğrulama araçları kullanırız."
   },
   "hero": {
-    "title": "Blockchain geleceğinizi inşa edin",
-    "subtitle": "Topluluğumuza katılın",
-    "description": "İşbirliği yapmak, öğrenmek ve yenilik yapmak için blockchain meraklıları, profesyoneller ve araştırmacılar için bir merkez",
-    "cta": "Başlayın"
+    "tagline": "BAĞLAN · ÖĞREN · İNŞA ET",
+    "headline": "Yeni Nesil için Akademik Blokzincir",
+    "headlineHighlight": "Altyapısı",
+    "description": "UTAAB, üniversiteleri, araştırmacıları ve yenilikçileri merkeziyetsiz teknolojilerle birleştiren akademik blokzincir altyapısı kurar.",
+    "joinUs": "Bize Katıl",
+    "explore": "Ekosistemi Keşfet"
   },
   "stats": {
     "members": "Üye",
