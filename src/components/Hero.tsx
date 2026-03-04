@@ -1,117 +1,165 @@
-import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { ChevronRight } from 'lucide-react';
-import { lazy, Suspense } from 'react';
-import { useLanguageTransition } from '@/hooks/useLanguageTransition';
-
-const HeroScene = lazy(() => import('@/components/three/HeroScene'));
 
 export const Hero = () => {
-  const { t } = useTranslation();
-  const { getTransitionClasses } = useLanguageTransition();
-
   const scrollToJoin = () => {
-    const element = document.getElementById('join');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    document.getElementById('join')?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const subtitleWords = t('hero.subtitle').split(' ');
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.08, delayChildren: 0.3 },
-    },
-  };
-
-  const letterVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-  };
+  const pills = ['Academic Infrastructure', 'Blockchain', 'Research Innovation'];
 
   return (
     <section
       id="hero"
-      className="relative min-h-[70vh] md:min-h-screen flex items-center justify-center overflow-hidden"
-      style={{
-        background: `
-          radial-gradient(ellipse at 75% 50%, #1e3a8a 0%, transparent 60%),
-          radial-gradient(ellipse at 30% 30%, #0f2557 0%, transparent 50%),
-          linear-gradient(135deg, #060e1f 0%, #0a1628 40%, #0d1f3c 100%)
-        `,
-        boxShadow: 'inset 0 0 150px rgba(0,0,0,0.5)',
-      }}
+      className="relative min-h-[70vh] md:min-h-screen overflow-hidden"
+      style={{ background: '#fff' }}
     >
-      {/* Noise overlay */}
+      {/* Background Video */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ zIndex: 0 }}
+      >
+        <source src="/videos/hero-cube.mp4" type="video/mp4" />
+      </video>
+
+      {/* White gradient overlay */}
       <div
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        className="absolute inset-0"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-          backgroundSize: '128px 128px',
+          background: 'linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 35%, rgba(255,255,255,0.45) 65%, rgba(255,255,255,0) 100%)',
+          zIndex: 1,
         }}
       />
 
-      {/* 3D Scene */}
-      <Suspense fallback={null}>
-        <HeroScene />
-      </Suspense>
+      {/* Content */}
+      <div
+        className="relative z-10 mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 items-center"
+        style={{ maxWidth: 1400, paddingTop: 120, paddingBottom: 120 }}
+      >
+        {/* Left column — text */}
+        <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+          {/* Pill tags */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-wrap gap-2 mb-6 justify-center lg:justify-start"
+          >
+            {pills.map((label) => (
+              <span
+                key={label}
+                className="rounded-full font-medium"
+                style={{
+                  background: 'rgba(11,60,109,0.08)',
+                  color: '#0B3C6D',
+                  fontSize: 14,
+                  padding: '6px 12px',
+                }}
+              >
+                {label}
+              </span>
+            ))}
+          </motion.div>
 
-      {/* Content overlay */}
-      <div className="section-container relative z-10 text-center py-20 sm:py-24 md:py-28 pt-24 md:pt-20">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <h1 className={getTransitionClasses("text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-2 sm:mb-3 text-glow-hero leading-tight px-2")}>
-            {t('hero.title')}
-          </h1>
-        </motion.div>
-
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className={getTransitionClasses("text-xl sm:text-2xl md:text-4xl lg:text-5xl font-semibold mb-4 sm:mb-5 text-accent text-glow-accent px-2")}
-        >
-          {subtitleWords.map((word, wordIndex) => (
-            <span key={wordIndex} className="inline-block mr-3">
-              {word.split('').map((char, charIndex) => (
-                <motion.span
-                  key={`${wordIndex}-${charIndex}`}
-                  variants={letterVariants}
-                  className="inline-block"
-                >
-                  {char}
-                </motion.span>
-              ))}
+          {/* Headline */}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="font-montserrat leading-tight mb-4"
+            style={{
+              fontWeight: 800,
+              fontSize: 'clamp(36px, 5vw, 64px)',
+              lineHeight: 1.1,
+              color: '#1A1A1A',
+            }}
+          >
+            Academic Blockchain Infrastructure{' '}
+            for the{' '}
+            <span
+              style={{
+                background: 'linear-gradient(90deg, #4A90E2, #6C63FF)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              Next Generation
             </span>
-          ))}
-        </motion.div>
+          </motion.h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className={getTransitionClasses("text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground text-glow-muted max-w-3xl mx-auto mb-6 sm:mb-8 px-4")}
-        >
-          {t('hero.description')}
-        </motion.p>
+          {/* Description */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.25 }}
+            className="font-montserrat mb-8"
+            style={{
+              fontWeight: 400,
+              fontSize: 18,
+              color: '#6F6F6F',
+              maxWidth: 520,
+            }}
+          >
+            UTAAB builds academic blockchain infrastructure connecting universities,
+            researchers and innovators through decentralized technologies.
+          </motion.p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-        >
-          <Button onClick={scrollToJoin} className={getTransitionClasses("bg-gradient-to-r from-primary via-blue-500 to-accent text-white font-semibold text-base sm:text-lg px-8 sm:px-10 py-3.5 sm:py-4 rounded-full border border-white/20 hover:scale-105 hover:shadow-[0_0_35px_hsl(213_94%_68%/0.45)] transition-all duration-300 group min-h-[44px]")}>
-            {t('hero.cta')}
-            <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-          </Button>
-        </motion.div>
+          {/* Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="flex flex-col sm:flex-row gap-4"
+          >
+            <button
+              onClick={scrollToJoin}
+              className="rounded-full text-white font-semibold transition-all duration-300 hover:scale-105"
+              style={{
+                background: 'linear-gradient(90deg, #4A90E2, #6C63FF)',
+                padding: '16px 28px',
+                fontWeight: 600,
+                boxShadow: '0 4px 20px rgba(74,144,226,0.3)',
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 6px 30px rgba(74,144,226,0.5)';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 4px 20px rgba(74,144,226,0.3)';
+              }}
+            >
+              Join Us
+            </button>
+
+            <button
+              className="rounded-full font-semibold transition-all duration-300"
+              style={{
+                border: '2px solid #0B3C6D',
+                color: '#0B3C6D',
+                padding: '16px 28px',
+                fontWeight: 600,
+                background: 'transparent',
+              }}
+              onMouseEnter={(e) => {
+                const btn = e.currentTarget as HTMLButtonElement;
+                btn.style.background = '#0B3C6D';
+                btn.style.color = '#fff';
+              }}
+              onMouseLeave={(e) => {
+                const btn = e.currentTarget as HTMLButtonElement;
+                btn.style.background = 'transparent';
+                btn.style.color = '#0B3C6D';
+              }}
+            >
+              Explore Ecosystem
+            </button>
+          </motion.div>
+        </div>
+
+        {/* Right column — spacer (video shows through) */}
+        <div className="hidden lg:block" />
       </div>
     </section>
   );
