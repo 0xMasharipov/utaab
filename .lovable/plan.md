@@ -1,39 +1,44 @@
 
 
-# Prevent Content Copying Across the Site
+# Refine Hero Section Aesthetics
 
-## Approach
-Add CSS-based and JavaScript-based copy protection to prevent users from selecting/copying text, saving images, and downloading videos.
+## What stays unchanged
+- Background video and white gradient overlay — no changes
+- Layout structure, text content, pill tags — no changes
+- Video already has autoPlay, muted, loop, playsInline — confirmed working
 
 ## Changes
 
-### 1. Add global CSS rules in `src/index.css`
-Add to the base layer:
-- `user-select: none` on `body` to prevent text selection
-- Disable image dragging globally
-- Disable video download via `controlsList`
+### 1. Fix "Next Generation" gradient text colors
+Replace the current `#4A90E2 → #6C63FF` (blue-to-purple) gradient with UTAAB on-brand colors only:
+- Use `linear-gradient(135deg, #0B3C6D, #4A90E2)` — deep UTAAB blue to gradient blue
+- This keeps it within the established palette, no purple accent
 
-### 2. Add JS-level protections in `src/main.tsx`
-Add event listeners on `document` to block:
-- `contextmenu` (right-click menu)
-- `copy` event
-- `selectstart` event
-- Keyboard shortcuts: `Ctrl+C`, `Ctrl+U` (view source), `Ctrl+S` (save), `Ctrl+A` (select all)
+### 2. Refine buttons to glassmorphism style
+Replace solid gradient and outline buttons with frosted glass aesthetic:
 
-### 3. Update video elements
-In `src/components/Hero.tsx` and any other video components, add `controlsList="nodownload"` and `onContextMenu={e => e.preventDefault()}` to `<video>` tags.
+**"Join Us" button:**
+- Background: `rgba(11, 60, 109, 0.75)` (UTAAB primary blue, semi-transparent)
+- `backdrop-filter: blur(12px)`
+- Border: `1px solid rgba(255,255,255,0.2)`
+- White text, rounded-full
+- Hover: increase opacity to 0.9, subtle scale 1.05, glow shadow
 
-### 4. Add image protection
-Add `draggable="false"` and `onContextMenu` prevention to image elements via a global CSS rule (`img { pointer-events: none }` or `user-drag: none`).
+**"Explore Ecosystem" button:**
+- Background: `rgba(255, 255, 255, 0.15)`
+- `backdrop-filter: blur(12px)`
+- Border: `1px solid rgba(11, 60, 109, 0.3)`
+- Text color: `#0B3C6D`
+- Hover: background `rgba(11, 60, 109, 0.12)`, border brightens
 
-## Files to modify
+### 3. Refine pill tags
+- Add `backdrop-filter: blur(8px)` for subtle glass effect
+- Slightly increase background opacity: `rgba(11,60,109,0.1)`
+- Add thin border: `1px solid rgba(11,60,109,0.12)`
+
+## File to modify
 
 | File | Change |
 |------|--------|
-| `src/index.css` | Add `user-select: none`, image drag prevention |
-| `src/main.tsx` | Add `contextmenu`, `copy`, `keydown` event blockers |
-| `src/components/Hero.tsx` | Add `controlsList="nodownload"` to video |
-
-## Note
-Client-side copy protection is a deterrent, not absolute security — determined users can always bypass it via dev tools. But it prevents casual copying.
+| `src/components/Hero.tsx` | Update gradient text colors, restyle buttons as glass, refine pills |
 
