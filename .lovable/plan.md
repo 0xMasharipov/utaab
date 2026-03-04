@@ -1,44 +1,28 @@
 
 
-# Refine Hero Section Aesthetics
+# Refine Hero: Bigger Text, Better Mobile/Tablet, New Tags
 
-## What stays unchanged
-- Background video and white gradient overlay — no changes
-- Layout structure, text content, pill tags — no changes
-- Video already has autoPlay, muted, loop, playsInline — confirmed working
+## Changes (all in `src/components/Hero.tsx`)
 
-## Changes
+### 1. Replace pill tags
+Remove `['Academic Infrastructure', 'Blockchain', 'Research Innovation']` array. Replace with a single line of spaced words: **CONNECT · LEARN · BUILD** — styled as a tracking-widest uppercase tagline, not pill badges. Uses `#0B3C6D` color, `letter-spacing: 0.25em`, font-weight 600, font-size 13px.
 
-### 1. Fix "Next Generation" gradient text colors
-Replace the current `#4A90E2 → #6C63FF` (blue-to-purple) gradient with UTAAB on-brand colors only:
-- Use `linear-gradient(135deg, #0B3C6D, #4A90E2)` — deep UTAAB blue to gradient blue
-- This keeps it within the established palette, no purple accent
+### 2. Bigger desktop text
+- Headline: change clamp from `clamp(36px, 5vw, 64px)` → `clamp(32px, 5.5vw, 72px)` for larger desktop size
+- Description: 18px → 20px on desktop
 
-### 2. Refine buttons to glassmorphism style
-Replace solid gradient and outline buttons with frosted glass aesthetic:
+### 3. Mobile/tablet refinements
+- **Mobile** (< 640px): min-h `100svh`, padding 80px top / 60px bottom, headline ~32px, description 16px, buttons full-width stacked
+- **Tablet** (640px–1024px): padding 100px top/bottom, headline ~44px, center-aligned layout
+- Gradient overlay on mobile: make it more opaque so text is readable over the 3D cube — change to a center-radial white overlay on small screens using a responsive approach
+- Mobile overlay: `linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.75) 60%, rgba(255,255,255,0.5) 100%)` — vertical gradient for portrait orientation
 
-**"Join Us" button:**
-- Background: `rgba(11, 60, 109, 0.75)` (UTAAB primary blue, semi-transparent)
-- `backdrop-filter: blur(12px)`
-- Border: `1px solid rgba(255,255,255,0.2)`
-- White text, rounded-full
-- Hover: increase opacity to 0.9, subtle scale 1.05, glow shadow
+### 4. Video visibility
+The 3D logo in the video isn't visible because the white overlay is too strong on the right side. On desktop this is fine (right column shows video). On mobile the vertical overlay will be lighter at the bottom, letting the cube peek through beneath the text.
 
-**"Explore Ecosystem" button:**
-- Background: `rgba(255, 255, 255, 0.15)`
-- `backdrop-filter: blur(12px)`
-- Border: `1px solid rgba(11, 60, 109, 0.3)`
-- Text color: `#0B3C6D`
-- Hover: background `rgba(11, 60, 109, 0.12)`, border brightens
-
-### 3. Refine pill tags
-- Add `backdrop-filter: blur(8px)` for subtle glass effect
-- Slightly increase background opacity: `rgba(11,60,109,0.1)`
-- Add thin border: `1px solid rgba(11,60,109,0.12)`
-
-## File to modify
+## Single file change
 
 | File | Change |
 |------|--------|
-| `src/components/Hero.tsx` | Update gradient text colors, restyle buttons as glass, refine pills |
+| `src/components/Hero.tsx` | Replace pills with "CONNECT · LEARN · BUILD" tagline, increase headline size, add responsive breakpoint styles for mobile/tablet, adjust mobile overlay gradient |
 
