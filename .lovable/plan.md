@@ -1,75 +1,31 @@
 
 
-# Localize Hero Section & Match Image Typography
+# Improve Hero Video Loading Speed
 
-## Current State
-The Hero component has hardcoded English text. The i18n locale files have a `hero` section but with old/different keys (`title`, `subtitle`, `description`, `cta`). Need to update both the locale keys and the component.
+## Problem
+The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
 
 ## Changes
 
-### 1. Update locale files — new hero keys
-Replace existing hero keys in all 4 locale files to match the actual hero content:
+### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
+Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
 
-**EN:**
-```json
-"hero": {
-  "tagline": "CONNECT · LEARN · BUILD",
-  "headline": "Academic Blockchain Infrastructure for the",
-  "headlineHighlight": "Next Generation",
-  "description": "UTAAB builds academic blockchain infrastructure connecting universities, researchers and innovators through decentralized technologies.",
-  "joinUs": "Join Us",
-  "explore": "Explore Ecosystem"
-}
+### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
+Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
+
+### 3. Preload the video in `index.html`
+Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
+```html
+<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
 ```
 
-**TR:**
-```json
-"hero": {
-  "tagline": "BAĞLAN · ÖĞREN · İNŞA ET",
-  "headline": "Yeni Nesil için Akademik Blokzincir",
-  "headlineHighlight": "Altyapısı",
-  "description": "UTAAB, üniversiteleri, araştırmacıları ve yenilikçileri merkeziyetsiz teknolojilerle birleştiren akademik blokzincir altyapısı kurar.",
-  "joinUs": "Bize Katıl",
-  "explore": "Ekosistemi Keşfet"
-}
-```
+### 4. Add loading state with fade-in transition (`Hero.tsx`)
+Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
 
-**RU:**
-```json
-"hero": {
-  "tagline": "СВЯЗЬ · ОБУЧЕНИЕ · СОЗДАНИЕ",
-  "headline": "Академическая блокчейн-инфраструктура для",
-  "headlineHighlight": "нового поколения",
-  "description": "UTAAB создаёт академическую блокчейн-инфраструктуру, объединяющую университеты, исследователей и новаторов через децентрализованные технологии.",
-  "joinUs": "Присоединиться",
-  "explore": "Исследовать экосистему"
-}
-```
-
-**AR:**
-```json
-"hero": {
-  "tagline": "تواصل · تعلّم · ابنِ",
-  "headline": "البنية التحتية الأكاديمية للبلوكشين",
-  "headlineHighlight": "للجيل القادم",
-  "description": "يبني UTAAB بنية تحتية أكاديمية للبلوكشين تربط الجامعات والباحثين والمبتكرين من خلال التقنيات اللامركزية.",
-  "joinUs": "انضم إلينا",
-  "explore": "استكشف النظام البيئي"
-}
-```
-
-### 2. Update `src/components/Hero.tsx`
-- Import `useTranslation` from `react-i18next`
-- Replace all hardcoded strings with `t('hero.tagline')`, `t('hero.headline')`, etc.
-- **Typography sizing to match the image**: The image shows very large, bold headline text (~72-80px on desktop). Increase clamp to `clamp(36px, 6vw, 80px)` to better match the reference screenshot's proportions.
-
-### Files to modify
+## Files to modify
 
 | File | Change |
 |------|--------|
-| `src/i18n/locales/en.json` | Update hero keys |
-| `src/i18n/locales/tr.json` | Update hero keys |
-| `src/i18n/locales/ru.json` | Update hero keys |
-| `src/i18n/locales/ar.json` | Update hero keys |
-| `src/components/Hero.tsx` | Add i18n, use `t()` for all text |
+| `index.html` | Add `<link rel="preload">` for the video |
+| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
 
