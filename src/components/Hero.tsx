@@ -56,10 +56,13 @@ export const Hero = () => {
                 key={label}
                 className="rounded-full font-medium"
                 style={{
-                  background: 'rgba(11,60,109,0.08)',
+                  background: 'rgba(11,60,109,0.1)',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                  border: '1px solid rgba(11,60,109,0.12)',
                   color: '#0B3C6D',
                   fontSize: 14,
-                  padding: '6px 12px',
+                  padding: '6px 14px',
                 }}
               >
                 {label}
@@ -84,7 +87,7 @@ export const Hero = () => {
             for the{' '}
             <span
               style={{
-                background: 'linear-gradient(90deg, #4A90E2, #6C63FF)',
+                background: 'linear-gradient(135deg, #0B3C6D, #4A90E2)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
               }}
@@ -121,39 +124,48 @@ export const Hero = () => {
               onClick={scrollToJoin}
               className="rounded-full text-white font-semibold transition-all duration-300 hover:scale-105"
               style={{
-                background: 'linear-gradient(90deg, #4A90E2, #6C63FF)',
+                background: 'rgba(11, 60, 109, 0.75)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255,255,255,0.2)',
                 padding: '16px 28px',
                 fontWeight: 600,
-                boxShadow: '0 4px 20px rgba(74,144,226,0.3)',
+                boxShadow: '0 4px 20px rgba(11,60,109,0.25)',
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 6px 30px rgba(74,144,226,0.5)';
+                const btn = e.currentTarget as HTMLButtonElement;
+                btn.style.background = 'rgba(11, 60, 109, 0.9)';
+                btn.style.boxShadow = '0 6px 30px rgba(11,60,109,0.45)';
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 4px 20px rgba(74,144,226,0.3)';
+                const btn = e.currentTarget as HTMLButtonElement;
+                btn.style.background = 'rgba(11, 60, 109, 0.75)';
+                btn.style.boxShadow = '0 4px 20px rgba(11,60,109,0.25)';
               }}
             >
               Join Us
             </button>
 
             <button
-              className="rounded-full font-semibold transition-all duration-300"
+              className="rounded-full font-semibold transition-all duration-300 hover:scale-105"
               style={{
-                border: '2px solid #0B3C6D',
+                background: 'rgba(255, 255, 255, 0.15)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                border: '1px solid rgba(11, 60, 109, 0.3)',
                 color: '#0B3C6D',
                 padding: '16px 28px',
                 fontWeight: 600,
-                background: 'transparent',
               }}
               onMouseEnter={(e) => {
                 const btn = e.currentTarget as HTMLButtonElement;
-                btn.style.background = '#0B3C6D';
-                btn.style.color = '#fff';
+                btn.style.background = 'rgba(11, 60, 109, 0.12)';
+                btn.style.borderColor = 'rgba(11, 60, 109, 0.5)';
               }}
               onMouseLeave={(e) => {
                 const btn = e.currentTarget as HTMLButtonElement;
-                btn.style.background = 'transparent';
-                btn.style.color = '#0B3C6D';
+                btn.style.background = 'rgba(255, 255, 255, 0.15)';
+                btn.style.borderColor = 'rgba(11, 60, 109, 0.3)';
               }}
             >
               Explore Ecosystem
