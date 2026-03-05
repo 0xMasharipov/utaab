@@ -1,31 +1,29 @@
 
 
-# Improve Hero Video Loading Speed
+# Add Grid Background & Bottom Fade to GlassCard and `.glass` Cards
 
-## Problem
-The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
+## Approach
+
+The grid and bottom-fade effects need to apply to two card systems used across the site:
+1. **`GlassCard` component** (`src/components/glass/GlassCard.tsx`) — used by Blog, Team, PDFs
+2. **`.glass` CSS class** (`src/index.css`) — used by Community, Events, Stats, Learn, Forms, etc.
+
+Both will get `::before` (grid) and `::after` (bottom fade) pseudo-elements via CSS. The `GlassCard` component needs `relative overflow-hidden` and children need `relative z-[2]`. For the `.glass` utility, same pseudo-element approach in CSS.
 
 ## Changes
 
-### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
-Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
+### 1. `src/index.css` — Add grid + fade to `.glass` class
+Add `position: relative; overflow: hidden;` to `.glass` base. Add `::before` pseudo for subtle grid (56px spacing, `rgba(255,255,255,0.04)` lines, `opacity: 0.55`). Add `::after` pseudo for bottom fade gradient. Add `> *` rule for `position: relative; z-index: 2`. Mobile media query reduces grid opacity to `0.3`.
 
-### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
-Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
+### 2. `src/components/glass/GlassCard.tsx` — Add grid + fade via internal pseudo-elements
+Add two internal `<div>` pseudo-layers (grid + fade) inside the component before `{children}`. Wrap children in a `relative z-[2]` container. Add `relative overflow-hidden` to the outer div. Use `isMobile` check or just use Tailwind responsive classes for reduced mobile opacity.
 
-### 3. Preload the video in `index.html`
-Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
-```html
-<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
-```
+Using internal divs is cleaner for a React component than trying to use CSS pseudo-elements with Tailwind. This keeps it self-contained.
 
-### 4. Add loading state with fade-in transition (`Hero.tsx`)
-Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
-
-## Files to modify
+## Files
 
 | File | Change |
 |------|--------|
-| `index.html` | Add `<link rel="preload">` for the video |
-| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
+| `src/index.css` | Add `::before` grid + `::after` fade + `> *` z-index to `.glass` and `.glass-strong` |
+| `src/components/glass/GlassCard.tsx` | Add grid overlay div + bottom fade div inside component, ensure children have relative z-index |
 
