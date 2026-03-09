@@ -42,6 +42,13 @@ export const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const changeLanguage = (lng: string) => i18n.changeLanguage(lng);
+
+  const closeMenu = useCallback(() => {
+    setIsMenuOpen(false);
+    setTimeout(() => hamburgerRef.current?.focus(), 150);
+  }, []);
+
   // Click outside to close
   useEffect(() => {
     if (!isMenuOpen) return;
@@ -63,14 +70,7 @@ export const Navbar = () => {
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isMenuOpen]);
-
-  const changeLanguage = (lng: string) => i18n.changeLanguage(lng);
-
-  const closeMenu = useCallback(() => {
-    setIsMenuOpen(false);
-    setTimeout(() => hamburgerRef.current?.focus(), 150);
-  }, []);
+  }, [isMenuOpen, closeMenu]);
 
   const scrollToSection = (id: string) => {
     closeMenu();
