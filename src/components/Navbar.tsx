@@ -283,7 +283,7 @@ export const Navbar = () => {
                   <span className="text-xs uppercase tracking-[2px] text-white/40 font-semibold mb-4 px-4">
                     {t('nav.explore', 'Explore')}
                   </span>
-                  <div className="flex flex-col gap-0.5">
+                  <div className="flex flex-col gap-1">
                     {[
                       { key: 'resources', type: 'scroll', id: 'resources' },
                       { key: 'blog', type: 'page', path: '/blog' },
