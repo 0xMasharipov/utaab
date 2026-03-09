@@ -36,11 +36,6 @@ export const Navbar = () => {
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const { getTransitionClasses } = useLanguageTransition();
 
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const changeLanguage = (lng: string) => i18n.changeLanguage(lng);
 
