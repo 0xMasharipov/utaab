@@ -1,31 +1,42 @@
 
 
-# Improve Hero Video Loading Speed
+# Convert Full-Screen Overlay to Rounded Dropdown Panel
 
 ## Problem
-The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
+The navigation menu currently opens as a full-screen overlay. User wants it as a compact, rounded, blurred panel that drops down directly below the navbar.
 
-## Changes
+## Changes — `src/components/Navbar.tsx`
 
-### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
-Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
+### 1. Replace full-screen overlay with a positioned dropdown panel
+- Change from `fixed inset-0` to a panel positioned below the navbar: `fixed top-[70px] left-1/2 -translate-x-1/2 z-[80] w-[96%] sm:w-[95%] max-w-6xl`
+- Add rounded corners: `rounded-3xl`
+- Same glass blur style: `rgba(8, 16, 36, 0.82)` with `backdrop-filter: blur(24px) saturate(180%)`
+- Border: `1px solid rgba(255,255,255,0.12)`
+- Shadow for depth
 
-### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
-Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
+### 2. Remove close button and center-stretch layout
+- Remove the separate close (X) button row — clicking the hamburger again or clicking outside closes it
+- Remove `flex-1 justify-center` vertical centering — content flows naturally with padding
+- Add click-outside handler to close
 
-### 3. Preload the video in `index.html`
-Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
-```html
-<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
-```
+### 3. Compact content layout
+- Nav links: smaller text (`text-lg` instead of `text-2xl/3xl`), arranged in a grid or compact vertical list with less gap
+- Action buttons: horizontal row instead of full-width stacked column
+- Language switcher: compact row at bottom
+- Auth links: always visible in the panel (remove `sm:hidden` restriction)
+- Overall padding: `p-6 sm:p-8`
 
-### 4. Add loading state with fade-in transition (`Hero.tsx`)
-Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
+### 4. Animation
+- Change from scale to `y: -10` slide-down entrance
+- Keep opacity fade
 
-## Files to modify
+### 5. Remove body scroll lock
+- Since it's no longer full-screen, no need to lock body scroll — remove the scroll-lock `useEffect`
+
+### 6. Add backdrop click-to-close
+- Add a transparent backdrop div behind the panel that closes the menu on click
 
 | File | Change |
 |------|--------|
-| `index.html` | Add `<link rel="preload">` for the video |
-| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
+| `src/components/Navbar.tsx` | Convert overlay to rounded dropdown panel below navbar |
 
