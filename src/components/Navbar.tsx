@@ -252,7 +252,7 @@ export const Navbar = () => {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-12 lg:gap-20">
                 {/* Column 1 — Ecosystem */}
                 <div className="flex flex-col">
-                  <span className="text-[11px] uppercase tracking-[0.2em] text-white/40 font-semibold mb-4 px-4">
+                  <span className="text-xs uppercase tracking-[2px] text-white/40 font-semibold mb-4 px-4">
                     {t('nav.ecosystem', 'Ecosystem')}
                   </span>
                   <div className="flex flex-col gap-0.5">
