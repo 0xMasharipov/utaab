@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Menu, X, Globe, ChevronDown, User } from 'lucide-react';
@@ -15,7 +15,6 @@ import logo from '@/assets/logo-new.png';
 import { BrandText } from '@/components/common/BrandText';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 
-
 const languages = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
   { code: 'tr', name: 'Türkçe', flag: '🇹🇷' },
@@ -27,10 +26,9 @@ export const Navbar = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [logoLoaded, setLogoLoaded] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
@@ -39,86 +37,53 @@ export const Navbar = () => {
   const { getTransitionClasses } = useLanguageTransition();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 40);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 40);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Lock scroll when menu is open
   useEffect(() => {
-    if (isMobileMenuOpen) {
+    if (isMenuOpen) {
       const scrollY = window.scrollY;
       document.body.style.position = 'fixed';
       document.body.style.top = `-${scrollY}px`;
       document.body.style.width = '100%';
-      
-      // Focus first item
-      setTimeout(() => closeButtonRef.current?.focus(), 100);
     } else {
       const scrollY = document.body.style.top;
       document.body.style.position = '';
       document.body.style.top = '';
       document.body.style.width = '';
-      if (scrollY) {
-        window.scrollTo(0, parseInt(scrollY || '0') * -1);
-      }
+      if (scrollY) window.scrollTo(0, parseInt(scrollY || '0') * -1);
     }
-  }, [isMobileMenuOpen]);
+  }, [isMenuOpen]);
 
-  // Focus trap
+  // Escape key
   useEffect(() => {
-    if (!isMobileMenuOpen) return;
-
+    if (!isMenuOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        closeMobileMenu();
-      }
-
-      if (e.key === 'Tab') {
-        const focusableElements = menuRef.current?.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        if (!focusableElements || focusableElements.length === 0) return;
-
-        const firstElement = focusableElements[0] as HTMLElement;
-        const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
-
-        if (e.shiftKey && document.activeElement === firstElement) {
-          e.preventDefault();
-          lastElement.focus();
-        } else if (!e.shiftKey && document.activeElement === lastElement) {
-          e.preventDefault();
-          firstElement.focus();
-        }
-      }
+      if (e.key === 'Escape') closeMenu();
     };
-
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isMobileMenuOpen]);
+  }, [isMenuOpen]);
 
-  const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
-  };
+  const changeLanguage = (lng: string) => i18n.changeLanguage(lng);
 
-  const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false);
+  const closeMenu = useCallback(() => {
+    setIsMenuOpen(false);
     setTimeout(() => hamburgerRef.current?.focus(), 150);
-  };
+  }, []);
 
   const scrollToSection = (id: string) => {
-    closeMobileMenu();
+    closeMenu();
     setTimeout(() => {
       const element = document.getElementById(id);
       if (element) {
         const navbarHeight = 100;
         const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-        const offsetPosition = elementPosition - navbarHeight;
-        
         window.scrollTo({
-          top: offsetPosition,
+          top: elementPosition - navbarHeight,
           behavior: prefersReducedMotion ? 'auto' : 'smooth'
         });
       }
@@ -138,376 +103,253 @@ export const Navbar = () => {
     { key: 'team', path: '/team' },
   ];
 
-  const handleEducationClick = () => {
-    closeMobileMenu();
-    setTimeout(() => {
-      navigate('/education');
-    }, prefersReducedMotion ? 0 : 200);
+  const handleNavigate = (path: string) => {
+    closeMenu();
+    setTimeout(() => navigate(path), prefersReducedMotion ? 0 : 200);
   };
 
   return (
-    <nav
-      className="fixed top-2 sm:top-4 left-1/2 -translate-x-1/2 z-50 w-[96%] sm:w-[95%] max-w-6xl transition-[transform,opacity] duration-300"
-    >
-      
-      <div 
-        className={`rounded-full px-4 sm:px-5 md:px-8 py-3 sm:py-4 border transition-all duration-300 ${
-          isScrolled 
-            ? 'border-white/20 shadow-xl shadow-primary/15' 
-            : 'border-white/10 shadow-lg shadow-primary/5'
-        }`}
-        style={{
-          background: isScrolled 
-            ? 'linear-gradient(135deg, rgba(10, 10, 20, 0.9) 0%, rgba(20, 30, 60, 0.85) 100%)'
-            : 'linear-gradient(135deg, rgba(10, 20, 50, 0.25) 0%, rgba(20, 40, 80, 0.2) 50%, rgba(10, 20, 50, 0.25) 100%)',
-          backdropFilter: 'blur(24px) saturate(200%) brightness(0.95)',
-          WebkitBackdropFilter: 'blur(24px) saturate(200%) brightness(0.95)',
-          boxShadow: isScrolled 
-            ? '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-            : '0 4px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
-        }}
-      >
-        {/* Grid layout: Logo | Center Nav | Right Actions */}
-        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
-          {/* Logo - Left column (fixed) */}
-          <button
-            onClick={() => {
-              if (window.location.pathname === '/') {
-                scrollToSection('hero');
-              } else {
-                navigate('/');
-              }
-            }}
-            className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity flex-shrink-0"
-            aria-label="UTAAB - Home"
-          >
-            <div className="relative h-8 sm:h-10 w-8 sm:w-10 flex-shrink-0">
-              {!logoLoaded && (
-                <div className="absolute inset-0 rounded-lg bg-muted animate-pulse" />
-              )}
-              <img 
-                src={logo} 
-                alt="UTAA Blockchain" 
-                className={`h-8 sm:h-10 w-auto mix-blend-lighten brightness-110 transition-opacity duration-500 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
-                width="40" 
-                height="40"
-                fetchPriority="high"
-                decoding="async"
-                onLoad={() => setLogoLoaded(true)}
-              />
-            </div>
-            <BrandText 
-              variant="navbar-mobile" 
-              className={`sm:hidden transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
-            />
-            <BrandText 
-              variant="navbar-tablet" 
-              className={`hidden sm:block md:hidden transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
-            />
-            <BrandText 
-              variant="navbar-desktop" 
-              className={`hidden md:block transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
-            />
-          </button>
-
-          {/* Desktop Navigation - Center column (independent space) */}
-          <div className="hidden md:flex items-center justify-center overflow-hidden">
-            <div 
-              className={`flex items-center gap-4 lg:gap-6 max-w-full overflow-hidden transition-all duration-300 ${
-                isScrolled 
-                  ? 'opacity-100 pointer-events-auto translate-y-0' 
-                  : 'opacity-0 pointer-events-none -translate-y-1'
-              }`}
-              style={{ willChange: 'opacity, transform' }}
-            >
-              {navItems.map((item) => (
-                <button
-                  key={item.key}
-                  onClick={() => scrollToSection(item.id)}
-                  className={getTransitionClasses("text-sm font-medium text-muted-foreground hover:text-foreground transition-colors navbar-text-truncate")}
-                >
-                  {t(`nav.${item.key}`)}
-                </button>
-              ))}
-              {pageNavItems.map((item) => (
-                <button
-                  key={item.key}
-                  onClick={() => { closeMobileMenu(); navigate(item.path); }}
-                  className={getTransitionClasses("text-sm font-medium text-muted-foreground hover:text-foreground transition-colors navbar-text-truncate")}
-                >
-                  {t(`nav.${item.key}`)}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Spacer for mobile (when nav is hidden) */}
-          <div className="md:hidden" />
-
-          {/* Right side - Actions + Join Button (fixed column) */}
-          <div className={cn(
-            "flex items-center gap-2 flex-shrink-0",
-            isRTL && "flex-row-reverse"
-          )} style={{ transform: 'translateZ(0)' }}>
-            {/* Education Button */}
-            <Button
-              onClick={handleEducationClick}
-              variant="ghost"
-              size="sm"
-              className={getTransitionClasses("glass hover:bg-white/10 rounded-full px-3 hidden md:inline-flex max-w-[140px] justify-center truncate")}
-            >
-              {t('nav.educationShort')}
-            </Button>
-            
-            {/* Language Selector */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="glass hover:bg-white/10 rounded-full px-3 min-w-[52px] justify-center"
-                  aria-label="Select language"
-                >
-                  <Globe className="h-4 w-4 sm:mr-2" />
-                  <span className="hidden sm:inline">{currentLanguage.flag}</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align={isRTL ? "start" : "end"}
-                className="glass-strong border-white/20 backdrop-blur-2xl rounded-2xl min-w-[180px] z-[100]"
-              >
-                {languages.map((lang) => (
-                  <DropdownMenuItem
-                    key={lang.code}
-                    onClick={() => changeLanguage(lang.code)}
-                    className={`cursor-pointer px-4 py-2 rounded-xl ${
-                      i18n.language === lang.code
-                        ? 'bg-accent/20 text-accent-foreground'
-                        : 'hover:bg-white/10'
-                    }`}
-                  >
-                    <span className={isRTL ? "ml-2" : "mr-2"}>{lang.flag}</span>
-                    <span>{lang.name}</span>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Account Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="glass hover:bg-white/10 rounded-full px-3 hidden lg:inline-flex"
-                  aria-label="Account menu"
-                >
-                  <User className="h-4 w-4" />
-                  <span className="text-sm hidden xl:inline mx-1 max-w-[80px] truncate">{t('nav.account')}</span>
-                  <ChevronDown className="h-3 w-3" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align={isRTL ? "start" : "end"}
-                className="glass-strong border-white/20 backdrop-blur-2xl rounded-2xl min-w-[200px] z-[100]"
-              >
-                <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
-                  Student
-                </div>
-                <DropdownMenuItem
-                  onClick={() => { closeMobileMenu(); navigate('/education/sign-in'); }}
-                  className="cursor-pointer px-4 py-2 rounded-xl hover:bg-white/10"
-                >
-                  {t('nav.studentAuthOptions')}
-                </DropdownMenuItem>
-                <div className="h-px bg-white/20 my-1" />
-                <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
-                  Admin
-                </div>
-                <DropdownMenuItem
-                  onClick={() => { closeMobileMenu(); navigate('/admin/login'); }}
-                  className="cursor-pointer px-4 py-2 rounded-xl hover:bg-white/10"
-                >
-                  {t('nav.adminSignIn')}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Join Button */}
-            <Button
-              onClick={() => scrollToSection('join')}
-              className={getTransitionClasses("btn-navbar-cta hidden sm:inline-flex max-w-[130px] justify-center truncate")}
-            >
-              {t('nav.joinShort')}
-            </Button>
-
-            {/* Mobile Menu Toggle */}
+    <>
+      <nav className="fixed top-2 sm:top-4 left-1/2 -translate-x-1/2 z-50 w-[96%] sm:w-[95%] max-w-6xl transition-[transform,opacity] duration-300">
+        <div
+          className={`rounded-full px-4 sm:px-5 md:px-8 py-3 sm:py-4 border transition-all duration-300 ${
+            isScrolled
+              ? 'border-white/20 shadow-xl shadow-primary/15'
+              : 'border-white/10 shadow-lg shadow-primary/5'
+          }`}
+          style={{
+            background: isScrolled
+              ? 'linear-gradient(135deg, rgba(10, 10, 20, 0.9) 0%, rgba(20, 30, 60, 0.85) 100%)'
+              : 'linear-gradient(135deg, rgba(10, 20, 50, 0.25) 0%, rgba(20, 40, 80, 0.2) 50%, rgba(10, 20, 50, 0.25) 100%)',
+            backdropFilter: 'blur(24px) saturate(200%) brightness(0.95)',
+            WebkitBackdropFilter: 'blur(24px) saturate(200%) brightness(0.95)',
+            boxShadow: isScrolled
+              ? '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+              : '0 4px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
+          }}
+        >
+          <div className="flex items-center justify-between">
+            {/* Logo */}
             <button
-              ref={hamburgerRef}
-              className="md:hidden text-foreground"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label={isMobileMenuOpen ? t('nav.close') : t('nav.menu')}
-              aria-expanded={isMobileMenuOpen}
-              aria-controls="mobile-menu"
+              onClick={() => {
+                if (window.location.pathname === '/') scrollToSection('hero');
+                else navigate('/');
+              }}
+              className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity flex-shrink-0"
+              aria-label="UTAAB - Home"
             >
-              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              <div className="relative h-8 sm:h-10 w-8 sm:w-10 flex-shrink-0">
+                {!logoLoaded && <div className="absolute inset-0 rounded-lg bg-muted animate-pulse" />}
+                <img
+                  src={logo}
+                  alt="UTAA Blockchain"
+                  className={`h-8 sm:h-10 w-auto mix-blend-lighten brightness-110 transition-opacity duration-500 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
+                  width="40" height="40"
+                  fetchPriority="high"
+                  decoding="async"
+                  onLoad={() => setLogoLoaded(true)}
+                />
+              </div>
+              <BrandText variant="navbar-mobile" className={`sm:hidden transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`} />
+              <BrandText variant="navbar-tablet" className={`hidden sm:block md:hidden transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`} />
+              <BrandText variant="navbar-desktop" className={`hidden md:block transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`} />
             </button>
+
+            {/* Right side: Globe + Account + Hamburger */}
+            <div className={cn("flex items-center gap-2 flex-shrink-0", isRTL && "flex-row-reverse")} style={{ transform: 'translateZ(0)' }}>
+              {/* Language Selector */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="glass hover:bg-white/10 rounded-full px-3 min-w-[52px] justify-center" aria-label="Select language">
+                    <Globe className="h-4 w-4 sm:mr-2" />
+                    <span className="hidden sm:inline">{currentLanguage.flag}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align={isRTL ? "start" : "end"} className="glass-strong border-white/20 backdrop-blur-2xl rounded-2xl min-w-[180px] z-[100]">
+                  {languages.map((lang) => (
+                    <DropdownMenuItem
+                      key={lang.code}
+                      onClick={() => changeLanguage(lang.code)}
+                      className={`cursor-pointer px-4 py-2 rounded-xl ${i18n.language === lang.code ? 'bg-accent/20 text-accent-foreground' : 'hover:bg-white/10'}`}
+                    >
+                      <span className={isRTL ? "ml-2" : "mr-2"}>{lang.flag}</span>
+                      <span>{lang.name}</span>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Account Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="glass hover:bg-white/10 rounded-full px-3 hidden sm:inline-flex" aria-label="Account menu">
+                    <User className="h-4 w-4" />
+                    <ChevronDown className="h-3 w-3 ml-1" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align={isRTL ? "start" : "end"} className="glass-strong border-white/20 backdrop-blur-2xl rounded-2xl min-w-[200px] z-[100]">
+                  <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">Student</div>
+                  <DropdownMenuItem onClick={() => navigate('/education/sign-in')} className="cursor-pointer px-4 py-2 rounded-xl hover:bg-white/10">
+                    {t('nav.studentAuthOptions')}
+                  </DropdownMenuItem>
+                  <div className="h-px bg-white/20 my-1" />
+                  <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">Admin</div>
+                  <DropdownMenuItem onClick={() => navigate('/admin/login')} className="cursor-pointer px-4 py-2 rounded-xl hover:bg-white/10">
+                    {t('nav.adminSignIn')}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Hamburger — always visible */}
+              <button
+                ref={hamburgerRef}
+                className="text-foreground p-2 rounded-full hover:bg-white/10 transition-colors"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                aria-label={isMenuOpen ? t('nav.close') : t('nav.menu')}
+                aria-expanded={isMenuOpen}
+                aria-controls="nav-overlay"
+              >
+                <Menu className="h-6 w-6" />
+              </button>
+            </div>
           </div>
         </div>
+      </nav>
 
-        {/* Mobile Menu Panel */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <>
-              {/* Backdrop */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: prefersReducedMotion ? 0 : 0.15 }}
-                className="fixed inset-0 z-[60] md:hidden"
-                style={{
-                  background: 'rgba(0, 0, 0, 0.3)',
-                  backdropFilter: 'blur(4px)',
-                  WebkitBackdropFilter: 'blur(4px)',
-                  pointerEvents: 'auto',
-                }}
-                onClick={closeMobileMenu}
-                aria-hidden="true"
-              />
-              
-              {/* Menu Panel */}
-              <motion.div
-                id="mobile-menu"
-                ref={menuRef}
-                role="menu"
-                aria-modal="true"
-                aria-label={t('nav.menu')}
-                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: -20, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -20, scale: 0.95 }}
-                transition={{ duration: prefersReducedMotion ? 0 : 0.2, ease: 'easeOut' }}
-                className={`fixed top-20 ${isRTL ? 'right-2' : 'left-2'} ${isRTL ? 'left-2' : 'right-2'} max-h-[85vh] overflow-y-auto z-[70] md:hidden rounded-3xl shadow-2xl border border-white/30`}
-                style={{
-                  paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',
-                  paddingLeft: 'max(1.5rem, env(safe-area-inset-left))',
-                  paddingRight: 'max(1.5rem, env(safe-area-inset-right))',
-                  background: 'rgba(10, 15, 30, 0.92)',
-                  backdropFilter: 'blur(40px) saturate(200%) brightness(0.95)',
-                  WebkitBackdropFilter: 'blur(40px) saturate(200%) brightness(0.95)',
-                }}
+      {/* Full-screen blurred navigation overlay */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            id="nav-overlay"
+            ref={menuRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={t('nav.menu')}
+            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 1.02 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 1.02 }}
+            transition={{ duration: prefersReducedMotion ? 0.1 : 0.3, ease: 'easeOut' }}
+            className="fixed inset-0 z-[80] flex flex-col"
+            style={{
+              background: 'rgba(8, 16, 36, 0.75)',
+              backdropFilter: 'blur(20px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+            }}
+          >
+            {/* Close button */}
+            <div className="flex justify-end p-6 sm:p-8">
+              <button
+                onClick={closeMenu}
+                className="text-white/80 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10"
+                aria-label={t('nav.close')}
               >
-                {/* Close Button */}
-                <div className="flex justify-end pt-4 pb-2">
+                <X className="h-7 w-7" />
+              </button>
+            </div>
+
+            {/* Center content */}
+            <div className="flex-1 flex flex-col items-center justify-center gap-6 px-6 -mt-16">
+              {/* Section nav links */}
+              {navItems.map((item, i) => (
+                <motion.button
+                  key={item.key}
+                  initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.05 * i, duration: 0.3 }}
+                  onClick={() => scrollToSection(item.id)}
+                  className={getTransitionClasses("text-2xl sm:text-3xl font-medium text-white/80 hover:text-white transition-colors")}
+                >
+                  {t(`nav.${item.key}`)}
+                </motion.button>
+              ))}
+
+              {/* Page nav links */}
+              {pageNavItems.map((item, i) => (
+                <motion.button
+                  key={item.key}
+                  initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.05 * (navItems.length + i), duration: 0.3 }}
+                  onClick={() => handleNavigate(item.path)}
+                  className={getTransitionClasses("text-2xl sm:text-3xl font-medium text-white/80 hover:text-white transition-colors")}
+                >
+                  {t(`nav.${item.key}`)}
+                </motion.button>
+              ))}
+
+              {/* Divider */}
+              <div className="w-16 h-px bg-white/20 my-2" />
+
+              {/* Action buttons */}
+              <motion.div
+                initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.3 }}
+                className="flex flex-col items-center gap-3 w-full max-w-xs"
+              >
+                <Button
+                  onClick={() => handleNavigate('/education')}
+                  className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold rounded-xl min-h-[48px]"
+                  size="lg"
+                >
+                  {t('education.title')}
+                </Button>
+
+                <Button
+                  onClick={() => scrollToSection('join')}
+                  className="btn-primary w-full min-h-[48px]"
+                  size="lg"
+                >
+                  {t('nav.join')}
+                </Button>
+
+                {/* Auth links (mobile — visible on sm:hidden since account dropdown handles desktop) */}
+                <div className="flex flex-col items-center gap-2 w-full sm:hidden mt-2">
                   <button
-                    ref={closeButtonRef}
-                    onClick={closeMobileMenu}
-                    className="text-white hover:text-accent transition-colors p-2 rounded-full hover:bg-white/20"
-                    aria-label={t('nav.close')}
-                  >
-                    <X className="h-6 w-6" />
-                  </button>
-                </div>
-
-                {/* Menu Items */}
-                <nav className="flex flex-col gap-1 pb-6">
-                  {navItems.map((item, index) => (
-                    <button
-                      key={item.key}
-                      role="menuitem"
-                      onClick={() => scrollToSection(item.id)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          scrollToSection(item.id);
-                        }
-                      }}
-                      className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
-                    >
-                      {t(`nav.${item.key}`)}
-                    </button>
-                  ))}
-
-                  {/* Page Nav Links */}
-                  {pageNavItems.map((item) => (
-                    <button
-                      key={item.key}
-                      role="menuitem"
-                      onClick={() => { closeMobileMenu(); setTimeout(() => navigate(item.path), 200); }}
-                      className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
-                    >
-                      {t(`nav.${item.key}`)}
-                    </button>
-                  ))}
-                  
-                  <div className="h-px bg-white/20 my-2" />
-                  
-                  <Button
-                    onClick={handleEducationClick}
-                    className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold rounded-xl min-h-[44px]"
-                    size="lg"
-                  >
-                    {t('education.title')}
-                  </Button>
-
-                  <div className="h-px bg-white/20 my-2" />
-
-                  <button
-                    role="menuitem"
-                    onClick={() => { closeMobileMenu(); setTimeout(() => navigate('/education/sign-in'), 200); }}
-                    className="flex items-center justify-center gap-2 w-full text-base font-semibold text-white border border-white/40 hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px]"
+                    onClick={() => handleNavigate('/education/sign-in')}
+                    className="flex items-center justify-center gap-2 w-full text-base font-semibold text-white border border-white/30 hover:bg-white/10 transition-all py-3 px-4 rounded-xl min-h-[44px]"
                   >
                     <User className="h-5 w-5" />
                     {t('nav.studentAuthOptions')}
                   </button>
-
                   <button
-                    role="menuitem"
-                    onClick={() => { closeMobileMenu(); setTimeout(() => navigate('/admin/login'), 200); }}
-                    className="text-center text-sm text-white/50 hover:text-white/80 transition-all py-2 px-4 rounded-xl w-full"
+                    onClick={() => handleNavigate('/admin/login')}
+                    className="text-sm text-white/50 hover:text-white/80 transition-colors py-2"
                   >
                     {t('nav.adminSignIn')}
                   </button>
-
-                  <div className="h-px bg-white/20 my-2" />
-
-                  {/* CTA Button */}
-                  <Button
-                    onClick={() => scrollToSection('join')}
-                    className="btn-primary w-full mt-2 min-h-[44px]"
-                    size="lg"
-                  >
-                    {t('nav.join')}
-                  </Button>
-
-                  {/* Language Switcher in Menu */}
-                  <div className="mt-4 pt-4 border-t border-white/20">
-                    <p className="text-xs text-white/70 mb-3 px-4">{t('nav.language')}</p>
-                    <div className="grid grid-cols-2 gap-2">
-                      {languages.map((lang) => (
-                        <button
-                          key={lang.code}
-                          onClick={() => {
-                            changeLanguage(lang.code);
-                          }}
-                          className={`flex items-center gap-2 px-4 py-3 rounded-xl min-h-[44px] transition-all ${
-                            i18n.language === lang.code
-                              ? 'bg-accent/30 text-white font-medium'
-                              : 'hover:bg-white/15 text-white'
-                          }`}
-                        >
-                          <span className="text-xl">{lang.flag}</span>
-                          <span className="text-sm">{lang.name}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </nav>
+                </div>
               </motion.div>
-            </>
-          )}
-        </AnimatePresence>
-      </div>
-    </nav>
+            </div>
+
+            {/* Bottom: Language switcher */}
+            <motion.div
+              initial={prefersReducedMotion ? {} : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.3 }}
+              className="px-6 pb-8 sm:pb-10"
+              style={{ paddingBottom: 'max(2rem, env(safe-area-inset-bottom))' }}
+            >
+              <div className="flex items-center justify-center gap-3 flex-wrap">
+                {languages.map((lang) => (
+                  <button
+                    key={lang.code}
+                    onClick={() => changeLanguage(lang.code)}
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-full transition-all ${
+                      i18n.language === lang.code
+                        ? 'bg-white/15 text-white font-medium'
+                        : 'hover:bg-white/10 text-white/60'
+                    }`}
+                  >
+                    <span className="text-lg">{lang.flag}</span>
+                    <span className="text-sm">{lang.name}</span>
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
