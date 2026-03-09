@@ -1,64 +1,31 @@
 
 
-# Refine Navbar Dropdown to Premium Frosted Glass Panel
+# Improve Hero Video Loading Speed
 
 ## Problem
-The current dropdown uses a heavy dark blue opaque background (`rgba(8, 16, 36, 0.82)`) that feels like a solid block. It needs to become a light, transparent, frosted glass panel with better spacing, typography hierarchy, and premium hover states.
+The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
 
-## Changes — `src/components/Navbar.tsx`
+## Changes
 
-### 1. Dropdown background & visual style
-Replace the current dark opaque panel with a premium glassmorphism panel:
-- Background: `rgba(255, 255, 255, 0.08)` — light transparent, not dark blue
-- Backdrop filter: `blur(20px) saturate(140%)`
-- Border: `1px solid rgba(255, 255, 255, 0.16)`
-- Shadow: `0 20px 60px rgba(15, 23, 42, 0.18)` — soft, not heavy
-- Border radius: `28px`
-- Remove the inset highlight shadow
+### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
+Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
 
-### 2. Dropdown positioning
-- Tighten the gap: change `top-[70px]` to `top-[60px] sm:top-[68px]` so it sits snugly under the navbar
-- On desktop, constrain width to `max-w-md` (right-aligned) instead of spanning full `max-w-6xl`
-- Align to right side of navbar container instead of center: remove `left-1/2 -translate-x-1/2`, use `right-[2%] sm:right-[2.5%]`
-- On mobile, keep full-width centered behavior
+### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
+Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
 
-### 3. Nav link styling
-- Left-align links instead of centering
-- Font: `text-base font-semibold` with `tracking-wide`
-- Text color: `rgba(255,255,255,0.90)` primary
-- Each link gets a rounded hover pill: `hover:bg-white/[0.08]` with `rounded-[14px]` and `px-5 py-3`
-- Stagger animation stays but with cleaner timing
-- Add subtle text brightening on hover: `hover:text-white`
+### 3. Preload the video in `index.html`
+Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
+```html
+<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
+```
 
-### 4. Divider refinement
-- Change from centered 48px line to full-width subtle separator: `w-full h-px bg-white/[0.10]`
-
-### 5. CTA section
-- Education button: keep blue gradient but make it pill-shaped (`rounded-full`), slightly translucent
-- Join button: glass-style outline button (`border border-white/20 bg-white/[0.06]`), pill-shaped
-- Both buttons side-by-side on all sizes
-
-### 6. Auth row
-- Student Sign In: thin bordered pill, transparent bg, centered with icon
-- Admin Sign In: subtle text link below, smaller and lighter
-
-### 7. Language row
-- Keep compact pill buttons but reduce visual weight
-- Active state: `bg-white/[0.12]`
-- Inactive: `text-white/50 hover:bg-white/[0.06]`
-
-### 8. Animation
-- Duration: `0.25s` ease-out
-- Initial: `opacity: 0, y: -8`
-- No scale effect
-
-### 9. Responsive behavior
-- Desktop: right-aligned panel, `max-w-md`, compact
-- Mobile (`< sm`): full-width centered, `w-[96%]`, same glass style
+### 4. Add loading state with fade-in transition (`Hero.tsx`)
+Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
 
 ## Files to modify
 
 | File | Change |
 |------|--------|
-| `src/components/Navbar.tsx` | Restyle dropdown panel: glass bg, positioning, link layout, CTA refinement, hover states |
+| `index.html` | Add `<link rel="preload">` for the video |
+| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
 
