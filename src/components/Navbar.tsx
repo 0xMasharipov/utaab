@@ -280,7 +280,7 @@ export const Navbar = () => {
 
                 {/* Column 2 — Explore */}
                 <div className="flex flex-col sm:border-0 border-t border-white/[0.08] pt-4 sm:pt-0">
-                  <span className="text-[11px] uppercase tracking-[0.2em] text-white/40 font-semibold mb-4 px-4">
+                  <span className="text-xs uppercase tracking-[2px] text-white/40 font-semibold mb-4 px-4">
                     {t('nav.explore', 'Explore')}
                   </span>
                   <div className="flex flex-col gap-0.5">
