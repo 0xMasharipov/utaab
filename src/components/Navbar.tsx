@@ -213,7 +213,7 @@ export const Navbar = () => {
         </div>
       </nav>
 
-      {/* Premium frosted glass dropdown panel */}
+      {/* Premium frosted glass mega menu panel */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -226,107 +226,151 @@ export const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
             transition={{ duration: prefersReducedMotion ? 0.1 : 0.25, ease: 'easeOut' }}
-            className="fixed top-[60px] sm:top-[68px] z-[80] w-[96%] left-1/2 -translate-x-1/2 sm:w-auto sm:min-w-[380px] sm:max-w-md sm:left-auto sm:translate-x-0 sm:right-[2.5%] overflow-hidden"
+            className="fixed top-[60px] sm:top-[68px] z-[80] w-[96%] max-w-5xl left-1/2 -translate-x-1/2 overflow-hidden"
             style={{
               background: 'rgba(255, 255, 255, 0.08)',
               backdropFilter: 'blur(20px) saturate(140%)',
               WebkitBackdropFilter: 'blur(20px) saturate(140%)',
-              boxShadow: '0 20px 60px rgba(15, 23, 42, 0.18)',
+              boxShadow: '0 30px 80px rgba(0, 0, 0, 0.25)',
               borderRadius: '28px',
               border: '1px solid rgba(255, 255, 255, 0.16)',
             }}
           >
-            <div className="p-6 sm:p-7 flex flex-col gap-1">
-              {/* Nav links */}
-              <div className="flex flex-col gap-0.5">
-                {navItems.map((item, i) => (
-                  <motion.button
-                    key={item.key}
-                    initial={prefersReducedMotion ? {} : { opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.025 * i, duration: 0.2 }}
-                    onClick={() => scrollToSection(item.id)}
-                    className={getTransitionClasses(
-                      "text-left text-base font-semibold tracking-wide text-white/90 hover:text-white hover:bg-white/[0.08] transition-all duration-200 px-5 py-3 rounded-[14px]"
-                    )}
-                  >
-                    {t(`nav.${item.key}`)}
-                  </motion.button>
-                ))}
-                {pageNavItems.map((item, i) => (
-                  <motion.button
-                    key={item.key}
-                    initial={prefersReducedMotion ? {} : { opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.025 * (navItems.length + i), duration: 0.2 }}
-                    onClick={() => handleNavigate(item.path)}
-                    className={getTransitionClasses(
-                      "text-left text-base font-semibold tracking-wide text-white/90 hover:text-white hover:bg-white/[0.08] transition-all duration-200 px-5 py-3 rounded-[14px]"
-                    )}
-                  >
-                    {t(`nav.${item.key}`)}
-                  </motion.button>
-                ))}
+            <div className="p-6 sm:p-8 md:p-10 lg:p-12">
+              {/* 3-Column Navigation Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-10 lg:gap-16">
+                {/* Column 1 — Ecosystem */}
+                <div className="flex flex-col">
+                  <span className="text-[11px] uppercase tracking-[0.2em] text-white/40 font-semibold mb-4 px-4">
+                    {t('nav.ecosystem', 'Ecosystem')}
+                  </span>
+                  <div className="flex flex-col gap-0.5">
+                    {[
+                      { key: 'community', id: 'community' },
+                      { key: 'learn', id: 'learn' },
+                      { key: 'events', id: 'events' },
+                      { key: 'projects', id: 'projects' },
+                    ].map((item, i) => (
+                      <motion.button
+                        key={item.key}
+                        initial={prefersReducedMotion ? {} : { opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.03 * i, duration: 0.2 }}
+                        onClick={() => scrollToSection(item.id)}
+                        className={getTransitionClasses(
+                          "text-left text-lg font-semibold tracking-wide text-white/90 hover:text-white hover:bg-white/[0.08] transition-all duration-200 px-4 py-2.5 rounded-xl"
+                        )}
+                      >
+                        {t(`nav.${item.key}`)}
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Column 2 — Explore */}
+                <div className="flex flex-col sm:border-0 border-t border-white/[0.08] pt-4 sm:pt-0">
+                  <span className="text-[11px] uppercase tracking-[0.2em] text-white/40 font-semibold mb-4 px-4">
+                    {t('nav.explore', 'Explore')}
+                  </span>
+                  <div className="flex flex-col gap-0.5">
+                    {[
+                      { key: 'resources', type: 'scroll', id: 'resources' },
+                      { key: 'blog', type: 'page', path: '/blog' },
+                      { key: 'education', type: 'page', path: '/education', label: 'education.title' },
+                    ].map((item, i) => (
+                      <motion.button
+                        key={item.key}
+                        initial={prefersReducedMotion ? {} : { opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.03 * (i + 4), duration: 0.2 }}
+                        onClick={() => item.type === 'scroll' ? scrollToSection(item.id!) : handleNavigate(item.path!)}
+                        className={getTransitionClasses(
+                          "text-left text-lg font-semibold tracking-wide text-white/90 hover:text-white hover:bg-white/[0.08] transition-all duration-200 px-4 py-2.5 rounded-xl"
+                        )}
+                      >
+                        {t(item.label || `nav.${item.key}`)}
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Column 3 — Organization */}
+                <div className="flex flex-col sm:border-0 border-t border-white/[0.08] pt-4 sm:pt-0">
+                  <span className="text-[11px] uppercase tracking-[0.2em] text-white/40 font-semibold mb-4 px-4">
+                    {t('nav.organization', 'Organization')}
+                  </span>
+                  <div className="flex flex-col gap-0.5">
+                    {[
+                      { key: 'team', type: 'page', path: '/team' },
+                      { key: 'join', type: 'scroll', id: 'join' },
+                    ].map((item, i) => (
+                      <motion.button
+                        key={item.key}
+                        initial={prefersReducedMotion ? {} : { opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.03 * (i + 7), duration: 0.2 }}
+                        onClick={() => item.type === 'scroll' ? scrollToSection(item.id!) : handleNavigate(item.path!)}
+                        className={getTransitionClasses(
+                          "text-left text-lg font-semibold tracking-wide text-white/90 hover:text-white hover:bg-white/[0.08] transition-all duration-200 px-4 py-2.5 rounded-xl"
+                        )}
+                      >
+                        {t(`nav.${item.key}`)}
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               {/* Divider */}
-              <div className="w-full h-px bg-white/[0.10] my-3" />
+              <div className="w-full h-px bg-white/[0.10] my-6 sm:my-8" />
 
-              {/* Action buttons */}
-              <div className="flex items-center gap-3 w-full px-1">
-                <Button
-                  onClick={() => handleNavigate('/education')}
-                  className="flex-1 bg-gradient-to-r from-blue-600/90 to-blue-500/90 hover:from-blue-500 hover:to-blue-400 text-white font-semibold rounded-full min-h-[44px] shadow-sm"
-                  size="default"
-                >
-                  {t('education.title')}
-                </Button>
-                <Button
-                  onClick={() => scrollToSection('join')}
-                  variant="outline"
-                  className="flex-1 bg-white/[0.06] border-white/20 hover:bg-white/[0.12] text-white font-semibold rounded-full min-h-[44px]"
-                  size="default"
-                >
-                  {t('nav.join')}
-                </Button>
-              </div>
+              {/* Bottom CTA Row */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                {/* Left: Action buttons */}
+                <div className="flex items-center gap-3 w-full sm:w-auto">
+                  <Button
+                    onClick={() => handleNavigate('/education')}
+                    className="flex-1 sm:flex-none bg-gradient-to-r from-blue-600/90 to-blue-500/90 hover:from-blue-500 hover:to-blue-400 text-white font-semibold rounded-full min-h-[40px] px-6 shadow-sm text-sm"
+                    size="sm"
+                  >
+                    {t('education.title')}
+                  </Button>
+                  <Button
+                    onClick={() => scrollToSection('join')}
+                    variant="outline"
+                    className="flex-1 sm:flex-none bg-white/[0.06] border-white/20 hover:bg-white/[0.12] text-white font-semibold rounded-full min-h-[40px] px-6 text-sm"
+                    size="sm"
+                  >
+                    {t('nav.join')}
+                  </Button>
+                </div>
 
-              {/* Auth row */}
-              <div className="flex flex-col items-center gap-2 mt-3 px-1">
+                {/* Center: Auth */}
                 <button
                   onClick={() => handleNavigate('/education/sign-in')}
-                  className="flex items-center justify-center gap-2 w-full text-sm font-semibold text-white/80 border border-white/[0.14] hover:bg-white/[0.08] transition-all duration-200 py-2.5 px-4 rounded-full bg-transparent"
+                  className="flex items-center justify-center gap-2 text-sm font-medium text-white/70 border border-white/[0.12] hover:bg-white/[0.08] transition-all duration-200 py-2 px-5 rounded-full bg-transparent"
                 >
-                  <User className="h-4 w-4 text-white/60" />
+                  <User className="h-3.5 w-3.5 text-white/50" />
                   {t('nav.studentAuthOptions')}
                 </button>
-                <button
-                  onClick={() => handleNavigate('/admin/login')}
-                  className="text-xs text-white/40 hover:text-white/60 transition-colors duration-200 py-1.5"
-                >
-                  {t('nav.adminSignIn')}
-                </button>
-              </div>
 
-              {/* Divider */}
-              <div className="w-full h-px bg-white/[0.08] my-2" />
-
-              {/* Language switcher */}
-              <div className="flex items-center justify-center gap-1.5 flex-wrap">
-                {languages.map((lang) => (
-                  <button
-                    key={lang.code}
-                    onClick={() => changeLanguage(lang.code)}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-full transition-all duration-200 text-sm ${
-                      i18n.language === lang.code
-                        ? 'bg-white/[0.12] text-white font-medium'
-                        : 'hover:bg-white/[0.06] text-white/50'
-                    }`}
-                  >
-                    <span>{lang.flag}</span>
-                    <span>{lang.name}</span>
-                  </button>
-                ))}
+                {/* Right: Language selector */}
+                <div className="flex items-center gap-1 flex-wrap justify-center sm:justify-end">
+                  {languages.map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => changeLanguage(lang.code)}
+                      className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full transition-all duration-200 text-xs ${
+                        i18n.language === lang.code
+                          ? 'bg-white/[0.12] text-white font-medium'
+                          : 'hover:bg-white/[0.06] text-white/50'
+                      }`}
+                    >
+                      <span>{lang.flag}</span>
+                      <span className="hidden md:inline">{lang.name}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </motion.div>
