@@ -232,10 +232,10 @@ export const Navbar = () => {
             role="dialog"
             aria-modal="true"
             aria-label={t('nav.menu')}
-            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
+            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
-            transition={{ duration: prefersReducedMotion ? 0.1 : 0.25, ease: 'easeOut' }}
+            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
+            transition={{ duration: prefersReducedMotion ? 0.1 : 0.22, ease: 'easeOut' }}
             className="fixed z-[80] w-[96%] sm:w-[95%] max-w-6xl left-1/2 -translate-x-1/2 overflow-hidden"
             style={{
               top: `${panelTop}px`,
@@ -247,15 +247,15 @@ export const Navbar = () => {
               border: '1px solid rgba(255, 255, 255, 0.16)',
             }}
           >
-            <div className="p-6 sm:p-8 md:p-10 lg:p-12">
+            <div className="p-8 sm:p-10 md:py-[60px] md:px-[80px]">
               {/* 3-Column Navigation Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-10 lg:gap-16">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-12 lg:gap-20">
                 {/* Column 1 — Ecosystem */}
                 <div className="flex flex-col">
-                  <span className="text-[11px] uppercase tracking-[0.2em] text-white/40 font-semibold mb-4 px-4">
+                  <span className="text-xs uppercase tracking-[2px] text-white/40 font-semibold mb-4 px-4">
                     {t('nav.ecosystem', 'Ecosystem')}
                   </span>
-                  <div className="flex flex-col gap-0.5">
+                  <div className="flex flex-col gap-1">
                     {[
                       { key: 'community', id: 'community' },
                       { key: 'learn', id: 'learn' },
@@ -280,10 +280,10 @@ export const Navbar = () => {
 
                 {/* Column 2 — Explore */}
                 <div className="flex flex-col sm:border-0 border-t border-white/[0.08] pt-4 sm:pt-0">
-                  <span className="text-[11px] uppercase tracking-[0.2em] text-white/40 font-semibold mb-4 px-4">
+                  <span className="text-xs uppercase tracking-[2px] text-white/40 font-semibold mb-4 px-4">
                     {t('nav.explore', 'Explore')}
                   </span>
-                  <div className="flex flex-col gap-0.5">
+                  <div className="flex flex-col gap-1">
                     {[
                       { key: 'resources', type: 'scroll', id: 'resources' },
                       { key: 'blog', type: 'page', path: '/blog' },
@@ -307,10 +307,10 @@ export const Navbar = () => {
 
                 {/* Column 3 — Organization */}
                 <div className="flex flex-col sm:border-0 border-t border-white/[0.08] pt-4 sm:pt-0">
-                  <span className="text-[11px] uppercase tracking-[0.2em] text-white/40 font-semibold mb-4 px-4">
+                  <span className="text-xs uppercase tracking-[2px] text-white/40 font-semibold mb-4 px-4">
                     {t('nav.organization', 'Organization')}
                   </span>
-                  <div className="flex flex-col gap-0.5">
+                  <div className="flex flex-col gap-1">
                     {[
                       { key: 'team', type: 'page', path: '/team' },
                       { key: 'join', type: 'scroll', id: 'join' },
@@ -341,7 +341,7 @@ export const Navbar = () => {
                 <div className="flex items-center gap-3 w-full sm:w-auto">
                   <Button
                     onClick={() => handleNavigate('/education')}
-                    className="flex-1 sm:flex-none bg-gradient-to-r from-blue-600/90 to-blue-500/90 hover:from-blue-500 hover:to-blue-400 text-white font-semibold rounded-full min-h-[40px] px-6 shadow-sm text-sm"
+                    className="flex-1 sm:flex-none bg-gradient-to-r from-blue-600/90 to-blue-500/90 hover:from-blue-500 hover:to-blue-400 text-white font-semibold rounded-[18px] py-2.5 px-5 shadow-sm text-sm"
                     size="sm"
                   >
                     {t('education.title')}
@@ -349,7 +349,7 @@ export const Navbar = () => {
                   <Button
                     onClick={() => scrollToSection('join')}
                     variant="outline"
-                    className="flex-1 sm:flex-none bg-white/[0.06] border-white/20 hover:bg-white/[0.12] text-white font-semibold rounded-full min-h-[40px] px-6 text-sm"
+                    className="flex-1 sm:flex-none bg-white/[0.06] border-white/20 hover:bg-white/[0.12] text-white font-semibold rounded-[18px] py-2.5 px-5 text-sm"
                     size="sm"
                   >
                     {t('nav.join')}
