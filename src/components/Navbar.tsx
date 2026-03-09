@@ -236,7 +236,9 @@ export const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
             transition={{ duration: prefersReducedMotion ? 0.1 : 0.25, ease: 'easeOut' }}
-            className="fixed top-[56px] sm:top-[76px] z-[80] w-[96%] sm:w-[95%] max-w-6xl left-1/2 -translate-x-1/2 overflow-hidden"
+            className="fixed z-[80] w-[96%] sm:w-[95%] max-w-6xl left-1/2 -translate-x-1/2 overflow-hidden"
+            style={{
+              top: `${panelTop}px`,
             style={{
               background: 'rgba(255, 255, 255, 0.08)',
               backdropFilter: 'blur(20px) saturate(140%)',
