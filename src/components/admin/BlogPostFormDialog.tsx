@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,6 +28,7 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
     content: '[]',
     slug: '',
     cover_image: '',
+    gallery: [] as string[],
     video_type: '',
     video_url: '',
     tags: '',
@@ -54,6 +56,7 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
         content: JSON.stringify(post.content || []),
         slug: post.slug || '',
         cover_image: post.cover_image || '',
+        gallery: Array.isArray(post.gallery) ? post.gallery.filter((g: any) => typeof g === 'string') : [],
         video_type: post.video_type || '',
         video_url: post.video_url || '',
         tags: (post.tags || []).join(', '),
@@ -70,7 +73,7 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
       setForm({
         title_en: '', title_tr: '', title_ru: '', title_ar: '',
         excerpt_en: '', excerpt_tr: '', excerpt_ru: '', excerpt_ar: '',
-        content: '[]', slug: '', cover_image: '', video_type: '', video_url: '',
+        content: '[]', slug: '', cover_image: '', gallery: [], video_type: '', video_url: '',
         tags: '', author_name: '', status: 'draft', featured: false,
         publish_date: '', scheduled_at: '', meta_title: '', meta_description: '', og_image: '',
       });
@@ -109,6 +112,7 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
       content: contentJson,
       slug: form.slug,
       cover_image: form.cover_image || null,
+      gallery: form.gallery.length > 0 ? form.gallery : [],
       video_type: form.video_type || null,
       video_url: form.video_url || null,
       tags: form.tags ? form.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
@@ -221,6 +225,35 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
                 onChange={url => update('cover_image', url)}
               />
             </div>
+
+            <div>
+              <Label>Gallery Images</Label>
+              <div className="space-y-3">
+                {form.gallery.map((url, idx) => (
+                  <div key={idx} className="relative group">
+                    <img src={url} alt={`Gallery ${idx + 1}`} className="w-full h-32 object-cover rounded-lg border border-border" />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="icon"
+                      className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity h-7 w-7"
+                      onClick={() => setForm(f => ({ ...f, gallery: f.gallery.filter((_, i) => i !== idx) }))}
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  </div>
+                ))}
+                <ImageUpload
+                  value={null}
+                  onChange={url => {
+                    if (url) setForm(f => ({ ...f, gallery: [...f.gallery, url] }));
+                  }}
+                  label="Add gallery image"
+                  folder="blog-gallery"
+                />
+              </div>
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label>Video Type</Label>

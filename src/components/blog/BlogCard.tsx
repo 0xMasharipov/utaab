@@ -20,6 +20,7 @@ interface BlogCardProps {
     cover_image?: string | null;
     publish_date?: string | null;
     tags?: string[];
+    gallery?: any | null;
   };
   index?: number;
 }
@@ -60,6 +61,26 @@ export const BlogCard = ({ post, index = 0 }: BlogCardProps) => {
                     {tag}
                   </span>
                 ))}
+              </div>
+            )}
+            {post.gallery && post.gallery.length > 0 && (
+              <div className="flex gap-2 mb-3">
+                {post.gallery.slice(0, 4).map((img, idx) => (
+                  <div key={idx} className="h-10 w-10 flex-shrink-0 rounded-md overflow-hidden border border-border/30">
+                    <AnimatedImage
+                      src={typeof img === 'string' ? img : ''}
+                      alt={`Gallery ${idx + 1}`}
+                      className="h-full w-full object-cover"
+                      containerClassName="h-full w-full"
+                      loading="lazy"
+                    />
+                  </div>
+                ))}
+                {post.gallery.length > 4 && (
+                  <div className="h-10 w-10 flex-shrink-0 rounded-md bg-muted flex items-center justify-center text-xs text-muted-foreground font-medium">
+                    +{post.gallery.length - 4}
+                  </div>
+                )}
               </div>
             )}
             <h3 className="text-lg font-semibold text-foreground mb-2 line-clamp-2 group-hover:text-accent transition-colors">
