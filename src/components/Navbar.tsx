@@ -249,7 +249,7 @@ export const Navbar = () => {
           >
             <div className="p-8 sm:p-10 md:py-[60px] md:px-[80px]">
               {/* 3-Column Navigation Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-10 lg:gap-16">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-12 lg:gap-20">
                 {/* Column 1 — Ecosystem */}
                 <div className="flex flex-col">
                   <span className="text-[11px] uppercase tracking-[0.2em] text-white/40 font-semibold mb-4 px-4">
