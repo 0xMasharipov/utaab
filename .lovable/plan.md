@@ -1,31 +1,32 @@
 
 
-# Improve Hero Video Loading Speed
+# Refine Navbar: Hamburger Menu with Full-Screen Blurred Navigation
 
-## Problem
-The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
+## What changes
 
-## Changes
+### 1. Hamburger icon — always visible on all screen sizes
+Currently the three-line (hamburger) menu button only shows on mobile (`md:hidden`). Move it to be visible on **all breakpoints** as the primary way to access navigation. The existing inline desktop nav links in the center column will be removed — all navigation goes through the hamburger overlay.
 
-### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
-Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
+### 2. Full-screen blurred transparent navigation overlay
+When the hamburger is tapped/clicked, open a **full-screen overlay** instead of the current small floating panel. The overlay:
+- Covers the entire viewport (`fixed inset-0`)
+- Background: `rgba(8, 16, 36, 0.75)` with `backdrop-filter: blur(20px)`
+- Smooth fade + scale animation via framer-motion
+- Close button (X) in top-right corner
+- Navigation links centered vertically, large text (text-2xl), stacked vertically with spacing
+- Language switcher row at the bottom
+- Education, Student Sign In, Admin Sign In, and Join buttons below nav links
 
-### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
-Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
+### 3. Simplified navbar bar
+With navigation moved to the overlay:
+- Remove the center column desktop nav links entirely
+- Keep: Logo (left), Language selector + Account dropdown + Hamburger (right)
+- The "Join" button and "Education" button move into the overlay menu only
+- Navbar becomes a minimal glass bar: Logo | spacer | Globe + User + ☰
 
-### 3. Preload the video in `index.html`
-Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
-```html
-<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
-```
-
-### 4. Add loading state with fade-in transition (`Hero.tsx`)
-Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
-
-## Files to modify
+### Files to modify
 
 | File | Change |
 |------|--------|
-| `index.html` | Add `<link rel="preload">` for the video |
-| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
+| `src/components/Navbar.tsx` | Remove inline desktop nav, make hamburger visible on all sizes, replace mobile panel with full-screen blurred overlay |
 
