@@ -657,7 +657,9 @@
     "relatedPosts": "Похожие статьи",
     "share": "Поделиться",
     "copyLink": "Скопировать ссылку",
-    "linkCopied": "Ссылка скопирована!"
+    "linkCopied": "Ссылка скопирована!",
+    "gallery": "Галерея",
+    "attachments": "Вложения"
   },
   "teamPage": {
     "title": "Наша Команда",

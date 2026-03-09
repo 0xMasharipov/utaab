@@ -122,9 +122,11 @@ const BlogPost = () => {
   }
 
   const title = (post as any)[`title_${lang}`] || post.title_en;
+  const excerpt = (post as any)[`excerpt_${lang}`] || post.excerpt_en;
   const content: ContentBlock[] = Array.isArray(post.content) ? post.content : [];
   const attachments: any[] = Array.isArray(post.attachments) ? post.attachments : [];
   const pdfAttachments = attachments.filter(a => a.type === 'pdf' || a.url?.endsWith('.pdf'));
+  const gallery: string[] = Array.isArray(post.gallery) ? post.gallery.filter((g: any) => typeof g === 'string') : [];
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -169,6 +171,12 @@ const BlogPost = () => {
                 ))}
               </div>
             )}
+
+            {excerpt && (
+              <p className="text-muted-foreground text-lg leading-relaxed mt-6 max-w-4xl">
+                {excerpt}
+              </p>
+            )}
           </div>
         </header>
 
@@ -177,6 +185,26 @@ const BlogPost = () => {
           <div className="max-w-3xl mx-auto prose-custom">
             {content.map((block, i) => <RenderBlock key={i} block={block} />)}
           </div>
+
+          {/* Gallery */}
+          {gallery.length > 0 && (
+            <div className="max-w-3xl mx-auto mt-10">
+              <h3 className="text-lg font-semibold text-foreground mb-4">{t('blog.gallery', 'Gallery')}</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {gallery.map((url, i) => (
+                  <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="group">
+                    <AnimatedImage
+                      src={url}
+                      alt={`Gallery ${i + 1}`}
+                      className="w-full h-48 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300"
+                      containerClassName="rounded-xl overflow-hidden"
+                      loading="lazy"
+                    />
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Video */}
           {post.video_url && post.video_type === 'embed' && (
@@ -190,7 +218,7 @@ const BlogPost = () => {
           {/* PDF Attachments */}
           {pdfAttachments.length > 0 && (
             <div className="max-w-3xl mx-auto mt-8 space-y-3">
-              <h3 className="text-lg font-semibold text-foreground mb-3">Attachments</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-3">{t('blog.attachments', 'Attachments')}</h3>
               {pdfAttachments.map((att, i) => (
                 <PDFAttachment key={i} name={att.name || 'Document.pdf'} url={att.url} />
               ))}

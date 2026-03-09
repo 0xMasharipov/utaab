@@ -735,7 +735,9 @@
     "relatedPosts": "مقالات ذات صلة",
     "share": "مشاركة",
     "copyLink": "نسخ الرابط",
-    "linkCopied": "تم نسخ الرابط!"
+    "linkCopied": "تم نسخ الرابط!",
+    "gallery": "معرض الصور",
+    "attachments": "المرفقات"
   },
   "teamPage": {
     "title": "فريقنا",

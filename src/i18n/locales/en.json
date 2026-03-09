@@ -736,7 +736,9 @@
     "relatedPosts": "Related Posts",
     "share": "Share",
     "copyLink": "Copy Link",
-    "linkCopied": "Link copied!"
+    "linkCopied": "Link copied!",
+    "gallery": "Gallery",
+    "attachments": "Attachments"
   },
   "teamPage": {
     "title": "Our Team",
