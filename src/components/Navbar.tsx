@@ -59,6 +59,19 @@ export const Navbar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isMenuOpen, closeMenu]);
 
+  // Measure navbar bottom for panel positioning
+  useEffect(() => {
+    const updatePanelTop = () => {
+      if (navRef.current) {
+        const rect = navRef.current.getBoundingClientRect();
+        setPanelTop(rect.bottom + 4);
+      }
+    };
+    updatePanelTop();
+    window.addEventListener('resize', updatePanelTop);
+    return () => window.removeEventListener('resize', updatePanelTop);
+  }, []);
+
   // Escape key
   useEffect(() => {
     if (!isMenuOpen) return;
