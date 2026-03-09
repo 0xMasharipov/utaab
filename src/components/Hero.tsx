@@ -28,6 +28,7 @@ export const Hero = () => {
     >
       {/* Background Video */}
       <video
+        key={isMobile ? 'mobile' : 'desktop'}
         autoPlay
         muted
         loop
@@ -41,7 +42,7 @@ export const Hero = () => {
         className="absolute inset-0 w-full h-full object-cover pointer-events-none transition-opacity duration-700"
         style={{ zIndex: 0, opacity: videoReady ? 1 : 0 }}
       >
-        <source src="/videos/hero-cube.mp4" type="video/mp4" />
+        <source src={isMobile ? '/videos/hero-mobile.mp4' : '/videos/hero-cube.mp4'} type="video/mp4" />
       </video>
 
       {/* Gradient overlay — responsive */}
