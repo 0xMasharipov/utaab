@@ -98,6 +98,11 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
     let contentJson;
     try { contentJson = JSON.parse(form.content); } catch { contentJson = []; }
 
+    // Auto-set publish_date when publishing without a date
+    const effectivePublishDate = form.status === 'published' && !form.publish_date
+      ? new Date().toISOString()
+      : form.publish_date ? new Date(form.publish_date).toISOString() : null;
+
     const payload: any = {
       title_en: form.title_en, title_tr: form.title_tr || null, title_ru: form.title_ru || null, title_ar: form.title_ar || null,
       excerpt_en: form.excerpt_en || null, excerpt_tr: form.excerpt_tr || null, excerpt_ru: form.excerpt_ru || null, excerpt_ar: form.excerpt_ar || null,
@@ -110,7 +115,7 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
       author_name: form.author_name || null,
       status: form.status,
       featured: form.featured,
-      publish_date: form.publish_date ? new Date(form.publish_date).toISOString() : null,
+      publish_date: effectivePublishDate,
       scheduled_at: form.scheduled_at ? new Date(form.scheduled_at).toISOString() : null,
       meta_title: form.meta_title || null,
       meta_description: form.meta_description || null,

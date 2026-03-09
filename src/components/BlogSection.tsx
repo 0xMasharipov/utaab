@@ -15,6 +15,8 @@ export const BlogSection = () => {
 
   const { data: posts, isLoading } = useQuery({
     queryKey: ['homepage-blog'],
+    staleTime: 30 * 1000,
+    refetchOnWindowFocus: true,
     queryFn: async () => {
       const { data, error } = await supabase
         .from('blog_posts')

@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Search } from 'lucide-react';
+import { Search, Calendar, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Navbar } from '@/components/Navbar';
@@ -11,20 +11,18 @@ import { BlogCard } from '@/components/blog/BlogCard';
 import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
 import GlassCard from '@/components/glass/GlassCard';
-import { Calendar } from 'lucide-react';
 import AnimatedImage from '@/components/common/AnimatedImage';
 import { format } from 'date-fns';
 import { PrivacyPopup } from '@/components/PrivacyPopup';
 import { PrivacyCenter } from '@/components/PrivacyCenter';
 import { FloatingPrivacyButton } from '@/components/FloatingPrivacyButton';
+import { useQuery } from '@tanstack/react-query';
 
 const POSTS_PER_PAGE = 12;
 
 const Blog = () => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as 'en' | 'tr' | 'ru' | 'ar';
-  const [posts, setPosts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [page, setPage] = useState(0);
@@ -34,20 +32,20 @@ const Blog = () => {
     document.title = 'UTAAB Blog - Insights, Updates & Web3 Innovations';
   }, []);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      setLoading(true);
+  const { data: posts = [], isLoading: loading } = useQuery({
+    queryKey: ['blog-posts'],
+    staleTime: 30 * 1000,
+    refetchOnWindowFocus: true,
+    queryFn: async () => {
       const { data } = await supabase
         .from('blog_posts')
         .select('*')
         .eq('status', 'published')
         .order('publish_date', { ascending: false, nullsFirst: false })
         .order('created_at', { ascending: false });
-      setPosts(data || []);
-      setLoading(false);
-    };
-    fetchPosts();
-  }, []);
+      return data || [];
+    },
+  });
 
   const allTags = [...new Set(posts.flatMap(p => p.tags || []))];
 
