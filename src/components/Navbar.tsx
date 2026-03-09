@@ -25,7 +25,7 @@ const languages = [
 export const Navbar = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const [isScrolled, setIsScrolled] = useState(false);
+  const isScrolled = false;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [logoLoaded, setLogoLoaded] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
