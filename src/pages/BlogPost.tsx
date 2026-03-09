@@ -182,53 +182,99 @@ const BlogPost = () => {
 
         {/* Content */}
         <div className="section-container pb-12">
-          <div className="max-w-3xl mx-auto prose-custom">
-            {content.map((block, i) => <RenderBlock key={i} block={block} />)}
-          </div>
-
-          {/* Gallery */}
-          {gallery.length > 0 && (
-            <div className="max-w-3xl mx-auto mt-10">
-              <h3 className="text-lg font-semibold text-foreground mb-4">{t('blog.gallery', 'Gallery')}</h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {gallery.map((url, i) => (
-                  <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="group">
-                    <AnimatedImage
-                      src={url}
-                      alt={`Gallery ${i + 1}`}
-                      className="w-full h-48 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300"
-                      containerClassName="rounded-xl overflow-hidden"
-                      loading="lazy"
-                    />
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Video */}
-          {post.video_url && post.video_type === 'embed' && (
-            <div className="max-w-3xl mx-auto my-8">
-              <div className="aspect-video rounded-xl overflow-hidden">
-                <iframe src={post.video_url} className="w-full h-full" allowFullScreen title="Video" />
-              </div>
-            </div>
-          )}
-
-          {/* PDF Attachments */}
-          {pdfAttachments.length > 0 && (
-            <div className="max-w-3xl mx-auto mt-8 space-y-3">
-              <h3 className="text-lg font-semibold text-foreground mb-3">{t('blog.attachments', 'Attachments')}</h3>
-              {pdfAttachments.map((att, i) => (
-                <PDFAttachment key={i} name={att.name || 'Document.pdf'} url={att.url} />
+          <GlassCard variant="default" className="max-w-4xl mx-auto p-6 sm:p-10">
+            <div className="max-w-3xl mx-auto prose-custom">
+              {content.map((block, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.05, duration: 0.4 }}
+                >
+                  <RenderBlock block={block} />
+                </motion.div>
               ))}
             </div>
-          )}
 
-          {/* Share */}
-          <div className="max-w-3xl mx-auto mt-10 pt-6 border-t border-white/10">
-            <ShareButtons url={window.location.href} title={title} />
-          </div>
+            {/* Gallery */}
+            {gallery.length > 0 && (
+              <div className="max-w-3xl mx-auto mt-10">
+                <motion.h3
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4 }}
+                  className="text-lg font-semibold text-foreground mb-4"
+                >
+                  {t('blog.gallery', 'Gallery')}
+                </motion.h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {gallery.map((url, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.08, duration: 0.4 }}
+                    >
+                      <a href={url} target="_blank" rel="noopener noreferrer" className="group block">
+                        <AnimatedImage
+                          src={url}
+                          alt={`Gallery ${i + 1}`}
+                          className="w-full h-48 object-cover rounded-2xl group-hover:scale-105 transition-transform duration-300"
+                          containerClassName="rounded-2xl overflow-hidden"
+                          loading="lazy"
+                        />
+                      </a>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Video */}
+            {post.video_url && post.video_type === 'embed' && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4 }}
+                className="max-w-3xl mx-auto my-8"
+              >
+                <div className="aspect-video rounded-2xl overflow-hidden">
+                  <iframe src={post.video_url} className="w-full h-full" allowFullScreen title="Video" />
+                </div>
+              </motion.div>
+            )}
+
+            {/* PDF Attachments */}
+            {pdfAttachments.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4 }}
+                className="max-w-3xl mx-auto mt-8 space-y-3"
+              >
+                <h3 className="text-lg font-semibold text-foreground mb-3">{t('blog.attachments', 'Attachments')}</h3>
+                {pdfAttachments.map((att, i) => (
+                  <PDFAttachment key={i} name={att.name || 'Document.pdf'} url={att.url} />
+                ))}
+              </motion.div>
+            )}
+
+            {/* Share */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4 }}
+              className="max-w-3xl mx-auto mt-10 pt-6 border-t border-border"
+            >
+              <ShareButtons url={window.location.href} title={title} />
+            </motion.div>
+          </GlassCard>
         </div>
 
         {/* Related Posts */}
