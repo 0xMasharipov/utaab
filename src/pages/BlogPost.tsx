@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -10,9 +10,9 @@ import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
 import { ShareButtons } from '@/components/blog/ShareButtons';
 import { PDFAttachment } from '@/components/blog/PDFAttachment';
 import { BlogCard } from '@/components/blog/BlogCard';
+import ImageLightbox from '@/components/blog/ImageLightbox';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
-import GlassCard from '@/components/glass/GlassCard';
 import { PrivacyPopup } from '@/components/PrivacyPopup';
 import { PrivacyCenter } from '@/components/PrivacyCenter';
 import { FloatingPrivacyButton } from '@/components/FloatingPrivacyButton';
@@ -28,7 +28,7 @@ interface ContentBlock {
   items?: string[];
 }
 
-const RenderBlock = ({ block }: { block: ContentBlock }) => {
+const RenderBlock = ({ block, onImageClick }: { block: ContentBlock; onImageClick?: () => void }) => {
   switch (block.type) {
     case 'heading':
       const HeadingTag = `h${block.level || 2}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
@@ -41,8 +41,8 @@ const RenderBlock = ({ block }: { block: ContentBlock }) => {
       return <pre className="bg-white/[0.03] border border-white/10 rounded-xl p-4 my-6 overflow-x-auto text-sm font-mono text-foreground"><code>{block.content}</code></pre>;
     case 'image':
       return (
-        <figure className="my-6">
-          <AnimatedImage src={block.url} alt={block.alt || ''} className="w-full rounded-xl" loading="lazy" />
+        <figure className="my-6 cursor-pointer" onClick={onImageClick}>
+          <AnimatedImage src={block.url} alt={block.alt || ''} className="w-full rounded-xl hover:scale-[1.01] transition-transform duration-300" loading="lazy" />
           {block.alt && <figcaption className="text-center text-xs text-muted-foreground mt-2">{block.alt}</figcaption>}
         </figure>
       );
@@ -67,6 +67,8 @@ const BlogPost = () => {
   const [related, setRelated] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isPrivacyCenterOpen, setIsPrivacyCenterOpen] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -82,8 +84,6 @@ const BlogPost = () => {
         document.title = data.meta_title || data.title_en;
         const meta = document.querySelector('meta[name="description"]');
         if (meta && data.meta_description) meta.setAttribute('content', data.meta_description);
-
-        // Fetch related posts
         if (data.tags?.length) {
           const { data: rel } = await supabase
             .from('blog_posts')
@@ -99,6 +99,27 @@ const BlogPost = () => {
     };
     fetchPost();
   }, [slug]);
+
+  const content: ContentBlock[] = post && Array.isArray(post.content) ? post.content : [];
+  const gallery: string[] = post && Array.isArray(post.gallery) ? post.gallery.filter((g: any) => typeof g === 'string') : [];
+
+  // Collect all images for lightbox
+  const allImages = useMemo(() => {
+    const imgs: { url: string; alt?: string }[] = [];
+    content.forEach(b => {
+      if (b.type === 'image' && b.url) imgs.push({ url: b.url, alt: b.alt });
+    });
+    gallery.forEach(url => imgs.push({ url }));
+    return imgs;
+  }, [content, gallery]);
+
+  const openLightbox = (url: string) => {
+    const idx = allImages.findIndex(img => img.url === url);
+    if (idx >= 0) {
+      setLightboxIndex(idx);
+      setLightboxOpen(true);
+    }
+  };
 
   if (loading) {
     return (
@@ -123,17 +144,14 @@ const BlogPost = () => {
 
   const title = (post as any)[`title_${lang}`] || post.title_en;
   const excerpt = (post as any)[`excerpt_${lang}`] || post.excerpt_en;
-  const content: ContentBlock[] = Array.isArray(post.content) ? post.content : [];
   const attachments: any[] = Array.isArray(post.attachments) ? post.attachments : [];
   const pdfAttachments = attachments.filter(a => a.type === 'pdf' || a.url?.endsWith('.pdf'));
-  const gallery: string[] = Array.isArray(post.gallery) ? post.gallery.filter((g: any) => typeof g === 'string') : [];
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       <AnimatedBlobBackground />
       <Navbar />
 
-      {/* Hero */}
       <article>
         <header className="relative pt-24 pb-12">
           {post.cover_image && (
@@ -180,19 +198,28 @@ const BlogPost = () => {
           </div>
         </header>
 
-        {/* Content */}
         <div className="section-container pb-12">
           <div className="max-w-3xl mx-auto prose-custom">
-            {content.map((block, i) => <RenderBlock key={i} block={block} />)}
+            {content.map((block, i) => (
+              <RenderBlock
+                key={i}
+                block={block}
+                onImageClick={block.type === 'image' && block.url ? () => openLightbox(block.url!) : undefined}
+              />
+            ))}
           </div>
 
-          {/* Gallery */}
           {gallery.length > 0 && (
             <div className="max-w-3xl mx-auto mt-10">
               <h3 className="text-lg font-semibold text-foreground mb-4">{t('blog.gallery', 'Gallery')}</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {gallery.map((url, i) => (
-                  <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="group">
+                  <button
+                    key={i}
+                    onClick={() => openLightbox(url)}
+                    className="group text-left cursor-pointer rounded-xl overflow-hidden"
+                    aria-label={`View image ${i + 1}`}
+                  >
                     <AnimatedImage
                       src={url}
                       alt={`Gallery ${i + 1}`}
@@ -200,13 +227,12 @@ const BlogPost = () => {
                       containerClassName="rounded-xl overflow-hidden"
                       loading="lazy"
                     />
-                  </a>
+                  </button>
                 ))}
               </div>
             </div>
           )}
 
-          {/* Video */}
           {post.video_url && post.video_type === 'embed' && (
             <div className="max-w-3xl mx-auto my-8">
               <div className="aspect-video rounded-xl overflow-hidden">
@@ -215,7 +241,6 @@ const BlogPost = () => {
             </div>
           )}
 
-          {/* PDF Attachments */}
           {pdfAttachments.length > 0 && (
             <div className="max-w-3xl mx-auto mt-8 space-y-3">
               <h3 className="text-lg font-semibold text-foreground mb-3">{t('blog.attachments', 'Attachments')}</h3>
@@ -225,13 +250,11 @@ const BlogPost = () => {
             </div>
           )}
 
-          {/* Share */}
           <div className="max-w-3xl mx-auto mt-10 pt-6 border-t border-white/10">
             <ShareButtons url={window.location.href} title={title} />
           </div>
         </div>
 
-        {/* Related Posts */}
         {related.length > 0 && (
           <section className="pb-16">
             <div className="section-container">
@@ -243,6 +266,13 @@ const BlogPost = () => {
           </section>
         )}
       </article>
+
+      <ImageLightbox
+        images={allImages}
+        initialIndex={lightboxIndex}
+        open={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+      />
 
       <Footer onPrivacyClick={() => setIsPrivacyCenterOpen(true)} />
       <PrivacyPopup onAccept={() => {}} onCustomize={() => setIsPrivacyCenterOpen(true)} />
