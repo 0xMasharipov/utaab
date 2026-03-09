@@ -239,7 +239,6 @@ export const Navbar = () => {
             className="fixed z-[80] w-[96%] sm:w-[95%] max-w-6xl left-1/2 -translate-x-1/2 overflow-hidden"
             style={{
               top: `${panelTop}px`,
-            style={{
               background: 'rgba(255, 255, 255, 0.08)',
               backdropFilter: 'blur(20px) saturate(140%)',
               WebkitBackdropFilter: 'blur(20px) saturate(140%)',
