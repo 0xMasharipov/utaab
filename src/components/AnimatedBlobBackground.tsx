@@ -1,57 +1,55 @@
 const AnimatedBlobBackground = () => {
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-      {/* Blob 1 - Large blue */}
+      {/* Layer 1 — Full-page vertical gradient */}
       <div
-        className="absolute w-[600px] h-[600px] opacity-45 animate-blob-1"
+        className="absolute inset-0"
         style={{
-          background: 'radial-gradient(circle, hsl(217 91% 35%) 0%, transparent 70%)',
-          filter: 'blur(90px)',
-          top: '10%',
-          left: '15%',
+          background: `linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #f5f8fc 12%,
+            #ebf2f9 24%,
+            #dbe8f5 38%,
+            #bdd5ef 52%,
+            #7fb2e8 68%,
+            #2f80ed 82%,
+            #10263d 92%,
+            #081624 100%
+          )`,
         }}
       />
-      {/* Blob 2 - Purple accent */}
+
+      {/* Layer 2 — Atmospheric radial glows */}
       <div
-        className="absolute w-[500px] h-[500px] opacity-40 animate-blob-2"
+        className="absolute w-[700px] h-[700px] opacity-30 animate-blob-1"
         style={{
-          background: 'radial-gradient(circle, hsl(260 60% 50%) 0%, transparent 70%)',
-          filter: 'blur(85px)',
-          top: '50%',
-          right: '10%',
-        }}
-      />
-      {/* Blob 3 - Bright blue */}
-      <div
-        className="absolute w-[550px] h-[550px] opacity-[0.38] animate-blob-3"
-        style={{
-          background: 'radial-gradient(circle, hsl(213 94% 68%) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(47,128,237,0.28) 0%, transparent 70%)',
           filter: 'blur(80px)',
-          bottom: '10%',
+          top: '15%',
+          right: '5%',
+        }}
+      />
+      <div
+        className="absolute w-[600px] h-[600px] opacity-25 animate-blob-2"
+        style={{
+          background: 'radial-gradient(circle, rgba(126,179,234,0.16) 0%, transparent 70%)',
+          filter: 'blur(90px)',
+          top: '40%',
+          left: '5%',
+        }}
+      />
+      <div
+        className="absolute w-[550px] h-[550px] opacity-20 animate-blob-3"
+        style={{
+          background: 'radial-gradient(circle, rgba(30,90,180,0.18) 0%, transparent 70%)',
+          filter: 'blur(85px)',
+          top: '65%',
           left: '40%',
         }}
       />
-      {/* Blob 4 - Deep blue */}
-      <div
-        className="absolute w-[400px] h-[400px] opacity-35 animate-blob-4"
-        style={{
-          background: 'radial-gradient(circle, hsl(217 91% 25%) 0%, transparent 70%)',
-          filter: 'blur(80px)',
-          top: '30%',
-          left: '60%',
-        }}
-      />
-      {/* Blob 5 - Cyan accent */}
-      <div
-        className="absolute w-[350px] h-[350px] opacity-30 animate-blob-2"
-        style={{
-          background: 'radial-gradient(circle, hsl(190 90% 50%) 0%, transparent 70%)',
-          filter: 'blur(90px)',
-          top: '70%',
-          left: '15%',
-        }}
-      />
-      {/* Grain overlay */}
+
+      {/* Layer 3 — Grain overlay */}
       <div className="absolute inset-0 opacity-[0.03] bg-grain" />
     </div>
   );

@@ -189,6 +189,15 @@ export const Hero = () => {
         {/* Right column — spacer (video shows through) */}
         <div className="hidden lg:block" />
       </div>
+      {/* Bottom fade — bridges hero into gradient */}
+      <div
+        className="absolute bottom-0 left-0 w-full pointer-events-none"
+        style={{
+          height: 220,
+          zIndex: 2,
+          background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(197,221,244,0.35) 35%, rgba(74,132,210,0.38) 62%, rgba(8,22,36,0.72) 100%)',
+        }}
+      />
     </section>
   );
 };
