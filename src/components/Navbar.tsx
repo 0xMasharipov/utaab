@@ -213,7 +213,7 @@ export const Navbar = () => {
         </div>
       </nav>
 
-      {/* Rounded dropdown panel */}
+      {/* Premium frosted glass dropdown panel */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -222,29 +222,33 @@ export const Navbar = () => {
             role="dialog"
             aria-modal="true"
             aria-label={t('nav.menu')}
-            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
+            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
+            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
             transition={{ duration: prefersReducedMotion ? 0.1 : 0.25, ease: 'easeOut' }}
-            className="fixed top-[70px] sm:top-[76px] left-1/2 -translate-x-1/2 z-[80] w-[96%] sm:w-[95%] max-w-6xl rounded-3xl border border-white/[0.12] overflow-hidden"
+            className="fixed top-[60px] sm:top-[68px] z-[80] w-[96%] left-1/2 -translate-x-1/2 sm:w-auto sm:min-w-[380px] sm:max-w-md sm:left-auto sm:translate-x-0 sm:right-[2.5%] overflow-hidden"
             style={{
-              background: 'rgba(8, 16, 36, 0.82)',
-              backdropFilter: 'blur(24px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-              boxShadow: '0 16px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
+              background: 'rgba(255, 255, 255, 0.08)',
+              backdropFilter: 'blur(20px) saturate(140%)',
+              WebkitBackdropFilter: 'blur(20px) saturate(140%)',
+              boxShadow: '0 20px 60px rgba(15, 23, 42, 0.18)',
+              borderRadius: '28px',
+              border: '1px solid rgba(255, 255, 255, 0.16)',
             }}
           >
-            <div className="p-6 sm:p-8 flex flex-col gap-5">
+            <div className="p-6 sm:p-7 flex flex-col gap-1">
               {/* Nav links */}
-              <div className="flex flex-col items-center gap-3">
+              <div className="flex flex-col gap-0.5">
                 {navItems.map((item, i) => (
                   <motion.button
                     key={item.key}
-                    initial={prefersReducedMotion ? {} : { opacity: 0, y: 8 }}
+                    initial={prefersReducedMotion ? {} : { opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.03 * i, duration: 0.2 }}
+                    transition={{ delay: 0.025 * i, duration: 0.2 }}
                     onClick={() => scrollToSection(item.id)}
-                    className={getTransitionClasses("text-lg font-medium text-white/80 hover:text-white transition-colors")}
+                    className={getTransitionClasses(
+                      "text-left text-base font-semibold tracking-wide text-white/90 hover:text-white hover:bg-white/[0.08] transition-all duration-200 px-5 py-3 rounded-[14px]"
+                    )}
                   >
                     {t(`nav.${item.key}`)}
                   </motion.button>
@@ -252,11 +256,13 @@ export const Navbar = () => {
                 {pageNavItems.map((item, i) => (
                   <motion.button
                     key={item.key}
-                    initial={prefersReducedMotion ? {} : { opacity: 0, y: 8 }}
+                    initial={prefersReducedMotion ? {} : { opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.03 * (navItems.length + i), duration: 0.2 }}
+                    transition={{ delay: 0.025 * (navItems.length + i), duration: 0.2 }}
                     onClick={() => handleNavigate(item.path)}
-                    className={getTransitionClasses("text-lg font-medium text-white/80 hover:text-white transition-colors")}
+                    className={getTransitionClasses(
+                      "text-left text-base font-semibold tracking-wide text-white/90 hover:text-white hover:bg-white/[0.08] transition-all duration-200 px-5 py-3 rounded-[14px]"
+                    )}
                   >
                     {t(`nav.${item.key}`)}
                   </motion.button>
@@ -264,53 +270,57 @@ export const Navbar = () => {
               </div>
 
               {/* Divider */}
-              <div className="w-12 h-px bg-white/20 mx-auto" />
+              <div className="w-full h-px bg-white/[0.10] my-3" />
 
               {/* Action buttons */}
-              <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
+              <div className="flex items-center gap-3 w-full px-1">
                 <Button
                   onClick={() => handleNavigate('/education')}
-                  className="w-full sm:flex-1 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold rounded-xl min-h-[44px]"
+                  className="flex-1 bg-gradient-to-r from-blue-600/90 to-blue-500/90 hover:from-blue-500 hover:to-blue-400 text-white font-semibold rounded-full min-h-[44px] shadow-sm"
                   size="default"
                 >
                   {t('education.title')}
                 </Button>
                 <Button
                   onClick={() => scrollToSection('join')}
-                  className="btn-primary w-full sm:flex-1 min-h-[44px]"
+                  variant="outline"
+                  className="flex-1 bg-white/[0.06] border-white/20 hover:bg-white/[0.12] text-white font-semibold rounded-full min-h-[44px]"
                   size="default"
                 >
                   {t('nav.join')}
                 </Button>
               </div>
 
-              {/* Auth links */}
-              <div className="flex flex-col sm:flex-row items-center gap-2">
+              {/* Auth row */}
+              <div className="flex flex-col items-center gap-2 mt-3 px-1">
                 <button
                   onClick={() => handleNavigate('/education/sign-in')}
-                  className="flex items-center justify-center gap-2 w-full sm:flex-1 text-sm font-semibold text-white/80 border border-white/20 hover:bg-white/10 transition-all py-2.5 px-4 rounded-xl"
+                  className="flex items-center justify-center gap-2 w-full text-sm font-semibold text-white/80 border border-white/[0.14] hover:bg-white/[0.08] transition-all duration-200 py-2.5 px-4 rounded-full bg-transparent"
                 >
-                  <User className="h-4 w-4" />
+                  <User className="h-4 w-4 text-white/60" />
                   {t('nav.studentAuthOptions')}
                 </button>
                 <button
                   onClick={() => handleNavigate('/admin/login')}
-                  className="text-xs text-white/40 hover:text-white/70 transition-colors py-2"
+                  className="text-xs text-white/40 hover:text-white/60 transition-colors duration-200 py-1.5"
                 >
                   {t('nav.adminSignIn')}
                 </button>
               </div>
 
+              {/* Divider */}
+              <div className="w-full h-px bg-white/[0.08] my-2" />
+
               {/* Language switcher */}
-              <div className="flex items-center justify-center gap-2 flex-wrap pt-1">
+              <div className="flex items-center justify-center gap-1.5 flex-wrap">
                 {languages.map((lang) => (
                   <button
                     key={lang.code}
                     onClick={() => changeLanguage(lang.code)}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-full transition-all text-sm ${
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-full transition-all duration-200 text-sm ${
                       i18n.language === lang.code
-                        ? 'bg-white/15 text-white font-medium'
-                        : 'hover:bg-white/10 text-white/50'
+                        ? 'bg-white/[0.12] text-white font-medium'
+                        : 'hover:bg-white/[0.06] text-white/50'
                     }`}
                   >
                     <span>{lang.flag}</span>
