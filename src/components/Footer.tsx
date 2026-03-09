@@ -38,7 +38,16 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
   };
 
   return (
-    <footer className="relative py-12 sm:py-16 border-t border-white/10">
+    <footer className="relative py-12 sm:py-16" style={{ background: '#081624' }}>
+      {/* Top fade overlay */}
+      <div
+        className="absolute top-0 left-0 w-full pointer-events-none"
+        style={{
+          height: 120,
+          transform: 'translateY(-100%)',
+          background: 'linear-gradient(to bottom, transparent 0%, #081624 100%)',
+        }}
+      />
       <div className="section-container">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12 mb-8 sm:mb-12">
           {/* Brand */}
