@@ -17,7 +17,6 @@ interface BlogCardProps {
     excerpt_tr?: string | null;
     excerpt_ru?: string | null;
     excerpt_ar?: string | null;
-    excerpt_ar?: string | null;
     cover_image?: string | null;
     publish_date?: string | null;
     tags?: string[];
