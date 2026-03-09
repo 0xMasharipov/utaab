@@ -111,6 +111,7 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
       content: contentJson,
       slug: form.slug,
       cover_image: form.cover_image || null,
+      gallery: form.gallery.length > 0 ? form.gallery : [],
       video_type: form.video_type || null,
       video_url: form.video_url || null,
       tags: form.tags ? form.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
