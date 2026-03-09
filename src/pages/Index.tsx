@@ -29,6 +29,7 @@ const Index = () => {
       <Community />
       <Learn />
       <Events />
+      <BlogSection />
       <Projects />
       <Resources />
       
