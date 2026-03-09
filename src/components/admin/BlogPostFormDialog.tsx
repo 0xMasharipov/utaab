@@ -72,7 +72,7 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
       setForm({
         title_en: '', title_tr: '', title_ru: '', title_ar: '',
         excerpt_en: '', excerpt_tr: '', excerpt_ru: '', excerpt_ar: '',
-        content: '[]', slug: '', cover_image: '', video_type: '', video_url: '',
+        content: '[]', slug: '', cover_image: '', gallery: [], video_type: '', video_url: '',
         tags: '', author_name: '', status: 'draft', featured: false,
         publish_date: '', scheduled_at: '', meta_title: '', meta_description: '', og_image: '',
       });
