@@ -1,20 +1,31 @@
 
 
-# Center Mega Menu Panel Under Navbar
+# Improve Hero Video Loading Speed
 
 ## Problem
-The mega menu panel appears visually offset/right-aligned despite having centering CSS. The panel uses `max-w-5xl` while the navbar uses `max-w-6xl`, creating a visual mismatch. The panel should match the navbar's width and centering exactly.
+The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
 
-## Change — `src/components/Navbar.tsx`
+## Changes
 
-**Line 224**: Update the mega menu panel className to match the navbar's width constraints:
-- Change `max-w-5xl` → `max-w-6xl` to match the navbar container width
-- Keep `left-1/2 -translate-x-1/2` centering
-- Keep `w-[96%]` for mobile
+### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
+Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
 
-This ensures the panel visually aligns directly under the navbar as an extension of it, centered on the same axis with the same max-width.
+### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
+Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
+
+### 3. Preload the video in `index.html`
+Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
+```html
+<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
+```
+
+### 4. Add loading state with fade-in transition (`Hero.tsx`)
+Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
+
+## Files to modify
 
 | File | Change |
 |------|--------|
-| `src/components/Navbar.tsx` | Change `max-w-5xl` to `max-w-6xl` on the mega menu panel |
+| `index.html` | Add `<link rel="preload">` for the video |
+| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
 
