@@ -1,31 +1,31 @@
 
 
-# Improve Hero Video Loading Speed
+# Fix Sharp Line Between Hero and Stats Section
 
 ## Problem
-The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
+The hero bottom fade overlay ends at `rgba(8,22,36,0.72)` (dark navy at 72% opacity), but the global background gradient at that scroll position is still in the light-to-mid blue range. This mismatch creates a visible hard edge at the hero's bottom boundary.
 
-## Changes
+## Fix
 
-### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
-Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
+### `src/components/Hero.tsx` — Update bottom fade gradient
+Change the bottom fade to transition from transparent white into the mid-blue tones that match the global gradient at that point, rather than jumping to dark navy:
 
-### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
-Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
-
-### 3. Preload the video in `index.html`
-Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
-```html
-<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
+```css
+background: linear-gradient(
+  to bottom,
+  rgba(255,255,255,0) 0%,
+  rgba(235,242,249,0.6) 30%,
+  rgba(189,213,239,0.8) 60%,
+  rgba(127,178,232,0.9) 85%,
+  rgba(127,178,232,1) 100%
+);
 ```
 
-### 4. Add loading state with fade-in transition (`Hero.tsx`)
-Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
+This matches the global gradient's `#ebf2f9` → `#bdd5ef` → `#7fb2e8` range at the hero/stats boundary, eliminating the sharp contrast jump.
 
-## Files to modify
+### Files to modify
 
 | File | Change |
 |------|--------|
-| `index.html` | Add `<link rel="preload">` for the video |
-| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
+| `src/components/Hero.tsx` | Update bottom fade gradient stops to match global background colors at that scroll position |
 
