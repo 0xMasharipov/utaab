@@ -55,6 +55,7 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
         content: JSON.stringify(post.content || []),
         slug: post.slug || '',
         cover_image: post.cover_image || '',
+        gallery: Array.isArray(post.gallery) ? post.gallery.filter((g: any) => typeof g === 'string') : [],
         video_type: post.video_type || '',
         video_url: post.video_url || '',
         tags: (post.tags || []).join(', '),
