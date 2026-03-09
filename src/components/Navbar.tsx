@@ -310,7 +310,7 @@ export const Navbar = () => {
                   <span className="text-xs uppercase tracking-[2px] text-white/40 font-semibold mb-4 px-4">
                     {t('nav.organization', 'Organization')}
                   </span>
-                  <div className="flex flex-col gap-0.5">
+                  <div className="flex flex-col gap-1">
                     {[
                       { key: 'team', type: 'page', path: '/team' },
                       { key: 'join', type: 'scroll', id: 'join' },
