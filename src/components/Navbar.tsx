@@ -349,7 +349,7 @@ export const Navbar = () => {
                   <Button
                     onClick={() => scrollToSection('join')}
                     variant="outline"
-                    className="flex-1 sm:flex-none bg-white/[0.06] border-white/20 hover:bg-white/[0.12] text-white font-semibold rounded-full min-h-[40px] px-6 text-sm"
+                    className="flex-1 sm:flex-none bg-white/[0.06] border-white/20 hover:bg-white/[0.12] text-white font-semibold rounded-[18px] py-2.5 px-5 text-sm"
                     size="sm"
                   >
                     {t('nav.join')}
