@@ -20,7 +20,7 @@ interface BlogCardProps {
     cover_image?: string | null;
     publish_date?: string | null;
     tags?: string[];
-    gallery?: any[] | null;
+    gallery?: any | null;
   };
   index?: number;
 }
