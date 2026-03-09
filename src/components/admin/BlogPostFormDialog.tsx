@@ -27,6 +27,7 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
     content: '[]',
     slug: '',
     cover_image: '',
+    gallery: [] as string[],
     video_type: '',
     video_url: '',
     tags: '',
