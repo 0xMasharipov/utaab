@@ -726,6 +726,8 @@
   "blog": {
     "title": "UTAAB Blog",
     "subtitle": "İçgörüler, Güncellemeler ve Web3 Yenilikleri",
+    "sectionTitle": "Blogdan Son Yazılar",
+    "viewAll": "Tüm Yazıları Gör",
     "featured": "Öne Çıkan",
     "readMore": "Devamını Oku",
     "search": "Yazı ara...",

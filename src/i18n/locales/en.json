@@ -726,6 +726,8 @@
   "blog": {
     "title": "UTAAB Blog",
     "subtitle": "Insights, Updates & Web3 Innovations",
+    "sectionTitle": "Latest from the Blog",
+    "viewAll": "View All Posts",
     "featured": "Featured",
     "readMore": "Read More",
     "search": "Search posts...",

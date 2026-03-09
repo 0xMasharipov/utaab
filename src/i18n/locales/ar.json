@@ -725,6 +725,8 @@
   "blog": {
     "title": "مدونة UTAAB",
     "subtitle": "رؤى وتحديثات وابتكارات Web3",
+    "sectionTitle": "آخر المقالات",
+    "viewAll": "عرض جميع المقالات",
     "featured": "مميز",
     "readMore": "اقرأ المزيد",
     "search": "البحث في المقالات...",
