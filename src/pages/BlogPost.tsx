@@ -122,9 +122,11 @@ const BlogPost = () => {
   }
 
   const title = (post as any)[`title_${lang}`] || post.title_en;
+  const excerpt = (post as any)[`excerpt_${lang}`] || post.excerpt_en;
   const content: ContentBlock[] = Array.isArray(post.content) ? post.content : [];
   const attachments: any[] = Array.isArray(post.attachments) ? post.attachments : [];
   const pdfAttachments = attachments.filter(a => a.type === 'pdf' || a.url?.endsWith('.pdf'));
+  const gallery: string[] = Array.isArray(post.gallery) ? post.gallery.filter((g: any) => typeof g === 'string') : [];
 
   return (
     <div className="min-h-screen bg-background text-foreground">
