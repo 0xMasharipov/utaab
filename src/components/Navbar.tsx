@@ -232,10 +232,10 @@ export const Navbar = () => {
             role="dialog"
             aria-modal="true"
             aria-label={t('nav.menu')}
-            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
+            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
-            transition={{ duration: prefersReducedMotion ? 0.1 : 0.25, ease: 'easeOut' }}
+            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
+            transition={{ duration: prefersReducedMotion ? 0.1 : 0.22, ease: 'easeOut' }}
             className="fixed z-[80] w-[96%] sm:w-[95%] max-w-6xl left-1/2 -translate-x-1/2 overflow-hidden"
             style={{
               top: `${panelTop}px`,
