@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Search } from 'lucide-react';
+import { Search, Calendar, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Navbar } from '@/components/Navbar';
@@ -11,12 +11,12 @@ import { BlogCard } from '@/components/blog/BlogCard';
 import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
 import GlassCard from '@/components/glass/GlassCard';
-import { Calendar } from 'lucide-react';
 import AnimatedImage from '@/components/common/AnimatedImage';
 import { format } from 'date-fns';
 import { PrivacyPopup } from '@/components/PrivacyPopup';
 import { PrivacyCenter } from '@/components/PrivacyCenter';
 import { FloatingPrivacyButton } from '@/components/FloatingPrivacyButton';
+import { useQuery } from '@tanstack/react-query';
 
 const POSTS_PER_PAGE = 12;
 

@@ -115,7 +115,7 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
       author_name: form.author_name || null,
       status: form.status,
       featured: form.featured,
-      publish_date: form.publish_date ? new Date(form.publish_date).toISOString() : null,
+      publish_date: effectivePublishDate,
       scheduled_at: form.scheduled_at ? new Date(form.scheduled_at).toISOString() : null,
       meta_title: form.meta_title || null,
       meta_description: form.meta_description || null,
