@@ -167,8 +167,8 @@ export const Events = () => {
                   {pastEvents.map((event, index) => renderEventCard(event, index))}
                 </div>
               ) : (
-                <div className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-center">
-                  <p className="text-muted-foreground">{t('events.noEvents')}</p>
+                <div className="glass-section rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-center">
+                   <p className="text-muted-foreground">{t('events.noEvents')}</p>
                 </div>
               )}
             </div>
