@@ -24,7 +24,7 @@ export const Hero = () => {
     <section
       id="hero"
       className="relative min-h-[100svh] md:min-h-screen overflow-hidden"
-      style={{ background: '#fff' }}
+      style={{ background: 'transparent' }}
     >
       {/* Background Video */}
       <video
