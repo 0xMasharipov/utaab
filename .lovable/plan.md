@@ -1,31 +1,51 @@
 
 
-# Improve Hero Video Loading Speed
+# Animate and Style Blog Post Content with Glass Background
 
-## Problem
-The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
+## What
+Wrap the blog post content area (text + gallery + attachments) in a centered glass card with blurred background, rounded corners, and staggered entrance animations for each content block and gallery image.
 
 ## Changes
 
-### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
-Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
+### `src/pages/BlogPost.tsx`
 
-### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
-Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
+1. **Glass container**: Wrap the content section (lines 184-232) inside a `GlassCard` with `variant="default"` centered with `max-w-4xl mx-auto`, giving the whole content area a blurred glass background with rounded corners.
 
-### 3. Preload the video in `index.html`
-Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
-```html
-<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
-```
+2. **Animated content blocks**: Wrap each `RenderBlock` in a `motion.div` with staggered fade-up animation:
+   ```tsx
+   <motion.div
+     initial={{ opacity: 0, y: 20 }}
+     whileInView={{ opacity: 1, y: 0 }}
+     viewport={{ once: true }}
+     transition={{ delay: i * 0.05, duration: 0.4 }}
+   >
+     <RenderBlock key={i} block={block} />
+   </motion.div>
+   ```
 
-### 4. Add loading state with fade-in transition (`Hero.tsx`)
-Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
+3. **Animated gallery images**: Wrap each gallery image in `motion.div` with staggered scale-in animation:
+   ```tsx
+   <motion.div
+     initial={{ opacity: 0, scale: 0.9 }}
+     whileInView={{ opacity: 1, scale: 1 }}
+     viewport={{ once: true }}
+     transition={{ delay: i * 0.08, duration: 0.4 }}
+   >
+   ```
 
-## Files to modify
+4. **Gallery heading**: Animate the "Gallery" heading with fade-in.
 
-| File | Change |
-|------|--------|
-| `index.html` | Add `<link rel="preload">` for the video |
-| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
+5. **Center and round gallery images**: Add `mx-auto` to the gallery grid container, ensure images have `rounded-2xl` for more pronounced rounding.
+
+### Summary
+
+| Element | Animation | Style |
+|---------|-----------|-------|
+| Content wrapper | - | GlassCard with backdrop blur, rounded-2xl, padding |
+| Content blocks | Staggered fade-up | Centered within glass card |
+| Gallery heading | Fade-in | - |
+| Gallery images | Staggered scale-in | rounded-2xl, centered grid |
+| Attachments/Share | Fade-in | Inside glass card |
+
+One file changed: `src/pages/BlogPost.tsx`.
 
