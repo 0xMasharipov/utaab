@@ -341,7 +341,7 @@ export const Navbar = () => {
                 <div className="flex items-center gap-3 w-full sm:w-auto">
                   <Button
                     onClick={() => handleNavigate('/education')}
-                    className="flex-1 sm:flex-none bg-gradient-to-r from-blue-600/90 to-blue-500/90 hover:from-blue-500 hover:to-blue-400 text-white font-semibold rounded-full min-h-[40px] px-6 shadow-sm text-sm"
+                    className="flex-1 sm:flex-none bg-gradient-to-r from-blue-600/90 to-blue-500/90 hover:from-blue-500 hover:to-blue-400 text-white font-semibold rounded-[18px] py-2.5 px-5 shadow-sm text-sm"
                     size="sm"
                   >
                     {t('education.title')}
