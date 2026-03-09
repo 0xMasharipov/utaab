@@ -24,9 +24,7 @@ export const Hero = () => {
     <section
       id="hero"
       className="relative min-h-[100svh] md:min-h-screen overflow-hidden"
-      style={{
-        background: 'linear-gradient(180deg, #ffffff 0%, #f3f7fb 15%, #e6eef7 30%, #cddff1 45%, #9ec2e6 60%, #4a90d9 75%, #0b2a45 100%)',
-      }}
+      style={{ background: '#fff' }}
     >
       {/* Background Video */}
       <video
@@ -191,9 +189,6 @@ export const Hero = () => {
         {/* Right column — spacer (video shows through) */}
         <div className="hidden lg:block" />
       </div>
-
-      {/* Bottom fade overlay for seamless transition */}
-      <div className="hero-bottom-fade" />
     </section>
   );
 };
