@@ -30,6 +30,8 @@ export const Navbar = () => {
   const [logoLoaded, setLogoLoaded] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
+  const navRef = useRef<HTMLElement>(null);
+  const [panelTop, setPanelTop] = useState(68);
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
   const isRTL = i18n.language === 'ar';
@@ -56,6 +58,19 @@ export const Navbar = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isMenuOpen, closeMenu]);
+
+  // Measure navbar bottom for panel positioning
+  useEffect(() => {
+    const updatePanelTop = () => {
+      if (navRef.current) {
+        const rect = navRef.current.getBoundingClientRect();
+        setPanelTop(rect.bottom + 4);
+      }
+    };
+    updatePanelTop();
+    window.addEventListener('resize', updatePanelTop);
+    return () => window.removeEventListener('resize', updatePanelTop);
+  }, []);
 
   // Escape key
   useEffect(() => {
@@ -102,7 +117,7 @@ export const Navbar = () => {
 
   return (
     <>
-      <nav className="fixed top-2 sm:top-4 left-1/2 -translate-x-1/2 z-50 w-[96%] sm:w-[95%] max-w-6xl transition-[transform,opacity] duration-300">
+      <nav ref={navRef} className="fixed top-2 sm:top-4 left-1/2 -translate-x-1/2 z-50 w-[96%] sm:w-[95%] max-w-6xl transition-[transform,opacity] duration-300">
         <div
           className={`rounded-full px-4 sm:px-5 md:px-8 py-3 sm:py-4 border transition-all duration-300 ${
             isScrolled
@@ -221,8 +236,9 @@ export const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
             transition={{ duration: prefersReducedMotion ? 0.1 : 0.25, ease: 'easeOut' }}
-            className="fixed top-[56px] sm:top-[76px] z-[80] w-[96%] sm:w-[95%] max-w-6xl left-1/2 -translate-x-1/2 overflow-hidden"
+            className="fixed z-[80] w-[96%] sm:w-[95%] max-w-6xl left-1/2 -translate-x-1/2 overflow-hidden"
             style={{
+              top: `${panelTop}px`,
               background: 'rgba(255, 255, 255, 0.08)',
               backdropFilter: 'blur(20px) saturate(140%)',
               WebkitBackdropFilter: 'blur(20px) saturate(140%)',

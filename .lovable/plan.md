@@ -1,35 +1,31 @@
 
 
-# Align Dropdown Menu Precisely Under Navbar
+# Improve Hero Video Loading Speed
 
 ## Problem
-The dropdown menu needs to appear directly below the navbar with a small consistent gap, perfectly centered and width-matched on all devices — exactly as shown in the reference image.
+The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
 
-## Analysis
-Both navbar and panel already share identical horizontal positioning:
-- `w-[96%] sm:w-[95%] max-w-6xl left-1/2 -translate-x-1/2`
+## Changes
 
-The only adjustment needed is the **vertical offset** (`top`) to ensure the panel sits snugly below the navbar with a small gap, accounting for:
-- Navbar top: `top-2` (8px) on mobile, `top-4` (16px) on sm+
-- Navbar inner padding: `py-3` (12px) on mobile, `py-4` (16px) on sm+
-- Content height: ~32-40px (logo + buttons)
-- Small gap between navbar bottom and panel top
+### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
+Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
 
-## Change — `src/components/Navbar.tsx`
+### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
+Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
 
-Update the mega menu `motion.div` top offset to use dynamic calculation that always follows the navbar's bottom edge:
+### 3. Preload the video in `index.html`
+Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
+```html
+<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
+```
 
-- Use a `ref` on the navbar `<nav>` element to measure its actual bottom position
-- Set the panel's `top` based on `navRef.current.getBoundingClientRect().bottom + gap`
-- This ensures pixel-perfect alignment on mobile, tablet, and desktop regardless of padding/content changes
+### 4. Add loading state with fade-in transition (`Hero.tsx`)
+Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
 
-Alternatively (simpler, no ref needed): fine-tune the fixed `top` values:
-- Mobile: navbar top (8px) + navbar height (~56px) + gap (4px) = `top-[68px]`  
-- SM+: navbar top (16px) + navbar height (~64px) + gap (4px) = `top-[84px]`
-
-**Recommended approach**: Use a ref-based measurement for robustness.
+## Files to modify
 
 | File | Change |
 |------|--------|
-| `src/components/Navbar.tsx` | Add ref to `<nav>`, compute panel top from navbar bottom + 4px gap |
+| `index.html` | Add `<link rel="preload">` for the video |
+| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
 
