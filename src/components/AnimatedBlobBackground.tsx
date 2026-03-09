@@ -1,4 +1,23 @@
+import { useState, useEffect, useRef } from 'react';
+
 const AnimatedBlobBackground = () => {
+  const [scrollY, setScrollY] = useState(0);
+  const rafRef = useRef<number>(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        setScrollY(window.scrollY);
+      });
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
       {/* Layer 1 — Full-page vertical gradient */}
@@ -20,7 +39,7 @@ const AnimatedBlobBackground = () => {
         }}
       />
 
-      {/* Layer 2 — Atmospheric radial glows */}
+      {/* Layer 2 — Atmospheric radial glows with parallax */}
       <div
         className="absolute w-[700px] h-[700px] opacity-30 animate-blob-1"
         style={{
@@ -28,6 +47,8 @@ const AnimatedBlobBackground = () => {
           filter: 'blur(80px)',
           top: '15%',
           right: '5%',
+          transform: `translateY(${scrollY * -0.08}px)`,
+          willChange: 'transform',
         }}
       />
       <div
@@ -37,6 +58,8 @@ const AnimatedBlobBackground = () => {
           filter: 'blur(90px)',
           top: '40%',
           left: '5%',
+          transform: `translateY(${scrollY * -0.15}px)`,
+          willChange: 'transform',
         }}
       />
       <div
@@ -46,6 +69,8 @@ const AnimatedBlobBackground = () => {
           filter: 'blur(85px)',
           top: '65%',
           left: '40%',
+          transform: `translateY(${scrollY * -0.22}px)`,
+          willChange: 'transform',
         }}
       />
 
