@@ -191,6 +191,9 @@ export const Hero = () => {
         {/* Right column — spacer (video shows through) */}
         <div className="hidden lg:block" />
       </div>
+
+      {/* Bottom fade overlay for seamless transition */}
+      <div className="hero-bottom-fade" />
     </section>
   );
 };
