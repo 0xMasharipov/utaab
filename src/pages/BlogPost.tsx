@@ -171,6 +171,12 @@ const BlogPost = () => {
                 ))}
               </div>
             )}
+
+            {excerpt && (
+              <p className="text-muted-foreground text-lg leading-relaxed mt-6 max-w-4xl">
+                {excerpt}
+              </p>
+            )}
           </div>
         </header>
 
