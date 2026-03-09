@@ -77,7 +77,7 @@ export const Events = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
-      className="glass-section rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:bg-white/10 transition-all duration-300 group"
+      className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:bg-white/10 transition-all duration-300 group"
     >
       {event.cover_image && (
         <img 
@@ -151,8 +151,8 @@ export const Events = () => {
                   {upcomingEvents.map((event, index) => renderEventCard(event, index))}
                 </div>
               ) : (
-                <div className="glass-section rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-center">
-                   <p className="text-muted-foreground">{t('events.noUpcoming')}</p>
+                <div className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-center">
+                  <p className="text-muted-foreground">{t('events.noUpcoming')}</p>
                 </div>
               )}
             </div>
@@ -167,8 +167,8 @@ export const Events = () => {
                   {pastEvents.map((event, index) => renderEventCard(event, index))}
                 </div>
               ) : (
-                <div className="glass-section rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-center">
-                   <p className="text-muted-foreground">{t('events.noEvents')}</p>
+                <div className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-center">
+                  <p className="text-muted-foreground">{t('events.noEvents')}</p>
                 </div>
               )}
             </div>

@@ -98,14 +98,6 @@
     @apply bg-white/10 backdrop-blur-2xl border border-white/20;
   }
   
-  /* Darker glass for sections on lighter gradient areas */
-  .glass-section {
-    background: rgba(8, 20, 40, 0.4);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  
   /* Text glow effects */
   .text-glow {
     text-shadow: 0 0 20px hsl(var(--glow-blue) / 0.5),

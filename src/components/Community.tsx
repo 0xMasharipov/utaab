@@ -51,7 +51,7 @@ export const Community = () => {
             initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="glass-section rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10"
+            className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10"
           >
             <h3 className={getTransitionClasses("text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-foreground")}>{t('community.mission')}</h3>
             <p className={getTransitionClasses("text-muted-foreground text-lg leading-relaxed")}>
@@ -63,7 +63,7 @@ export const Community = () => {
             initial={{ opacity: 0, x: 30 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="glass-section rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10"
+            className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10"
           >
             <h3 className={getTransitionClasses("text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-foreground")}>{t('community.visionTitle')}</h3>
             <p className={getTransitionClasses("text-muted-foreground text-lg leading-relaxed")}>
@@ -79,7 +79,7 @@ export const Community = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
-              className="glass-section rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 group"
+              className="glass rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 group"
             >
               <feature.icon className="h-12 w-12 text-accent mb-4 group-hover:scale-110 transition-transform" />
               <h4 className={getTransitionClasses("text-xl font-bold mb-2 text-foreground")}>{t(feature.titleKey)}</h4>
