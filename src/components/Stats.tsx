@@ -44,7 +44,7 @@ const StatItem = ({ value, label, suffix = '+' }: StatItemProps) => {
       transition={{ duration: 0.6 }}
       className="text-center"
     >
-      <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-glow mb-3 sm:mb-4">
+      <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold stat-glow mb-3 sm:mb-4">
         {count}{suffix}
       </div>
       <div className="text-base sm:text-lg md:text-xl text-muted-foreground lang-transition">{label}</div>
@@ -62,9 +62,14 @@ export const Stats = () => {
   ];
 
   return (
-    <section className="py-20 md:py-32 relative">
+    <section
+      className="py-20 md:py-32 relative"
+      style={{
+        background: 'radial-gradient(circle at center, rgba(40,80,140,0.25), #081624)',
+      }}
+    >
       <div className="section-container">
-        <div className="glass rounded-2xl sm:rounded-3xl p-8 sm:p-12 md:p-16">
+        <div className="rounded-2xl sm:rounded-3xl p-8 sm:p-12 md:p-16 bg-white/[0.03] border border-white/[0.06]">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10 md:gap-12">
             {stats.map((stat, index) => (
               <StatItem
