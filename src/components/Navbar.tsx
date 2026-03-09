@@ -42,21 +42,25 @@ export const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Lock scroll when menu is open
+  const changeLanguage = (lng: string) => i18n.changeLanguage(lng);
+
+  const closeMenu = useCallback(() => {
+    setIsMenuOpen(false);
+    setTimeout(() => hamburgerRef.current?.focus(), 150);
+  }, []);
+
+  // Click outside to close
   useEffect(() => {
-    if (isMenuOpen) {
-      const scrollY = window.scrollY;
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
-    } else {
-      const scrollY = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      if (scrollY) window.scrollTo(0, parseInt(scrollY || '0') * -1);
-    }
-  }, [isMenuOpen]);
+    if (!isMenuOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node) &&
+          hamburgerRef.current && !hamburgerRef.current.contains(e.target as Node)) {
+        closeMenu();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isMenuOpen, closeMenu]);
 
   // Escape key
   useEffect(() => {
@@ -66,14 +70,7 @@ export const Navbar = () => {
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isMenuOpen]);
-
-  const changeLanguage = (lng: string) => i18n.changeLanguage(lng);
-
-  const closeMenu = useCallback(() => {
-    setIsMenuOpen(false);
-    setTimeout(() => hamburgerRef.current?.focus(), 150);
-  }, []);
+  }, [isMenuOpen, closeMenu]);
 
   const scrollToSection = (id: string) => {
     closeMenu();
@@ -216,7 +213,7 @@ export const Navbar = () => {
         </div>
       </nav>
 
-      {/* Full-screen blurred navigation overlay */}
+      {/* Rounded dropdown panel */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -225,128 +222,103 @@ export const Navbar = () => {
             role="dialog"
             aria-modal="true"
             aria-label={t('nav.menu')}
-            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 1.02 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 1.02 }}
-            transition={{ duration: prefersReducedMotion ? 0.1 : 0.3, ease: 'easeOut' }}
-            className="fixed inset-0 z-[80] flex flex-col"
+            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
+            transition={{ duration: prefersReducedMotion ? 0.1 : 0.25, ease: 'easeOut' }}
+            className="fixed top-[70px] sm:top-[76px] left-1/2 -translate-x-1/2 z-[80] w-[96%] sm:w-[95%] max-w-6xl rounded-3xl border border-white/[0.12] overflow-hidden"
             style={{
-              background: 'rgba(8, 16, 36, 0.75)',
-              backdropFilter: 'blur(20px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+              background: 'rgba(8, 16, 36, 0.82)',
+              backdropFilter: 'blur(24px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+              boxShadow: '0 16px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
             }}
           >
-            {/* Close button */}
-            <div className="flex justify-end p-6 sm:p-8">
-              <button
-                onClick={closeMenu}
-                className="text-white/80 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10"
-                aria-label={t('nav.close')}
-              >
-                <X className="h-7 w-7" />
-              </button>
-            </div>
-
-            {/* Center content */}
-            <div className="flex-1 flex flex-col items-center justify-center gap-6 px-6 -mt-16">
-              {/* Section nav links */}
-              {navItems.map((item, i) => (
-                <motion.button
-                  key={item.key}
-                  initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.05 * i, duration: 0.3 }}
-                  onClick={() => scrollToSection(item.id)}
-                  className={getTransitionClasses("text-2xl sm:text-3xl font-medium text-white/80 hover:text-white transition-colors")}
-                >
-                  {t(`nav.${item.key}`)}
-                </motion.button>
-              ))}
-
-              {/* Page nav links */}
-              {pageNavItems.map((item, i) => (
-                <motion.button
-                  key={item.key}
-                  initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.05 * (navItems.length + i), duration: 0.3 }}
-                  onClick={() => handleNavigate(item.path)}
-                  className={getTransitionClasses("text-2xl sm:text-3xl font-medium text-white/80 hover:text-white transition-colors")}
-                >
-                  {t(`nav.${item.key}`)}
-                </motion.button>
-              ))}
+            <div className="p-6 sm:p-8 flex flex-col gap-5">
+              {/* Nav links */}
+              <div className="flex flex-col items-center gap-3">
+                {navItems.map((item, i) => (
+                  <motion.button
+                    key={item.key}
+                    initial={prefersReducedMotion ? {} : { opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.03 * i, duration: 0.2 }}
+                    onClick={() => scrollToSection(item.id)}
+                    className={getTransitionClasses("text-lg font-medium text-white/80 hover:text-white transition-colors")}
+                  >
+                    {t(`nav.${item.key}`)}
+                  </motion.button>
+                ))}
+                {pageNavItems.map((item, i) => (
+                  <motion.button
+                    key={item.key}
+                    initial={prefersReducedMotion ? {} : { opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.03 * (navItems.length + i), duration: 0.2 }}
+                    onClick={() => handleNavigate(item.path)}
+                    className={getTransitionClasses("text-lg font-medium text-white/80 hover:text-white transition-colors")}
+                  >
+                    {t(`nav.${item.key}`)}
+                  </motion.button>
+                ))}
+              </div>
 
               {/* Divider */}
-              <div className="w-16 h-px bg-white/20 my-2" />
+              <div className="w-12 h-px bg-white/20 mx-auto" />
 
               {/* Action buttons */}
-              <motion.div
-                initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.3 }}
-                className="flex flex-col items-center gap-3 w-full max-w-xs"
-              >
+              <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
                 <Button
                   onClick={() => handleNavigate('/education')}
-                  className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold rounded-xl min-h-[48px]"
-                  size="lg"
+                  className="w-full sm:flex-1 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold rounded-xl min-h-[44px]"
+                  size="default"
                 >
                   {t('education.title')}
                 </Button>
-
                 <Button
                   onClick={() => scrollToSection('join')}
-                  className="btn-primary w-full min-h-[48px]"
-                  size="lg"
+                  className="btn-primary w-full sm:flex-1 min-h-[44px]"
+                  size="default"
                 >
                   {t('nav.join')}
                 </Button>
+              </div>
 
-                {/* Auth links (mobile — visible on sm:hidden since account dropdown handles desktop) */}
-                <div className="flex flex-col items-center gap-2 w-full sm:hidden mt-2">
-                  <button
-                    onClick={() => handleNavigate('/education/sign-in')}
-                    className="flex items-center justify-center gap-2 w-full text-base font-semibold text-white border border-white/30 hover:bg-white/10 transition-all py-3 px-4 rounded-xl min-h-[44px]"
-                  >
-                    <User className="h-5 w-5" />
-                    {t('nav.studentAuthOptions')}
-                  </button>
-                  <button
-                    onClick={() => handleNavigate('/admin/login')}
-                    className="text-sm text-white/50 hover:text-white/80 transition-colors py-2"
-                  >
-                    {t('nav.adminSignIn')}
-                  </button>
-                </div>
-              </motion.div>
-            </div>
+              {/* Auth links */}
+              <div className="flex flex-col sm:flex-row items-center gap-2">
+                <button
+                  onClick={() => handleNavigate('/education/sign-in')}
+                  className="flex items-center justify-center gap-2 w-full sm:flex-1 text-sm font-semibold text-white/80 border border-white/20 hover:bg-white/10 transition-all py-2.5 px-4 rounded-xl"
+                >
+                  <User className="h-4 w-4" />
+                  {t('nav.studentAuthOptions')}
+                </button>
+                <button
+                  onClick={() => handleNavigate('/admin/login')}
+                  className="text-xs text-white/40 hover:text-white/70 transition-colors py-2"
+                >
+                  {t('nav.adminSignIn')}
+                </button>
+              </div>
 
-            {/* Bottom: Language switcher */}
-            <motion.div
-              initial={prefersReducedMotion ? {} : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.3 }}
-              className="px-6 pb-8 sm:pb-10"
-              style={{ paddingBottom: 'max(2rem, env(safe-area-inset-bottom))' }}
-            >
-              <div className="flex items-center justify-center gap-3 flex-wrap">
+              {/* Language switcher */}
+              <div className="flex items-center justify-center gap-2 flex-wrap pt-1">
                 {languages.map((lang) => (
                   <button
                     key={lang.code}
                     onClick={() => changeLanguage(lang.code)}
-                    className={`flex items-center gap-2 px-4 py-2.5 rounded-full transition-all ${
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-full transition-all text-sm ${
                       i18n.language === lang.code
                         ? 'bg-white/15 text-white font-medium'
-                        : 'hover:bg-white/10 text-white/60'
+                        : 'hover:bg-white/10 text-white/50'
                     }`}
                   >
-                    <span className="text-lg">{lang.flag}</span>
-                    <span className="text-sm">{lang.name}</span>
+                    <span>{lang.flag}</span>
+                    <span>{lang.name}</span>
                   </button>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
