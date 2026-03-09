@@ -224,6 +224,35 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
                 onChange={url => update('cover_image', url)}
               />
             </div>
+
+            <div>
+              <Label>Gallery Images</Label>
+              <div className="space-y-3">
+                {form.gallery.map((url, idx) => (
+                  <div key={idx} className="relative group">
+                    <img src={url} alt={`Gallery ${idx + 1}`} className="w-full h-32 object-cover rounded-lg border border-border" />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="icon"
+                      className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity h-7 w-7"
+                      onClick={() => setForm(f => ({ ...f, gallery: f.gallery.filter((_, i) => i !== idx) }))}
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  </div>
+                ))}
+                <ImageUpload
+                  value={null}
+                  onChange={url => {
+                    if (url) setForm(f => ({ ...f, gallery: [...f.gallery, url] }));
+                  }}
+                  label="Add gallery image"
+                  folder="blog-gallery"
+                />
+              </div>
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label>Video Type</Label>
