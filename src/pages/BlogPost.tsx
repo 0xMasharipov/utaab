@@ -218,7 +218,7 @@ const BlogPost = () => {
           {/* PDF Attachments */}
           {pdfAttachments.length > 0 && (
             <div className="max-w-3xl mx-auto mt-8 space-y-3">
-              <h3 className="text-lg font-semibold text-foreground mb-3">Attachments</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-3">{t('blog.attachments', 'Attachments')}</h3>
               {pdfAttachments.map((att, i) => (
                 <PDFAttachment key={i} name={att.name || 'Document.pdf'} url={att.url} />
               ))}
