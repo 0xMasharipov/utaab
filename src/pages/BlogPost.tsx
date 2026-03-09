@@ -186,6 +186,26 @@ const BlogPost = () => {
             {content.map((block, i) => <RenderBlock key={i} block={block} />)}
           </div>
 
+          {/* Gallery */}
+          {gallery.length > 0 && (
+            <div className="max-w-3xl mx-auto mt-10">
+              <h3 className="text-lg font-semibold text-foreground mb-4">{t('blog.gallery', 'Gallery')}</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {gallery.map((url, i) => (
+                  <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="group">
+                    <AnimatedImage
+                      src={url}
+                      alt={`Gallery ${i + 1}`}
+                      className="w-full h-48 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300"
+                      containerClassName="rounded-xl overflow-hidden"
+                      loading="lazy"
+                    />
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Video */}
           {post.video_url && post.video_type === 'embed' && (
             <div className="max-w-3xl mx-auto my-8">
