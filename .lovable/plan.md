@@ -1,84 +1,31 @@
 
 
-# Contributor Match Page
+# Improve Hero Video Loading Speed
 
-## Overview
-A premium multi-step assessment page at `/contributor-match` where users answer questions about their skills, interests, and work style, then receive AI-powered role recommendations within UTAAB. Uses Lovable AI (Gemini) via an edge function for analysis.
+## Problem
+The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
 
-## Files to Create
+## Changes
 
-### 1. Edge Function: `supabase/functions/contributor-match/index.ts`
-- Accepts form submission data, constructs a detailed prompt for Lovable AI
-- Uses `google/gemini-2.5-flash` model via gateway
-- Returns structured role recommendation using tool calling (JSON schema)
-- Output: primary role, secondary role, compatibility score, profile summary, strengths, growth path, suggested first steps
-- Handles 429/402 errors properly
-- CORS with allowed origins pattern (matches existing `cutii-chat`)
+### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
+Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
 
-### 2. Database Migration
-- Create `contributor_assessments` table to store submissions + AI results
-- Columns: `id`, `full_name`, `email`, `form_data` (jsonb), `ai_result` (jsonb), `created_at`
-- RLS: insert allowed for anonymous (public form), select/update for admins only
-- No auth required to submit (public-facing recruitment form)
+### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
+Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
 
-### 3. Page: `src/pages/ContributorMatch.tsx`
-- Main page component with Navbar, AnimatedBlobBackground, Footer
-- Hero section, How It Works, Assessment Form, Archetypes, Final CTA
-- Route: `/contributor-match`
+### 3. Preload the video in `index.html`
+Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
+```html
+<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
+```
 
-### 4. Component: `src/components/contributor/ContributorHero.tsx`
-- Headline, subtitle, CTA buttons, trust badge
-- Gradient overlay matching UTAAB style
+### 4. Add loading state with fade-in transition (`Hero.tsx`)
+Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
 
-### 5. Component: `src/components/contributor/HowItWorks.tsx`
-- 3 GlassCard steps with icons, hover animations
+## Files to modify
 
-### 6. Component: `src/components/contributor/AssessmentForm.tsx`
-- Multi-step form with 6 steps + review step
-- Progress bar at top
-- LocalStorage autosave
-- Framer-motion step transitions
-- Each step as a sub-component rendering appropriate fields
-- Validation per step before advancing
-- Previous/Next navigation
-
-### 7. Component: `src/components/contributor/AssessmentResult.tsx`
-- Dashboard-style result display after AI analysis
-- Circular compatibility score (animated)
-- Primary/secondary role cards
-- Strengths/interests tags
-- Growth path timeline
-- Loading skeleton during analysis
-
-### 8. Component: `src/components/contributor/ContributorArchetypes.tsx`
-- 6 archetype cards (Builder, Researcher, Operator, Connector, Creator, Strategist)
-- Each with description + matching UTAAB roles
-
-### 9. Component: `src/components/contributor/ContributorCTA.tsx`
-- Bottom CTA section with headline + two buttons
-
-### 10. Route Registration in `src/App.tsx`
-- Add lazy-loaded route for `/contributor-match`
-
-## Form Data Schema
-All form fields organized into sections A-F as specified. Multi-select fields use checkbox groups, ratings use a custom 1-5 slider/button group, open-ended questions use textareas.
-
-## AI Integration
-- Edge function sends structured form data to Lovable AI gateway
-- Uses tool calling to extract: `primary_role`, `secondary_role`, `compatibility_score` (0-100), `profile_summary`, `strengths` (array), `growth_recommendations`, `suggested_first_step`, `recommended_department`, `growth_path`
-- Frontend calls edge function via `supabase.functions.invoke('contributor-match', { body: formData })`
-- Shows skeleton loading state during analysis (~5-10s)
-
-## Design
-- Reuses `GlassCard`, `AnimatedBlobBackground`, existing color system
-- Dark theme matching site (navy/blue/glass)
-- Framer-motion for step transitions, result reveals
-- Mobile-first responsive layout
-- Premium spacing and typography (Montserrat)
-
-## Key Technical Decisions
-- No auth required (public recruitment form)
-- Form state persisted to localStorage to survive refresh
-- Results saved to database for admin review
-- AI analysis happens server-side only (prompt not exposed to client)
+| File | Change |
+|------|--------|
+| `index.html` | Add `<link rel="preload">` for the video |
+| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
 

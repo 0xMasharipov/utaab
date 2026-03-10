@@ -45,6 +45,7 @@ const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const TeamPage = lazy(() => import("./pages/TeamPage"));
 const AdminBlog = lazy(() => import("./pages/admin/AdminBlog"));
+const ContributorMatch = lazy(() => import("./pages/ContributorMatch"));
 
 const queryClient = new QueryClient();
 
@@ -72,6 +73,7 @@ function App() {
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/team" element={<TeamPage />} />
+            <Route path="/contributor-match" element={<ContributorMatch />} />
             
             {/* Separate Admin Authentication */}
             <Route path="/admin/login" element={<AdminLogin />} />
