@@ -17,7 +17,8 @@
     "studentAuthOptions": "Öğrenci Girişi | Kaydı",
     "adminSignIn": "Yönetici Girişi",
     "blog": "Blog",
-    "team": "Ekip"
+    "team": "Ekip",
+    "contributorMatch": "Katılımcı Eşleştirme"
   },
   "auth": {
     "studentSignIn": "Öğrenci Girişi",

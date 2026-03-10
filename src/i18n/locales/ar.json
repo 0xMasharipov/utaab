@@ -17,7 +17,8 @@
     "studentAuthOptions": "تسجيل دخول الطالب | تسجيل",
     "adminSignIn": "تسجيل دخول المشرف",
     "blog": "المدونة",
-    "team": "الفريق"
+    "team": "الفريق",
+    "contributorMatch": "مطابقة المساهمين"
   },
   "auth": {
     "studentSignIn": "تسجيل دخول الطالب",
