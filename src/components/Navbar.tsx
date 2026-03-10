@@ -171,8 +171,11 @@ export const Navbar = () => {
               </button>
             </div>
 
-            {/* Center: Globe + MENU */}
-            <div className={cn("flex items-center gap-3 sm:gap-4", isRTL && "flex-row-reverse")} style={{ transform: 'translateZ(0)' }}>
+            {/* Center: Spacer */}
+            <div className="flex-1" />
+
+            {/* Right: Globe + MENU */}
+            <div className={cn("flex-1 flex justify-end items-center gap-3 sm:gap-4", isRTL && "flex-row-reverse")} style={{ transform: 'translateZ(0)' }}>
               {/* Language Selector */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -207,9 +210,6 @@ export const Navbar = () => {
                 {isMenuOpen ? 'CLOSE' : 'MENU'}
               </button>
             </div>
-
-            {/* Right: Spacer for balance */}
-            <div className="flex-1" />
           </div>
         </div>
       </nav>
