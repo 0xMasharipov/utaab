@@ -139,7 +139,7 @@ const Blog = () => {
                 onClick={() => { setSelectedTag(null); setPage(0); }}
                 className="rounded-full"
               >
-                All
+                {t('blog.all', 'All')}
               </Button>
               {allTags.slice(0, 8).map(tag => (
                 <Button
