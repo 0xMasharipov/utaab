@@ -436,7 +436,7 @@ export const EducationNavbar = () => {
                     }}
                     className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                   >
-                    Main Site
+                    {t('educationNav.mainSite')}
                   </button>
 
                   <div className="h-px bg-white/20 my-2" />
