@@ -316,7 +316,7 @@ export const EducationNavbar = () => {
                 >
                   <DropdownMenuItem onClick={() => navigate('/education/profile')}>
                     <User className="h-4 w-4 mr-2" />
-                    Profile
+                    {t('educationNav.profile')}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-white/10" />
                   <DropdownMenuItem onClick={handleSignOut}>
