@@ -18,7 +18,10 @@
     "adminSignIn": "Yönetici Girişi",
     "blog": "Blog",
     "team": "Ekip",
-    "contributorMatch": "Katılımcı Eşleştirme"
+    "contributorMatch": "Katılımcı Eşleştirme",
+    "ecosystem": "Ekosistem",
+    "explore": "Keşfet",
+    "organization": "Organizasyon"
   },
   "auth": {
     "studentSignIn": "Öğrenci Girişi",
