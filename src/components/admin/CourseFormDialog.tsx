@@ -246,6 +246,60 @@ export function CourseFormDialog({ open, onOpenChange, course, mode }: CourseFor
             </div>
           </div>
 
+          {/* Lesson Video Uploads */}
+          <div className="space-y-3 border border-border/50 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <Label className="text-base font-semibold">Lesson Videos</Label>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setLessonVideos([...lessonVideos, { title: '', url: null }])}
+              >
+                + Add Lesson Video
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">Upload individual lecture/lesson videos for this course</p>
+            {lessonVideos.map((lv, idx) => (
+              <div key={idx} className="flex items-start gap-3 p-3 rounded-lg bg-muted/10">
+                <div className="flex-1 space-y-2">
+                  <Input
+                    placeholder={`Lesson ${idx + 1} title`}
+                    value={lv.title}
+                    onChange={(e) => {
+                      const updated = [...lessonVideos];
+                      updated[idx].title = e.target.value;
+                      setLessonVideos(updated);
+                    }}
+                  />
+                  <ImageUpload
+                    value={lv.url}
+                    onChange={(url) => {
+                      const updated = [...lessonVideos];
+                      updated[idx].url = url;
+                      setLessonVideos(updated);
+                    }}
+                    accept="video/*"
+                    folder="courses/lessons"
+                    label="Upload Lesson Video"
+                  />
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="text-destructive hover:text-destructive"
+                  onClick={() => setLessonVideos(lessonVideos.filter((_, i) => i !== idx))}
+                >
+                  ✕
+                </Button>
+              </div>
+            ))}
+            {lessonVideos.length === 0 && (
+              <p className="text-sm text-muted-foreground text-center py-4">No lesson videos added yet</p>
+            )}
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="level">Level</Label>
