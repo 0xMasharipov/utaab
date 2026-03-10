@@ -64,7 +64,7 @@ export const CourseLearn = () => {
     queryKey: ['lessons', course?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('lessons')
+        .from('safe_lessons' as any)
         .select('*')
         .eq('course_id', course!.id)
         .order('order_index', { ascending: true });
