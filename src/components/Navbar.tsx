@@ -64,7 +64,7 @@ export const Navbar = () => {
     const updatePanelTop = () => {
       if (navRef.current) {
         const rect = navRef.current.getBoundingClientRect();
-        setPanelTop(rect.bottom + 4);
+        setPanelTop(rect.bottom + 2);
       }
     };
     updatePanelTop();
