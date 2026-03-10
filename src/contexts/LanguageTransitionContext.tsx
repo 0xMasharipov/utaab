@@ -31,7 +31,9 @@ export const LanguageTransitionProvider = ({ children }: LanguageTransitionProvi
 
   return (
     <LanguageTransitionContext.Provider value={{ isTransitioning }}>
-      {children}
+      <div className={isTransitioning ? 'lang-page-transitioning' : 'lang-page-idle'}>
+        {children}
+      </div>
     </LanguageTransitionContext.Provider>
   );
 };
