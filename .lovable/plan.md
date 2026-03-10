@@ -1,30 +1,31 @@
 
 
-# Reposition Dropdown Panel to Match Navbar Pill
+# Improve Hero Video Loading Speed
 
 ## Problem
-The dropdown panel is currently anchored to the MENU button's center and uses its own width (`w-[96%] max-w-6xl`), which can differ from the navbar pill. It needs to be exactly aligned with and contained within the navbar pill boundaries.
+The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
 
-## Approach
-Instead of calculating the MENU button center, track the navbar pill's exact bounding rect (left, width) and use those for the dropdown panel positioning. The panel will inherit the pill's horizontal position and width exactly.
+## Changes
 
-## Changes in `src/components/Navbar.tsx`
+### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
+Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
 
-### 1. Replace `menuButtonCenter` state with `navPillRect` state
-Track `left` and `width` of the navbar pill (`navRef`'s inner `<div>` — the rounded-full container). Add a new ref for the pill div itself.
+### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
+Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
 
-### 2. Update the measurement `useEffect`
-Instead of measuring the hamburger button center, measure the pill container's `getBoundingClientRect()` to get its exact `left` and `width`.
+### 3. Preload the video in `index.html`
+Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
+```html
+<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
+```
 
-### 3. Update dropdown panel positioning (line 228-239)
-- Remove `w-[96%] sm:w-[95%] max-w-6xl` classes
-- Remove the `menuButtonCenter`-based `left` calculation
-- Set inline styles:
-  - `left: pillRect.left + 'px'`
-  - `width: pillRect.width + 'px'`
-  - `top: panelTop` (unchanged)
-  - Remove `transform: translateX(-50%)`
-- Update `borderRadius` to match the pill style (use `24px` or similar rounded corners, not asymmetric)
+### 4. Add loading state with fade-in transition (`Hero.tsx`)
+Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
 
-This guarantees the dropdown is always exactly the same width as the navbar pill, perfectly aligned beneath it, and never crosses its borders.
+## Files to modify
+
+| File | Change |
+|------|--------|
+| `index.html` | Add `<link rel="preload">` for the video |
+| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
 

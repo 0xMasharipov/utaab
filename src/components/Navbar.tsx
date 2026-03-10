@@ -31,8 +31,9 @@ export const Navbar = () => {
   const menuRef = useRef<HTMLDivElement>(null);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
   const navRef = useRef<HTMLElement>(null);
+  const pillRef = useRef<HTMLDivElement>(null);
   const [panelTop, setPanelTop] = useState(68);
-  const [menuButtonCenter, setMenuButtonCenter] = useState(0);
+  const [pillRect, setPillRect] = useState({ left: 0, width: 0 });
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
   const isRTL = i18n.language === 'ar';
@@ -60,16 +61,16 @@ export const Navbar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isMenuOpen, closeMenu]);
 
-  // Measure navbar bottom and menu button center for panel positioning
+  // Measure navbar bottom and pill rect for panel positioning
   useEffect(() => {
     const updatePositions = () => {
       if (navRef.current) {
         const rect = navRef.current.getBoundingClientRect();
         setPanelTop(rect.bottom + 2);
       }
-      if (hamburgerRef.current) {
-        const rect = hamburgerRef.current.getBoundingClientRect();
-        setMenuButtonCenter(rect.left + rect.width / 2);
+      if (pillRef.current) {
+        const rect = pillRef.current.getBoundingClientRect();
+        setPillRect({ left: rect.left, width: rect.width });
       }
     };
     updatePositions();
@@ -124,6 +125,7 @@ export const Navbar = () => {
     <>
       <nav ref={navRef} className="fixed top-2 sm:top-4 left-1/2 -translate-x-1/2 z-50 w-[96%] sm:w-[95%] max-w-6xl transition-[transform,opacity] duration-300">
         <div
+          ref={pillRef}
           className={`rounded-full px-4 sm:px-5 md:px-8 py-3 sm:py-4 border transition-all duration-300 ${
             isScrolled
               ? 'border-white/20 shadow-xl shadow-primary/15'
@@ -225,16 +227,16 @@ export const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
             transition={{ duration: prefersReducedMotion ? 0.1 : 0.22, ease: 'easeOut' }}
-            className="fixed z-[80] w-[96%] sm:w-[95%] max-w-6xl overflow-hidden"
+            className="fixed z-[80] overflow-hidden"
             style={{
               top: `${panelTop}px`,
-              left: `${Math.max(window.innerWidth * 0.02, Math.min(menuButtonCenter, window.innerWidth * 0.98))}px`,
-              transform: 'translateX(-50%)',
+              left: `${pillRect.left}px`,
+              width: `${pillRect.width}px`,
               background: 'rgba(255, 255, 255, 0.08)',
               backdropFilter: 'blur(20px) saturate(140%)',
               WebkitBackdropFilter: 'blur(20px) saturate(140%)',
               boxShadow: '0 30px 80px rgba(0, 0, 0, 0.25)',
-              borderRadius: '16px 16px 28px 28px',
+              borderRadius: '24px',
               border: '1px solid rgba(255, 255, 255, 0.16)',
             }}
           >
