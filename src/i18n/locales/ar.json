@@ -18,7 +18,10 @@
     "adminSignIn": "تسجيل دخول المشرف",
     "blog": "المدونة",
     "team": "الفريق",
-    "contributorMatch": "مطابقة المساهمين"
+    "contributorMatch": "مطابقة المساهمين",
+    "ecosystem": "النظام البيئي",
+    "explore": "استكشف",
+    "organization": "المنظمة"
   },
   "auth": {
     "studentSignIn": "تسجيل دخول الطالب",
