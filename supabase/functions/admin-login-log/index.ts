@@ -1,10 +1,30 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
-};
+const ALLOWED_EVENT_TYPES = ['admin_login_success', 'admin_login_failed', 'admin_logout'] as const;
+type AllowedEventType = typeof ALLOWED_EVENT_TYPES[number];
+
+// Strict CORS - same allowlist as other edge functions
+const allowedOrigins = [
+  'https://nxbjgqdehvxszqjoxumx.lovableproject.com',
+  'https://id.preview.lovableproject.com',
+  'https://utaab.org',
+  'https://www.utaab.org',
+  Deno.env.get('SITE_URL') || '',
+].filter(Boolean);
+
+function getCorsHeaders(req: Request) {
+  const origin = req.headers.get('origin') || '';
+  const isAllowed = allowedOrigins.some(allowed =>
+    origin === allowed || origin.endsWith('.lovableproject.com') || origin.includes('localhost')
+  );
+
+  return {
+    'Access-Control-Allow-Origin': isAllowed ? origin : allowedOrigins[0],
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
+    'Access-Control-Allow-Credentials': 'true',
+  };
+}
 
 function getClientIP(req: Request): string {
   const forwarded = req.headers.get('x-forwarded-for');
@@ -17,6 +37,8 @@ function getClientIP(req: Request): string {
 }
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -24,29 +46,55 @@ serve(async (req) => {
   try {
     const { event_type, email, provider, session_token } = await req.json();
 
-    if (!event_type || !email) {
+    // Validate event_type against strict allowlist
+    if (!event_type || !ALLOWED_EVENT_TYPES.includes(event_type as AllowedEventType)) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid event_type' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (!email || typeof email !== 'string') {
       return new Response(
         JSON.stringify({ error: 'Missing required fields' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
+    // Require valid auth - caller must be authenticated
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const anonClient = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_ANON_KEY')!,
+      { global: { headers: { Authorization: authHeader } } }
+    );
+
+    const { data: { user }, error: authError } = await anonClient.auth.getUser();
+    if (authError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Ensure the email in the request matches the authenticated user's email
+    if (user.email?.toLowerCase() !== email.toLowerCase()) {
+      return new Response(
+        JSON.stringify({ error: 'Email mismatch' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const userId = user.id;
     const clientIP = getClientIP(req);
     const userAgent = req.headers.get('user-agent') || null;
-
-    // Authenticate caller
-    const authHeader = req.headers.get('Authorization');
-    let userId: string | null = null;
-
-    if (authHeader) {
-      const anonClient = createClient(
-        Deno.env.get('SUPABASE_URL')!,
-        Deno.env.get('SUPABASE_ANON_KEY')!,
-        { global: { headers: { Authorization: authHeader } } }
-      );
-      const { data: { user } } = await anonClient.auth.getUser();
-      userId = user?.id || null;
-    }
 
     // Use service_role for privileged inserts
     const serviceClient = createClient(
@@ -56,9 +104,8 @@ serve(async (req) => {
 
     // Determine severity - escalate for repeated failures
     let severity = event_type === 'admin_login_success' ? 'low' : 'medium';
-    
+
     if (event_type === 'admin_login_failed' && clientIP !== 'unknown') {
-      // Count recent failures from this IP
       const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
       const { count } = await serviceClient
         .from('security_events')
@@ -85,7 +132,7 @@ serve(async (req) => {
 
     // Log to audit_log
     await serviceClient.from('audit_log').insert({
-      action: event_type === 'admin_login_success' ? 'login' : 'login_failed',
+      action: event_type === 'admin_login_success' ? 'login' : event_type === 'admin_logout' ? 'logout' : 'login_failed',
       entity_type: 'session',
       entity_name: email,
       user_id: userId,
@@ -96,8 +143,7 @@ serve(async (req) => {
     });
 
     // Update admin_sessions with IP + user agent if successful login
-    if (event_type === 'admin_login_success' && userId && session_token) {
-      // Check for concurrent sessions (warning)
+    if (event_type === 'admin_login_success' && session_token) {
       const { data: existingSessions } = await serviceClient
         .from('admin_sessions')
         .select('id')
@@ -117,7 +163,6 @@ serve(async (req) => {
         });
       }
 
-      // Update session with IP and user agent
       await serviceClient
         .from('admin_sessions')
         .update({
@@ -129,14 +174,14 @@ serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ success: true, ip: clientIP }),
+      JSON.stringify({ success: true }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
     console.error('admin-login-log error:', error);
     return new Response(
       JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { status: 500, headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' } }
     );
   }
 });

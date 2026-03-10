@@ -56,8 +56,8 @@ export default function AdminLogin() {
     setIsLoading(true);
 
     try {
-      // Check rate limit
-      const rateLimitCheck = await checkRateLimit(email, 'admin_login', 5);
+      // Check rate limit - identifier is ignored server-side for admin_login (uses IP)
+      const rateLimitCheck = await checkRateLimit('_', 'admin_login', 5);
       if (!rateLimitCheck.allowed) {
         toast({
           title: t("common.error"),
