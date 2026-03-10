@@ -1,30 +1,31 @@
 
 
-# Make 20TB Storage Capacity More Prominent
+# Improve Hero Video Loading Speed
 
-The storage section already displays "X GB / 20,480 GB (20 TB)" but it's subtle. We'll make the 20TB capacity more visually prominent.
+## Problem
+The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
 
-## Changes — `src/pages/education/admin/AdminMedia.tsx`
+## Changes
 
-Update the storage card to include a bold "20 TB Cloud Storage" headline badge and make the capacity info more eye-catching:
+### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
+Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
 
-- Add a badge or highlighted text reading **"20 TB Cloud Storage"** near the title
-- Show remaining storage more prominently (e.g., "19,999 GB of 20 TB available")
-- Keep the progress bar and file count as-is
+### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
+Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
 
-```tsx
-<div className="flex items-center gap-3 mb-2">
-  <h3 className="text-sm font-semibold">Storage Usage</h3>
-  <Badge variant="secondary" className="text-xs">20 TB Plan</Badge>
-</div>
-<div className="flex items-center justify-between mb-2">
-  <span className="text-lg font-bold">{storageUsedGB} GB <span className="text-sm font-normal text-muted-foreground">used of 20 TB</span></span>
-  <span className="text-sm text-muted-foreground">
-    {(TOTAL_STORAGE_GB - storageUsedGB).toLocaleString()} GB remaining
-  </span>
-</div>
+### 3. Preload the video in `index.html`
+Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
+```html
+<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
 ```
 
-### File Modified
-- `src/pages/education/admin/AdminMedia.tsx`
+### 4. Add loading state with fade-in transition (`Hero.tsx`)
+Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
+
+## Files to modify
+
+| File | Change |
+|------|--------|
+| `index.html` | Add `<link rel="preload">` for the video |
+| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
 

@@ -85,10 +85,16 @@ export const AdminMedia = () => {
       {/* Storage Capacity Bar */}
       <Card className="glass-panel">
         <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-3 mb-2">
             <h3 className="text-sm font-semibold">Storage Usage</h3>
+            <Badge variant="secondary" className="text-xs font-bold">20 TB Plan</Badge>
+          </div>
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-lg font-bold">
+              {storageUsedGB} GB <span className="text-sm font-normal text-muted-foreground">used of 20 TB</span>
+            </span>
             <span className="text-sm text-muted-foreground">
-              {storageUsedGB} GB / {TOTAL_STORAGE_GB.toLocaleString()} GB (20 TB)
+              {(TOTAL_STORAGE_GB - storageUsedGB).toLocaleString()} GB remaining
             </span>
           </div>
           <Progress value={Math.max(storagePercent, 0.1)} className="h-3" />
@@ -97,7 +103,7 @@ export const AdminMedia = () => {
               {storageStats?.contentMetrics?.mediaFiles || 0} files uploaded
             </span>
             <span className="text-xs text-muted-foreground">
-              {(TOTAL_STORAGE_GB - storageUsedGB).toLocaleString()} GB remaining
+              20 TB Cloud Storage
             </span>
           </div>
         </CardContent>
