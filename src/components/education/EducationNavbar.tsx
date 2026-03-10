@@ -261,7 +261,7 @@ export const EducationNavbar = () => {
                 'glass hover:bg-white/10 rounded-full px-3 hidden md:inline-flex max-w-[140px] justify-center truncate'
               )}
             >
-              Main Site
+               {t('educationNav.mainSite')}
             </Button>
 
             {/* Language Selector */}
