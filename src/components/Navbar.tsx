@@ -144,7 +144,7 @@ export const Navbar = () => {
         >
           <div className="flex items-center justify-between">
             {/* Left: Logo */}
-            <div className="flex-1 flex justify-start">
+            <div className="sm:flex-1 flex justify-start">
               <button
                 onClick={() => {
                   if (window.location.pathname === '/') scrollToSection('hero');
