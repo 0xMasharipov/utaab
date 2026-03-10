@@ -227,16 +227,16 @@ export const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
             transition={{ duration: prefersReducedMotion ? 0.1 : 0.22, ease: 'easeOut' }}
-            className="fixed z-[80] w-[96%] sm:w-[95%] max-w-6xl overflow-hidden"
+            className="fixed z-[80] overflow-hidden"
             style={{
               top: `${panelTop}px`,
-              left: `${Math.max(window.innerWidth * 0.02, Math.min(menuButtonCenter, window.innerWidth * 0.98))}px`,
-              transform: 'translateX(-50%)',
+              left: `${pillRect.left}px`,
+              width: `${pillRect.width}px`,
               background: 'rgba(255, 255, 255, 0.08)',
               backdropFilter: 'blur(20px) saturate(140%)',
               WebkitBackdropFilter: 'blur(20px) saturate(140%)',
               boxShadow: '0 30px 80px rgba(0, 0, 0, 0.25)',
-              borderRadius: '16px 16px 28px 28px',
+              borderRadius: '24px',
               border: '1px solid rgba(255, 255, 255, 0.16)',
             }}
           >
