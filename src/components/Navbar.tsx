@@ -175,7 +175,7 @@ export const Navbar = () => {
             <div className="hidden sm:block flex-1" />
 
             {/* Right: Globe + MENU */}
-            <div className={cn("flex-1 flex justify-end items-center gap-3 sm:gap-4", isRTL && "flex-row-reverse")} style={{ transform: 'translateZ(0)' }}>
+            <div className={cn("sm:flex-1 flex justify-end items-center gap-3 sm:gap-4", isRTL && "flex-row-reverse")} style={{ transform: 'translateZ(0)' }}>
               {/* Language Selector */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
