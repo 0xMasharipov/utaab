@@ -62,6 +62,8 @@ const defaultFormData: FormData = {
   whyJoin: '', desiredImpact: '', proudAchievement: '', whatToBuild: '', bestTeamEnvironment: '',
 };
 
+const countWords = (str: string) => str.trim().split(/\s+/).filter(Boolean).length;
+
 interface AssessmentFormProps {
   onSubmit: (data: FormData) => void;
   isSubmitting: boolean;
