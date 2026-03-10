@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Menu, X, Globe, ChevronDown, User } from 'lucide-react';
+import { X, Globe, ChevronDown, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -163,7 +163,7 @@ export const Navbar = () => {
             </button>
 
             {/* Right side: Globe + Account + Hamburger */}
-            <div className={cn("flex items-center gap-2 flex-shrink-0", isRTL && "flex-row-reverse")} style={{ transform: 'translateZ(0)' }}>
+            <div className={cn("flex items-center gap-3 sm:gap-4 flex-shrink-0", isRTL && "flex-row-reverse")} style={{ transform: 'translateZ(0)' }}>
               {/* Language Selector */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -186,37 +186,16 @@ export const Navbar = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* Account Dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="glass hover:bg-white/10 rounded-full px-3 hidden sm:inline-flex" aria-label="Account menu">
-                    <User className="h-4 w-4" />
-                    <ChevronDown className="h-3 w-3 ml-1" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align={isRTL ? "start" : "end"} className="glass-strong border-white/20 backdrop-blur-2xl rounded-2xl min-w-[200px] z-[100]">
-                  <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">Student</div>
-                  <DropdownMenuItem onClick={() => navigate('/education/sign-in')} className="cursor-pointer px-4 py-2 rounded-xl hover:bg-white/10">
-                    {t('nav.studentAuthOptions')}
-                  </DropdownMenuItem>
-                  <div className="h-px bg-white/20 my-1" />
-                  <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">Admin</div>
-                  <DropdownMenuItem onClick={() => navigate('/admin/login')} className="cursor-pointer px-4 py-2 rounded-xl hover:bg-white/10">
-                    {t('nav.adminSignIn')}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* Hamburger — always visible */}
+              {/* MENU text button */}
               <button
                 ref={hamburgerRef}
-                className="text-foreground p-2 rounded-full hover:bg-white/10 transition-colors"
+                className="text-sm font-semibold tracking-[0.06em] uppercase text-white bg-transparent hover:opacity-70 transition-opacity cursor-pointer select-none py-2 px-1"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 aria-label={isMenuOpen ? t('nav.close') : t('nav.menu')}
                 aria-expanded={isMenuOpen}
                 aria-controls="nav-overlay"
               >
-                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                {isMenuOpen ? 'CLOSE' : 'MENU'}
               </button>
             </div>
           </div>
