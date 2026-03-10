@@ -45,6 +45,7 @@ const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const TeamPage = lazy(() => import("./pages/TeamPage"));
 const AdminBlog = lazy(() => import("./pages/admin/AdminBlog"));
+const ContributorMatch = lazy(() => import("./pages/ContributorMatch"));
 
 const queryClient = new QueryClient();
 

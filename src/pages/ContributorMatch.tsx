@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import { Navbar } from '@/components/Navbar';
+import { Footer } from '@/components/Footer';
 import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
 import ContributorHero from '@/components/contributor/ContributorHero';
 import HowItWorks from '@/components/contributor/HowItWorks';
