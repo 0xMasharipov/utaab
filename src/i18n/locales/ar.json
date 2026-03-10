@@ -741,7 +741,128 @@
     "copyLink": "نسخ الرابط",
     "linkCopied": "تم نسخ الرابط!",
     "gallery": "معرض الصور",
-    "attachments": "المرفقات"
+    "attachments": "المرفقات",
+    "all": "الكل",
+    "loading": "جارٍ التحميل...",
+    "postNotFound": "المقال غير موجود"
+  },
+  "notFound": {
+    "title": "404",
+    "message": "عذراً! الصفحة غير موجودة",
+    "backHome": "العودة إلى الرئيسية"
+  },
+  "contributor": {
+    "hero": {
+      "badge": "مدعوم بالذكاء الاصطناعي • مطابقة الأدوار • موجه للمساهمين",
+      "title": "اعثر على أفضل موقع لك",
+      "titleHighlight": "في UTAAB",
+      "subtitle": "أجب عن بعض الأسئلة الذكية ودع الذكاء الاصطناعي يحلل نقاط قوتك واهتماماتك وأسلوب عملك لتوصية بأنسب دور مساهم.",
+      "startAssessment": "ابدأ التقييم",
+      "learnHow": "تعرف على كيفية العمل"
+    },
+    "howItWorks": {
+      "title": "كيف يعمل",
+      "subtitle": "ثلاث خطوات بسيطة لاكتشاف دور المساهم المثالي لك.",
+      "step": "الخطوة",
+      "step1Title": "أجب عن الأسئلة",
+      "step1Desc": "شارك اهتماماتك ومهاراتك وأسلوب عملك من خلال تقييم قصير متعدد الخطوات.",
+      "step2Title": "الذكاء الاصطناعي يحلل ملفك",
+      "step2Desc": "يقيّم محرك الذكاء الاصطناعي لدينا إجاباتك لتحديد نقاط قوتك ومجال المساهمة المثالي.",
+      "step3Title": "احصل على مطابقة دورك",
+      "step3Desc": "احصل على توصية مخصصة لأفضل دور مساهم داخل UTAAB."
+    },
+    "archetypes": {
+      "title": "أين ينجح أشخاص مثلك في UTAAB",
+      "subtitle": "اكتشف أي نموذج يناسبك.",
+      "builder": "البنّاء",
+      "builderDesc": "تحب إنشاء الأشياء من الصفر — التطبيقات والعقود الذكية أو الأدوات. تزدهر عندما تحول الأفكار إلى واقع.",
+      "researcher": "الباحث",
+      "researcherDesc": "التحليل العميق والفهم يحركانك. تستمتع باستكشاف البروتوكولات الجديدة ومشاركة الرؤى.",
+      "operator": "المشغّل",
+      "operatorDesc": "تحافظ على سير الأمور بسلاسة. التنظيم والعمليات والكفاءة هي نقاط قوتك.",
+      "connector": "الموصّل",
+      "connectorDesc": "بناء العلاقات وتنمية المجتمعات تمنحك الطاقة. تجمع الناس بشكل طبيعي.",
+      "creator": "المبدع",
+      "creatorDesc": "السرد البصري وإنتاج المحتوى هي قواك الخارقة. تجعل الأفكار المعقدة سهلة وجميلة.",
+      "strategist": "الاستراتيجي",
+      "strategistDesc": "ترى الصورة الكبيرة وتخطط لخارطة الطريق. التفكير الاستراتيجي واتخاذ القرارات يأتيان إليك بشكل طبيعي.",
+      "roles": {
+        "frontend": "تطوير الواجهة الأمامية",
+        "backend": "تطوير الخلفية",
+        "smartContract": "تطوير العقود الذكية / البلوكشين",
+        "product": "المنتج",
+        "research": "البحث",
+        "analytics": "التحليلات",
+        "education": "التعليم / ورش العمل",
+        "operations": "العمليات",
+        "strategy": "الاستراتيجية",
+        "events": "الفعاليات والنظام البيئي",
+        "community": "المجتمع والنمو",
+        "partnerships": "الشراكات",
+        "design": "التصميم",
+        "content": "المحتوى والإعلام"
+      }
+    },
+    "cta": {
+      "title": "رحلتك في UTAAB تبدأ مع",
+      "titleHighlight": "الدور المناسب.",
+      "subtitle": "خذ التقييم واكتشف أين يمكنك خلق أكبر قيمة.",
+      "takeAssessment": "خذ التقييم",
+      "contactUtaab": "تواصل مع UTAAB"
+    },
+    "form": {
+      "steps": { "aboutYou": "عنك", "interests": "الاهتمامات", "skills": "المهارات", "workStyle": "أسلوب العمل", "motivation": "الدافع", "review": "المراجعة" },
+      "fullName": "الاسم الكامل", "email": "البريد الإلكتروني", "university": "الجامعة / القسم", "universityPlaceholder": "مثال: جامعة إسطنبول التقنية - علوم الحاسوب",
+      "yearOfStudy": "سنة الدراسة", "linkedIn": "LinkedIn (اختياري)", "github": "GitHub (اختياري)", "portfolio": "المحفظة (اختياري)",
+      "communityExperience": "هل انضممت سابقاً إلى أي مجتمعات أو نوادٍ أو شركات ناشئة أو DAOs أو مشاريع بلوكشين؟",
+      "communityExperienceDetails": "صف تجربتك بإيجاز...",
+      "topicInterests": "ما المواضيع التي تثيرك أكثر؟", "freeTimeActivities": "ماذا تستمتع بفعله في وقت فراغك عادة؟",
+      "naturalWork": "ما نوع العمل الذي يبدو أكثر طبيعية بالنسبة لك؟", "strengths": "أي من هذه تصف نقاط قوتك؟",
+      "experienceLevel": "قيّم مستوى خبرتك (1–5)", "bestTasks": "ما نوع المهام التي تؤديها عادة بشكل أفضل؟",
+      "workPreference": "تفضل:", "decisionStyle": "كيف تتخذ القرارات عادة؟",
+      "personalityType": "أيهما يصفك بشكل أفضل؟", "underPressure": "تحت الضغط، تميل إلى:",
+      "whatMotivates": "ما الذي يحفزك أكثر؟", "weeklyHours": "كم ساعة أسبوعياً يمكنك المساهمة؟",
+      "contributionType": "نوع المساهمة المفضل", "trackInterest": "هل أنت مهتم بـ:",
+      "whyJoin": "لماذا تريد الانضمام إلى UTAAB؟ (50 كلمة على الأقل)", "whyJoinPlaceholder": "شارك دافعك...",
+      "wordsCount": "{{count}}/50 كلمة", "desiredImpact": "ما نوع التأثير الذي تريد إحداثه؟", "desiredImpactPlaceholder": "صف التأثير...",
+      "proudAchievement": "صف مشروعاً أو إنجازاً أو تجربة تفخر بها.", "proudAchievementPlaceholder": "أخبرنا عنها...",
+      "whatToBuild": "لو انضممت إلى UTAAB، ما الذي تريد تحسينه أو بناءه أو قيادته؟", "whatToBuildPlaceholder": "رؤيتك...",
+      "bestTeamEnvironment": "ما نوع بيئة الفريق التي تساعدك على الأداء الأفضل؟", "bestTeamEnvironmentPlaceholder": "صف البيئة المثالية...",
+      "reviewTitle": "راجع إجاباتك", "reviewName": "الاسم", "reviewEmail": "البريد", "reviewUniversity": "الجامعة",
+      "reviewInterests": "الاهتمامات", "reviewStrengths": "نقاط القوة", "reviewWorkPreference": "تفضيل العمل",
+      "reviewWeeklyHours": "الساعات الأسبوعية", "reviewWhyUtaab": "لماذا UTAAB",
+      "submitDisclaimer": "بالإرسال، سيتم تحليل إجاباتك بواسطة الذكاء الاصطناعي للتوصية بأفضل دور مساهم لك.",
+      "previous": "السابق", "next": "التالي", "submitting": "جارٍ الإرسال...", "submitAssessment": "إرسال التقييم",
+      "validation": { "requiredFields": "حقول مطلوبة", "fillNameEmail": "يرجى ملء الاسم والبريد الإلكتروني.", "invalidEmail": "بريد غير صالح", "invalidEmailDesc": "يرجى إدخال بريد إلكتروني صحيح.", "selectInterest": "اختر اهتماماً واحداً على الأقل", "selectStrength": "اختر نقطة قوة واحدة على الأقل", "answerAll": "يرجى الإجابة على جميع الأسئلة", "fillAvailability": "يرجى ملء التوفر والدافع", "motivationTooShort": "الدافع قصير جداً", "motivationTooShortDesc": "اكتب 50 كلمة على الأقل. الحالي: {{count}} كلمة." },
+      "options": { "yes": "نعم", "no": "لا", "year1": "السنة الأولى", "year2": "السنة الثانية", "year3": "السنة الثالثة", "year4": "السنة الرابعة", "graduate": "خريج", "other": "أخرى", "workAlone": "العمل بمفردي", "workSmallTeam": "في فريق صغير", "workLargeTeam": "في فريق كبير", "logicFirst": "المنطق أولاً", "intuitionFirst": "الحدس أولاً", "dataFirst": "البيانات أولاً", "discussionFirst": "النقاش أولاً", "structured": "منظم ومرتب", "flexible": "مرن وقابل للتكيف", "creative": "إبداعي وتجريبي", "analytical": "تحليلي ومنهجي", "takeInitiative": "أخذ المبادرة", "focusQuietly": "التركيز بهدوء", "askTeam": "طلب رأي الفريق", "breakTasks": "تقسيم المهام", "hours1_3": "1–3", "hours4_6": "4–6", "hours7_10": "7–10", "hours10plus": "10+", "ongoingWeekly": "مساهمة أسبوعية مستمرة", "projectBased": "مساهمة قائمة على المشاريع", "eventSupport": "دعم الفعاليات", "researchContent": "مساهمة بحثية/محتوى", "technicalBuilding": "بناء تقني", "leadershipTrack": "مسار القيادة", "coreContributor": "مسار المساهم الأساسي", "volunteerTrack": "مسار التطوع", "internshipTrack": "مسار التدريب" },
+      "topicOptions": { "blockchain": "البلوكشين", "smartContracts": "العقود الذكية", "defi": "التمويل اللامركزي", "ai": "الذكاء الاصطناعي", "productBuilding": "بناء المنتجات", "design": "التصميم", "contentCreation": "إنشاء المحتوى", "communityBuilding": "بناء المجتمع", "research": "البحث", "marketing": "التسويق", "events": "الفعاليات", "partnerships": "الشراكات", "operations": "العمليات", "education": "التعليم", "dataAnalytics": "البيانات / التحليلات" },
+      "freeTimeOptions": { "reading": "القراءة", "writing": "الكتابة", "sideProjects": "مشاريع جانبية", "designing": "التصميم", "organizingEvents": "تنظيم الفعاليات", "networking": "التواصل", "gaming": "الألعاب", "researchingTrends": "بحث الاتجاهات", "publicSpeaking": "التحدث أمام الجمهور", "coding": "البرمجة", "socialMedia": "محتوى وسائل التواصل", "helpingCommunities": "مساعدة المجتمعات على النمو", "other": "أخرى" },
+      "naturalWorkOptions": { "creating": "الإنشاء", "analyzing": "التحليل", "leading": "القيادة", "supporting": "الدعم", "communicating": "التواصل", "designingSystems": "تصميم الأنظمة", "solvingTechnical": "حل المشاكل التقنية", "buildingRelationships": "بناء العلاقات" },
+      "strengthOptions": { "communication": "التواصل", "writing": "الكتابة", "research": "البحث", "graphicDesign": "التصميم الجرافيكي", "uiux": "UI/UX", "frontend": "الواجهة الأمامية", "backend": "الخلفية", "smartContracts": "العقود الذكية", "socialMedia": "وسائل التواصل", "eventPlanning": "تخطيط الفعاليات", "partnershipDev": "تطوير الشراكات", "leadership": "القيادة", "strategy": "الاستراتيجية", "dataAnalysis": "تحليل البيانات", "videoEditing": "تحرير الفيديو", "communityModeration": "إدارة المجتمع", "presentationSkills": "مهارات العرض" },
+      "experienceAreas": { "blockchainKnowledge": "معرفة البلوكشين", "coding": "البرمجة", "design": "التصميم", "research": "البحث", "marketing": "التسويق", "teamwork": "العمل الجماعي", "leadership": "القيادة", "communication": "التواصل" },
+      "bestTaskOptions": { "fastExecution": "تنفيذ سريع", "longTermResearch": "بحث طويل المدى", "creativeIdeation": "أفكار إبداعية", "organizingPeople": "تنظيم الأشخاص", "technicalDev": "تطوير تقني", "contentProduction": "إنتاج المحتوى", "problemSolving": "حل المشاكل", "detailControl": "مراقبة التفاصيل" },
+      "motivationOptions": { "learning": "التعلم", "recognition": "التقدير", "buildingImpactful": "بناء أشياء مؤثرة", "community": "المجتمع", "careerGrowth": "النمو المهني", "innovation": "الابتكار", "networking": "التواصل", "leadershipOpportunities": "فرص القيادة" }
+    },
+    "result": {
+      "match": "التطابق", "analyzing": "جارٍ تحليل ملف المساهم الخاص بك...", "analyzingSubtitle": "الذكاء الاصطناعي يقيّم إجاباتك للعثور على التطابق المثالي.",
+      "title": "ملف المساهم الخاص بك", "subtitle": "إليك ما اكتشفه الذكاء الاصطناعي حول دورك المثالي في UTAAB.",
+      "primaryMatch": "التطابق الأساسي", "secondaryMatch": "التطابق الثانوي", "profileSummary": "ملخص الملف",
+      "whyThisRole": "لماذا هذا الدور يناسبك", "yourStrengths": "نقاط قوتك", "growthPath": "مسار النمو",
+      "recommendedDepartment": "القسم الموصى به", "suggestedNextSteps": "الخطوات التالية المقترحة",
+      "growthRecommendations": "توصيات النمو", "exploreUtaab": "استكشف UTAAB"
+    },
+    "toast": { "analysisComplete": "اكتمل التحليل!", "profileReady": "ملف المساهم الخاص بك جاهز.", "analysisFailed": "فشل تحليل ملفك. يرجى المحاولة مرة أخرى." }
+  },
+  "educationNav": {
+    "mainSite": "الموقع الرئيسي", "profile": "الملف الشخصي", "signOut": "تسجيل الخروج", "admin": "المسؤول",
+    "openMenu": "فتح القائمة", "closeMenu": "إغلاق القائمة", "mobileMenu": "القائمة المحمولة",
+    "studentSignIn": "تسجيل دخول الطالب", "backToEducation": "العودة إلى التعليم",
+    "welcomeBack": "مرحباً بعودتك! سجّل الدخول لمتابعة رحلتك التعليمية"
+  },
+  "profile": {
+    "backToEducation": "العودة إلى التعليم", "enrolled": "مسجل", "completed": "مكتمل", "inProgress": "قيد التقدم",
+    "overview": "نظرة عامة", "courses": "الدورات", "certificates": "الشهادات", "saved": "المحفوظات",
+    "notifications": "الإشعارات", "settings": "الإعدادات", "privacy": "الخصوصية", "admin": "المسؤول"
   },
   "teamPage": {
     "title": "فريقنا",

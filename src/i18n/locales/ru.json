@@ -663,7 +663,128 @@
     "copyLink": "Скопировать ссылку",
     "linkCopied": "Ссылка скопирована!",
     "gallery": "Галерея",
-    "attachments": "Вложения"
+    "attachments": "Вложения",
+    "all": "Все",
+    "loading": "Загрузка...",
+    "postNotFound": "Статья не найдена"
+  },
+  "notFound": {
+    "title": "404",
+    "message": "Упс! Страница не найдена",
+    "backHome": "Вернуться на главную"
+  },
+  "contributor": {
+    "hero": {
+      "badge": "На основе AI • Подбор ролей • Ориентирован на участников",
+      "title": "Найдите свою лучшую позицию",
+      "titleHighlight": "в UTAAB",
+      "subtitle": "Ответьте на несколько умных вопросов, и AI проанализирует ваши сильные стороны, интересы и стиль работы, чтобы рекомендовать наиболее подходящую роль участника.",
+      "startAssessment": "Начать оценку",
+      "learnHow": "Узнать как это работает"
+    },
+    "howItWorks": {
+      "title": "Как это работает",
+      "subtitle": "Три простых шага, чтобы найти вашу идеальную роль.",
+      "step": "Шаг",
+      "step1Title": "Ответьте на вопросы",
+      "step1Desc": "Поделитесь своими интересами, навыками и стилем работы через короткую многоэтапную оценку.",
+      "step2Title": "AI анализирует ваш профиль",
+      "step2Desc": "Наш AI-движок оценивает ваши ответы, чтобы определить ваши сильные стороны и идеальную область вклада.",
+      "step3Title": "Получите подбор роли",
+      "step3Desc": "Получите персонализированную рекомендацию лучшей роли участника в UTAAB."
+    },
+    "archetypes": {
+      "title": "Где такие как вы преуспевают в UTAAB",
+      "subtitle": "Узнайте, какой архетип вам подходит.",
+      "builder": "Строитель",
+      "builderDesc": "Вы любите создавать с нуля — приложения, смарт-контракты или инструменты. Вы преуспеваете, превращая идеи в реальность.",
+      "researcher": "Исследователь",
+      "researcherDesc": "Глубокий анализ и понимание движут вами. Вам нравится изучать новые протоколы и делиться знаниями.",
+      "operator": "Оператор",
+      "operatorDesc": "Вы следите за бесперебойной работой. Организация, процессы и эффективность — ваши сильные стороны.",
+      "connector": "Коммуникатор",
+      "connectorDesc": "Построение отношений и развитие сообществ заряжают вас энергией. Вы естественно объединяете людей.",
+      "creator": "Создатель",
+      "creatorDesc": "Визуальное повествование и создание контента — ваши суперсилы. Вы делаете сложные идеи доступными и красивыми.",
+      "strategist": "Стратег",
+      "strategistDesc": "Вы видите общую картину и планируете дорожную карту. Стратегическое мышление и принятие решений даются вам естественно.",
+      "roles": {
+        "frontend": "Frontend-разработка",
+        "backend": "Backend-разработка",
+        "smartContract": "Разработка смарт-контрактов / Blockchain",
+        "product": "Продукт",
+        "research": "Исследования",
+        "analytics": "Аналитика",
+        "education": "Образование / Воркшопы",
+        "operations": "Операции",
+        "strategy": "Стратегия",
+        "events": "События & Экосистема",
+        "community": "Сообщество & Рост",
+        "partnerships": "Партнёрства",
+        "design": "Дизайн",
+        "content": "Контент & Медиа"
+      }
+    },
+    "cta": {
+      "title": "Ваш путь в UTAAB начинается с",
+      "titleHighlight": "правильной роли.",
+      "subtitle": "Пройдите оценку и узнайте, где вы можете создать наибольшую ценность.",
+      "takeAssessment": "Пройти оценку",
+      "contactUtaab": "Связаться с UTAAB"
+    },
+    "form": {
+      "steps": { "aboutYou": "О вас", "interests": "Интересы", "skills": "Навыки", "workStyle": "Стиль работы", "motivation": "Мотивация", "review": "Обзор" },
+      "fullName": "Полное имя", "email": "Email", "university": "Университет / Факультет", "universityPlaceholder": "напр. Стамбульский технический университет - ИТ",
+      "yearOfStudy": "Курс обучения", "linkedIn": "LinkedIn (необязательно)", "github": "GitHub (необязательно)", "portfolio": "Портфолио (необязательно)",
+      "communityExperience": "Вы ранее участвовали в каких-либо сообществах, клубах, стартапах, DAO или блокчейн-проектах?",
+      "communityExperienceDetails": "Кратко опишите ваш опыт...",
+      "topicInterests": "Какие темы вас больше всего вдохновляют?", "freeTimeActivities": "Чем вы обычно занимаетесь в свободное время?",
+      "naturalWork": "Какой тип работы кажется вам наиболее естественным?", "strengths": "Что из этого описывает ваши сильные стороны?",
+      "experienceLevel": "Оцените свой уровень опыта (1–5)", "bestTasks": "Какие задачи вы обычно выполняете лучше всего?",
+      "workPreference": "Вы предпочитаете:", "decisionStyle": "Как вы обычно принимаете решения?",
+      "personalityType": "Что лучше вас описывает?", "underPressure": "Под давлением вы обычно:",
+      "whatMotivates": "Что мотивирует вас больше всего?", "weeklyHours": "Сколько часов в неделю вы можете уделять?",
+      "contributionType": "Предпочтительный тип вклада", "trackInterest": "Что вас интересует:",
+      "whyJoin": "Почему вы хотите присоединиться к UTAAB? (мин. 50 слов)", "whyJoinPlaceholder": "Поделитесь мотивацией...",
+      "wordsCount": "{{count}}/50 слов", "desiredImpact": "Какое влияние вы хотите оказать?", "desiredImpactPlaceholder": "Опишите влияние...",
+      "proudAchievement": "Опишите проект, достижение или опыт, которым гордитесь.", "proudAchievementPlaceholder": "Расскажите нам...",
+      "whatToBuild": "Если бы вы присоединились к UTAAB, что бы вы хотели улучшить, создать или возглавить?", "whatToBuildPlaceholder": "Ваше видение...",
+      "bestTeamEnvironment": "Какая командная среда помогает вам работать лучше всего?", "bestTeamEnvironmentPlaceholder": "Опишите идеальную среду...",
+      "reviewTitle": "Проверьте ваши ответы", "reviewName": "Имя", "reviewEmail": "Email", "reviewUniversity": "Университет",
+      "reviewInterests": "Интересы", "reviewStrengths": "Сильные стороны", "reviewWorkPreference": "Предпочтение работы",
+      "reviewWeeklyHours": "Часов в неделю", "reviewWhyUtaab": "Почему UTAAB",
+      "submitDisclaimer": "Отправляя, ваши ответы будут проанализированы AI для рекомендации лучшей роли.",
+      "previous": "Назад", "next": "Далее", "submitting": "Отправка...", "submitAssessment": "Отправить оценку",
+      "validation": { "requiredFields": "Обязательные поля", "fillNameEmail": "Заполните имя и email.", "invalidEmail": "Неверный email", "invalidEmailDesc": "Введите корректный email.", "selectInterest": "Выберите хотя бы один интерес", "selectStrength": "Выберите хотя бы одну сильную сторону", "answerAll": "Ответьте на все вопросы", "fillAvailability": "Заполните доступность и мотивацию", "motivationTooShort": "Мотивация слишком короткая", "motivationTooShortDesc": "Напишите минимум 50 слов. Сейчас: {{count}} слов." },
+      "options": { "yes": "Да", "no": "Нет", "year1": "1 курс", "year2": "2 курс", "year3": "3 курс", "year4": "4 курс", "graduate": "Выпускник", "other": "Другое", "workAlone": "Работать одному", "workSmallTeam": "В небольшой команде", "workLargeTeam": "В большой команде", "logicFirst": "Логика", "intuitionFirst": "Интуиция", "dataFirst": "Данные", "discussionFirst": "Обсуждение", "structured": "Структурированный и организованный", "flexible": "Гибкий и адаптивный", "creative": "Творческий и экспериментальный", "analytical": "Аналитический и методичный", "takeInitiative": "Проявить инициативу", "focusQuietly": "Сосредоточиться тихо", "askTeam": "Спросить мнение команды", "breakTasks": "Разбить задачи на части", "hours1_3": "1–3", "hours4_6": "4–6", "hours7_10": "7–10", "hours10plus": "10+", "ongoingWeekly": "Постоянный еженедельный вклад", "projectBased": "Проектный вклад", "eventSupport": "Поддержка событий", "researchContent": "Исследования/контент", "technicalBuilding": "Техническая разработка", "leadershipTrack": "Лидерство", "coreContributor": "Основной участник", "volunteerTrack": "Волонтёрство", "internshipTrack": "Стажировка" },
+      "topicOptions": { "blockchain": "Блокчейн", "smartContracts": "Смарт-контракты", "defi": "DeFi", "ai": "ИИ", "productBuilding": "Создание продуктов", "design": "Дизайн", "contentCreation": "Создание контента", "communityBuilding": "Построение сообщества", "research": "Исследования", "marketing": "Маркетинг", "events": "События", "partnerships": "Партнёрства", "operations": "Операции", "education": "Образование", "dataAnalytics": "Данные / Аналитика" },
+      "freeTimeOptions": { "reading": "Чтение", "writing": "Письмо", "sideProjects": "Побочные проекты", "designing": "Дизайн", "organizingEvents": "Организация событий", "networking": "Нетворкинг", "gaming": "Игры", "researchingTrends": "Исследование трендов", "publicSpeaking": "Публичные выступления", "coding": "Программирование", "socialMedia": "Контент для соцсетей", "helpingCommunities": "Помощь в росте сообществ", "other": "Другое" },
+      "naturalWorkOptions": { "creating": "Создание", "analyzing": "Анализ", "leading": "Лидерство", "supporting": "Поддержка", "communicating": "Коммуникация", "designingSystems": "Проектирование систем", "solvingTechnical": "Решение технических задач", "buildingRelationships": "Построение отношений" },
+      "strengthOptions": { "communication": "Коммуникация", "writing": "Написание текстов", "research": "Исследования", "graphicDesign": "Графический дизайн", "uiux": "UI/UX", "frontend": "Frontend", "backend": "Backend", "smartContracts": "Смарт-контракты", "socialMedia": "Соцсети", "eventPlanning": "Планирование событий", "partnershipDev": "Развитие партнёрств", "leadership": "Лидерство", "strategy": "Стратегия", "dataAnalysis": "Анализ данных", "videoEditing": "Видеомонтаж", "communityModeration": "Модерация сообщества", "presentationSkills": "Навыки презентации" },
+      "experienceAreas": { "blockchainKnowledge": "Знание блокчейна", "coding": "Программирование", "design": "Дизайн", "research": "Исследования", "marketing": "Маркетинг", "teamwork": "Командная работа", "leadership": "Лидерство", "communication": "Коммуникация" },
+      "bestTaskOptions": { "fastExecution": "Быстрое выполнение", "longTermResearch": "Долгосрочные исследования", "creativeIdeation": "Креативные идеи", "organizingPeople": "Организация людей", "technicalDev": "Техническая разработка", "contentProduction": "Производство контента", "problemSolving": "Решение проблем", "detailControl": "Контроль деталей" },
+      "motivationOptions": { "learning": "Обучение", "recognition": "Признание", "buildingImpactful": "Создание значимого", "community": "Сообщество", "careerGrowth": "Карьерный рост", "innovation": "Инновации", "networking": "Нетворкинг", "leadershipOpportunities": "Возможности лидерства" }
+    },
+    "result": {
+      "match": "Совпадение", "analyzing": "Анализ вашего профиля...", "analyzingSubtitle": "AI оценивает ваши ответы для идеального подбора.",
+      "title": "Ваш профиль участника", "subtitle": "Вот что AI обнаружил о вашей идеальной роли в UTAAB.",
+      "primaryMatch": "Основное совпадение", "secondaryMatch": "Вторичное совпадение", "profileSummary": "Резюме профиля",
+      "whyThisRole": "Почему эта роль подходит вам", "yourStrengths": "Ваши сильные стороны", "growthPath": "Путь развития",
+      "recommendedDepartment": "Рекомендуемый отдел", "suggestedNextSteps": "Рекомендуемые следующие шаги",
+      "growthRecommendations": "Рекомендации по развитию", "exploreUtaab": "Исследовать UTAAB"
+    },
+    "toast": { "analysisComplete": "Анализ завершён!", "profileReady": "Ваш профиль участника готов.", "analysisFailed": "Не удалось проанализировать профиль. Попробуйте снова." }
+  },
+  "educationNav": {
+    "mainSite": "Главный сайт", "profile": "Профиль", "signOut": "Выйти", "admin": "Админ",
+    "openMenu": "Открыть меню", "closeMenu": "Закрыть меню", "mobileMenu": "Мобильное меню",
+    "studentSignIn": "Вход студента", "backToEducation": "Назад к обучению",
+    "welcomeBack": "С возвращением! Войдите, чтобы продолжить обучение"
+  },
+  "profile": {
+    "backToEducation": "Назад к обучению", "enrolled": "Записан", "completed": "Завершено", "inProgress": "В процессе",
+    "overview": "Обзор", "courses": "Курсы", "certificates": "Сертификаты", "saved": "Сохранённое",
+    "notifications": "Уведомления", "settings": "Настройки", "privacy": "Конфиденциальность", "admin": "Админ"
   },
   "teamPage": {
     "title": "Наша Команда",
