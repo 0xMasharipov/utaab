@@ -62,6 +62,8 @@ const defaultFormData: FormData = {
   whyJoin: '', desiredImpact: '', proudAchievement: '', whatToBuild: '', bestTeamEnvironment: '',
 };
 
+const countWords = (str: string) => str.trim().split(/\s+/).filter(Boolean).length;
+
 interface AssessmentFormProps {
   onSubmit: (data: FormData) => void;
   isSubmitting: boolean;
@@ -199,6 +201,10 @@ const AssessmentForm = ({ onSubmit, isSubmitting }: AssessmentFormProps) => {
           toast({ title: 'Please fill in availability and motivation', variant: 'destructive' });
           return false;
         }
+        if (countWords(formData.whyJoin) < 50) {
+          toast({ title: 'Motivation too short', description: `Please write at least 50 words. Current: ${countWords(formData.whyJoin)} words.`, variant: 'destructive' });
+          return false;
+        }
         return true;
       default:
         return true;
@@ -270,7 +276,13 @@ const AssessmentForm = ({ onSubmit, isSubmitting }: AssessmentFormProps) => {
           <div><FieldLabel required>How many hours per week can you contribute?</FieldLabel><SingleSelect options={['1–3', '4–6', '7–10', '10+']} value={formData.weeklyHours} onChange={v => updateField('weeklyHours', v)} /></div>
           <div><FieldLabel>Preferred contribution type</FieldLabel><SingleSelect options={['Ongoing weekly contribution', 'Project-based contribution', 'Event support', 'Research/content contribution', 'Technical building']} value={formData.contributionType} onChange={v => updateField('contributionType', v)} /></div>
           <div><FieldLabel>Are you interested in:</FieldLabel><SingleSelect options={['Leadership track', 'Core contributor track', 'Volunteer track', 'Internship-style learning track']} value={formData.trackInterest} onChange={v => updateField('trackInterest', v)} /></div>
-          <div><FieldLabel required>Why do you want to join UTAAB?</FieldLabel><Textarea value={formData.whyJoin} onChange={e => updateField('whyJoin', e.target.value)} placeholder="Share your motivation..." className="bg-white/[0.04] border-white/[0.1] min-h-[100px]" /></div>
+          <div>
+            <FieldLabel required>Why do you want to join UTAAB? (min. 50 words)</FieldLabel>
+            <Textarea value={formData.whyJoin} onChange={e => updateField('whyJoin', e.target.value)} placeholder="Share your motivation..." className="bg-white/[0.04] border-white/[0.1] min-h-[100px]" />
+            <p className={`text-xs mt-1.5 ${countWords(formData.whyJoin) >= 50 ? 'text-green-400' : 'text-destructive'}`}>
+              {countWords(formData.whyJoin)}/50 words
+            </p>
+          </div>
           <div><FieldLabel>What kind of impact do you want to create?</FieldLabel><Textarea value={formData.desiredImpact} onChange={e => updateField('desiredImpact', e.target.value)} placeholder="Describe the impact..." className="bg-white/[0.04] border-white/[0.1]" /></div>
           <div><FieldLabel>Describe a project, achievement, or experience you are proud of.</FieldLabel><Textarea value={formData.proudAchievement} onChange={e => updateField('proudAchievement', e.target.value)} placeholder="Tell us about it..." className="bg-white/[0.04] border-white/[0.1]" /></div>
           <div><FieldLabel>If you joined UTAAB, what would you like to improve, build, or lead?</FieldLabel><Textarea value={formData.whatToBuild} onChange={e => updateField('whatToBuild', e.target.value)} placeholder="Your vision..." className="bg-white/[0.04] border-white/[0.1]" /></div>
