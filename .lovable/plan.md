@@ -1,50 +1,31 @@
 
 
-# Replace Page Fade with Text-Only Animation on Language Change
+# Improve Hero Video Loading Speed
 
 ## Problem
-Currently the entire page fades to `opacity: 0` and back when switching languages. This feels heavy — backgrounds, images, and layout all disappear briefly. A better approach: only animate the **text content** so the page structure stays stable while words smoothly transition.
+The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
 
-## Approach
-Remove the page-level opacity wrapper and instead use a CSS animation that targets text elements inline. The `lang-transitioning` class already gets applied via `getTransitionClasses()` — we just need to make it do a nice text animation (blur + fade + slight slide) instead of hiding the whole page.
+## Changes
 
-### Changes
+### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
+Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
 
-**1. `src/contexts/LanguageTransitionContext.tsx`** — Remove the wrapper div. Just pass children through directly:
-```tsx
-<LanguageTransitionContext.Provider value={{ isTransitioning }}>
-  {children}
-</LanguageTransitionContext.Provider>
+### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
+Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
+
+### 3. Preload the video in `index.html`
+Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
+```html
+<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
 ```
 
-**2. `src/index.css`** — Remove `.lang-page-idle` and `.lang-page-transitioning`. Update `.lang-transitioning` to use a blur+fade+slide animation on individual text elements:
-```css
-.lang-transition {
-  transition: opacity 0.2s ease-out, transform 0.2s ease-out, filter 0.2s ease-out;
-}
+### 4. Add loading state with fade-in transition (`Hero.tsx`)
+Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
 
-.lang-transitioning {
-  animation: lang-text-swap 0.35s ease-in-out;
-}
+## Files to modify
 
-@keyframes lang-text-swap {
-  0%   { opacity: 1; transform: translateY(0); filter: blur(0); }
-  35%  { opacity: 0; transform: translateY(-6px); filter: blur(4px); }
-  65%  { opacity: 0; transform: translateY(6px); filter: blur(4px); }
-  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
-}
-```
-
-Remove the old `lang-page-idle`, `lang-page-transitioning`, and the old `lang-fade` keyframe. Update reduced-motion to disable `lang-text-swap` too.
-
-**3. `src/hooks/useLanguageTransition.ts`** — No changes needed. Components already use `getTransitionClasses()` to apply the animation to individual text elements.
-
-### Result
-- Page background, images, navbar structure stay perfectly still
-- Only text elements using `getTransitionClasses()` animate with a blur-slide effect
-- Feels more polished and less jarring than a full-page fade
-
-### Files Modified
-- `src/contexts/LanguageTransitionContext.tsx`
-- `src/index.css`
+| File | Change |
+|------|--------|
+| `index.html` | Add `<link rel="preload">` for the video |
+| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
 
