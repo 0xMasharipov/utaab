@@ -32,6 +32,8 @@ interface CourseFormDialogProps {
 
 export function CourseFormDialog({ open, onOpenChange, course, mode }: CourseFormDialogProps) {
   const queryClient = useQueryClient();
+  const [lessonVideos, setLessonVideos] = useState<{ title: string; url: string | null }[]>([]);
+
   const [formData, setFormData] = useState<{
     title_en: string;
     title_tr: string;

@@ -4,6 +4,7 @@ import { Upload, Search, Filter, Grid, List, MoreVertical, Trash2, Download } fr
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,10 +22,21 @@ import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 
+const TOTAL_STORAGE_GB = 20480; // 20TB
+
 export const AdminMedia = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+
+  const { data: storageStats } = useQuery({
+    queryKey: ['admin-storage-stats'],
+    queryFn: async () => {
+      const { data, error } = await supabase.functions.invoke('admin-stats');
+      if (error) throw error;
+      return data;
+    },
+  });
 
   const { data: media, isLoading } = useQuery({
     queryKey: ['admin-media', typeFilter],
@@ -53,6 +65,9 @@ export const AdminMedia = () => {
     return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   };
 
+  const storageUsedGB = parseFloat(storageStats?.contentMetrics?.storageUsedGB || '0');
+  const storagePercent = (storageUsedGB / TOTAL_STORAGE_GB) * 100;
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -66,6 +81,27 @@ export const AdminMedia = () => {
           Upload Files
         </Button>
       </div>
+
+      {/* Storage Capacity Bar */}
+      <Card className="glass-panel">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-semibold">Storage Usage</h3>
+            <span className="text-sm text-muted-foreground">
+              {storageUsedGB} GB / {TOTAL_STORAGE_GB.toLocaleString()} GB (20 TB)
+            </span>
+          </div>
+          <Progress value={Math.max(storagePercent, 0.1)} className="h-3" />
+          <div className="flex items-center justify-between mt-2">
+            <span className="text-xs text-muted-foreground">
+              {storageStats?.contentMetrics?.mediaFiles || 0} files uploaded
+            </span>
+            <span className="text-xs text-muted-foreground">
+              {(TOTAL_STORAGE_GB - storageUsedGB).toLocaleString()} GB remaining
+            </span>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Filters */}
       <Card className="glass">

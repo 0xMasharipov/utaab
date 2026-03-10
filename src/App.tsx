@@ -93,6 +93,7 @@ function App() {
               <Route path="announcements" element={<AdminAnnouncements />} />
               <Route path="messages" element={<AdminMessages />} />
               <Route path="media" element={<AdminMedia />} />
+              <Route path="contributors" element={<AdminContributorAssessments />} />
               
               <Route path="settings" element={<AdminSettingsNew />} />
               <Route path="audit" element={<AdminAuditLog />} />
