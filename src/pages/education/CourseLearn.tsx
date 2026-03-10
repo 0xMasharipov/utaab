@@ -67,10 +67,27 @@ export const CourseLearn = () => {
         .from('safe_lessons' as any)
         .select('*')
         .eq('course_id', course!.id)
-        .order('order_index', { ascending: true });
+        .order('order_index', { ascending: true }) as { data: any[] | null; error: any };
       
       if (error) throw error;
-      return data;
+      return (data || []) as Array<{
+        id: string;
+        course_id: string;
+        title_en: string;
+        title_tr: string | null;
+        title_ru: string | null;
+        title_ar: string | null;
+        description_en: string | null;
+        description_tr: string | null;
+        description_ru: string | null;
+        description_ar: string | null;
+        duration_minutes: number | null;
+        order_index: number;
+        is_free: boolean | null;
+        video_url: string | null;
+        created_at: string;
+        updated_at: string;
+      }>;
     },
     enabled: !!course
   });
