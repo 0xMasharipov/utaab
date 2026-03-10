@@ -85,7 +85,7 @@ const ContributorMatch = () => {
         </>
       )}
 
-      <Footer />
+      <Footer onPrivacyClick={() => window.open('/privacy-policy', '_blank')} />
     </div>
   );
 };
