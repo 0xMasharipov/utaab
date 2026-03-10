@@ -216,7 +216,7 @@ export const Navbar = () => {
                 aria-expanded={isMenuOpen}
                 aria-controls="nav-overlay"
               >
-                <Menu className="h-6 w-6" />
+                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
             </div>
           </div>
