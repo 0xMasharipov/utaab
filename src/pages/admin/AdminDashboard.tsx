@@ -19,6 +19,7 @@ import {
   Users as UsersIcon,
   RefreshCw
 } from 'lucide-react';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 interface Stats {
   systemHealth?: any;
