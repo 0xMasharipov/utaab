@@ -452,7 +452,7 @@ export const EducationNavbar = () => {
                         className="flex items-center justify-center gap-2 w-full text-base font-semibold text-white border border-white/40 hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px]"
                       >
                         <User className="h-5 w-5" />
-                        Student Sign In
+                        {t('educationNav.studentSignIn')}
                       </button>
 
                       <Button
