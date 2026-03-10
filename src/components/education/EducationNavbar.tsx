@@ -340,7 +340,7 @@ export const EducationNavbar = () => {
               ref={hamburgerRef}
               className="md:hidden text-foreground"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-label={isMobileMenuOpen ? t('educationNav.closeMenu') : t('educationNav.openMenu')}
               aria-expanded={isMobileMenuOpen}
               aria-controls="education-mobile-menu"
             >
