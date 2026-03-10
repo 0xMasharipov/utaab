@@ -16,9 +16,17 @@ function getCorsHeaders(req: Request) {
   
   return {
     'Access-Control-Allow-Origin': isAllowed ? origin : allowedOrigins[0],
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
     'Access-Control-Allow-Credentials': 'true',
   };
+}
+
+function getClientIP(req: Request): string {
+  const forwarded = req.headers.get('x-forwarded-for');
+  if (forwarded) return forwarded.split(',')[0].trim();
+  const realIp = req.headers.get('x-real-ip');
+  if (realIp) return realIp.trim();
+  return 'unknown';
 }
 
 interface RateLimitRequest {
@@ -28,6 +36,9 @@ interface RateLimitRequest {
   window?: number; // window in seconds
 }
 
+// Endpoints where the identifier must be derived server-side (IP) to prevent spoofing
+const SERVER_DERIVED_ENDPOINTS = ['admin_login'];
+
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req);
   
@@ -36,8 +47,23 @@ serve(async (req) => {
   }
 
   try {
-    const { identifier, endpoint, limit = 20, window = 60 } = await req.json() as RateLimitRequest;
+    const { identifier: clientIdentifier, endpoint, limit = 20, window = 60 } = await req.json() as RateLimitRequest;
     
+    // For sensitive endpoints, always use server-derived IP to prevent identifier spoofing
+    let identifier: string;
+    if (SERVER_DERIVED_ENDPOINTS.includes(endpoint)) {
+      identifier = getClientIP(req);
+      if (identifier === 'unknown') {
+        // If we can't determine the IP, allow the request (fail open)
+        return new Response(
+          JSON.stringify({ allowed: true, request_count: 0, limit, window, retry_after: null }),
+          { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+    } else {
+      identifier = clientIdentifier;
+    }
+
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
