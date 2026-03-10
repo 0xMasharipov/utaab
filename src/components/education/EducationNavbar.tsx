@@ -477,7 +477,7 @@ export const EducationNavbar = () => {
                         className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                       >
                         <User className="h-4 w-4 mr-2" />
-                        Profile
+                        {t('educationNav.profile')}
                       </button>
 
                       <button
