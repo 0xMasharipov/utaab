@@ -136,34 +136,36 @@ export const Navbar = () => {
           }}
         >
           <div className="flex items-center justify-between">
-            {/* Logo */}
-            <button
-              onClick={() => {
-                if (window.location.pathname === '/') scrollToSection('hero');
-                else navigate('/');
-              }}
-              className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity flex-shrink-0"
-              aria-label="UTAAB - Home"
-            >
-              <div className="relative h-8 sm:h-10 w-8 sm:w-10 flex-shrink-0">
-                {!logoLoaded && <div className="absolute inset-0 rounded-lg bg-muted animate-pulse" />}
-                <img
-                  src={logo}
-                  alt="UTAA Blockchain"
-                  className={`h-8 sm:h-10 w-auto mix-blend-lighten brightness-110 transition-opacity duration-500 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
-                  width="40" height="40"
-                  fetchPriority="high"
-                  decoding="async"
-                  onLoad={() => setLogoLoaded(true)}
-                />
-              </div>
-              <BrandText variant="navbar-mobile" className={`sm:hidden transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`} />
-              <BrandText variant="navbar-tablet" className={`hidden sm:block md:hidden transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`} />
-              <BrandText variant="navbar-desktop" className={`hidden md:block transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`} />
-            </button>
+            {/* Left: Logo */}
+            <div className="flex-1 flex justify-start">
+              <button
+                onClick={() => {
+                  if (window.location.pathname === '/') scrollToSection('hero');
+                  else navigate('/');
+                }}
+                className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity flex-shrink-0"
+                aria-label="UTAAB - Home"
+              >
+                <div className="relative h-8 sm:h-10 w-8 sm:w-10 flex-shrink-0">
+                  {!logoLoaded && <div className="absolute inset-0 rounded-lg bg-muted animate-pulse" />}
+                  <img
+                    src={logo}
+                    alt="UTAA Blockchain"
+                    className={`h-8 sm:h-10 w-auto mix-blend-lighten brightness-110 transition-opacity duration-500 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
+                    width="40" height="40"
+                    fetchPriority="high"
+                    decoding="async"
+                    onLoad={() => setLogoLoaded(true)}
+                  />
+                </div>
+                <BrandText variant="navbar-mobile" className={`sm:hidden transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`} />
+                <BrandText variant="navbar-tablet" className={`hidden sm:block md:hidden transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`} />
+                <BrandText variant="navbar-desktop" className={`hidden md:block transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`} />
+              </button>
+            </div>
 
-            {/* Right side: Globe + Account + Hamburger */}
-            <div className={cn("flex items-center gap-3 sm:gap-4 flex-shrink-0", isRTL && "flex-row-reverse")} style={{ transform: 'translateZ(0)' }}>
+            {/* Center: Globe + MENU */}
+            <div className={cn("flex items-center gap-3 sm:gap-4", isRTL && "flex-row-reverse")} style={{ transform: 'translateZ(0)' }}>
               {/* Language Selector */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -198,6 +200,9 @@ export const Navbar = () => {
                 {isMenuOpen ? 'CLOSE' : 'MENU'}
               </button>
             </div>
+
+            {/* Right: Spacer for balance */}
+            <div className="flex-1" />
           </div>
         </div>
       </nav>

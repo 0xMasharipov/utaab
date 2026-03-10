@@ -1,24 +1,31 @@
 
 
-# Center the MENU Button and Language Selector in the Navbar
+# Improve Hero Video Loading Speed
 
-## Change
+## Problem
+The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
 
-Switch the navbar layout from `justify-between` (logo left, controls right) to a 3-part layout: logo left, language selector + MENU button centered, and an empty right spacer for balance.
+## Changes
 
-## File: `src/components/Navbar.tsx`
+### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
+Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
 
-### Line 138: Change flex layout
-Replace `justify-between` with `justify-between` kept but restructure into 3 equal sections:
-- Left: Logo (with `flex-1 justify-start`)
-- Center: Language selector + MENU button group (centered)
-- Right: Empty spacer (with `flex-1 justify-end`) to balance the logo
+### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
+Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
 
-### Specific changes:
-1. **Line 138**: Change the inner flex container to use 3 children with `flex-1` on left and right
-2. **Line 145**: Add `flex-1` to logo wrapper
-3. **Line 166**: Remove `flex-shrink-0`, keep the control group but center it (no `flex-1`, just centered naturally)
-4. Add an empty `<div className="flex-1" />` spacer after the controls group
+### 3. Preload the video in `index.html`
+Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
+```html
+<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
+```
 
-This creates: `[Logo — flex-1] [Lang + MENU — auto] [spacer — flex-1]`
+### 4. Add loading state with fade-in transition (`Hero.tsx`)
+Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
+
+## Files to modify
+
+| File | Change |
+|------|--------|
+| `index.html` | Add `<link rel="preload">` for the video |
+| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
 
