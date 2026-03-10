@@ -397,7 +397,7 @@ export const EducationNavbar = () => {
                     ref={closeButtonRef}
                     onClick={closeMobileMenu}
                     className="text-white hover:text-accent transition-colors p-2 rounded-full hover:bg-white/20"
-                    aria-label="Close menu"
+                    aria-label={t('educationNav.closeMenu')}
                   >
                     <X className="h-6 w-6" />
                   </button>
