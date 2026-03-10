@@ -17,7 +17,7 @@ export const EducationSignIn = () => {
           className="mb-6 text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Education
+          {t('educationNav.backToEducation')}
         </Button>
 
         <div className="text-center mb-8">
@@ -25,7 +25,7 @@ export const EducationSignIn = () => {
             {t('education.registration.signIn')}
           </h1>
           <p className="text-lg text-muted-foreground">
-            Welcome back! Sign in to continue your learning journey
+            {t('educationNav.welcomeBack')}
           </p>
         </div>
 

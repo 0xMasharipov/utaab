@@ -161,7 +161,7 @@ const Blog = () => {
       <section className="pb-16">
         <div className="section-container">
           {loading ? (
-            <div className="text-center py-20 text-muted-foreground">Loading...</div>
+            <div className="text-center py-20 text-muted-foreground">{t('blog.loading', 'Loading...')}</div>
           ) : paged.length === 0 ? (
             <div className="text-center py-20 text-muted-foreground">{t('blog.noResults', 'No posts found')}</div>
           ) : (

@@ -207,7 +207,7 @@ export const Navbar = () => {
                 aria-expanded={isMenuOpen}
                 aria-controls="nav-overlay"
               >
-                {isMenuOpen ? 'CLOSE' : 'MENU'}
+                {isMenuOpen ? t('nav.close', 'CLOSE').toUpperCase() : t('nav.menu', 'MENU').toUpperCase()}
               </button>
             </div>
           </div>

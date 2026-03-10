@@ -1,12 +1,15 @@
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, MessageCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface ContributorCTAProps {
   onStartAssessment: () => void;
 }
 
 const ContributorCTA = ({ onStartAssessment }: ContributorCTAProps) => {
+  const { t } = useTranslation();
+
   return (
     <section className="py-24 px-4">
       <motion.div
@@ -16,11 +19,11 @@ const ContributorCTA = ({ onStartAssessment }: ContributorCTAProps) => {
         className="max-w-3xl mx-auto text-center"
       >
         <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-6" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-          Your journey in UTAAB starts with the{' '}
-          <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">right role.</span>
+          {t('contributor.cta.title')}{' '}
+          <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">{t('contributor.cta.titleHighlight')}</span>
         </h2>
         <p className="text-muted-foreground text-lg mb-10 max-w-xl mx-auto">
-          Take the assessment and discover where you can create the most value.
+          {t('contributor.cta.subtitle')}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button
@@ -28,7 +31,7 @@ const ContributorCTA = ({ onStartAssessment }: ContributorCTAProps) => {
             size="lg"
             className="bg-primary/80 backdrop-blur-xl hover:bg-primary text-primary-foreground px-8 py-6 text-lg rounded-xl shadow-[0_0_30px_hsl(var(--primary)/0.3)] transition-all duration-300"
           >
-            Take the Assessment
+            {t('contributor.cta.takeAssessment')}
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
           <Button
@@ -39,7 +42,7 @@ const ContributorCTA = ({ onStartAssessment }: ContributorCTAProps) => {
           >
             <a href="https://wa.me/message/UTAAB" target="_blank" rel="noopener noreferrer">
               <MessageCircle className="w-5 h-5 mr-2" />
-              Contact UTAAB
+              {t('contributor.cta.contactUtaab')}
             </a>
           </Button>
         </div>

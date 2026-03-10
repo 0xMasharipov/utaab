@@ -1,47 +1,50 @@
 import { motion } from 'framer-motion';
 import { Hammer, Search, Settings, Users, Palette, Lightbulb } from 'lucide-react';
 import GlassCard from '@/components/glass/GlassCard';
-
-const archetypes = [
-  {
-    icon: Hammer,
-    name: 'Builder',
-    description: 'You love creating things from scratch — apps, smart contracts, or tools. You thrive when turning ideas into reality.',
-    roles: ['Frontend Development', 'Backend Development', 'Smart Contract / Blockchain Development', 'Product'],
-  },
-  {
-    icon: Search,
-    name: 'Researcher',
-    description: 'Deep analysis and understanding drive you. You enjoy exploring new protocols, reading whitepapers, and sharing insights.',
-    roles: ['Research', 'Analytics', 'Education / Workshops'],
-  },
-  {
-    icon: Settings,
-    name: 'Operator',
-    description: 'You keep things running smoothly. Organization, processes, and efficiency are your strengths.',
-    roles: ['Operations', 'Strategy', 'Events & Ecosystem'],
-  },
-  {
-    icon: Users,
-    name: 'Connector',
-    description: 'Building relationships and growing communities energize you. You naturally bring people together.',
-    roles: ['Community & Growth', 'Partnerships', 'Events & Ecosystem'],
-  },
-  {
-    icon: Palette,
-    name: 'Creator',
-    description: 'Visual storytelling and content production are your superpowers. You make complex ideas accessible and beautiful.',
-    roles: ['Design', 'Content & Media'],
-  },
-  {
-    icon: Lightbulb,
-    name: 'Strategist',
-    description: 'You see the big picture and plan the roadmap. Strategic thinking and decision-making come naturally to you.',
-    roles: ['Strategy', 'Product', 'Partnerships'],
-  },
-];
+import { useTranslation } from 'react-i18next';
 
 const ContributorArchetypes = () => {
+  const { t } = useTranslation();
+
+  const archetypes = [
+    {
+      icon: Hammer,
+      name: t('contributor.archetypes.builder'),
+      description: t('contributor.archetypes.builderDesc'),
+      roles: [t('contributor.archetypes.roles.frontend'), t('contributor.archetypes.roles.backend'), t('contributor.archetypes.roles.smartContract'), t('contributor.archetypes.roles.product')],
+    },
+    {
+      icon: Search,
+      name: t('contributor.archetypes.researcher'),
+      description: t('contributor.archetypes.researcherDesc'),
+      roles: [t('contributor.archetypes.roles.research'), t('contributor.archetypes.roles.analytics'), t('contributor.archetypes.roles.education')],
+    },
+    {
+      icon: Settings,
+      name: t('contributor.archetypes.operator'),
+      description: t('contributor.archetypes.operatorDesc'),
+      roles: [t('contributor.archetypes.roles.operations'), t('contributor.archetypes.roles.strategy'), t('contributor.archetypes.roles.events')],
+    },
+    {
+      icon: Users,
+      name: t('contributor.archetypes.connector'),
+      description: t('contributor.archetypes.connectorDesc'),
+      roles: [t('contributor.archetypes.roles.community'), t('contributor.archetypes.roles.partnerships'), t('contributor.archetypes.roles.events')],
+    },
+    {
+      icon: Palette,
+      name: t('contributor.archetypes.creator'),
+      description: t('contributor.archetypes.creatorDesc'),
+      roles: [t('contributor.archetypes.roles.design'), t('contributor.archetypes.roles.content')],
+    },
+    {
+      icon: Lightbulb,
+      name: t('contributor.archetypes.strategist'),
+      description: t('contributor.archetypes.strategistDesc'),
+      roles: [t('contributor.archetypes.roles.strategy'), t('contributor.archetypes.roles.product'), t('contributor.archetypes.roles.partnerships')],
+    },
+  ];
+
   return (
     <section className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
@@ -52,9 +55,9 @@ const ContributorArchetypes = () => {
           className="text-center mb-14"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-            Where People Like You Thrive in UTAAB
+            {t('contributor.archetypes.title')}
           </h2>
-          <p className="text-muted-foreground text-lg max-w-xl mx-auto">Discover which archetype resonates with you.</p>
+          <p className="text-muted-foreground text-lg max-w-xl mx-auto">{t('contributor.archetypes.subtitle')}</p>
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
