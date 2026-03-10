@@ -243,7 +243,7 @@ export const Navbar = () => {
               backdropFilter: 'blur(20px) saturate(140%)',
               WebkitBackdropFilter: 'blur(20px) saturate(140%)',
               boxShadow: '0 30px 80px rgba(0, 0, 0, 0.25)',
-              borderRadius: '28px',
+              borderRadius: '16px 16px 28px 28px',
               border: '1px solid rgba(255, 255, 255, 0.16)',
             }}
           >
