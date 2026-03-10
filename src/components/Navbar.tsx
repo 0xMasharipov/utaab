@@ -227,11 +227,12 @@ export const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
             transition={{ duration: prefersReducedMotion ? 0.1 : 0.22, ease: 'easeOut' }}
-            className="fixed z-[80] overflow-hidden"
+            className="fixed z-[80] overflow-y-auto"
             style={{
               top: `${panelTop}px`,
               left: `${pillRect.left}px`,
               width: `${pillRect.width}px`,
+              maxHeight: `calc(100vh - ${panelTop + 8}px)`,
               background: 'rgba(255, 255, 255, 0.08)',
               backdropFilter: 'blur(20px) saturate(140%)',
               WebkitBackdropFilter: 'blur(20px) saturate(140%)',
