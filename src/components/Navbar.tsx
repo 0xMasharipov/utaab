@@ -64,7 +64,7 @@ export const Navbar = () => {
     const updatePanelTop = () => {
       if (navRef.current) {
         const rect = navRef.current.getBoundingClientRect();
-        setPanelTop(rect.bottom + 4);
+        setPanelTop(rect.bottom + 2);
       }
     };
     updatePanelTop();
@@ -216,7 +216,7 @@ export const Navbar = () => {
                 aria-expanded={isMenuOpen}
                 aria-controls="nav-overlay"
               >
-                <Menu className="h-6 w-6" />
+                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
             </div>
           </div>
@@ -243,11 +243,19 @@ export const Navbar = () => {
               backdropFilter: 'blur(20px) saturate(140%)',
               WebkitBackdropFilter: 'blur(20px) saturate(140%)',
               boxShadow: '0 30px 80px rgba(0, 0, 0, 0.25)',
-              borderRadius: '28px',
+              borderRadius: '16px 16px 28px 28px',
               border: '1px solid rgba(255, 255, 255, 0.16)',
             }}
           >
-            <div className="p-8 sm:p-10 md:py-[60px] md:px-[80px]">
+            <div className="relative p-6 pt-12 sm:p-10 sm:pt-12 md:py-[60px] md:px-[80px]">
+              {/* Close button */}
+              <button
+                onClick={closeMenu}
+                className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 rounded-full bg-white/[0.08] hover:bg-white/[0.15] border border-white/10 transition-colors z-10"
+                aria-label={t('nav.close')}
+              >
+                <X className="h-5 w-5 text-white/80" />
+              </button>
               {/* 3-Column Navigation Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-12 lg:gap-20">
                 {/* Column 1 — Ecosystem */}

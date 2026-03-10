@@ -1,34 +1,31 @@
 
 
-# Refine Mobile/Tablet Navigation Dropdown Positioning
+# Improve Hero Video Loading Speed
 
-## Current State
-The mega menu panel is already positioned as a full-width fixed element below the navbar with matching width (`w-[96%] sm:w-[95%] max-w-6xl`) and centering. However, it lacks a close (X) button inside the panel, the hamburger never toggles to X, and the 28px border-radius on all corners + 4px gap makes it feel disconnected from the navbar rather than an organic extension.
+## Problem
+The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
 
-## Changes — Single File: `src/components/Navbar.tsx`
+## Changes
 
-### 1. Add close (X) button inside the mega menu panel
-- Place an `X` icon button in the top-right of the panel content area (absolute positioned)
-- Glass-style circular button matching the existing nav button aesthetics
-- Calls `closeMenu()`
+### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
+Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
 
-### 2. Make panel feel connected to navbar
-- Reduce top border-radius on the panel from `28px` to `16px` on top, keep `28px` on bottom — gives the "expanding downward" feel
-- Reduce gap from 4px to 2px (`rect.bottom + 2`)
-- Add a subtle top border highlight that visually connects to navbar's bottom edge
+### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
+Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
 
-### 3. Toggle hamburger icon to X when open
-- Switch `<Menu>` to `<X>` icon based on `isMenuOpen` state so the user sees a clear toggle in the navbar itself
+### 3. Preload the video in `index.html`
+Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
+```html
+<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
+```
 
-### 4. Adjust mobile padding
-- Tighten mobile padding from `p-8` to `p-6` for a cleaner mobile feel
-- Add `pt-12` or similar to make room for the close button at top-right
+### 4. Add loading state with fade-in transition (`Hero.tsx`)
+Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
 
-| Area | Change |
+## Files to modify
+
+| File | Change |
 |------|--------|
-| Hamburger icon | Toggle between `Menu` / `X` based on `isMenuOpen` |
-| Panel border-radius | `28px 28px 28px 28px` → `16px 16px 28px 28px` (top smaller) |
-| Panel gap | `bottom + 4` → `bottom + 2` |
-| Close button | Add glass-style X button, top-right inside panel |
-| Mobile padding | Adjust to accommodate close button |
+| `index.html` | Add `<link rel="preload">` for the video |
+| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
 
