@@ -247,7 +247,15 @@ export const Navbar = () => {
               border: '1px solid rgba(255, 255, 255, 0.16)',
             }}
           >
-            <div className="p-8 sm:p-10 md:py-[60px] md:px-[80px]">
+            <div className="relative p-6 pt-12 sm:p-10 sm:pt-12 md:py-[60px] md:px-[80px]">
+              {/* Close button */}
+              <button
+                onClick={closeMenu}
+                className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 rounded-full bg-white/[0.08] hover:bg-white/[0.15] border border-white/10 transition-colors z-10"
+                aria-label={t('nav.close')}
+              >
+                <X className="h-5 w-5 text-white/80" />
+              </button>
               {/* 3-Column Navigation Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-12 lg:gap-20">
                 {/* Column 1 — Ecosystem */}
