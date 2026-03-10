@@ -360,13 +360,21 @@ export const Navbar = () => {
                 </div>
 
                 {/* Center: Auth */}
-                <button
-                  onClick={() => handleNavigate('/education/sign-in')}
-                  className="flex items-center justify-center gap-2 text-sm font-medium text-white/70 border border-white/[0.12] hover:bg-white/[0.08] transition-all duration-200 py-2 px-5 rounded-full bg-transparent"
-                >
-                  <User className="h-3.5 w-3.5 text-white/50" />
-                  {t('nav.studentAuthOptions')}
-                </button>
+                <div className="flex flex-col items-center gap-1.5">
+                  <button
+                    onClick={() => handleNavigate('/education/sign-in')}
+                    className="flex items-center justify-center gap-2 text-sm font-medium text-white/70 border border-white/[0.12] hover:bg-white/[0.08] transition-all duration-200 py-2 px-5 rounded-full bg-transparent"
+                  >
+                    <User className="h-3.5 w-3.5 text-white/50" />
+                    {t('nav.studentAuthOptions')}
+                  </button>
+                  <button
+                    onClick={() => handleNavigate('/admin/login')}
+                    className="text-xs text-white/40 hover:text-white/70 transition-colors duration-200"
+                  >
+                    {t('nav.adminSignIn', 'Admin Sign In')}
+                  </button>
+                </div>
 
                 {/* Right: Language selector */}
                 <div className="flex items-center gap-1 flex-wrap justify-center sm:justify-end">
