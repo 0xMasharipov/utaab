@@ -376,7 +376,7 @@ export const EducationNavbar = () => {
                 ref={menuRef}
                 role="menu"
                 aria-modal="true"
-                aria-label="Mobile menu"
+                aria-label={t('educationNav.mobileMenu')}
                 initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: -20, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -20, scale: 0.95 }}
