@@ -61,16 +61,16 @@ export const Navbar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isMenuOpen, closeMenu]);
 
-  // Measure navbar bottom and menu button center for panel positioning
+  // Measure navbar bottom and pill rect for panel positioning
   useEffect(() => {
     const updatePositions = () => {
       if (navRef.current) {
         const rect = navRef.current.getBoundingClientRect();
         setPanelTop(rect.bottom + 2);
       }
-      if (hamburgerRef.current) {
-        const rect = hamburgerRef.current.getBoundingClientRect();
-        setMenuButtonCenter(rect.left + rect.width / 2);
+      if (pillRef.current) {
+        const rect = pillRef.current.getBoundingClientRect();
+        setPillRect({ left: rect.left, width: rect.width });
       }
     };
     updatePositions();
