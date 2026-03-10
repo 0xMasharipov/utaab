@@ -28,6 +28,7 @@ interface Stats {
   security?: any;
   announcements?: any;
   communities?: any;
+  dailyMetrics?: { date: string; registrations: number; enrollments: number }[];
 }
 
 // Animated stat component that flashes when value changes
