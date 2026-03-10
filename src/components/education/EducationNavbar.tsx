@@ -152,7 +152,7 @@ export const EducationNavbar = () => {
   ];
 
   if (isAdmin) {
-    navItems.push({ label: 'Admin', path: '/education/admin' });
+    navItems.push({ label: t('educationNav.admin'), path: '/education/admin' });
   }
 
   return (
