@@ -282,28 +282,18 @@
 
   /* Language transition utilities */
   .lang-transition {
-    transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out, filter 0.2s ease-out;
   }
   
   .lang-transitioning {
-    animation: lang-fade 0.3s ease-in-out;
+    animation: lang-text-swap 0.35s ease-in-out;
   }
 
-  @keyframes lang-fade {
-    0%   { opacity: 1; transform: translateY(0); }
-    40%  { opacity: 0; transform: translateY(4px); }
-    60%  { opacity: 0; transform: translateY(-4px); }
-    100% { opacity: 1; transform: translateY(0); }
-  }
-
-  /* Page-level language transition wrapper */
-  .lang-page-idle {
-    transition: opacity 0.15s ease-out;
-    opacity: 1;
-  }
-
-  .lang-page-transitioning {
-    opacity: 0;
+  @keyframes lang-text-swap {
+    0%   { opacity: 1; transform: translateY(0); filter: blur(0); }
+    35%  { opacity: 0; transform: translateY(-6px); filter: blur(4px); }
+    65%  { opacity: 0; transform: translateY(6px); filter: blur(4px); }
+    100% { opacity: 1; transform: translateY(0); filter: blur(0); }
   }
   
   /* Respect reduced motion preferences */
@@ -315,9 +305,7 @@
       animation: none;
       opacity: 1;
       transform: none;
-    }
-    .lang-page-transitioning {
-      opacity: 1;
+      filter: none;
     }
   }
 
