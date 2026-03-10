@@ -1,31 +1,41 @@
 
 
-# Improve Hero Video Loading Speed
+# Fix Hero Video Bug on Dropdown Open
 
-## Problem
-The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
+## Root Cause
 
-## Changes
+The hero video uses a JavaScript-based mobile detection (`window.innerWidth < 768`) tied to a `resize` event listener. When the dropdown menu opens, some browsers trigger layout recalculations that briefly change `window.innerWidth` (e.g., scrollbar appearing/disappearing, virtual keyboard, or viewport changes). This toggles `isMobile`, which changes the `key` prop on the `<video>` element, causing React to **unmount and remount** the video with the other source file. This results in:
 
-### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
-Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
+1. Both video versions briefly loading
+2. The native video player UI flashing
+3. Video restarting playback
 
-### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
-Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
+## Fix
 
-### 3. Preload the video in `index.html`
-Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
-```html
-<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
+### 1. Replace `window.innerWidth` resize listener with `matchMedia` (`Hero.tsx`)
+
+Use `window.matchMedia` instead of raw `innerWidth`. `matchMedia` only fires when the media query result **actually changes** (crossing the breakpoint), not on every minor layout shift. This prevents false toggles.
+
+```tsx
+useEffect(() => {
+  const mql = window.matchMedia('(max-width: 767px)');
+  const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+  setIsMobile(mql.matches);
+  mql.addEventListener('change', onChange);
+  return () => mql.removeEventListener('change', onChange);
+}, []);
 ```
 
-### 4. Add loading state with fade-in transition (`Hero.tsx`)
-Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
+### 2. Reset `videoReady` when video source changes (`Hero.tsx`)
 
-## Files to modify
+When `isMobile` legitimately changes (e.g., actual device rotation), reset `videoReady` to `false` so the new video fades in cleanly instead of showing the poster then jumping.
 
-| File | Change |
-|------|--------|
-| `index.html` | Add `<link rel="preload">` for the video |
-| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
+```tsx
+useEffect(() => {
+  setVideoReady(false);
+}, [isMobile]);
+```
+
+## Files Modified
+- `src/components/Hero.tsx` — 2 small changes (replace resize listener, add videoReady reset)
 
