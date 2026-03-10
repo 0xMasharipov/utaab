@@ -1,26 +1,31 @@
 
 
-# Center Dropdown Panel Under MENU Button
+# Improve Hero Video Loading Speed
 
-## Current State
-The mega menu panel is positioned as a full-width element (`w-[96%] max-w-6xl left-1/2 -translate-x-1/2`), centered relative to the viewport.
+## Problem
+The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
 
-## Change
+## Changes
 
-Track the MENU button's horizontal center position using a ref, then position the dropdown panel centered under the MENU button instead of centered on the page.
+### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
+Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
 
-### `src/components/Navbar.tsx`
+### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
+Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
 
-1. **Add state to track MENU button center position** — use `hamburgerRef` to calculate the button's horizontal center on mount/resize, store in state (e.g. `menuButtonCenter`).
+### 3. Preload the video in `index.html`
+Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
+```html
+<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
+```
 
-2. **Update the `useEffect` that measures navbar** (lines 67-73) — also measure `hamburgerRef.current.getBoundingClientRect()` to get the button's center X coordinate.
+### 4. Add loading state with fade-in transition (`Hero.tsx`)
+Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
 
-3. **Update mega menu panel positioning** (line 223):
-   - Remove `left-1/2 -translate-x-1/2` (viewport centering)
-   - Instead, use inline `left` style set to `menuButtonCenter` and `transform: translateX(-50%)` to center the panel under the MENU button
-   - Keep `max-w-6xl` width but add a clamp so the panel doesn't overflow the viewport edges
+## Files to modify
 
-4. **Add viewport edge clamping** — ensure the panel's left edge never goes below ~2% from viewport edge and right edge doesn't overflow, using `Math.min/Math.max` on the calculated position.
-
-This makes the dropdown appear anchored to the MENU button while retaining its full-width content layout.
+| File | Change |
+|------|--------|
+| `index.html` | Add `<link rel="preload">` for the video |
+| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
 

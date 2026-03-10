@@ -32,6 +32,7 @@ export const Navbar = () => {
   const hamburgerRef = useRef<HTMLButtonElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const [panelTop, setPanelTop] = useState(68);
+  const [menuButtonCenter, setMenuButtonCenter] = useState(0);
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
   const isRTL = i18n.language === 'ar';
@@ -59,17 +60,21 @@ export const Navbar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isMenuOpen, closeMenu]);
 
-  // Measure navbar bottom for panel positioning
+  // Measure navbar bottom and menu button center for panel positioning
   useEffect(() => {
-    const updatePanelTop = () => {
+    const updatePositions = () => {
       if (navRef.current) {
         const rect = navRef.current.getBoundingClientRect();
         setPanelTop(rect.bottom + 2);
       }
+      if (hamburgerRef.current) {
+        const rect = hamburgerRef.current.getBoundingClientRect();
+        setMenuButtonCenter(rect.left + rect.width / 2);
+      }
     };
-    updatePanelTop();
-    window.addEventListener('resize', updatePanelTop);
-    return () => window.removeEventListener('resize', updatePanelTop);
+    updatePositions();
+    window.addEventListener('resize', updatePositions);
+    return () => window.removeEventListener('resize', updatePositions);
   }, []);
 
   // Escape key
@@ -220,9 +225,11 @@ export const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
             transition={{ duration: prefersReducedMotion ? 0.1 : 0.22, ease: 'easeOut' }}
-            className="fixed z-[80] w-[96%] sm:w-[95%] max-w-6xl left-1/2 -translate-x-1/2 overflow-hidden"
+            className="fixed z-[80] w-[96%] sm:w-[95%] max-w-6xl overflow-hidden"
             style={{
               top: `${panelTop}px`,
+              left: `${Math.max(window.innerWidth * 0.02, Math.min(menuButtonCenter, window.innerWidth * 0.98))}px`,
+              transform: 'translateX(-50%)',
               background: 'rgba(255, 255, 255, 0.08)',
               backdropFilter: 'blur(20px) saturate(140%)',
               WebkitBackdropFilter: 'blur(20px) saturate(140%)',
