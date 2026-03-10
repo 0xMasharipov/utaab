@@ -17,7 +17,8 @@
     "studentAuthOptions": "Вход студента | Регистрация",
     "adminSignIn": "Вход администратора",
     "blog": "Блог",
-    "team": "Команда"
+    "team": "Команда",
+    "contributorMatch": "Подбор роли"
   },
   "auth": {
     "studentSignIn": "Вход для Студентов",

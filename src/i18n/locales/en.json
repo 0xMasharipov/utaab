@@ -17,7 +17,8 @@
     "studentAuthOptions": "Student Sign In | Register",
     "adminSignIn": "Admin Sign In",
     "blog": "Blog",
-    "team": "Team"
+    "team": "Team",
+    "contributorMatch": "Contributor Match"
   },
   "auth": {
     "studentSignIn": "Student Sign In",

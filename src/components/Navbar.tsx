@@ -321,6 +321,7 @@ export const Navbar = () => {
                   <div className="flex flex-col gap-1">
                     {[
                       { key: 'team', type: 'page', path: '/team' },
+                      { key: 'contributorMatch', type: 'page', path: '/contributor-match' },
                       { key: 'join', type: 'scroll', id: 'join' },
                     ].map((item, i) => (
                       <motion.button
