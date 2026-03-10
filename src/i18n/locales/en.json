@@ -18,7 +18,10 @@
     "adminSignIn": "Admin Sign In",
     "blog": "Blog",
     "team": "Team",
-    "contributorMatch": "Contributor Match"
+    "contributorMatch": "Contributor Match",
+    "ecosystem": "Ecosystem",
+    "explore": "Explore",
+    "organization": "Organization"
   },
   "auth": {
     "studentSignIn": "Student Sign In",
