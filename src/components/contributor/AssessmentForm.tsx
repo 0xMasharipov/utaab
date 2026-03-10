@@ -201,6 +201,10 @@ const AssessmentForm = ({ onSubmit, isSubmitting }: AssessmentFormProps) => {
           toast({ title: 'Please fill in availability and motivation', variant: 'destructive' });
           return false;
         }
+        if (countWords(formData.whyJoin) < 50) {
+          toast({ title: 'Motivation too short', description: `Please write at least 50 words. Current: ${countWords(formData.whyJoin)} words.`, variant: 'destructive' });
+          return false;
+        }
         return true;
       default:
         return true;
