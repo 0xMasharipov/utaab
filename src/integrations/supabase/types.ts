@@ -1204,6 +1204,13 @@ export type Database = {
             referencedRelation: "lessons"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "lesson_progress_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "safe_lessons"
+            referencedColumns: ["id"]
+          },
         ]
       }
       lessons: {
@@ -1454,6 +1461,13 @@ export type Database = {
             columns: ["lesson_id"]
             isOneToOne: false
             referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quizzes_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "safe_lessons"
             referencedColumns: ["id"]
           },
         ]
@@ -1925,6 +1939,71 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "reviews_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      safe_lessons: {
+        Row: {
+          course_id: string | null
+          created_at: string | null
+          description_ar: string | null
+          description_en: string | null
+          description_ru: string | null
+          description_tr: string | null
+          duration_minutes: number | null
+          id: string | null
+          is_free: boolean | null
+          order_index: number | null
+          title_ar: string | null
+          title_en: string | null
+          title_ru: string | null
+          title_tr: string | null
+          updated_at: string | null
+          video_url: string | null
+        }
+        Insert: {
+          course_id?: string | null
+          created_at?: string | null
+          description_ar?: string | null
+          description_en?: string | null
+          description_ru?: string | null
+          description_tr?: string | null
+          duration_minutes?: number | null
+          id?: string | null
+          is_free?: boolean | null
+          order_index?: number | null
+          title_ar?: string | null
+          title_en?: string | null
+          title_ru?: string | null
+          title_tr?: string | null
+          updated_at?: string | null
+          video_url?: never
+        }
+        Update: {
+          course_id?: string | null
+          created_at?: string | null
+          description_ar?: string | null
+          description_en?: string | null
+          description_ru?: string | null
+          description_tr?: string | null
+          duration_minutes?: number | null
+          id?: string | null
+          is_free?: boolean | null
+          order_index?: number | null
+          title_ar?: string | null
+          title_en?: string | null
+          title_ru?: string | null
+          title_tr?: string | null
+          updated_at?: string | null
+          video_url?: never
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lessons_course_id_fkey"
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "courses"
