@@ -1,31 +1,18 @@
 
 
-# Improve Hero Video Loading Speed
+# Move Menu & Language Buttons to Right End of Navbar
 
-## Problem
-The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
+## Change
 
-## Changes
+The current layout is: `Logo (flex-1 left)` | `Globe + MENU (center)` | `empty spacer (flex-1 right)`.
 
-### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
-Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
+Move the Globe + MENU group from center to right by swapping it with the empty spacer div.
 
-### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
-Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
+### `src/components/Navbar.tsx` (lines 174-212)
 
-### 3. Preload the video in `index.html`
-Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
-```html
-<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
-```
+1. **Remove the center group** (lines 174-209) containing Globe + MENU
+2. **Replace the right spacer** (lines 211-212) with the Globe + MENU group, wrapped in `flex-1 flex justify-end`
+3. Add an empty center spacer `<div className="flex-1" />` where the buttons used to be
 
-### 4. Add loading state with fade-in transition (`Hero.tsx`)
-Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
-
-## Files to modify
-
-| File | Change |
-|------|--------|
-| `index.html` | Add `<link rel="preload">` for the video |
-| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
+Result layout: `Logo (flex-1 left)` | `spacer (flex-1 center)` | `Globe + MENU (flex-1 right, justify-end)`
 
