@@ -659,6 +659,33 @@ export type Database = {
         }
         Relationships: []
       }
+      contributor_assessments: {
+        Row: {
+          ai_result: Json | null
+          created_at: string
+          email: string
+          form_data: Json
+          full_name: string
+          id: string
+        }
+        Insert: {
+          ai_result?: Json | null
+          created_at?: string
+          email: string
+          form_data?: Json
+          full_name: string
+          id?: string
+        }
+        Update: {
+          ai_result?: Json | null
+          created_at?: string
+          email?: string
+          form_data?: Json
+          full_name?: string
+          id?: string
+        }
+        Relationships: []
+      }
       courses: {
         Row: {
           category_id: string | null
