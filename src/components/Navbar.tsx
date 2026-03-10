@@ -60,17 +60,21 @@ export const Navbar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isMenuOpen, closeMenu]);
 
-  // Measure navbar bottom for panel positioning
+  // Measure navbar bottom and menu button center for panel positioning
   useEffect(() => {
-    const updatePanelTop = () => {
+    const updatePositions = () => {
       if (navRef.current) {
         const rect = navRef.current.getBoundingClientRect();
         setPanelTop(rect.bottom + 2);
       }
+      if (hamburgerRef.current) {
+        const rect = hamburgerRef.current.getBoundingClientRect();
+        setMenuButtonCenter(rect.left + rect.width / 2);
+      }
     };
-    updatePanelTop();
-    window.addEventListener('resize', updatePanelTop);
-    return () => window.removeEventListener('resize', updatePanelTop);
+    updatePositions();
+    window.addEventListener('resize', updatePositions);
+    return () => window.removeEventListener('resize', updatePositions);
   }, []);
 
   // Escape key
