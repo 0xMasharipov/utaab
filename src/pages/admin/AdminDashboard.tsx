@@ -19,6 +19,7 @@ import {
   Users as UsersIcon,
   RefreshCw
 } from 'lucide-react';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 interface Stats {
   systemHealth?: any;
@@ -27,6 +28,7 @@ interface Stats {
   security?: any;
   announcements?: any;
   communities?: any;
+  dailyMetrics?: { date: string; registrations: number; enrollments: number }[];
 }
 
 // Animated stat component that flashes when value changes
@@ -581,6 +583,65 @@ export default function AdminDashboard() {
                 </div>
               ))}
             </div>
+          </Card>
+        </div>
+      )}
+
+      {/* System Metrics Chart */}
+      {stats.dailyMetrics && stats.dailyMetrics.length > 0 && (
+        <div>
+          <h2 className="text-xl font-semibold mb-4">System Metrics (Last 7 Days)</h2>
+          <Card className="glass-panel p-6">
+            <ResponsiveContainer width="100%" height={300}>
+              <AreaChart data={stats.dailyMetrics}>
+                <defs>
+                  <linearGradient id="colorReg" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient id="colorEnr" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(142 76% 36%)" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="hsl(142 76% 36%)" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                <XAxis
+                  dataKey="date"
+                  stroke="hsl(var(--muted-foreground))"
+                  fontSize={12}
+                  tickFormatter={(val) => new Date(val + 'T00:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                />
+                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} allowDecimals={false} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: 'hsl(var(--card))',
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '8px',
+                    color: 'hsl(var(--foreground))',
+                  }}
+                  labelFormatter={(val) => new Date(val + 'T00:00:00').toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}
+                />
+                <Legend />
+                <Area
+                  type="monotone"
+                  dataKey="registrations"
+                  name="Registrations"
+                  stroke="hsl(var(--primary))"
+                  fillOpacity={1}
+                  fill="url(#colorReg)"
+                  strokeWidth={2}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="enrollments"
+                  name="Enrollments"
+                  stroke="hsl(142 76% 36%)"
+                  fillOpacity={1}
+                  fill="url(#colorEnr)"
+                  strokeWidth={2}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
           </Card>
         </div>
       )}

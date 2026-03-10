@@ -137,6 +137,35 @@ serve(async (req) => {
       ? ((completedEnrollmentsResult.count || 0) / enrollmentsResult.count * 100).toFixed(1)
       : 0;
 
+    // Daily metrics for the last 7 days
+    const dailyMetrics: { date: string; registrations: number; enrollments: number }[] = [];
+    for (let i = 6; i >= 0; i--) {
+      const dayStart = new Date();
+      dayStart.setDate(dayStart.getDate() - i);
+      dayStart.setHours(0, 0, 0, 0);
+      const dayEnd = new Date(dayStart);
+      dayEnd.setHours(23, 59, 59, 999);
+
+      const [regResult, enrResult] = await Promise.all([
+        supabaseAdmin
+          .from('education_profiles')
+          .select('id', { count: 'exact', head: true })
+          .gte('created_at', dayStart.toISOString())
+          .lte('created_at', dayEnd.toISOString()),
+        supabaseAdmin
+          .from('enrollments')
+          .select('id', { count: 'exact', head: true })
+          .gte('enrolled_at', dayStart.toISOString())
+          .lte('enrolled_at', dayEnd.toISOString()),
+      ]);
+
+      dailyMetrics.push({
+        date: dayStart.toISOString().split('T')[0],
+        registrations: regResult.count || 0,
+        enrollments: enrResult.count || 0,
+      });
+    }
+
     const stats = {
       // System Health
       systemHealth: {
@@ -179,6 +208,8 @@ serve(async (req) => {
       communities: {
         total: communitiesResult.count || 0,
       },
+      // Daily Metrics (last 7 days)
+      dailyMetrics,
     };
 
     return new Response(

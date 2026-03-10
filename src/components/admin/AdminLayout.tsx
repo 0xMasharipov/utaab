@@ -16,6 +16,7 @@ import {
   LogOut,
   ChevronLeft,
   Calendar,
+  Sparkles,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
@@ -32,6 +33,7 @@ const sidebarItems = [
   { icon: Megaphone, label: 'Announcements', path: '/admin/announcements' },
   { icon: MessageSquare, label: 'Messages', path: '/admin/messages' },
   { icon: ImageIcon, label: 'Media Library', path: '/admin/media' },
+  { icon: Sparkles, label: 'Contributors', path: '/admin/contributors' },
   { icon: Shield, label: 'Security', path: '/admin/security' },
   { icon: Settings, label: 'Settings', path: '/admin/settings' },
   { icon: FileText, label: 'Audit Log', path: '/admin/audit' },

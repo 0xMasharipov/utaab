@@ -1,63 +1,31 @@
 
 
-# Admin Panel Enhancements
+# Improve Hero Video Loading Speed
 
-Four changes requested: video upload in courses, contributor match results viewer, storage section with 20TB capacity display, and system metrics graph on the dashboard.
+## Problem
+The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
 
-## 1. Video Upload in Course Section
+## Changes
 
-The `CourseFormDialog` already has a `promo_video` field with `ImageUpload accept="video/*"`. This is functional. The request likely means adding a dedicated **lesson video upload** capability so admins can upload course lecture videos directly. 
+### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
+Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
 
-**Changes:**
-- Add a "Lesson Videos" section in `CourseFormDialog` or as a separate tab in `AdminCourses` where admins can upload videos per lesson
-- Actually, since the video upload already exists in CourseFormDialog (promo_video field), we should enhance it to also allow uploading **course content videos** (lesson-level). Add a "Course Videos" upload section below the promo video with multi-file support and a list of uploaded videos.
+### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
+Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
 
-**Files:** `src/components/admin/CourseFormDialog.tsx` — add a dedicated course video upload section with the existing `ImageUpload` component configured for `accept="video/*"`.
+### 3. Preload the video in `index.html`
+Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
+```html
+<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
+```
 
-## 2. Contributor Match Results in Admin Panel
+### 4. Add loading state with fade-in transition (`Hero.tsx`)
+Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
 
-Create a new admin page `AdminContributorAssessments` that queries the `contributor_assessments` table and displays submissions with their AI results.
+## Files to modify
 
-**Changes:**
-- Create `src/pages/admin/AdminContributorAssessments.tsx` — table view of all assessments with columns: name, email, date, primary role match, score. Expandable rows to show full AI result details (strengths, growth paths, etc.)
-- Add route in `App.tsx` under `/admin/contributors`
-- Add sidebar item in `AdminLayout.tsx` with a `Sparkles` or `Users` icon labeled "Contributors"
-
-**Files:** 
-- New: `src/pages/admin/AdminContributorAssessments.tsx`
-- Edit: `src/App.tsx` — add route
-- Edit: `src/components/admin/AdminLayout.tsx` — add sidebar item
-
-## 3. Storage/Media Section with 20TB Capacity
-
-Enhance `AdminMedia` to show a storage usage bar at the top: used space (from `admin-stats` edge function's `contentMetrics.storageUsedGB`) out of 20TB total, with a visual progress bar.
-
-**Changes:**
-- Add a storage usage card at the top of `AdminMedia` that fetches stats from `admin-stats` and displays used/total with a progress bar (X GB / 20,480 GB)
-
-**Files:** `src/pages/education/admin/AdminMedia.tsx`
-
-## 4. System Metrics Graph on Dashboard
-
-Add a Recharts `AreaChart` to the dashboard showing user registrations and enrollments over the last 7 days. The data will come from the existing `admin-stats` edge function — we need to add a `dailyMetrics` array to it.
-
-**Changes:**
-- Update `supabase/functions/admin-stats/index.ts` to query daily registration and enrollment counts for the last 7 days
-- Add a "System Metrics" section in `AdminDashboard.tsx` with a Recharts `AreaChart` showing users and enrollments per day
-
-**Files:**
-- Edit: `supabase/functions/admin-stats/index.ts` — add daily metrics query
-- Edit: `src/pages/admin/AdminDashboard.tsx` — add chart section using `recharts`
-
-## Summary of All Files
-
-| File | Action |
+| File | Change |
 |------|--------|
-| `src/components/admin/CourseFormDialog.tsx` | Add dedicated video upload section |
-| `src/pages/admin/AdminContributorAssessments.tsx` | **New** — contributor results table |
-| `src/App.tsx` | Add `/admin/contributors` route |
-| `src/components/admin/AdminLayout.tsx` | Add "Contributors" sidebar item |
-| `src/pages/education/admin/AdminMedia.tsx` | Add storage capacity bar (20TB) |
-| `supabase/functions/admin-stats/index.ts` | Add daily metrics data |
-| `src/pages/admin/AdminDashboard.tsx` | Add system metrics chart |
+| `index.html` | Add `<link rel="preload">` for the video |
+| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
 
