@@ -10,11 +10,16 @@ export const Hero = () => {
   const handleVideoReady = useCallback(() => setVideoReady(true), []);
 
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
+    const mql = window.matchMedia('(max-width: 767px)');
+    const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    setIsMobile(mql.matches);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
   }, []);
+
+  useEffect(() => {
+    setVideoReady(false);
+  }, [isMobile]);
 
   const scrollToJoin = () => {
     document.getElementById('join')?.scrollIntoView({ behavior: 'smooth' });
