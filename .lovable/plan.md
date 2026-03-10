@@ -1,29 +1,31 @@
 
 
-# Move Language Selector & Menu Button to Right Edge on Mobile
+# Improve Hero Video Loading Speed
 
 ## Problem
-The navbar uses three equal `flex-1` columns. On mobile, the right group (language + menu) sits at the end of its flex-1 share (roughly the right third), not at the far right edge of the navbar.
+The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
 
-## Solution
-Remove the center spacer on mobile and adjust the left column so the right controls naturally align to the far right edge.
+## Changes
 
-### Change in `src/components/Navbar.tsx`
+### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
+Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
 
-**Line 175 — Center spacer**: Hide on mobile, show on larger screens:
-```tsx
-<div className="hidden sm:block flex-1" />
+### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
+Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
+
+### 3. Preload the video in `index.html`
+Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
+```html
+<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
 ```
 
-**Line 147 — Left logo column**: Remove `flex-1` on mobile so the logo only takes its natural width, pushing the right group to the edge:
-```tsx
-<div className="sm:flex-1 flex justify-start">
-```
+### 4. Add loading state with fade-in transition (`Hero.tsx`)
+Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
 
-**Line 178 — Right controls**: Remove `flex-1` on mobile so it doesn't take extra space, just sits at the end:
-```tsx
-<div className={cn("sm:flex-1 flex justify-end items-center gap-3 sm:gap-4", isRTL && "flex-row-reverse")}>
-```
+## Files to modify
 
-This gives mobile a simple two-element layout (logo left, controls right) while preserving the three-column balanced layout on desktop.
+| File | Change |
+|------|--------|
+| `index.html` | Add `<link rel="preload">` for the video |
+| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
 
