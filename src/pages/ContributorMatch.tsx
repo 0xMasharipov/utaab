@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
@@ -14,6 +15,7 @@ import type { FormData } from '@/components/contributor/AssessmentForm';
 import type { AIResult } from '@/components/contributor/AssessmentResult';
 
 const ContributorMatch = () => {
+  const { t } = useTranslation();
   const [result, setResult] = useState<AIResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -31,7 +33,6 @@ const ContributorMatch = () => {
     setIsLoading(true);
     setSubmitted(true);
 
-    // Scroll to result area
     setTimeout(() => {
       window.scrollTo({ top: formRef.current?.offsetTop || 0, behavior: 'smooth' });
     }, 100);
@@ -42,16 +43,13 @@ const ContributorMatch = () => {
       });
 
       if (error) throw error;
-
-      if (data?.error) {
-        throw new Error(data.error);
-      }
+      if (data?.error) throw new Error(data.error);
 
       setResult(data.result);
-      toast({ title: 'Analysis complete!', description: 'Your contributor profile is ready.' });
+      toast({ title: t('contributor.toast.analysisComplete'), description: t('contributor.toast.profileReady') });
     } catch (err: any) {
       console.error('Assessment error:', err);
-      const message = err?.message || 'Failed to analyze your profile. Please try again.';
+      const message = err?.message || t('contributor.toast.analysisFailed');
       toast({ title: 'Error', description: message, variant: 'destructive' });
       setSubmitted(false);
     } finally {

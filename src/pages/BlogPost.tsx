@@ -135,7 +135,7 @@ const BlogPost = () => {
         <AnimatedBlobBackground />
         <Navbar />
         <div className="pt-32 text-center section-container">
-          <h1 className="text-3xl font-bold mb-4">Post not found</h1>
+          <h1 className="text-3xl font-bold mb-4">{t('blog.postNotFound', 'Post not found')}</h1>
           <Button asChild><Link to="/blog">{t('blog.backToBlog', 'Back to Blog')}</Link></Button>
         </div>
       </div>

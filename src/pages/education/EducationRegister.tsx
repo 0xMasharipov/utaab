@@ -17,7 +17,7 @@ export const EducationRegister = () => {
           className="mb-6 text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Education
+          {t('educationNav.backToEducation')}
         </Button>
 
         <div className="text-center mb-8">

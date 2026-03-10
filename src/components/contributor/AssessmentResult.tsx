@@ -3,6 +3,7 @@ import { Award, Star, TrendingUp, Target, Zap, ArrowRight } from 'lucide-react';
 import GlassCard from '@/components/glass/GlassCard';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useTranslation } from 'react-i18next';
 
 export interface AIResult {
   primary_role: string;
@@ -23,6 +24,7 @@ interface AssessmentResultProps {
 }
 
 function CircularScore({ score }: { score: number }) {
+  const { t } = useTranslation();
   const circumference = 2 * Math.PI * 54;
   const offset = circumference - (score / 100) * circumference;
 
@@ -54,13 +56,14 @@ function CircularScore({ score }: { score: number }) {
         >
           {score}%
         </motion.span>
-        <span className="text-xs text-muted-foreground">Match</span>
+        <span className="text-xs text-muted-foreground">{t('contributor.result.match')}</span>
       </div>
     </div>
   );
 }
 
 function LoadingSkeleton() {
+  const { t } = useTranslation();
   return (
     <section className="py-20 px-4">
       <div className="max-w-4xl mx-auto">
@@ -69,8 +72,8 @@ function LoadingSkeleton() {
             <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center mx-auto mb-4 animate-pulse">
               <Zap className="w-7 h-7 text-secondary animate-pulse" />
             </div>
-            <h2 className="text-2xl font-bold text-foreground mb-2">Analyzing your contributor profile...</h2>
-            <p className="text-muted-foreground">Our AI is evaluating your responses to find the perfect match.</p>
+            <h2 className="text-2xl font-bold text-foreground mb-2">{t('contributor.result.analyzing')}</h2>
+            <p className="text-muted-foreground">{t('contributor.result.analyzingSubtitle')}</p>
           </div>
           <div className="space-y-6">
             <Skeleton className="h-36 w-36 rounded-full mx-auto" />
@@ -88,6 +91,8 @@ function LoadingSkeleton() {
 }
 
 const AssessmentResult = ({ result, isLoading }: AssessmentResultProps) => {
+  const { t } = useTranslation();
+
   if (isLoading) return <LoadingSkeleton />;
   if (!result) return null;
 
@@ -96,29 +101,26 @@ const AssessmentResult = ({ result, isLoading }: AssessmentResultProps) => {
       <div className="max-w-4xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <GlassCard variant="strong" className="p-8 md:p-12">
-            {/* Header */}
             <div className="text-center mb-10">
               <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center mx-auto mb-4">
                 <Award className="w-7 h-7 text-secondary" />
               </div>
               <h2 className="text-3xl font-bold text-foreground mb-2" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                Your Contributor Profile
+                {t('contributor.result.title')}
               </h2>
-              <p className="text-muted-foreground">Here's what our AI discovered about your ideal role in UTAAB.</p>
+              <p className="text-muted-foreground">{t('contributor.result.subtitle')}</p>
             </div>
 
-            {/* Score */}
             <div className="mb-10">
               <CircularScore score={result.compatibility_score} />
             </div>
 
-            {/* Role cards */}
             <div className="grid md:grid-cols-2 gap-4 mb-8">
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
                 <GlassCard className="p-6 border-primary/30">
                   <div className="flex items-center gap-2 mb-2">
                     <Star className="w-5 h-5 text-secondary" />
-                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Primary Match</span>
+                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">{t('contributor.result.primaryMatch')}</span>
                   </div>
                   <h3 className="text-xl font-bold text-foreground">{result.primary_role}</h3>
                 </GlassCard>
@@ -127,32 +129,29 @@ const AssessmentResult = ({ result, isLoading }: AssessmentResultProps) => {
                 <GlassCard className="p-6">
                   <div className="flex items-center gap-2 mb-2">
                     <Target className="w-5 h-5 text-muted-foreground" />
-                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Secondary Match</span>
+                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">{t('contributor.result.secondaryMatch')}</span>
                   </div>
                   <h3 className="text-xl font-bold text-foreground">{result.secondary_role}</h3>
                 </GlassCard>
               </motion.div>
             </div>
 
-            {/* Profile summary */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="mb-8">
               <GlassCard variant="subtle" className="p-6">
-                <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-3">Profile Summary</h4>
+                <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-3">{t('contributor.result.profileSummary')}</h4>
                 <p className="text-foreground leading-relaxed">{result.profile_summary}</p>
               </GlassCard>
             </motion.div>
 
-            {/* Why this role */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="mb-8">
               <GlassCard variant="subtle" className="p-6">
-                <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-3">Why This Role Fits You</h4>
+                <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-3">{t('contributor.result.whyThisRole')}</h4>
                 <p className="text-foreground leading-relaxed">{result.why_this_role}</p>
               </GlassCard>
             </motion.div>
 
-            {/* Strengths */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="mb-8">
-              <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-3">Your Strengths</h4>
+              <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-3">{t('contributor.result.yourStrengths')}</h4>
               <div className="flex flex-wrap gap-2">
                 {result.strengths.map((s, i) => (
                   <span key={i} className="px-3 py-1.5 rounded-full text-sm bg-primary/15 text-secondary border border-white/[0.08]">
@@ -162,46 +161,42 @@ const AssessmentResult = ({ result, isLoading }: AssessmentResultProps) => {
               </div>
             </motion.div>
 
-            {/* Details grid */}
             <div className="grid md:grid-cols-2 gap-4 mb-8">
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
                 <GlassCard variant="subtle" className="p-5 h-full">
                   <div className="flex items-center gap-2 mb-2">
                     <TrendingUp className="w-4 h-4 text-secondary" />
-                    <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider">Growth Path</h4>
+                    <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider">{t('contributor.result.growthPath')}</h4>
                   </div>
                   <p className="text-sm text-foreground">{result.growth_path}</p>
                 </GlassCard>
               </motion.div>
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}>
                 <GlassCard variant="subtle" className="p-5 h-full">
-                  <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-2">Recommended Department</h4>
+                  <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-2">{t('contributor.result.recommendedDepartment')}</h4>
                   <p className="text-sm text-foreground">{result.recommended_department}</p>
                 </GlassCard>
               </motion.div>
             </div>
 
-            {/* Suggested first step */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }} className="mb-8">
               <GlassCard variant="subtle" className="p-6 border-primary/20">
-                <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-3">Suggested Next Steps</h4>
+                <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-3">{t('contributor.result.suggestedNextSteps')}</h4>
                 <p className="text-foreground leading-relaxed">{result.suggested_first_step}</p>
               </GlassCard>
             </motion.div>
 
-            {/* Growth recommendations */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.1 }}>
               <GlassCard variant="subtle" className="p-6">
-                <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-3">Growth Recommendations</h4>
+                <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-3">{t('contributor.result.growthRecommendations')}</h4>
                 <p className="text-foreground leading-relaxed">{result.growth_recommendations}</p>
               </GlassCard>
             </motion.div>
 
-            {/* CTA */}
             <div className="text-center mt-10">
               <Button asChild size="lg" className="bg-primary/80 hover:bg-primary text-primary-foreground px-8 py-6 text-lg rounded-xl">
-                <a href="/" >
-                  Explore UTAAB <ArrowRight className="w-5 h-5 ml-2" />
+                <a href="/">
+                  {t('contributor.result.exploreUtaab')} <ArrowRight className="w-5 h-5 ml-2" />
                 </a>
               </Button>
             </div>

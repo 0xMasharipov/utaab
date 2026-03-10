@@ -152,7 +152,7 @@ export const EducationNavbar = () => {
   ];
 
   if (isAdmin) {
-    navItems.push({ label: 'Admin', path: '/education/admin' });
+    navItems.push({ label: t('educationNav.admin'), path: '/education/admin' });
   }
 
   return (
@@ -261,7 +261,7 @@ export const EducationNavbar = () => {
                 'glass hover:bg-white/10 rounded-full px-3 hidden md:inline-flex max-w-[140px] justify-center truncate'
               )}
             >
-              Main Site
+               {t('educationNav.mainSite')}
             </Button>
 
             {/* Language Selector */}
@@ -316,12 +316,12 @@ export const EducationNavbar = () => {
                 >
                   <DropdownMenuItem onClick={() => navigate('/education/profile')}>
                     <User className="h-4 w-4 mr-2" />
-                    Profile
+                    {t('educationNav.profile')}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-white/10" />
                   <DropdownMenuItem onClick={handleSignOut}>
                     <LogOut className="h-4 w-4 mr-2" />
-                    Sign Out
+                    {t('educationNav.signOut')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -340,7 +340,7 @@ export const EducationNavbar = () => {
               ref={hamburgerRef}
               className="md:hidden text-foreground"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-label={isMobileMenuOpen ? t('educationNav.closeMenu') : t('educationNav.openMenu')}
               aria-expanded={isMobileMenuOpen}
               aria-controls="education-mobile-menu"
             >
@@ -376,7 +376,7 @@ export const EducationNavbar = () => {
                 ref={menuRef}
                 role="menu"
                 aria-modal="true"
-                aria-label="Mobile menu"
+                aria-label={t('educationNav.mobileMenu')}
                 initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: -20, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -20, scale: 0.95 }}
@@ -397,7 +397,7 @@ export const EducationNavbar = () => {
                     ref={closeButtonRef}
                     onClick={closeMobileMenu}
                     className="text-white hover:text-accent transition-colors p-2 rounded-full hover:bg-white/20"
-                    aria-label="Close menu"
+                    aria-label={t('educationNav.closeMenu')}
                   >
                     <X className="h-6 w-6" />
                   </button>
@@ -436,7 +436,7 @@ export const EducationNavbar = () => {
                     }}
                     className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                   >
-                    Main Site
+                    {t('educationNav.mainSite')}
                   </button>
 
                   <div className="h-px bg-white/20 my-2" />
@@ -452,7 +452,7 @@ export const EducationNavbar = () => {
                         className="flex items-center justify-center gap-2 w-full text-base font-semibold text-white border border-white/40 hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px]"
                       >
                         <User className="h-5 w-5" />
-                        Student Sign In
+                        {t('educationNav.studentSignIn')}
                       </button>
 
                       <Button
@@ -477,7 +477,7 @@ export const EducationNavbar = () => {
                         className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                       >
                         <User className="h-4 w-4 mr-2" />
-                        Profile
+                        {t('educationNav.profile')}
                       </button>
 
                       <button
@@ -489,7 +489,7 @@ export const EducationNavbar = () => {
                         className="text-left text-base font-medium text-white hover:text-accent hover:bg-white/15 transition-all py-3 px-4 rounded-xl min-h-[44px] flex items-center"
                       >
                         <LogOut className="h-4 w-4 mr-2" />
-                        Sign Out
+                        {t('educationNav.signOut')}
                       </button>
                     </>
                   )}

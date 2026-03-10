@@ -37,7 +37,7 @@ import {
 
 export default function Profile() {
   const navigate = useNavigate();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
   const [roles, setRoles] = useState<string[]>([]);
@@ -58,7 +58,6 @@ export default function Profile() {
 
       setUser(authUser);
 
-      // Fetch profile
       const { data: profileData, error: profileError } = await supabase
         .from('education_profiles')
         .select('*')
@@ -68,7 +67,6 @@ export default function Profile() {
       if (profileError && profileError.code !== 'PGRST116') throw profileError;
       setProfile(profileData);
 
-      // Fetch roles
       const { data: rolesData, error: rolesError } = await supabase
         .from('user_roles')
         .select('role')
@@ -107,7 +105,6 @@ export default function Profile() {
   };
 
   const getEnrollmentStats = () => {
-    // These would be fetched from actual data in production
     return {
       enrolled: 0,
       completed: 0,
@@ -127,7 +124,6 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <div className="glass-strong border-b border-white/10 pt-24 md:pt-28">
         <div className="container mx-auto px-6 py-8">
           <Button
@@ -136,10 +132,9 @@ export default function Profile() {
             onClick={() => navigate('/education')}
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Education
+            {t('profile.backToEducation')}
           </Button>
 
-          {/* Profile Header Card */}
           <Card className="glass-panel p-6">
             <div className="flex flex-col md:flex-row gap-6 items-start">
               <Avatar className="w-24 h-24">
@@ -161,24 +156,22 @@ export default function Profile() {
                   )}
                 </div>
 
-                {/* Quick Stats */}
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <div className="text-2xl font-bold text-primary">{stats.enrolled}</div>
-                    <p className="text-sm text-muted-foreground">Enrolled</p>
+                    <p className="text-sm text-muted-foreground">{t('profile.enrolled')}</p>
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-primary">{stats.completed}</div>
-                    <p className="text-sm text-muted-foreground">Completed</p>
+                    <p className="text-sm text-muted-foreground">{t('profile.completed')}</p>
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-primary">{stats.inProgress}</div>
-                    <p className="text-sm text-muted-foreground">In Progress</p>
+                    <p className="text-sm text-muted-foreground">{t('profile.inProgress')}</p>
                   </div>
                 </div>
               </div>
 
-              {/* Language Selector */}
               <div className="flex items-center gap-2">
                 <Globe className="h-4 w-4 text-muted-foreground" />
                 <Select value={i18n.language} onValueChange={handleLanguageChange}>
@@ -198,42 +191,41 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="container mx-auto px-6 py-8">
         <Tabs defaultValue="overview" className="space-y-6">
           <TabsList className="glass-panel w-full overflow-x-auto flex-nowrap justify-start gap-1 p-1.5">
             <TabsTrigger value="overview" className="gap-2 flex-shrink-0 snap-start">
               <User className="h-4 w-4" />
-              Overview
+              {t('profile.overview')}
             </TabsTrigger>
             <TabsTrigger value="courses" className="gap-2 flex-shrink-0 snap-start">
               <BookOpen className="h-4 w-4" />
-              Courses
+              {t('profile.courses')}
             </TabsTrigger>
             <TabsTrigger value="certificates" className="gap-2 flex-shrink-0 snap-start">
               <Award className="h-4 w-4" />
-              Certificates
+              {t('profile.certificates')}
             </TabsTrigger>
             <TabsTrigger value="saved" className="gap-2 flex-shrink-0 snap-start">
               <Bookmark className="h-4 w-4" />
-              Saved
+              {t('profile.saved')}
             </TabsTrigger>
             <TabsTrigger value="notifications" className="gap-2 flex-shrink-0 snap-start">
               <Bell className="h-4 w-4" />
-              Notifications
+              {t('profile.notifications')}
             </TabsTrigger>
             <TabsTrigger value="settings" className="gap-2 flex-shrink-0 snap-start">
               <Settings className="h-4 w-4" />
-              Settings
+              {t('profile.settings')}
             </TabsTrigger>
             <TabsTrigger value="privacy" className="gap-2 flex-shrink-0 snap-start">
               <Shield className="h-4 w-4" />
-              Privacy
+              {t('profile.privacy')}
             </TabsTrigger>
             {isAdmin && (
               <TabsTrigger value="admin" className="gap-2 border-l border-white/10 ml-2 flex-shrink-0 snap-start">
                 <Shield className="h-4 w-4 text-primary" />
-                Admin
+                {t('profile.admin')}
               </TabsTrigger>
             )}
           </TabsList>
@@ -241,31 +233,24 @@ export default function Profile() {
           <TabsContent value="overview">
             <ProfileOverview profile={profile} user={user} />
           </TabsContent>
-
           <TabsContent value="courses">
             <ProfileCourses userId={user?.id} />
           </TabsContent>
-
           <TabsContent value="certificates">
             <ProfileCertificates userId={user?.id} />
           </TabsContent>
-
           <TabsContent value="saved">
             <ProfileSaved userId={user?.id} />
           </TabsContent>
-
           <TabsContent value="notifications">
             <ProfileNotifications userId={user?.id} />
           </TabsContent>
-
           <TabsContent value="settings">
             <ProfileSettings profile={profile} userId={user?.id} onUpdate={fetchUserData} />
           </TabsContent>
-
           <TabsContent value="privacy">
             <ProfilePrivacy profile={profile} userId={user?.id} />
           </TabsContent>
-
           {isAdmin && (
             <TabsContent value="admin">
               <ProfileAdminMode userId={user?.id} />

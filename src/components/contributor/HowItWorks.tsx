@@ -1,26 +1,19 @@
 import { motion } from 'framer-motion';
 import { ClipboardList, Brain, Target } from 'lucide-react';
 import GlassCard from '@/components/glass/GlassCard';
+import { useTranslation } from 'react-i18next';
 
-const steps = [
-  {
-    icon: ClipboardList,
-    title: 'Answer Questions',
-    description: 'Share your interests, skills, and working style through a short multi-step assessment.',
-  },
-  {
-    icon: Brain,
-    title: 'AI Analyzes Your Profile',
-    description: 'Our AI engine evaluates your responses to identify your strengths and ideal contribution area.',
-  },
-  {
-    icon: Target,
-    title: 'Get Your Role Match',
-    description: 'Receive a personalized recommendation for the best contributor role inside UTAAB.',
-  },
-];
+const icons = [ClipboardList, Brain, Target];
 
 const HowItWorks = () => {
+  const { t } = useTranslation();
+
+  const steps = [
+    { icon: icons[0], title: t('contributor.howItWorks.step1Title'), description: t('contributor.howItWorks.step1Desc') },
+    { icon: icons[1], title: t('contributor.howItWorks.step2Title'), description: t('contributor.howItWorks.step2Desc') },
+    { icon: icons[2], title: t('contributor.howItWorks.step3Title'), description: t('contributor.howItWorks.step3Desc') },
+  ];
+
   return (
     <section className="py-20 px-4">
       <div className="max-w-5xl mx-auto">
@@ -31,9 +24,9 @@ const HowItWorks = () => {
           className="text-center mb-14"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-            How It Works
+            {t('contributor.howItWorks.title')}
           </h2>
-          <p className="text-muted-foreground text-lg max-w-xl mx-auto">Three simple steps to discover your ideal contributor role.</p>
+          <p className="text-muted-foreground text-lg max-w-xl mx-auto">{t('contributor.howItWorks.subtitle')}</p>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-6">
@@ -49,7 +42,7 @@ const HowItWorks = () => {
                 <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center mx-auto mb-5">
                   <step.icon className="w-7 h-7 text-secondary" />
                 </div>
-                <div className="text-sm font-semibold text-secondary mb-2 tracking-wider uppercase">Step {i + 1}</div>
+                <div className="text-sm font-semibold text-secondary mb-2 tracking-wider uppercase">{t('contributor.howItWorks.step')} {i + 1}</div>
                 <h3 className="text-xl font-bold text-foreground mb-3">{step.title}</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">{step.description}</p>
               </GlassCard>
