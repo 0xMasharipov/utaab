@@ -32,6 +32,7 @@ export const Navbar = () => {
   const hamburgerRef = useRef<HTMLButtonElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const [panelTop, setPanelTop] = useState(68);
+  const [menuButtonCenter, setMenuButtonCenter] = useState(0);
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
   const isRTL = i18n.language === 'ar';
