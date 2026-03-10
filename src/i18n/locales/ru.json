@@ -18,7 +18,10 @@
     "adminSignIn": "Вход администратора",
     "blog": "Блог",
     "team": "Команда",
-    "contributorMatch": "Подбор роли"
+    "contributorMatch": "Подбор роли",
+    "ecosystem": "Экосистема",
+    "explore": "Исследовать",
+    "organization": "Организация"
   },
   "auth": {
     "studentSignIn": "Вход для Студентов",
