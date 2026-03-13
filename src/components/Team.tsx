@@ -22,11 +22,11 @@ const teamMembers = [
   { key: 'abdulla', image: abdullaImg },
   { key: 'abdulbaki', image: abdulbakiImg },
   { key: 'umut', image: umutImg },
+  { key: 'anar', image: anarImg },
   { key: 'yana', image: yanaImg },
   { key: 'shuayb', image: shuaybImg },
   { key: 'ibrahim', image: ibrahimImg },
   { key: 'burak', image: burakImg },
-  { key: 'anar', image: anarImg },
 ];
 
 const containerVariants = {
