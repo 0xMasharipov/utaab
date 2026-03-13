@@ -9,13 +9,24 @@ import zinurbekImg from '@/assets/team/zinurbek.png';
 import umutImg from '@/assets/team/umut.png';
 import abdullaImg from '@/assets/team/abdulla.png';
 import yunusImg from '@/assets/team/yunus.png';
+import abdulbakiImg from '@/assets/team/abdulbaki.png';
+import yanaImg from '@/assets/team/yana.png';
+import shuaybImg from '@/assets/team/shuayb.png';
+import ibrahimImg from '@/assets/team/ibrahim.png';
+import burakImg from '@/assets/team/burak.png';
+import anarImg from '@/assets/team/anar.png';
 
 const teamMembers = [
   { key: 'zinurbek', image: zinurbekImg },
   { key: 'yunus', image: yunusImg },
   { key: 'abdulla', image: abdullaImg },
-  { key: 'abdulbaki' },
+  { key: 'abdulbaki', image: abdulbakiImg },
   { key: 'umut', image: umutImg },
+  { key: 'yana', image: yanaImg },
+  { key: 'shuayb', image: shuaybImg },
+  { key: 'ibrahim', image: ibrahimImg },
+  { key: 'burak', image: burakImg },
+  { key: 'anar', image: anarImg },
 ];
 
 const containerVariants = {
