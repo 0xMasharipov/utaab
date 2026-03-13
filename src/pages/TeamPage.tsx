@@ -30,11 +30,11 @@ const teamMembers: TeamMember[] = [
   { key: 'abdulla', image: abdullaImg, tag: 'Engineering' },
   { key: 'abdulbaki', image: abdulbakiImg, tag: 'Operations' },
   { key: 'umut', image: umutImg, tag: 'Operations' },
+  { key: 'anar', image: anarImg, tag: 'Operations' },
   { key: 'yana', image: yanaImg, tag: 'Engineering' },
   { key: 'shuayb', image: shuaybImg, tag: 'Engineering' },
   { key: 'ibrahim', image: ibrahimImg, tag: 'Marketing' },
   { key: 'burak', image: burakImg, tag: 'Operations' },
-  { key: 'anar', image: anarImg, tag: 'Operations' },
 ];
 
 const containerVariants = {
