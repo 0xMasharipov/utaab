@@ -1092,6 +1092,31 @@
         "name": "Umut Tekbaş",
         "position": "HR Manager",
         "description": "Cultivating talent pipelines and building a diverse, inclusive Web3 community of builders and creators."
+      },
+      "yana": {
+        "name": "Yanina Isak",
+        "position": "Front-End Developer",
+        "description": "Shaping seamless and visually refined digital experiences across UTAAB's platforms with a strong focus on interface quality, responsiveness, and usability."
+      },
+      "shuayb": {
+        "name": "Shuayb Allahverdiev",
+        "position": "Full-Stack Developer",
+        "description": "Contributing to the development of robust and scalable digital infrastructure, working across both front-end and back-end systems."
+      },
+      "ibrahim": {
+        "name": "Ibrahim Hasanli",
+        "position": "Social Media",
+        "description": "Overseeing UTAAB's digital communication and public-facing presence, crafting content strategies that enhance visibility and audience engagement."
+      },
+      "burak": {
+        "name": "Burak Yaman Deniz",
+        "position": "Event Coordinator",
+        "description": "Managing the planning and execution of events that support community-building and strategic outreach efforts with precision and professionalism."
+      },
+      "anar": {
+        "name": "Anar Malikov",
+        "position": "HR and Coordinator",
+        "description": "Supporting organizational structure and team development, strengthening internal coordination and improving communication across teams."
       }
     }
   }

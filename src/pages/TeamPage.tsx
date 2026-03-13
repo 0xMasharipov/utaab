@@ -17,13 +17,24 @@ import zinurbekImg from '@/assets/team/zinurbek.png';
 import umutImg from '@/assets/team/umut.png';
 import abdullaImg from '@/assets/team/abdulla.png';
 import yunusImg from '@/assets/team/yunus.png';
+import abdulbakiImg from '@/assets/team/abdulbaki.png';
+import yanaImg from '@/assets/team/yana.png';
+import shuaybImg from '@/assets/team/shuayb.png';
+import ibrahimImg from '@/assets/team/ibrahim.png';
+import burakImg from '@/assets/team/burak.png';
+import anarImg from '@/assets/team/anar.png';
 
 const teamMembers: TeamMember[] = [
   { key: 'zinurbek', image: zinurbekImg, tag: 'Founder' },
   { key: 'yunus', image: yunusImg, tag: 'Leadership' },
   { key: 'abdulla', image: abdullaImg, tag: 'Engineering' },
-  { key: 'abdulbaki', tag: 'Operations' },
+  { key: 'abdulbaki', image: abdulbakiImg, tag: 'Operations' },
   { key: 'umut', image: umutImg, tag: 'Operations' },
+  { key: 'yana', image: yanaImg, tag: 'Engineering' },
+  { key: 'shuayb', image: shuaybImg, tag: 'Engineering' },
+  { key: 'ibrahim', image: ibrahimImg, tag: 'Marketing' },
+  { key: 'burak', image: burakImg, tag: 'Operations' },
+  { key: 'anar', image: anarImg, tag: 'Operations' },
 ];
 
 const containerVariants = {

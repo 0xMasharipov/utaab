@@ -1092,6 +1092,31 @@
         "name": "Umut Tekbaş",
         "position": "İK Müdürü",
         "description": "Yetenek havuzları oluşturan ve çeşitli, kapsayıcı bir Web3 inşaatçılar ve yaratıcılar topluluğu kuran yönetici."
+      },
+      "yana": {
+        "name": "Yanina Isak",
+        "position": "Ön Uç Geliştirici",
+        "description": "UTAAB platformlarında arayüz kalitesi, duyarlılık ve kullanılabilirliğe odaklanarak kusursuz ve görsel olarak rafine dijital deneyimler oluşturuyor."
+      },
+      "shuayb": {
+        "name": "Shuayb Allahverdiev",
+        "position": "Full-Stack Geliştirici",
+        "description": "Hem ön uç hem de arka uç sistemlerinde çalışarak sağlam ve ölçeklenebilir dijital altyapının geliştirilmesine katkıda bulunuyor."
+      },
+      "ibrahim": {
+        "name": "Ibrahim Hasanli",
+        "position": "Sosyal Medya",
+        "description": "UTAAB'ın dijital iletişimini ve kamuya açık varlığını yöneterek görünürlüğü ve kitle etkileşimini artıran içerik stratejileri oluşturuyor."
+      },
+      "burak": {
+        "name": "Burak Yaman Deniz",
+        "position": "Etkinlik Koordinatörü",
+        "description": "Topluluk oluşturma ve stratejik erişim çalışmalarını destekleyen etkinliklerin planlanması ve yürütülmesini hassasiyet ve profesyonellikle yönetiyor."
+      },
+      "anar": {
+        "name": "Anar Malikov",
+        "position": "İK ve Koordinatör",
+        "description": "Organizasyon yapısını ve ekip gelişimini destekleyerek iç koordinasyonu güçlendiriyor ve ekipler arası iletişimi iyileştiriyor."
       }
     }
   }
