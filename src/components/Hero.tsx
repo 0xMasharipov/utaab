@@ -29,7 +29,7 @@ export const Hero = () => {
     <section
       id="hero"
       className="relative min-h-[100svh] md:min-h-screen overflow-hidden"
-      style={{ background: '#fff' }}
+      style={{ background: '#061224' }}
     >
       {/* Background Video */}
       <video
@@ -50,14 +50,38 @@ export const Hero = () => {
         <source src={isMobile ? '/videos/hero-mobile.mp4' : '/videos/hero-cube.mp4'} type="video/mp4" />
       </video>
 
-      {/* Gradient overlay — responsive */}
+      {/* Dark navy gradient overlay — responsive */}
       <div
         className="absolute inset-0"
         style={{
           background: isMobile
-            ? 'linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.75) 60%, rgba(255,255,255,0.5) 100%)'
-            : 'linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 35%, rgba(255,255,255,0.45) 65%, rgba(255,255,255,0) 100%)',
+            ? 'linear-gradient(180deg, rgba(6,18,36,0.92) 0%, rgba(6,18,36,0.75) 60%, rgba(6,18,36,0.5) 100%)'
+            : 'linear-gradient(90deg, rgba(6,18,36,0.92) 0%, rgba(6,18,36,0.80) 35%, rgba(6,18,36,0.45) 65%, rgba(6,18,36,0) 100%)',
           zIndex: 1,
+        }}
+      />
+
+      {/* Atmospheric glow layer */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: [
+            'radial-gradient(ellipse at 65% 50%, rgba(47,111,181,0.15), transparent 70%)',
+            'radial-gradient(ellipse at 20% 40%, rgba(28,63,104,0.2), transparent 60%)',
+          ].join(', '),
+          zIndex: 2,
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/* Bottom fade for seamless transition */}
+      <div
+        className="absolute bottom-0 left-0 right-0"
+        style={{
+          height: 120,
+          background: 'linear-gradient(to bottom, transparent, #081624)',
+          zIndex: 3,
+          pointerEvents: 'none',
         }}
       />
 
@@ -81,7 +105,7 @@ export const Hero = () => {
           >
             <span
               style={{
-                color: '#0B3C6D',
+                color: 'rgba(127,179,255,0.7)',
                 fontSize: 13,
                 fontWeight: 600,
                 letterSpacing: '0.25em',
@@ -102,13 +126,13 @@ export const Hero = () => {
               fontWeight: 800,
               fontSize: 'clamp(36px, 6vw, 80px)',
               lineHeight: 1.1,
-              color: '#1A1A1A',
+              color: '#F3F7FB',
             }}
           >
             {t('hero.headline')}{' '}
             <span
               style={{
-                background: 'linear-gradient(135deg, #0B3C6D, #4A90E2)',
+                background: 'linear-gradient(135deg, #7FB3FF 0%, #4F8FE8 45%, #A9CFFF 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
               }}
@@ -125,7 +149,7 @@ export const Hero = () => {
             className="font-montserrat mb-8 text-base md:text-lg lg:text-xl"
             style={{
               fontWeight: 400,
-              color: '#6F6F6F',
+              color: 'rgba(230,238,248,0.72)',
               maxWidth: 520,
             }}
           >
@@ -146,20 +170,20 @@ export const Hero = () => {
                 background: 'rgba(11, 60, 109, 0.75)',
                 backdropFilter: 'blur(12px)',
                 WebkitBackdropFilter: 'blur(12px)',
-                border: '1px solid rgba(255,255,255,0.2)',
+                border: '1px solid rgba(255,255,255,0.15)',
                 padding: '16px 28px',
                 fontWeight: 600,
-                boxShadow: '0 4px 20px rgba(11,60,109,0.25)',
+                boxShadow: '0 4px 24px rgba(47,111,181,0.35)',
               }}
               onMouseEnter={(e) => {
                 const btn = e.currentTarget as HTMLButtonElement;
                 btn.style.background = 'rgba(11, 60, 109, 0.9)';
-                btn.style.boxShadow = '0 6px 30px rgba(11,60,109,0.45)';
+                btn.style.boxShadow = '0 6px 30px rgba(47,111,181,0.5)';
               }}
               onMouseLeave={(e) => {
                 const btn = e.currentTarget as HTMLButtonElement;
                 btn.style.background = 'rgba(11, 60, 109, 0.75)';
-                btn.style.boxShadow = '0 4px 20px rgba(11,60,109,0.25)';
+                btn.style.boxShadow = '0 4px 24px rgba(47,111,181,0.35)';
               }}
             >
               {t('hero.joinUs')}
@@ -168,23 +192,23 @@ export const Hero = () => {
             <button
               className="rounded-full font-semibold transition-all duration-300 hover:scale-105 w-full sm:w-auto"
               style={{
-                background: 'rgba(255, 255, 255, 0.15)',
+                background: 'rgba(255, 255, 255, 0.06)',
                 backdropFilter: 'blur(12px)',
                 WebkitBackdropFilter: 'blur(12px)',
-                border: '1px solid rgba(11, 60, 109, 0.3)',
-                color: '#0B3C6D',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                color: '#B4D2EB',
                 padding: '16px 28px',
                 fontWeight: 600,
               }}
               onMouseEnter={(e) => {
                 const btn = e.currentTarget as HTMLButtonElement;
-                btn.style.background = 'rgba(11, 60, 109, 0.12)';
-                btn.style.borderColor = 'rgba(11, 60, 109, 0.5)';
+                btn.style.background = 'rgba(255, 255, 255, 0.12)';
+                btn.style.borderColor = 'rgba(255, 255, 255, 0.35)';
               }}
               onMouseLeave={(e) => {
                 const btn = e.currentTarget as HTMLButtonElement;
-                btn.style.background = 'rgba(255, 255, 255, 0.15)';
-                btn.style.borderColor = 'rgba(11, 60, 109, 0.3)';
+                btn.style.background = 'rgba(255, 255, 255, 0.06)';
+                btn.style.borderColor = 'rgba(255, 255, 255, 0.2)';
               }}
             >
               {t('hero.explore')}
