@@ -1,37 +1,29 @@
 project_id = "nxbjgqdehvxszqjoxumx"
 
-[functions.cutii-chat]
-verify_jwt = true
-
-[functions.generate-subtitles]
-verify_jwt = true
-
-[functions.submit-community-application]
-verify_jwt = false
-
-[functions.submit-kvkk-request]
-verify_jwt = false
-
-[functions.admin-stats]
-verify_jwt = true
-
-[functions.check-admin-status]
-verify_jwt = true
-
-[functions.utaab-verify]
-verify_jwt = false
-
-[functions.manage-user-role]
-verify_jwt = false
-
-[functions.convert-applicant-to-user]
-verify_jwt = false
-
-[functions.admin-login-log]
-verify_jwt = false
-
-[functions.terminate-admin-session]
-verify_jwt = false
-
-[functions.process-email-queue]
-verify_jwt = false
+[functions]
+  [functions.admin-login-log]
+    verify_jwt = false
+  [functions.admin-stats]
+    verify_jwt = true
+  [functions.auth-email-hook]
+    verify_jwt = false
+  [functions.check-admin-status]
+    verify_jwt = true
+  [functions.convert-applicant-to-user]
+    verify_jwt = false
+  [functions.cutii-chat]
+    verify_jwt = true
+  [functions.generate-subtitles]
+    verify_jwt = true
+  [functions.manage-user-role]
+    verify_jwt = false
+  [functions.process-email-queue]
+    verify_jwt = false
+  [functions.submit-community-application]
+    verify_jwt = false
+  [functions.submit-kvkk-request]
+    verify_jwt = false
+  [functions.terminate-admin-session]
+    verify_jwt = false
+  [functions.utaab-verify]
+    verify_jwt = false
