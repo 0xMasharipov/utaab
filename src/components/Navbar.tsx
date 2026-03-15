@@ -134,7 +134,7 @@ export const Navbar = () => {
           style={{
             background: isScrolled
               ? 'linear-gradient(135deg, rgba(10, 10, 20, 0.9) 0%, rgba(20, 30, 60, 0.85) 100%)'
-              : 'linear-gradient(135deg, rgba(10, 20, 50, 0.25) 0%, rgba(20, 40, 80, 0.2) 50%, rgba(10, 20, 50, 0.25) 100%)',
+              : 'linear-gradient(135deg, rgba(6, 18, 36, 0.4) 0%, rgba(20, 40, 80, 0.3) 50%, rgba(6, 18, 36, 0.4) 100%)',
             backdropFilter: 'blur(24px) saturate(200%) brightness(0.95)',
             WebkitBackdropFilter: 'blur(24px) saturate(200%) brightness(0.95)',
             boxShadow: isScrolled
