@@ -1,31 +1,62 @@
 
 
-# Improve Hero Video Loading Speed
+# Brand UTAAB Auth Email Templates
 
-## Problem
-The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
+## Overview
+Apply UTAAB's dark navy-blue Web3 branding to all 6 scaffolded auth email templates, upload the logo to storage, and deploy.
+
+## Brand Identity (from `index.css`)
+- **Primary**: `hsl(217, 91%, 35%)` → `#0B3C8C`
+- **Primary foreground**: white
+- **Background**: `hsl(217, 50%, 6%)` → `#081020`
+- **Foreground**: `hsl(0, 0%, 98%)` → `#FAFAFA`
+- **Muted foreground**: `hsl(217, 10%, 60%)` → `#919199`
+- **Accent**: `hsl(213, 94%, 68%)` → `#5BA3F5`
+- **Border radius**: `1rem` (16px)
+- **Font**: Inter / system sans-serif stack
 
 ## Changes
 
-### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
-Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
+### 1. Upload logo to storage
+Upload `src/assets/logo-new.png` to the `media` bucket as `email/logo.png` so it can be referenced via public URL in email templates.
 
-### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
-Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
+### 2. Update all 6 email templates
+Apply consistent UTAAB branding to each template in `supabase/functions/_shared/email-templates/`:
 
-### 3. Preload the video in `index.html`
-Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
-```html
-<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
-```
+**Style updates (all templates):**
+- `main.backgroundColor`: `#ffffff` → `#081020` (dark navy background)
+- `main.fontFamily`: `'Inter, -apple-system, BlinkMacSystemFont, sans-serif'`
+- Add `wrapper` style: centered white card container with subtle border
+- `container`: white card with padding `40px 32px`, border-radius `16px`, max-width `480px`
+- `h1.color`: `#000000` → `#081020`
+- `text.color`: `#55575d` → `#4A4A52`
+- `button.backgroundColor`: `#000000` → `#0B3C8C` (primary blue)
+- `button.borderRadius`: `8px` → `16px`
+- `footer.color`: `#999999` → `#919199`
+- `codeStyle` (reauthentication): update color to `#0B3C8C`
 
-### 4. Add loading state with fade-in transition (`Hero.tsx`)
-Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
+**Content updates:**
+- Add UTAAB logo `<Img>` at top of each template's container
+- Replace generic "siteName" references with "UTAAB" branding tone
+- Add a subtle "Powered by UTAAB" footer line
+- Signup: "Welcome to UTAAB" heading, "Get Started" button text
+- Recovery: "Reset Your Password" stays
+- Magic Link: "Sign In to UTAAB" button text
+- Invite: "Join UTAAB" heading
+- Email Change: stays similar
+- Reauthentication: stays similar
 
-## Files to modify
+### 3. Deploy edge function
+Deploy `auth-email-hook` so the branded templates go live.
 
+## Files Modified
 | File | Change |
 |------|--------|
-| `index.html` | Add `<link rel="preload">` for the video |
-| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
+| `supabase/functions/_shared/email-templates/signup.tsx` | UTAAB branding |
+| `supabase/functions/_shared/email-templates/recovery.tsx` | UTAAB branding |
+| `supabase/functions/_shared/email-templates/magic-link.tsx` | UTAAB branding |
+| `supabase/functions/_shared/email-templates/invite.tsx` | UTAAB branding |
+| `supabase/functions/_shared/email-templates/email-change.tsx` | UTAAB branding |
+| `supabase/functions/_shared/email-templates/reauthentication.tsx` | UTAAB branding |
+| Storage: `media/email/logo.png` | Logo upload |
 
