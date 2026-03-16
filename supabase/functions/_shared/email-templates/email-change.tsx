@@ -23,10 +23,9 @@ interface EmailChangeEmailProps {
   confirmationUrl: string
 }
 
-const LOGO_URL = 'https://nxbjgqdehvxszqjoxumx.supabase.co/storage/v1/object/public/media/email%2Flogo.png'
+const LOGO_URL = 'https://nxbjgqdehvxszqjoxumx.supabase.co/storage/v1/object/public/media/email%2Flogo-bl.png'
 
 export const EmailChangeEmail = ({
-  siteName,
   email,
   newEmail,
   confirmationUrl,
@@ -35,17 +34,17 @@ export const EmailChangeEmail = ({
     <Head>
       <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
     </Head>
-    <Preview>Confirm your email change for {siteName}</Preview>
+    <Preview>Confirm your email change for UTAAB</Preview>
     <Body style={main}>
       <Container style={wrapper}>
         <Container style={container}>
           <Section style={logoSection}>
-            <Img src={LOGO_URL} width="160" height="auto" alt={siteName} style={logo} />
+            <Img src={LOGO_URL} width="160" height="auto" alt="UTAAB" style={logo} />
           </Section>
           <Text style={tagline}>CONNECT. LEARN. BUILD.</Text>
           <Heading style={h1}>Confirm Email Change</Heading>
           <Text style={text}>
-            You requested to change your email for {siteName} from{' '}
+            You requested to change your email for UTAAB from{' '}
             <Link href={`mailto:${email}`} style={link}>{email}</Link>{' '}
             to{' '}
             <Link href={`mailto:${newEmail}`} style={link}>{newEmail}</Link>.
@@ -59,7 +58,7 @@ export const EmailChangeEmail = ({
           <Text style={footer}>
             If you didn't request this change, please secure your account immediately.
           </Text>
-          <Text style={powered}>© {siteName} · Powered by UTAAB</Text>
+          <Text style={powered}>© Powered by UTAAB</Text>
         </Container>
       </Container>
     </Body>
@@ -76,7 +75,7 @@ const logoSection = { textAlign: 'center' as const, marginBottom: '8px' }
 const logo = { display: 'inline-block' as const }
 const tagline = { fontFamily, fontSize: '11px', fontWeight: '600' as const, color: '#919199', textAlign: 'center' as const, letterSpacing: '3px', margin: '0 0 28px' }
 const h1 = { fontFamily, fontSize: '24px', fontWeight: '700' as const, color: '#081020', margin: '0 0 16px', textAlign: 'center' as const }
-const text = { fontFamily, fontSize: '14px', color: '#4A4A52', lineHeight: '1.7', margin: '0 0 28px' }
+const text = { fontFamily, fontSize: '14px', color: '#4A4A52', lineHeight: '1.7', margin: '0 0 28px', textAlign: 'center' as const }
 const link = { color: '#0B3C8C', textDecoration: 'underline' }
 const buttonSection = { textAlign: 'center' as const, margin: '0 0 28px' }
 const button = { fontFamily, backgroundColor: '#0B3C8C', color: '#ffffff', fontSize: '14px', fontWeight: '600' as const, borderRadius: '12px', padding: '14px 32px', textDecoration: 'none', display: 'inline-block' as const }
