@@ -77,7 +77,7 @@ export default function AdminContributorAssessments() {
                   >
                     <div className="flex items-center gap-4 flex-1 min-w-0">
                       <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-                        <Sparkles className="h-5 w-5 text-primary" />
+                        <GitMerge className="h-5 w-5 text-primary" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-medium truncate">{item.full_name}</p>
