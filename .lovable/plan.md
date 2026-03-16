@@ -1,31 +1,34 @@
 
 
-# Improve Hero Video Loading Speed
+# Fix Email Templates and OTP Delivery
 
-## Problem
-The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
+## Problem Analysis
+1. **"— — —" divider**: All 6 email templates contain `<Text style={divider}>— — —</Text>` which needs to be removed.
+2. **OTP not working**: The email domain is verified (`notify.utaab.org`) and the `auth-email-hook` edge function is deployed, but the `email_send_log` table is empty -- meaning the hook is never being invoked by the auth system. The queue infrastructure (pgmq, cron job, enqueue_email RPC) all exist and are properly configured.
+
+The root cause of OTP failure: the auth-email-hook needs to be re-scaffolded and redeployed to trigger the backend reconciliation that links the hook to the auth system.
 
 ## Changes
 
-### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
-Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
+### 1. Remove "— — —" divider from all 6 email templates
+Remove the `<Text style={divider}>— — —</Text>` line and the `divider` style constant from:
+- `signup.tsx`
+- `recovery.tsx`
+- `magic-link.tsx`
+- `invite.tsx`
+- `email-change.tsx`
+- `reauthentication.tsx`
 
-### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
-Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
+### 2. Re-scaffold and redeploy auth-email-hook
+- Call `scaffold_auth_email_templates` with `confirm_overwrite: true` to re-scaffold
+- Re-apply the branded styling (Montserrat font, UTAAB logo, centered layout, no divider)
+- Call `deploy_edge_functions` with `["auth-email-hook"]` to trigger the backend reconciliation that activates the hook with the auth system
 
-### 3. Preload the video in `index.html`
-Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
-```html
-<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
-```
+This will ensure the auth system properly routes signup/recovery/OTP emails through the custom hook, which enqueues them for delivery via the verified `notify.utaab.org` domain.
 
-### 4. Add loading state with fade-in transition (`Hero.tsx`)
-Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
-
-## Files to modify
-
+## Files Modified
 | File | Change |
 |------|--------|
-| `index.html` | Add `<link rel="preload">` for the video |
-| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
+| All 6 templates in `supabase/functions/_shared/email-templates/` | Remove `— — —` divider line and style |
+| `supabase/functions/auth-email-hook/index.ts` | Re-scaffolded to trigger auth system linking |
 
