@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -20,7 +20,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
 import { mapError } from '@/lib/errorUtils';
 import { useSecurity } from '@/hooks/useSecurity';
-import { UtaabCaptcha, UtaabCaptchaRef } from '@/components/security/UtaabCaptcha';
 
 const createSchema = (t: any) => z.object({
   full_name: z.string().trim().min(1, { message: t('join.validation.nameRequired') }),
@@ -60,8 +59,6 @@ export const CommunityJoinForm = () => {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formStartTime] = useState(Date.now());
-  const [utaabToken, setUtaabToken] = useState<string | null>(null);
-  const utaabRef = useRef<UtaabCaptchaRef>(null);
 
   const interestOptions = [
     'interestSolidity', 'interestRust', 'interestZK', 'interestL2',
@@ -70,8 +67,6 @@ export const CommunityJoinForm = () => {
   ];
 
   const trackOptions = ['trackLearn', 'trackResearch', 'trackProjects', 'trackEvents', 'trackMentorship'];
-
-  // Remove auto-save draft feature for security (no PII in localStorage)
 
   const validateStep = (currentStep: number): boolean => {
     const newErrors: Record<string, string> = {};
@@ -113,13 +108,11 @@ export const CommunityJoinForm = () => {
     e?.preventDefault();
     if (validateStep(step)) {
       setStep(step + 1);
-      // Focus first field of next step after state update
       setTimeout(() => {
         const firstInput = document.querySelector(`form input:not([tabindex="-1"]), form select, form textarea`) as HTMLElement;
         firstInput?.focus();
       }, 100);
     } else {
-      // Focus first invalid field
       setTimeout(() => {
         const firstError = Object.keys(errors)[0];
         if (firstError) {
@@ -134,7 +127,6 @@ export const CommunityJoinForm = () => {
     e?.preventDefault();
     setStep(step - 1);
     setErrors({});
-    // Focus first field of previous step
     setTimeout(() => {
       const firstInput = document.querySelector(`form input:not([tabindex="-1"]), form select, form textarea`) as HTMLElement;
       firstInput?.focus();
@@ -152,15 +144,8 @@ export const CommunityJoinForm = () => {
     e.preventDefault();
     if (!validateStep(4)) return;
 
-    // Check UTAAB verification
-    if (!utaabToken) {
-      toast.error(t('auth.captchaRequired'));
-      return;
-    }
-
     setIsSubmitting(true);
     try {
-      // Check rate limit
       const rateLimitCheck = await checkRateLimit(formData.email || 'unknown', 'community_application', 3);
       if (!rateLimitCheck.allowed) {
         toast.error('Too many submissions. Please try again later.');
@@ -171,7 +156,6 @@ export const CommunityJoinForm = () => {
       const schema = createSchema(t);
       const validatedData = schema.parse(formData);
 
-      // Get metadata
       const urlParams = new URLSearchParams(window.location.search);
       const metadata = {
         locale: i18n.language,
@@ -182,7 +166,6 @@ export const CommunityJoinForm = () => {
         user_agent: navigator.userAgent,
       };
 
-      // Call edge function for server-side validation and rate limiting
       const { data, error } = await supabase.functions.invoke('submit-community-application', {
         body: {
           full_name: validatedData.full_name,
@@ -203,7 +186,6 @@ export const CommunityJoinForm = () => {
           kvkk_consent_version: '1.0',
           honeypot: validatedData.honeypot || '',
           form_start_time: formStartTime,
-          utaab_token: utaabToken,
           ...metadata,
         },
       });
@@ -217,7 +199,6 @@ export const CommunityJoinForm = () => {
       toast.success(t('join.successTitle'));
     } catch (error: any) {
       await logSecurityEvent('community_application_failed', 'medium', { email: formData.email });
-      // Error details are sanitized by mapError to prevent information leakage
       toast.error(mapError(error));
     } finally {
       setIsSubmitting(false);
@@ -660,15 +641,6 @@ export const CommunityJoinForm = () => {
                 <p className="font-medium text-foreground mb-2">{t('join.nonProfitTitle')}</p>
                 <p>{t('join.nonProfitDescription')}</p>
               </div>
-
-              {/* UTAAB Anti-bot Verification */}
-              <UtaabCaptcha
-                ref={utaabRef}
-                onVerify={(token) => setUtaabToken(token)}
-                onError={() => toast.error(t('auth.captchaFailed'))}
-                mode="visible"
-                difficulty="adaptive"
-              />
             </div>
 
             <div className="flex gap-3">
@@ -676,7 +648,7 @@ export const CommunityJoinForm = () => {
                 <ChevronLeft className="mr-2 h-5 w-5" />
                 {t('join.back')}
               </Button>
-              <Button type="submit" className="btn-primary flex-1" disabled={isSubmitting || !utaabToken}>
+              <Button type="submit" className="btn-primary flex-1" disabled={isSubmitting}>
                 {isSubmitting ? t('join.submitting') : t('join.submit')}
               </Button>
             </div>
