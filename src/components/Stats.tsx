@@ -62,7 +62,7 @@ export const Stats = () => {
   ];
 
   return (
-    <section className="py-20 md:py-32 relative">
+    <section className="pt-16 pb-20 md:pt-24 md:pb-32 relative">
       <div className="section-container">
         <div className="glass rounded-2xl sm:rounded-3xl p-8 sm:p-12 md:p-16">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10 md:gap-12">

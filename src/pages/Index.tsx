@@ -26,6 +26,7 @@ const Index = () => {
       <AnimatedBlobBackground />
       <Navbar />
       <Hero />
+      <HeroCarousel />
       <Stats />
       <Community />
       <Learn />
