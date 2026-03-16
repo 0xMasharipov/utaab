@@ -95,6 +95,7 @@ function App() {
               <Route path="messages" element={<AdminMessages />} />
               <Route path="media" element={<AdminMedia />} />
               <Route path="contributors" element={<AdminContributorAssessments />} />
+              <Route path="team" element={<AdminTeamMembers />} />
               
               <Route path="settings" element={<AdminSettingsNew />} />
               <Route path="audit" element={<AdminAuditLog />} />
