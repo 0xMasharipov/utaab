@@ -81,16 +81,7 @@ export const Hero = () => {
         }}
       />
 
-      {/* Bottom fade for seamless transition */}
-      <div
-        className="absolute bottom-0 left-0 right-0"
-        style={{
-          height: 120,
-          background: 'linear-gradient(to bottom, transparent, #081624)',
-          zIndex: 3,
-          pointerEvents: 'none',
-        }}
-      />
+      {/* Bottom fade removed — carousel handles transition */}
 
       {/* Content */}
       <div
