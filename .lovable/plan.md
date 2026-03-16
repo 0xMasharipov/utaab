@@ -1,36 +1,31 @@
 
 
-# Add Tablet Video to Hero Section
+# Improve Hero Video Loading Speed
 
-## What
-Add a third breakpoint for tablets (768px–1023px) using the uploaded video, so the hero shows:
-- **Mobile** (≤767px): `hero-mobile.mp4`
-- **Tablet** (768–1023px): uploaded video (`hero-tablet.mp4`)
-- **Desktop** (≥1024px): `hero-cube.mp4`
+## Problem
+The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
 
 ## Changes
 
-### 1. Copy uploaded video to public folder
-Copy `user-uploads://UTAAB_HERO_600x839.mp4` → `public/videos/hero-tablet.mp4`
+### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
+Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
 
-### 2. Update `src/components/Hero.tsx`
-- Replace `isMobile` boolean with a `deviceType` state: `'mobile' | 'tablet' | 'desktop'`
-- Use two `matchMedia` queries:
-  - `(max-width: 767px)` → mobile
-  - `(min-width: 768px) and (max-width: 1023px)` → tablet
-  - else → desktop
-- Map `deviceType` to video source:
-  - `mobile` → `/videos/hero-mobile.mp4`
-  - `tablet` → `/videos/hero-tablet.mp4`
-  - `desktop` → `/videos/hero-cube.mp4`
-- Use `deviceType` as the `<video>` `key` prop
-- Keep the gradient overlay logic: mobile/tablet use the vertical gradient, desktop uses the horizontal gradient
-- Reset `videoReady` when `deviceType` changes
+### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
+Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
 
-## Files Modified
+### 3. Preload the video in `index.html`
+Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
+```html
+<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
+```
+
+### 4. Add loading state with fade-in transition (`Hero.tsx`)
+Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
+
+## Files to modify
 
 | File | Change |
 |------|--------|
-| `public/videos/hero-tablet.mp4` | New — copied from upload |
-| `src/components/Hero.tsx` | Add tablet breakpoint and video source |
+| `index.html` | Add `<link rel="preload">` for the video |
+| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
 

@@ -5,22 +5,39 @@ import { ArrowRight } from 'lucide-react';
 
 export const Hero = () => {
   const { t } = useTranslation();
-  const [isMobile, setIsMobile] = useState(false);
+  const [deviceType, setDeviceType] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
   const [videoReady, setVideoReady] = useState(false);
 
   const handleVideoReady = useCallback(() => setVideoReady(true), []);
 
   useEffect(() => {
-    const mql = window.matchMedia('(max-width: 767px)');
-    const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    setIsMobile(mql.matches);
-    mql.addEventListener('change', onChange);
-    return () => mql.removeEventListener('change', onChange);
+    const mqlMobile = window.matchMedia('(max-width: 767px)');
+    const mqlTablet = window.matchMedia('(min-width: 768px) and (max-width: 1023px)');
+    const getDevice = () => {
+      if (mqlMobile.matches) return 'mobile';
+      if (mqlTablet.matches) return 'tablet';
+      return 'desktop';
+    };
+    setDeviceType(getDevice());
+    const onChange = () => setDeviceType(getDevice());
+    mqlMobile.addEventListener('change', onChange);
+    mqlTablet.addEventListener('change', onChange);
+    return () => {
+      mqlMobile.removeEventListener('change', onChange);
+      mqlTablet.removeEventListener('change', onChange);
+    };
   }, []);
 
   useEffect(() => {
     setVideoReady(false);
-  }, [isMobile]);
+  }, [deviceType]);
+
+  const isMobile = deviceType === 'mobile';
+  const videoSrc = deviceType === 'mobile'
+    ? '/videos/hero-mobile.mp4'
+    : deviceType === 'tablet'
+      ? '/videos/hero-tablet.mp4'
+      : '/videos/hero-cube.mp4';
 
   const scrollToJoin = () => {
     document.getElementById('join')?.scrollIntoView({ behavior: 'smooth' });
@@ -38,7 +55,7 @@ export const Hero = () => {
     >
       {/* Background Video */}
       <video
-        key={isMobile ? 'mobile' : 'desktop'}
+        key={deviceType}
         autoPlay
         muted
         loop
@@ -54,7 +71,7 @@ export const Hero = () => {
         className="absolute inset-0 w-full h-full object-cover pointer-events-none transition-opacity duration-700 hero-video-no-controls"
         style={{ zIndex: 0, opacity: videoReady ? 1 : 0 }}
       >
-        <source src={isMobile ? '/videos/hero-mobile.mp4' : '/videos/hero-cube.mp4'} type="video/mp4" />
+        <source src={videoSrc} type="video/mp4" />
       </video>
 
       {/* Dark navy gradient overlay — responsive */}
