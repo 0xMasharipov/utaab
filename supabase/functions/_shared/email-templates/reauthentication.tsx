@@ -36,7 +36,6 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
           <Heading style={h1}>Confirm Your Identity</Heading>
           <Text style={text}>Use the code below to verify your identity:</Text>
           <Text style={codeStyle}>{token}</Text>
-          <Text style={divider}>— — —</Text>
           <Text style={footer}>
             This code will expire shortly. If you didn't request this, you can safely ignore this email.
           </Text>
@@ -70,6 +69,5 @@ const codeStyle = {
   borderRadius: '12px',
   padding: '16px',
 }
-const divider = { fontFamily, fontSize: '14px', color: '#d0d0d8', textAlign: 'center' as const, margin: '0 0 16px' }
 const footer = { fontFamily, fontSize: '12px', color: '#919199', margin: '0 0 8px', textAlign: 'center' as const }
 const powered = { fontFamily, fontSize: '11px', color: '#b0b0b8', margin: '0', textAlign: 'center' as const }

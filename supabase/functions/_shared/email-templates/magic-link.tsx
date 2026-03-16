@@ -46,7 +46,6 @@ export const MagicLinkEmail = ({
               Sign In to UTAAB
             </Button>
           </Section>
-          <Text style={divider}>— — —</Text>
           <Text style={footer}>
             If you didn't request this link, you can safely ignore this email.
           </Text>
@@ -70,6 +69,5 @@ const h1 = { fontFamily, fontSize: '24px', fontWeight: '700' as const, color: '#
 const text = { fontFamily, fontSize: '14px', color: '#4A4A52', lineHeight: '1.7', margin: '0 0 28px', textAlign: 'center' as const }
 const buttonSection = { textAlign: 'center' as const, margin: '0 0 28px' }
 const button = { fontFamily, backgroundColor: '#0B3C8C', color: '#ffffff', fontSize: '14px', fontWeight: '600' as const, borderRadius: '12px', padding: '14px 32px', textDecoration: 'none', display: 'inline-block' as const }
-const divider = { fontFamily, fontSize: '14px', color: '#d0d0d8', textAlign: 'center' as const, margin: '0 0 16px' }
 const footer = { fontFamily, fontSize: '12px', color: '#919199', margin: '0 0 8px', textAlign: 'center' as const }
 const powered = { fontFamily, fontSize: '11px', color: '#b0b0b8', margin: '0', textAlign: 'center' as const }

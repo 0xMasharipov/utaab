@@ -54,7 +54,6 @@ export const EmailChangeEmail = ({
               Confirm Email Change
             </Button>
           </Section>
-          <Text style={divider}>— — —</Text>
           <Text style={footer}>
             If you didn't request this change, please secure your account immediately.
           </Text>
@@ -79,6 +78,5 @@ const text = { fontFamily, fontSize: '14px', color: '#4A4A52', lineHeight: '1.7'
 const link = { color: '#0B3C8C', textDecoration: 'underline' }
 const buttonSection = { textAlign: 'center' as const, margin: '0 0 28px' }
 const button = { fontFamily, backgroundColor: '#0B3C8C', color: '#ffffff', fontSize: '14px', fontWeight: '600' as const, borderRadius: '12px', padding: '14px 32px', textDecoration: 'none', display: 'inline-block' as const }
-const divider = { fontFamily, fontSize: '14px', color: '#d0d0d8', textAlign: 'center' as const, margin: '0 0 16px' }
 const footer = { fontFamily, fontSize: '12px', color: '#919199', margin: '0 0 8px', textAlign: 'center' as const }
 const powered = { fontFamily, fontSize: '11px', color: '#b0b0b8', margin: '0', textAlign: 'center' as const }
