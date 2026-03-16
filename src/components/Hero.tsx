@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ArrowRight } from 'lucide-react';
 
 export const Hero = () => {
   const { t } = useTranslation();
