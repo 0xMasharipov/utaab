@@ -11,6 +11,7 @@ import { Resources } from '@/components/Resources';
 
 import { Join } from '@/components/Join';
 import { Footer } from '@/components/Footer';
+import { HeroCarousel } from '@/components/HeroCarousel';
 import { PrivacyPopup } from '@/components/PrivacyPopup';
 import { PrivacyCenter } from '@/components/PrivacyCenter';
 import { FloatingPrivacyButton } from '@/components/FloatingPrivacyButton';
