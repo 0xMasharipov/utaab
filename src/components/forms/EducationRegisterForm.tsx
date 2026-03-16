@@ -408,6 +408,16 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
       return;
     }
 
+    // Anti-bot check
+    if (!utaabToken) {
+      toast({
+        title: 'Error',
+        description: 'Please complete the security verification',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     // Form timing check
     if (!validateFormTiming()) {
       await logSecurityEvent('fast_submission', 'medium', { email: formData.email });
