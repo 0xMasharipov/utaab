@@ -55,7 +55,7 @@ export const Hero = () => {
     >
       {/* Background Video */}
       <video
-        key={isMobile ? 'mobile' : 'desktop'}
+        key={deviceType}
         autoPlay
         muted
         loop
