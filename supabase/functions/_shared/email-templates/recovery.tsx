@@ -47,7 +47,7 @@ export const RecoveryEmail = ({
               Reset Password
             </Button>
           </Section>
-          <Text style={divider}>— — —</Text>
+          
           <Text style={footer}>
             If you didn't request a password reset, you can safely ignore this email.
           </Text>
