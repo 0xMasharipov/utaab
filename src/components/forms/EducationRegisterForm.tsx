@@ -1019,6 +1019,19 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
               </div>
             </div>
 
+            {/* UTAAB Anti-bot Verification */}
+            <UtaabCaptcha
+              ref={utaabRef}
+              onVerify={(token) => setUtaabToken(token)}
+              onError={() => toast({
+                title: 'Error',
+                description: 'Security verification failed. Please try again.',
+                variant: 'destructive',
+              })}
+              mode="interactive"
+              difficulty="adaptive"
+            />
+
             <div className="flex gap-3">
               <Button type="button" onClick={handleBack} variant="outline" className="flex-1 glass hover:bg-white/10">
                 <ChevronLeft className="mr-2 h-5 w-5" />
@@ -1027,7 +1040,7 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
               <Button 
                 type="submit" 
                 className="btn-primary flex-1" 
-                disabled={isSubmitting}
+                disabled={isSubmitting || !utaabToken}
               >
                 {isSubmitting ? 'Creating Account...' : t('education.registration.createAccount')}
               </Button>
