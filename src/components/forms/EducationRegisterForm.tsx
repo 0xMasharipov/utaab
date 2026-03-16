@@ -260,6 +260,18 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
 
   const handleResendOtp = async () => {
     if (resendCooldown > 0) return;
+
+    // Rate limit OTP resend
+    const rateLimitCheck = await checkRateLimit(otpEmail, 'otp_resend', 3);
+    if (!rateLimitCheck.allowed) {
+      toast({
+        title: 'Error',
+        description: `Too many resend attempts. Please try again ${rateLimitCheck.retryAfter ? `in ${rateLimitCheck.retryAfter}s` : 'later'}.`,
+        variant: 'destructive',
+      });
+      return;
+    }
+
     try {
       if (otpType === 'signup') {
         await supabase.auth.resend({ type: 'signup', email: otpEmail });
