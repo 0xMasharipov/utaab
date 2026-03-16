@@ -18,7 +18,7 @@ interface ReauthenticationEmailProps {
   token: string
 }
 
-const LOGO_URL = 'https://nxbjgqdehvxszqjoxumx.supabase.co/storage/v1/object/public/media/email%2Flogo.png'
+const LOGO_URL = 'https://nxbjgqdehvxszqjoxumx.supabase.co/storage/v1/object/public/media/email%2Flogo-bl.png'
 
 export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => (
   <Html lang="en" dir="ltr">
@@ -40,7 +40,7 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
           <Text style={footer}>
             This code will expire shortly. If you didn't request this, you can safely ignore this email.
           </Text>
-          <Text style={powered}>Powered by UTAAB</Text>
+          <Text style={powered}>© Powered by UTAAB</Text>
         </Container>
       </Container>
     </Body>
@@ -57,7 +57,7 @@ const logoSection = { textAlign: 'center' as const, marginBottom: '8px' }
 const logo = { display: 'inline-block' as const }
 const tagline = { fontFamily, fontSize: '11px', fontWeight: '600' as const, color: '#919199', textAlign: 'center' as const, letterSpacing: '3px', margin: '0 0 28px' }
 const h1 = { fontFamily, fontSize: '24px', fontWeight: '700' as const, color: '#081020', margin: '0 0 16px', textAlign: 'center' as const }
-const text = { fontFamily, fontSize: '14px', color: '#4A4A52', lineHeight: '1.7', margin: '0 0 28px' }
+const text = { fontFamily, fontSize: '14px', color: '#4A4A52', lineHeight: '1.7', margin: '0 0 28px', textAlign: 'center' as const }
 const codeStyle = {
   fontFamily: 'Montserrat, Courier, monospace',
   fontSize: '32px',

@@ -22,10 +22,9 @@ interface InviteEmailProps {
   confirmationUrl: string
 }
 
-const LOGO_URL = 'https://nxbjgqdehvxszqjoxumx.supabase.co/storage/v1/object/public/media/email%2Flogo.png'
+const LOGO_URL = 'https://nxbjgqdehvxszqjoxumx.supabase.co/storage/v1/object/public/media/email%2Flogo-bl.png'
 
 export const InviteEmail = ({
-  siteName,
   siteUrl,
   confirmationUrl,
 }: InviteEmailProps) => (
@@ -33,19 +32,19 @@ export const InviteEmail = ({
     <Head>
       <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
     </Head>
-    <Preview>You've been invited to join {siteName}</Preview>
+    <Preview>You've been invited to join UTAAB</Preview>
     <Body style={main}>
       <Container style={wrapper}>
         <Container style={container}>
           <Section style={logoSection}>
-            <Img src={LOGO_URL} width="160" height="auto" alt={siteName} style={logo} />
+            <Img src={LOGO_URL} width="160" height="auto" alt="UTAAB" style={logo} />
           </Section>
           <Text style={tagline}>CONNECT. LEARN. BUILD.</Text>
-          <Heading style={h1}>Join {siteName}</Heading>
+          <Heading style={h1}>Join UTAAB</Heading>
           <Text style={text}>
             You've been invited to join{' '}
             <Link href={siteUrl} style={link}>
-              <strong>{siteName}</strong>
+              <strong>UTAAB</strong>
             </Link>
             . Click the button below to accept the invitation and create your account.
           </Text>
@@ -58,7 +57,7 @@ export const InviteEmail = ({
           <Text style={footer}>
             If you weren't expecting this invitation, you can safely ignore this email.
           </Text>
-          <Text style={powered}>© {siteName} · Powered by UTAAB</Text>
+          <Text style={powered}>© Powered by UTAAB</Text>
         </Container>
       </Container>
     </Body>
@@ -75,7 +74,7 @@ const logoSection = { textAlign: 'center' as const, marginBottom: '8px' }
 const logo = { display: 'inline-block' as const }
 const tagline = { fontFamily, fontSize: '11px', fontWeight: '600' as const, color: '#919199', textAlign: 'center' as const, letterSpacing: '3px', margin: '0 0 28px' }
 const h1 = { fontFamily, fontSize: '24px', fontWeight: '700' as const, color: '#081020', margin: '0 0 16px', textAlign: 'center' as const }
-const text = { fontFamily, fontSize: '14px', color: '#4A4A52', lineHeight: '1.7', margin: '0 0 28px' }
+const text = { fontFamily, fontSize: '14px', color: '#4A4A52', lineHeight: '1.7', margin: '0 0 28px', textAlign: 'center' as const }
 const link = { color: '#0B3C8C', textDecoration: 'underline' }
 const buttonSection = { textAlign: 'center' as const, margin: '0 0 28px' }
 const button = { fontFamily, backgroundColor: '#0B3C8C', color: '#ffffff', fontSize: '14px', fontWeight: '600' as const, borderRadius: '12px', padding: '14px 32px', textDecoration: 'none', display: 'inline-block' as const }
