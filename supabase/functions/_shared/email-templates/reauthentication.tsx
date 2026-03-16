@@ -70,6 +70,6 @@ const codeStyle = {
   borderRadius: '12px',
   padding: '16px',
 }
-const divider = { fontFamily, fontSize: '14px', color: '#d0d0d8', textAlign: 'center' as const, margin: '0 0 16px' }
+
 const footer = { fontFamily, fontSize: '12px', color: '#919199', margin: '0 0 8px', textAlign: 'center' as const }
 const powered = { fontFamily, fontSize: '11px', color: '#b0b0b8', margin: '0', textAlign: 'center' as const }
