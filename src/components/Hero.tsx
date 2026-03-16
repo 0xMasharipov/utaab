@@ -26,6 +26,10 @@ export const Hero = () => {
     document.getElementById('join')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const scrollToProjects = () => {
+    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <section
       id="hero"
