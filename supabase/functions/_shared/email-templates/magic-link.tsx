@@ -46,7 +46,7 @@ export const MagicLinkEmail = ({
               Sign In to UTAAB
             </Button>
           </Section>
-          <Text style={divider}>— — —</Text>
+          
           <Text style={footer}>
             If you didn't request this link, you can safely ignore this email.
           </Text>
