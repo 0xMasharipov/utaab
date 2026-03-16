@@ -16,7 +16,8 @@ import {
   LogOut,
   ChevronLeft,
   Calendar,
-  Sparkles,
+  GitMerge,
+  UsersRound,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
