@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Search, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
+import { Search, ChevronDown, ChevronUp, GitMerge } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function AdminContributorAssessments() {
@@ -77,7 +77,7 @@ export default function AdminContributorAssessments() {
                   >
                     <div className="flex items-center gap-4 flex-1 min-w-0">
                       <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-                        <Sparkles className="h-5 w-5 text-primary" />
+                        <GitMerge className="h-5 w-5 text-primary" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-medium truncate">{item.full_name}</p>
@@ -158,7 +158,7 @@ export default function AdminContributorAssessments() {
       ) : (
         <Card className="glass-panel">
           <CardContent className="p-12 text-center">
-            <Sparkles className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+            <GitMerge className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
             <h3 className="text-lg font-semibold mb-2">No assessments found</h3>
             <p className="text-muted-foreground">
               Contributor assessments will appear here once submitted

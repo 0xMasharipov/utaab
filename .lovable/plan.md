@@ -1,56 +1,31 @@
 
 
-# Change Contributor Match Icon + Fix Hero Video Play Button & Fallback
+# Improve Hero Video Loading Speed
 
-## 1. Replace Sparkles with GitMerge icon
+## Problem
+The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
 
-Replace `Sparkles` with `GitMerge` in all contributor-related files:
+## Changes
 
-| File | Change |
-|------|--------|
-| `src/components/admin/AdminLayout.tsx` | Import `GitMerge` instead of `Sparkles`, use for Contributors sidebar item |
-| `src/components/contributor/ContributorHero.tsx` | Import `GitMerge` instead of `Sparkles`, use in the badge |
-| `src/pages/admin/AdminContributorAssessments.tsx` | Import `GitMerge` instead of `Sparkles`, use in avatar circles and empty state |
+### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
+Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
 
-## 2. Fix Hero video play button appearing on some devices
+### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
+Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
 
-The `<video>` element currently has `pointer-events-none` but some mobile browsers still show a native play button overlay. Fix by adding CSS to hide native controls:
-
-**`src/components/Hero.tsx`**:
-- Add `controls={false}` explicitly (redundant but helps some browsers)
-- Add inline style `WebkitMediaControls` or use a CSS class to hide native video controls
-- Add `x-webkit-airplay="deny"` attribute workaround
-
-**`src/index.css`** (or `App.css`):
-- Add CSS rules to suppress native video play buttons:
-```css
-video::-webkit-media-controls,
-video::-webkit-media-controls-panel,
-video::-webkit-media-controls-play-button,
-video::-webkit-media-controls-start-playback-button {
-  display: none !important;
-  -webkit-appearance: none;
-}
+### 3. Preload the video in `index.html`
+Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
+```html
+<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
 ```
 
-## 3. Remove poster image fallback — use solid color instead
+### 4. Add loading state with fade-in transition (`Hero.tsx`)
+Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
 
-When video hasn't loaded, instead of showing the poster image (`hero-cube-poster.jpg`), show the solid dark navy background (`#061224`). This avoids a static "dummy" image flash.
-
-**`src/components/Hero.tsx`**:
-- Remove `poster="/videos/hero-cube-poster.jpg"` from the `<video>` tag
-- The existing `style={{ background: '#061224' }}` on the section already provides the fallback
-- The video fades in via the existing `opacity: videoReady ? 1 : 0` transition
-
-These changes apply to both desktop and mobile versions since the same `<video>` element handles both via the `isMobile` key switch.
-
-## Files Modified
+## Files to modify
 
 | File | Change |
 |------|--------|
-| `src/components/Hero.tsx` | Remove poster, add controls={false}, suppress native controls |
-| `src/index.css` | Add CSS to hide native video controls |
-| `src/components/admin/AdminLayout.tsx` | Sparkles → GitMerge |
-| `src/components/contributor/ContributorHero.tsx` | Sparkles → GitMerge |
-| `src/pages/admin/AdminContributorAssessments.tsx` | Sparkles → GitMerge |
+| `index.html` | Add `<link rel="preload">` for the video |
+| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
 

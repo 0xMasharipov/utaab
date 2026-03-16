@@ -39,12 +39,14 @@ export const Hero = () => {
         loop
         playsInline
         preload="auto"
-        poster="/videos/hero-cube-poster.jpg"
+        controls={false}
         onCanPlay={handleVideoReady}
         controlsList="nodownload nofullscreen noremoteplayback"
         disablePictureInPicture
+        // @ts-ignore
+        x-webkit-airplay="deny"
         onContextMenu={(e) => e.preventDefault()}
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none transition-opacity duration-700"
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none transition-opacity duration-700 hero-video-no-controls"
         style={{ zIndex: 0, opacity: videoReady ? 1 : 0 }}
       >
         <source src={isMobile ? '/videos/hero-mobile.mp4' : '/videos/hero-cube.mp4'} type="video/mp4" />
