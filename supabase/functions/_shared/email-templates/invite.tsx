@@ -53,7 +53,7 @@ export const InviteEmail = ({
               Accept Invitation
             </Button>
           </Section>
-          <Text style={divider}>— — —</Text>
+          
           <Text style={footer}>
             If you weren't expecting this invitation, you can safely ignore this email.
           </Text>
