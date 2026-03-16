@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Search, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
+import { Search, ChevronDown, ChevronUp, GitMerge } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function AdminContributorAssessments() {
