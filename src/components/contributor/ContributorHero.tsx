@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { GitMerge, ArrowDown } from 'lucide-react';
+import { Sparkles, ArrowDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
 
@@ -27,7 +27,7 @@ const ContributorHero = ({ onStartAssessment, onLearnMore }: ContributorHeroProp
           transition={{ duration: 0.5 }}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.06] backdrop-blur-xl border border-white/[0.12] mb-8"
         >
-          <GitMerge className="w-4 h-4 text-secondary" />
+          <Sparkles className="w-4 h-4 text-secondary" />
           <span className="text-sm text-muted-foreground tracking-wide">{t('contributor.hero.badge')}</span>
         </motion.div>
 

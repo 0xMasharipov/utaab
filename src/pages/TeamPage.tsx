@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Navbar } from '@/components/Navbar';
@@ -12,7 +12,30 @@ import TeamOverlapCard from '@/components/team/TeamOverlapCard';
 import TeamProfileModal from '@/components/team/TeamProfileModal';
 import TeamProfileDrawer from '@/components/team/TeamProfileDrawer';
 import type { TeamMember } from '@/components/team/TeamOverlapCard';
-import { supabase } from '@/integrations/supabase/client';
+
+import zinurbekImg from '@/assets/team/zinurbek.png';
+import umutImg from '@/assets/team/umut.png';
+import abdullaImg from '@/assets/team/abdulla.png';
+import yunusImg from '@/assets/team/yunus.png';
+import abdulbakiImg from '@/assets/team/abdulbaki.png';
+import yanaImg from '@/assets/team/yana.png';
+import shuaybImg from '@/assets/team/shuayb.png';
+import ibrahimImg from '@/assets/team/ibrahim.png';
+import burakImg from '@/assets/team/burak.png';
+import anarImg from '@/assets/team/anar.png';
+
+const teamMembers: TeamMember[] = [
+  { key: 'zinurbek', image: zinurbekImg, tag: 'Founder' },
+  { key: 'yunus', image: yunusImg, tag: 'Leadership' },
+  { key: 'abdulla', image: abdullaImg, tag: 'Engineering' },
+  { key: 'abdulbaki', image: abdulbakiImg, tag: 'Operations' },
+  { key: 'umut', image: umutImg, tag: 'Operations' },
+  { key: 'anar', image: anarImg, tag: 'Operations' },
+  { key: 'yana', image: yanaImg, tag: 'Engineering' },
+  { key: 'shuayb', image: shuaybImg, tag: 'Engineering' },
+  { key: 'ibrahim', image: ibrahimImg, tag: 'Marketing' },
+  { key: 'burak', image: burakImg, tag: 'Operations' },
+];
 
 const containerVariants = {
   hidden: {},
@@ -20,42 +43,11 @@ const containerVariants = {
 };
 
 const TeamPage = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const isMobile = useIsMobile();
   const [isPrivacyCenterOpen, setIsPrivacyCenterOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchTeam = async () => {
-      const { data } = await supabase
-        .from('team_members')
-        .select('*')
-        .eq('is_published', true)
-        .order('display_order', { ascending: true });
-
-      if (data && data.length > 0) {
-        const lang = i18n.language;
-        setTeamMembers(data.map(m => ({
-          key: m.id,
-          image: m.image_url || undefined,
-          tag: m.department,
-          db_name: m.full_name,
-          db_role: m.role_title,
-          db_bio: (lang === 'tr' && m.bio_tr) || (lang === 'ru' && m.bio_ru) || (lang === 'ar' && m.bio_ar) || m.bio_en || '',
-          linkedin_url: m.linkedin_url || undefined,
-          twitter_url: m.twitter_url || undefined,
-          telegram_url: m.telegram_url || undefined,
-          website_url: m.website_url || undefined,
-          instagram_url: m.instagram_url || undefined,
-        })));
-      }
-      setLoading(false);
-    };
-    fetchTeam();
-  }, [i18n.language]);
 
   const handleCardClick = (member: TeamMember) => {
     setSelectedMember(member);
@@ -91,27 +83,21 @@ const TeamPage = () => {
       {/* Card Grid */}
       <section className="pb-24">
         <div className="section-container">
-          {loading ? (
-            <div className="flex justify-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
-            </div>
-          ) : (
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-50px' }}
-              className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-7 lg:gap-8 max-w-6xl mx-auto"
-            >
-              {teamMembers.map((member) => (
-                <TeamOverlapCard
-                  key={member.key}
-                  member={member}
-                  onClick={() => handleCardClick(member)}
-                />
-              ))}
-            </motion.div>
-          )}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+            className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-7 lg:gap-8 max-w-6xl mx-auto"
+          >
+            {teamMembers.map((member) => (
+              <TeamOverlapCard
+                key={member.key}
+                member={member}
+                onClick={() => handleCardClick(member)}
+              />
+            ))}
+          </motion.div>
         </div>
       </section>
 

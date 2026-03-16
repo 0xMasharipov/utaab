@@ -47,7 +47,6 @@ const TeamPage = lazy(() => import("./pages/TeamPage"));
 const AdminBlog = lazy(() => import("./pages/admin/AdminBlog"));
 const ContributorMatch = lazy(() => import("./pages/ContributorMatch"));
 const AdminContributorAssessments = lazy(() => import("./pages/admin/AdminContributorAssessments"));
-const AdminTeamMembers = lazy(() => import("./pages/admin/AdminTeamMembers"));
 
 const queryClient = new QueryClient();
 
@@ -95,7 +94,6 @@ function App() {
               <Route path="messages" element={<AdminMessages />} />
               <Route path="media" element={<AdminMedia />} />
               <Route path="contributors" element={<AdminContributorAssessments />} />
-              <Route path="team" element={<AdminTeamMembers />} />
               
               <Route path="settings" element={<AdminSettingsNew />} />
               <Route path="audit" element={<AdminAuditLog />} />

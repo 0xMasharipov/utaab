@@ -1,23 +1,33 @@
-import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { User } from 'lucide-react';
 import GlassCard from '@/components/glass/GlassCard';
 import GlassSectionWrapper from '@/components/glass/GlassSectionWrapper';
 import AnimatedImage from '@/components/common/AnimatedImage';
-import { supabase } from '@/integrations/supabase/client';
 
-interface TeamMemberData {
-  id: string;
-  full_name: string;
-  role_title: string;
-  department: string;
-  bio_en: string | null;
-  bio_tr: string | null;
-  bio_ru: string | null;
-  bio_ar: string | null;
-  image_url: string | null;
-}
+import zinurbekImg from '@/assets/team/zinurbek.png';
+import umutImg from '@/assets/team/umut.png';
+import abdullaImg from '@/assets/team/abdulla.png';
+import yunusImg from '@/assets/team/yunus.png';
+import abdulbakiImg from '@/assets/team/abdulbaki.png';
+import yanaImg from '@/assets/team/yana.png';
+import shuaybImg from '@/assets/team/shuayb.png';
+import ibrahimImg from '@/assets/team/ibrahim.png';
+import burakImg from '@/assets/team/burak.png';
+import anarImg from '@/assets/team/anar.png';
+
+const teamMembers = [
+  { key: 'zinurbek', image: zinurbekImg },
+  { key: 'yunus', image: yunusImg },
+  { key: 'abdulla', image: abdullaImg },
+  { key: 'abdulbaki', image: abdulbakiImg },
+  { key: 'umut', image: umutImg },
+  { key: 'anar', image: anarImg },
+  { key: 'yana', image: yanaImg },
+  { key: 'shuayb', image: shuaybImg },
+  { key: 'ibrahim', image: ibrahimImg },
+  { key: 'burak', image: burakImg },
+];
 
 const containerVariants = {
   hidden: {},
@@ -32,25 +42,7 @@ const cardVariants = {
 };
 
 export const Team = () => {
-  const { t, i18n } = useTranslation();
-  const [members, setMembers] = useState<TeamMemberData[]>([]);
-
-  useEffect(() => {
-    const fetchTeam = async () => {
-      const { data } = await supabase
-        .from('team_members')
-        .select('id, full_name, role_title, department, bio_en, bio_tr, bio_ru, bio_ar, image_url')
-        .eq('is_published', true)
-        .order('display_order', { ascending: true });
-      if (data) setMembers(data);
-    };
-    fetchTeam();
-  }, []);
-
-  const getBio = (m: TeamMemberData) => {
-    const lang = i18n.language;
-    return (lang === 'tr' && m.bio_tr) || (lang === 'ru' && m.bio_ru) || (lang === 'ar' && m.bio_ar) || m.bio_en || '';
-  };
+  const { t } = useTranslation();
 
   return (
     <GlassSectionWrapper id="team">
@@ -81,14 +73,14 @@ export const Team = () => {
         viewport={{ once: true, margin: '-50px' }}
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 sm:gap-6"
       >
-        {members.map((member) => (
-          <motion.div key={member.id} variants={cardVariants}>
+        {teamMembers.map((member) => (
+          <motion.div key={member.key} variants={cardVariants}>
             <GlassCard hover glow className="p-6 text-center group">
               <div className="w-20 h-20 mx-auto mb-4 rounded-full p-[2px] bg-gradient-to-br from-accent/30 via-primary/20 to-accent/15">
                 <div className="w-full h-full rounded-full overflow-hidden bg-muted/20 flex items-center justify-center">
-                  {member.image_url ? (
+                  {member.image ? (
                     <AnimatedImage
-                      src={member.image_url}
+                      src={member.image}
                       alt=""
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       containerClassName="w-full h-full"
@@ -100,13 +92,13 @@ export const Team = () => {
               </div>
 
               <h3 className="text-foreground font-semibold text-lg mb-1">
-                {member.full_name}
+                {t(`team.members.${member.key}.name`)}
               </h3>
               <p className="text-accent text-sm font-medium mb-3">
-                {member.role_title}
+                {t(`team.members.${member.key}.position`)}
               </p>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                {getBio(member)}
+                {t(`team.members.${member.key}.description`)}
               </p>
             </GlassCard>
           </motion.div>

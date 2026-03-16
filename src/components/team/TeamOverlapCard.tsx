@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { User, Linkedin, Globe, Send } from 'lucide-react';
+import { User } from 'lucide-react';
 import AnimatedImage from '@/components/common/AnimatedImage';
 
 export interface TeamMember {
@@ -8,15 +8,6 @@ export interface TeamMember {
   image?: string;
   tag: string;
   linkedin?: string;
-  // Database-driven fields
-  db_name?: string;
-  db_role?: string;
-  db_bio?: string;
-  twitter_url?: string;
-  instagram_url?: string;
-  telegram_url?: string;
-  website_url?: string;
-  linkedin_url?: string;
 }
 
 interface TeamOverlapCardProps {
@@ -30,13 +21,7 @@ const cardVariants = {
 };
 
 const TeamOverlapCard = ({ member, onClick }: TeamOverlapCardProps) => {
-  const { t, i18n } = useTranslation();
-
-  const name = member.db_name || t(`team.members.${member.key}.name`);
-  const role = member.db_role || t(`team.members.${member.key}.position`);
-  const bio = member.db_bio || t(`team.members.${member.key}.description`);
-
-  const hasSocials = member.linkedin_url || member.twitter_url || member.telegram_url || member.website_url;
+  const { t } = useTranslation();
 
   return (
     <motion.div
@@ -46,14 +31,14 @@ const TeamOverlapCard = ({ member, onClick }: TeamOverlapCardProps) => {
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && onClick()}
-      aria-label={name}
+      aria-label={t(`team.members.${member.key}.name`)}
     >
       {/* Image Card */}
       <div className="relative aspect-[4/5] rounded-[28px] overflow-hidden border border-white/[0.08] shadow-lg transition-all duration-[240ms] motion-safe:group-hover:border-white/[0.16]">
         {member.image ? (
           <AnimatedImage
             src={member.image}
-            alt={name}
+            alt={t(`team.members.${member.key}.name`)}
             className="w-full h-full object-cover transition-transform duration-500 ease-out motion-safe:group-hover:scale-[1.02]"
             containerClassName="w-full h-full"
             loading="lazy"
@@ -74,7 +59,7 @@ const TeamOverlapCard = ({ member, onClick }: TeamOverlapCardProps) => {
 
         {/* Dark Glass Info Card */}
         <div
-          className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 z-20 w-[65%] sm:w-[52%] lg:w-[48%] max-h-[140px] sm:max-h-[160px] rounded-[22px] p-3 sm:p-3.5 lg:p-4 transition-all duration-[240ms] motion-safe:group-hover:border-slate-400/30"
+          className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 z-20 w-[65%] sm:w-[52%] lg:w-[48%] max-h-[120px] sm:max-h-[140px] rounded-[22px] p-3 sm:p-3.5 lg:p-4 transition-all duration-[240ms] motion-safe:group-hover:border-slate-400/30"
           style={{
             background: 'rgba(10, 18, 40, 0.62)',
             backdropFilter: 'blur(12px)',
@@ -93,12 +78,12 @@ const TeamOverlapCard = ({ member, onClick }: TeamOverlapCardProps) => {
             className="font-bold text-[16px] sm:text-[18px] lg:text-[20px] leading-tight mb-0.5 line-clamp-1"
             style={{ color: '#F8FAFC', fontFamily: 'Montserrat, sans-serif' }}
           >
-            {name}
+            {t(`team.members.${member.key}.name`)}
           </h3>
 
           {/* Role */}
           <p className="text-[12px] sm:text-[13px] font-semibold mb-1" style={{ color: '#93C5FD' }}>
-            {role}
+            {t(`team.members.${member.key}.position`)}
           </p>
 
           {/* Bio */}
@@ -106,29 +91,8 @@ const TeamOverlapCard = ({ member, onClick }: TeamOverlapCardProps) => {
             className="text-[12px] leading-relaxed line-clamp-2"
             style={{ color: 'rgba(226,232,240,0.78)' }}
           >
-            {bio}
+            {t(`team.members.${member.key}.description`)}
           </p>
-
-          {/* Social icons */}
-          {hasSocials && (
-            <div className="flex items-center gap-2 mt-1.5" onClick={e => e.stopPropagation()}>
-              {member.linkedin_url && (
-                <a href={member.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors">
-                  <Linkedin className="w-3.5 h-3.5" />
-                </a>
-              )}
-              {member.telegram_url && (
-                <a href={member.telegram_url} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors">
-                  <Send className="w-3.5 h-3.5" />
-                </a>
-              )}
-              {member.website_url && (
-                <a href={member.website_url} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors">
-                  <Globe className="w-3.5 h-3.5" />
-                </a>
-              )}
-            </div>
-          )}
         </div>
       </div>
     </motion.div>

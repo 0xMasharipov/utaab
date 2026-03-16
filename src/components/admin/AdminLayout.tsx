@@ -16,8 +16,7 @@ import {
   LogOut,
   ChevronLeft,
   Calendar,
-  GitMerge,
-  UsersRound,
+  Sparkles,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
@@ -27,7 +26,6 @@ const sidebarItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
   { icon: Users, label: 'Users & Roles', path: '/admin/users' },
   { icon: Users, label: 'Communities', path: '/admin/communities' },
-  { icon: UsersRound, label: 'Team Members', path: '/admin/team' },
   { icon: Calendar, label: 'Events', path: '/admin/events' },
   { icon: BookOpen, label: 'Courses', path: '/admin/courses' },
   { icon: FileText, label: 'Blog', path: '/admin/blog' },
@@ -35,7 +33,7 @@ const sidebarItems = [
   { icon: Megaphone, label: 'Announcements', path: '/admin/announcements' },
   { icon: MessageSquare, label: 'Messages', path: '/admin/messages' },
   { icon: ImageIcon, label: 'Media Library', path: '/admin/media' },
-  { icon: GitMerge, label: 'Contributors', path: '/admin/contributors' },
+  { icon: Sparkles, label: 'Contributors', path: '/admin/contributors' },
   { icon: Shield, label: 'Security', path: '/admin/security' },
   { icon: Settings, label: 'Settings', path: '/admin/settings' },
   { icon: FileText, label: 'Audit Log', path: '/admin/audit' },
