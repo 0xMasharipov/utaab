@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ArrowRight } from 'lucide-react';
 
 export const Hero = () => {
   const { t } = useTranslation();
@@ -23,6 +24,10 @@ export const Hero = () => {
 
   const scrollToJoin = () => {
     document.getElementById('join')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const scrollToProjects = () => {
+    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -76,16 +81,7 @@ export const Hero = () => {
         }}
       />
 
-      {/* Bottom fade for seamless transition */}
-      <div
-        className="absolute bottom-0 left-0 right-0"
-        style={{
-          height: 120,
-          background: 'linear-gradient(to bottom, transparent, #081624)',
-          zIndex: 3,
-          pointerEvents: 'none',
-        }}
-      />
+      {/* Bottom fade removed — carousel handles transition */}
 
       {/* Content */}
       <div
@@ -167,53 +163,18 @@ export const Hero = () => {
           >
             <button
               onClick={scrollToJoin}
-              className="rounded-full text-white font-semibold transition-all duration-300 hover:scale-105 w-full sm:w-auto"
-              style={{
-                background: 'rgba(11, 60, 109, 0.75)',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                border: '1px solid rgba(255,255,255,0.15)',
-                padding: '16px 28px',
-                fontWeight: 600,
-                boxShadow: '0 4px 24px rgba(47,111,181,0.35)',
-              }}
-              onMouseEnter={(e) => {
-                const btn = e.currentTarget as HTMLButtonElement;
-                btn.style.background = 'rgba(11, 60, 109, 0.9)';
-                btn.style.boxShadow = '0 6px 30px rgba(47,111,181,0.5)';
-              }}
-              onMouseLeave={(e) => {
-                const btn = e.currentTarget as HTMLButtonElement;
-                btn.style.background = 'rgba(11, 60, 109, 0.75)';
-                btn.style.boxShadow = '0 4px 24px rgba(47,111,181,0.35)';
-              }}
+              className="hero-btn-primary group/btn rounded-full text-white font-semibold transition-all duration-300 hover:scale-105 w-full sm:w-auto flex items-center justify-center gap-2"
             >
               {t('hero.joinUs')}
+              <ArrowRight size={18} className="transition-transform duration-300 group-hover/btn:translate-x-1" />
             </button>
 
             <button
-              className="rounded-full font-semibold transition-all duration-300 hover:scale-105 w-full sm:w-auto"
-              style={{
-                background: 'rgba(255, 255, 255, 0.06)',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                color: '#B4D2EB',
-                padding: '16px 28px',
-                fontWeight: 600,
-              }}
-              onMouseEnter={(e) => {
-                const btn = e.currentTarget as HTMLButtonElement;
-                btn.style.background = 'rgba(255, 255, 255, 0.12)';
-                btn.style.borderColor = 'rgba(255, 255, 255, 0.35)';
-              }}
-              onMouseLeave={(e) => {
-                const btn = e.currentTarget as HTMLButtonElement;
-                btn.style.background = 'rgba(255, 255, 255, 0.06)';
-                btn.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-              }}
+              onClick={scrollToProjects}
+              className="hero-btn-outline rounded-full font-semibold transition-all duration-300 hover:scale-105 w-full sm:w-auto flex items-center justify-center gap-2"
             >
               {t('hero.explore')}
+              <ArrowRight size={18} className="transition-transform duration-300 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0" />
             </button>
           </motion.div>
         </div>

@@ -320,6 +320,63 @@
     pointer-events: none !important;
   }
 
+  /* Hero buttons */
+  .hero-btn-primary {
+    background: rgba(11, 60, 109, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(127, 179, 255, 0.3);
+    padding: 16px 32px;
+    font-weight: 600;
+    box-shadow: 0 4px 24px rgba(47, 111, 181, 0.35);
+  }
+  .hero-btn-primary:hover {
+    background: rgba(11, 60, 109, 0.92);
+    border-color: rgba(127, 179, 255, 0.5);
+    box-shadow: 0 6px 36px rgba(47, 111, 181, 0.55);
+  }
+
+  .hero-btn-outline {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: hsl(var(--secondary));
+    padding: 16px 32px;
+    font-weight: 600;
+  }
+  .hero-btn-outline:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(127, 179, 255, 0.4);
+    box-shadow: 0 4px 24px rgba(47, 111, 181, 0.2);
+  }
+
+  /* Infinite carousel */
+  @keyframes hero-carousel-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .hero-carousel-track {
+    display: flex;
+    width: max-content;
+    animation: hero-carousel-scroll 30s linear infinite;
+  }
+  .hero-carousel-track:hover {
+    animation-play-state: paused;
+  }
+
+  .hero-carousel-item {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    color: rgba(255, 255, 255, 0.8);
+    text-shadow: 0 0 20px rgba(0, 150, 255, 0.3);
+    white-space: nowrap;
+  }
+
   /* Grain noise overlay for blob background */
   .bg-grain {
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");

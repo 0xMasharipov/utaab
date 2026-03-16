@@ -1,47 +1,31 @@
 
 
-# Refine Hero Buttons + Infinite Carousel Transition Band
+# Improve Hero Video Loading Speed
+
+## Problem
+The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
 
 ## Changes
 
-### 1. Refine Hero Buttons
-**`src/components/Hero.tsx`**:
-- **"Join Us"** button: Upgrade to a premium glassmorphism style with a subtle blue glow border animation, slightly larger padding, and an arrow icon (`ArrowRight` from lucide)
-- **"Explore Ecosystem"** button: Add `onClick` that scrolls to `#projects` section. Refine with a gradient border effect (blue → light blue) and subtle shimmer
-- Both buttons get improved hover states with smooth glow transitions via CSS instead of inline `onMouseEnter/Leave` handlers
+### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
+Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
 
-### 2. Create Infinite Carousel Transition Component
-**New file: `src/components/HeroCarousel.tsx`**:
-- Renders "CONNECT.  LEARN.  BUILD." repeated 4× in a single row, duplicated for seamless loop
-- CSS keyframe animation: `scroll 25s linear infinite` translating -50% horizontally
-- Montserrat 600 weight, uppercase, `letter-spacing: 0.25em`
-- Text styled with `rgba(255,255,255,0.85)` and `text-shadow: 0 0 20px rgba(0,150,255,0.3)` glow
-- Pauses on hover
-- Positioned with `margin-top: -60px; margin-bottom: -60px; z-index: 5` to overlap hero bottom and Stats top
-- Background: gradient blend from hero tone to dark section (`linear-gradient(to bottom, rgba(10,40,120,0.4), rgba(5,10,25,0.95))`) with `backdrop-filter: blur(12px)`
+### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
+Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
 
-### 3. Eliminate Visible Line Between Hero and Stats
-**`src/components/Hero.tsx`**:
-- Remove the existing 120px bottom fade div (the hard gradient to `#081624` causes the visible line)
+### 3. Preload the video in `index.html`
+Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
+```html
+<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
+```
 
-**`src/components/Stats.tsx`**:
-- Remove top padding to close the gap — the carousel now bridges the sections
+### 4. Add loading state with fade-in transition (`Hero.tsx`)
+Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
 
-**`src/index.css`**:
-- Add `@keyframes hero-carousel-scroll` animation
-- Add `.hero-carousel-track` utility class
-
-### 4. Wire Carousel into Index
-**`src/pages/Index.tsx`**:
-- Import and place `HeroCarousel` between `<Hero />` and `<Stats />`
-
-## Files Modified
+## Files to modify
 
 | File | Change |
 |------|--------|
-| `src/components/Hero.tsx` | Refine buttons, remove bottom fade div, add scroll-to-projects |
-| `src/components/HeroCarousel.tsx` | New — infinite carousel transition band |
-| `src/components/Stats.tsx` | Adjust top spacing for seamless blend |
-| `src/pages/Index.tsx` | Add `HeroCarousel` between Hero and Stats |
-| `src/index.css` | Add carousel keyframe animation |
+| `index.html` | Add `<link rel="preload">` for the video |
+| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
 
