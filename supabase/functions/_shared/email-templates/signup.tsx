@@ -55,7 +55,7 @@ export const SignupEmail = ({
               Get Started
             </Button>
           </Section>
-          <Text style={divider}>— — —</Text>
+          
           <Text style={footer}>
             If you didn't create an account, you can safely ignore this email.
           </Text>
