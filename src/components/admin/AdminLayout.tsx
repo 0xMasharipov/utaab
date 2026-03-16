@@ -27,6 +27,7 @@ const sidebarItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
   { icon: Users, label: 'Users & Roles', path: '/admin/users' },
   { icon: Users, label: 'Communities', path: '/admin/communities' },
+  { icon: UsersRound, label: 'Team Members', path: '/admin/team' },
   { icon: Calendar, label: 'Events', path: '/admin/events' },
   { icon: BookOpen, label: 'Courses', path: '/admin/courses' },
   { icon: FileText, label: 'Blog', path: '/admin/blog' },
