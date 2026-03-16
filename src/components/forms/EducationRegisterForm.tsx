@@ -23,6 +23,7 @@ import { z } from 'zod';
 import { mapError } from '@/lib/errorUtils';
 import { HoneypotField } from '@/components/security/HoneypotField';
 import { useSecurity } from '@/hooks/useSecurity';
+import { UtaabCaptcha, UtaabCaptchaRef } from '@/components/security/UtaabCaptcha';
 
 const createBaseSchema = (t: any) => z.object({
   email: z.string().trim().email({ message: t('education.registration.validation.emailInvalid') }),
@@ -83,6 +84,8 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
   const [honeypot, setHoneypot] = useState("");
   const [failedAttempts, setFailedAttempts] = useState(0);
   const { checkRateLimit, validateFormTiming, logSecurityEvent } = useSecurity();
+  const [utaabToken, setUtaabToken] = useState<string | null>(null);
+  const utaabRef = useRef<UtaabCaptchaRef>(null);
   const [formData, setFormData] = useState<Partial<FormData>>({
     preferred_language: i18n.language,
     focus_areas: [],
@@ -206,6 +209,18 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
 
   const handleVerifyOtp = async () => {
     if (otpCode.length !== 6) return;
+    
+    // Rate limit OTP verification attempts
+    const rateLimitCheck = await checkRateLimit(otpEmail, 'otp_verify', 5);
+    if (!rateLimitCheck.allowed) {
+      toast({
+        title: 'Error',
+        description: `Too many verification attempts. Please try again ${rateLimitCheck.retryAfter ? `in ${rateLimitCheck.retryAfter}s` : 'later'}.`,
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setIsVerifyingOtp(true);
     try {
       const { data, error } = await supabase.auth.verifyOtp({
@@ -245,6 +260,18 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
 
   const handleResendOtp = async () => {
     if (resendCooldown > 0) return;
+
+    // Rate limit OTP resend
+    const rateLimitCheck = await checkRateLimit(otpEmail, 'otp_resend', 3);
+    if (!rateLimitCheck.allowed) {
+      toast({
+        title: 'Error',
+        description: `Too many resend attempts. Please try again ${rateLimitCheck.retryAfter ? `in ${rateLimitCheck.retryAfter}s` : 'later'}.`,
+        variant: 'destructive',
+      });
+      return;
+    }
+
     try {
       if (otpType === 'signup') {
         await supabase.auth.resend({ type: 'signup', email: otpEmail });
@@ -376,6 +403,16 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
       toast({
         title: 'Error',
         description: 'Please try again later',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    // Anti-bot check
+    if (!utaabToken) {
+      toast({
+        title: 'Error',
+        description: 'Please complete the security verification',
         variant: 'destructive',
       });
       return;
@@ -982,6 +1019,19 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
               </div>
             </div>
 
+            {/* UTAAB Anti-bot Verification */}
+            <UtaabCaptcha
+              ref={utaabRef}
+              onVerify={(token) => setUtaabToken(token)}
+              onError={() => toast({
+                title: 'Error',
+                description: 'Security verification failed. Please try again.',
+                variant: 'destructive',
+              })}
+              mode="interactive"
+              difficulty="adaptive"
+            />
+
             <div className="flex gap-3">
               <Button type="button" onClick={handleBack} variant="outline" className="flex-1 glass hover:bg-white/10">
                 <ChevronLeft className="mr-2 h-5 w-5" />
@@ -990,7 +1040,7 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
               <Button 
                 type="submit" 
                 className="btn-primary flex-1" 
-                disabled={isSubmitting}
+                disabled={isSubmitting || !utaabToken}
               >
                 {isSubmitting ? 'Creating Account...' : t('education.registration.createAccount')}
               </Button>
