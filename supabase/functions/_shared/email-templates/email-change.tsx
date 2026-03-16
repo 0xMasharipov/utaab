@@ -54,7 +54,7 @@ export const EmailChangeEmail = ({
               Confirm Email Change
             </Button>
           </Section>
-          <Text style={divider}>— — —</Text>
+          
           <Text style={footer}>
             If you didn't request this change, please secure your account immediately.
           </Text>
