@@ -84,6 +84,8 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
   const [honeypot, setHoneypot] = useState("");
   const [failedAttempts, setFailedAttempts] = useState(0);
   const { checkRateLimit, validateFormTiming, logSecurityEvent } = useSecurity();
+  const [utaabToken, setUtaabToken] = useState<string | null>(null);
+  const utaabRef = useRef<UtaabCaptchaRef>(null);
   const [formData, setFormData] = useState<Partial<FormData>>({
     preferred_language: i18n.language,
     focus_areas: [],
