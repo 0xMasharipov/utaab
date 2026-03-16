@@ -209,6 +209,18 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
 
   const handleVerifyOtp = async () => {
     if (otpCode.length !== 6) return;
+    
+    // Rate limit OTP verification attempts
+    const rateLimitCheck = await checkRateLimit(otpEmail, 'otp_verify', 5);
+    if (!rateLimitCheck.allowed) {
+      toast({
+        title: 'Error',
+        description: `Too many verification attempts. Please try again ${rateLimitCheck.retryAfter ? `in ${rateLimitCheck.retryAfter}s` : 'later'}.`,
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setIsVerifyingOtp(true);
     try {
       const { data, error } = await supabase.auth.verifyOtp({
