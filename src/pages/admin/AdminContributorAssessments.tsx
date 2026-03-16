@@ -158,7 +158,7 @@ export default function AdminContributorAssessments() {
       ) : (
         <Card className="glass-panel">
           <CardContent className="p-12 text-center">
-            <Sparkles className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+            <GitMerge className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
             <h3 className="text-lg font-semibold mb-2">No assessments found</h3>
             <p className="text-muted-foreground">
               Contributor assessments will appear here once submitted
