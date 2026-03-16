@@ -92,6 +92,7 @@ Deno.serve(async (req) => {
     }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
 
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), { status: 500, headers: corsHeaders })
+    console.error('terminate-admin-session error:', err)
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: corsHeaders })
   }
 })
