@@ -23,6 +23,7 @@ import { z } from 'zod';
 import { mapError } from '@/lib/errorUtils';
 import { HoneypotField } from '@/components/security/HoneypotField';
 import { useSecurity } from '@/hooks/useSecurity';
+import { UtaabCaptcha, UtaabCaptchaRef } from '@/components/security/UtaabCaptcha';
 
 const createBaseSchema = (t: any) => z.object({
   email: z.string().trim().email({ message: t('education.registration.validation.emailInvalid') }),
