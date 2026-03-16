@@ -1392,6 +1392,36 @@ export type Database = {
           },
         ]
       }
+      login_history: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          id: string
+          ip_address: string | null
+          provider: string | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          ip_address?: string | null
+          provider?: string | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          ip_address?: string | null
+          provider?: string | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       media_library: {
         Row: {
           alt_text: string | null
@@ -1906,6 +1936,78 @@ export type Database = {
           id?: string
           metadata?: Json | null
           reason?: string
+        }
+        Relationships: []
+      }
+      team_members: {
+        Row: {
+          bio_ar: string | null
+          bio_en: string | null
+          bio_ru: string | null
+          bio_tr: string | null
+          created_at: string
+          department: string
+          display_order: number
+          email: string | null
+          full_name: string
+          id: string
+          image_url: string | null
+          instagram_url: string | null
+          is_featured: boolean
+          is_published: boolean
+          linkedin_url: string | null
+          phone: string | null
+          role_title: string
+          telegram_url: string | null
+          twitter_url: string | null
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          bio_ar?: string | null
+          bio_en?: string | null
+          bio_ru?: string | null
+          bio_tr?: string | null
+          created_at?: string
+          department?: string
+          display_order?: number
+          email?: string | null
+          full_name: string
+          id?: string
+          image_url?: string | null
+          instagram_url?: string | null
+          is_featured?: boolean
+          is_published?: boolean
+          linkedin_url?: string | null
+          phone?: string | null
+          role_title: string
+          telegram_url?: string | null
+          twitter_url?: string | null
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          bio_ar?: string | null
+          bio_en?: string | null
+          bio_ru?: string | null
+          bio_tr?: string | null
+          created_at?: string
+          department?: string
+          display_order?: number
+          email?: string | null
+          full_name?: string
+          id?: string
+          image_url?: string | null
+          instagram_url?: string | null
+          is_featured?: boolean
+          is_published?: boolean
+          linkedin_url?: string | null
+          phone?: string | null
+          role_title?: string
+          telegram_url?: string | null
+          twitter_url?: string | null
+          updated_at?: string
+          website_url?: string | null
         }
         Relationships: []
       }

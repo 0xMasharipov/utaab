@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -14,14 +14,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ChevronLeft, ChevronRight, Eye, EyeOff, CheckCircle, ExternalLink } from 'lucide-react';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
+import { ChevronLeft, ChevronRight, Eye, EyeOff, CheckCircle, ExternalLink, Mail, RefreshCw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { lovable } from '@/integrations/lovable/index';
 import { z } from 'zod';
 import { mapError } from '@/lib/errorUtils';
 import { HoneypotField } from '@/components/security/HoneypotField';
 import { useSecurity } from '@/hooks/useSecurity';
-import { UtaabCaptcha, UtaabCaptchaRef } from '@/components/security/UtaabCaptcha';
 
 const createBaseSchema = (t: any) => z.object({
   email: z.string().trim().email({ message: t('education.registration.validation.emailInvalid') }),
@@ -47,6 +48,28 @@ const createSchema = (t: any) => createBaseSchema(t).refine(data => data.passwor
 
 type FormData = z.infer<ReturnType<typeof createSchema>>;
 
+const GoogleIcon = () => (
+  <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
+    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+  </svg>
+);
+
+const logLogin = async (userId: string, email: string, provider: string) => {
+  try {
+    await supabase.from('login_history').insert({
+      user_id: userId,
+      email,
+      provider,
+      user_agent: navigator.userAgent,
+    });
+  } catch (e) {
+    console.error('Failed to log login:', e);
+  }
+};
+
 export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?: 'signup' | 'signin' }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -70,8 +93,22 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
     role: undefined,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [utaabToken, setUtaabToken] = useState<string | null>(null);
-  const utaabRef = useRef<UtaabCaptchaRef>(null);
+
+  // OTP state
+  const [awaitingOtp, setAwaitingOtp] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
+  const [otpEmail, setOtpEmail] = useState('');
+  const [otpType, setOtpType] = useState<'signup' | 'email'>('signup');
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+
+  // Resend cooldown timer
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendCooldown]);
 
   const focusAreaOptions = [
     'interestSolidity', 'interestRust', 'interestZK', 'interestL2',
@@ -102,7 +139,6 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
     try {
       if (currentStep === 1) {
         baseSchema.pick({ email: true, password: true, confirmPassword: true, preferred_language: true }).parse(formData);
-        // Also check password match for step 1
         if (formData.password !== formData.confirmPassword) {
           newErrors.confirmPassword = t('education.registration.validation.passwordMatch');
           throw new Error('Password mismatch');
@@ -136,13 +172,11 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
     e?.preventDefault();
     if (validateStep(step)) {
       setStep(step + 1);
-      // Focus first field of next step after state update
       setTimeout(() => {
         const firstInput = document.querySelector(`form input:not([type="checkbox"]), form select, form textarea`) as HTMLElement;
         firstInput?.focus();
       }, 100);
     } else {
-      // Focus first invalid field
       setTimeout(() => {
         const firstError = Object.keys(errors)[0];
         if (firstError) {
@@ -157,7 +191,6 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
     e?.preventDefault();
     setStep(step - 1);
     setErrors({});
-    // Focus first field of previous step
     setTimeout(() => {
       const firstInput = document.querySelector(`form input:not([type="checkbox"]), form select, form textarea`) as HTMLElement;
       firstInput?.focus();
@@ -171,6 +204,80 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
     }
   };
 
+  const handleVerifyOtp = async () => {
+    if (otpCode.length !== 6) return;
+    setIsVerifyingOtp(true);
+    try {
+      const { data, error } = await supabase.auth.verifyOtp({
+        email: otpEmail,
+        token: otpCode,
+        type: otpType,
+      });
+
+      if (error) throw error;
+
+      if (data.user) {
+        await logLogin(data.user.id, otpEmail, 'email');
+      }
+
+      toast({
+        title: t('education.registration.welcomeTitle'),
+        description: otpType === 'signup' 
+          ? t('education.registration.welcomeMessage')
+          : t('education.registration.signInSuccess'),
+      });
+
+      if (otpType === 'signup') {
+        setCompleted(true);
+      } else {
+        navigate('/education');
+      }
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: error.message || 'Invalid verification code',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsVerifyingOtp(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    if (resendCooldown > 0) return;
+    try {
+      if (otpType === 'signup') {
+        await supabase.auth.resend({ type: 'signup', email: otpEmail });
+      } else {
+        await supabase.auth.resend({ type: 'email_change', email: otpEmail });
+      }
+      setResendCooldown(60);
+      toast({
+        title: 'Code resent',
+        description: `A new verification code has been sent to ${otpEmail}`,
+      });
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: mapError(error),
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    const { error } = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: window.location.origin,
+    });
+    if (error) {
+      toast({
+        title: 'Error',
+        description: error.message || 'Google sign-in failed',
+        variant: 'destructive',
+      });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -179,17 +286,7 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
       if (!formData.email || !formData.password) {
         toast({
           title: 'Error',
-          description: t('auth.captchaRequired'),
-          variant: 'destructive',
-        });
-        return;
-      }
-
-      // Check UTAAB for sign-in
-      if (!utaabToken) {
-        toast({
-          title: 'Error',
-          description: t('auth.captchaRequired'),
+          description: 'Please fill in all fields',
           variant: 'destructive',
         });
         return;
@@ -197,7 +294,6 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
 
       setIsSubmitting(true);
       try {
-        // Check rate limit
         const rateLimitCheck = await checkRateLimit(formData.email, 'student_login', 10);
         if (!rateLimitCheck.allowed) {
           toast({
@@ -218,11 +314,23 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
           setFailedAttempts(prev => prev + 1);
           await logSecurityEvent('student_login_failed', 'low', { email: formData.email });
           
+          // If email not confirmed, show OTP input
+          if (error.message?.includes('Email not confirmed')) {
+            setOtpEmail(formData.email.trim().toLowerCase());
+            setOtpType('email');
+            setAwaitingOtp(true);
+            setResendCooldown(60);
+            toast({
+              title: 'Email not verified',
+              description: 'Please enter the verification code sent to your email.',
+            });
+            setIsSubmitting(false);
+            return;
+          }
+          
           let errorMessage = mapError(error);
           if (error.message?.includes('Invalid login credentials')) {
             errorMessage = t('auth.incorrectPassword');
-          } else if (error.message?.includes('Email not confirmed')) {
-            errorMessage = t('auth.verifyEmail');
           }
           
           toast({
@@ -235,6 +343,10 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
         }
 
         await logSecurityEvent('student_login_success', 'low', { email: formData.email });
+        
+        if (data.user) {
+          await logLogin(data.user.id, formData.email, 'email');
+        }
 
         toast({
           title: t('education.registration.welcomeBack'),
@@ -258,17 +370,7 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
     // Handle sign up mode
     if (!validateStep(3)) return;
 
-    // Check UTAAB for sign-up
-    if (!utaabToken) {
-      toast({
-        title: 'Error',
-        description: t('auth.captchaRequired'),
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    // Honeypot check (bot detection)
+    // Honeypot check
     if (honeypot) {
       await logSecurityEvent('honeypot_triggered', 'high', { email: formData.email });
       toast({
@@ -292,7 +394,6 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
 
     setIsSubmitting(true);
     try {
-      // Check rate limit
       const rateLimitCheck = await checkRateLimit(formData.email || 'unknown', 'student_register', 3);
       if (!rateLimitCheck.allowed) {
         toast({
@@ -307,7 +408,6 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
       const schema = createSchema(t);
       const validatedData = schema.parse(formData);
 
-      // Sign up with Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: validatedData.email.trim().toLowerCase(),
         password: validatedData.password,
@@ -362,13 +462,17 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
 
       await logSecurityEvent('student_register_success', 'low', { email: validatedData.email });
 
-      setCompleted(true);
+      // Show OTP verification step
+      setOtpEmail(validatedData.email.trim().toLowerCase());
+      setOtpType('signup');
+      setAwaitingOtp(true);
+      setResendCooldown(60);
+      
       toast({
-        title: t('education.registration.welcomeTitle'),
-        description: t('education.registration.welcomeMessage'),
+        title: 'Verification code sent',
+        description: `Please check ${validatedData.email} for your verification code.`,
       });
     } catch (error: any) {
-      // Error details are sanitized by mapError to prevent information leakage
       toast({
         title: 'Error',
         description: mapError(error),
@@ -386,6 +490,64 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
       focus_areas: current.includes(area) ? current.filter(a => a !== area) : [...current, area],
     }));
   };
+
+  // OTP Verification Screen
+  if (awaitingOtp) {
+    return (
+      <div className="glass rounded-3xl p-8 md:p-12 text-center">
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: 'spring', duration: 0.6 }}
+        >
+          <Mail className="h-16 w-16 text-accent mx-auto mb-6" />
+        </motion.div>
+        <h3 className="text-2xl font-bold mb-2 text-foreground">
+          Verify Your Email
+        </h3>
+        <p className="text-muted-foreground mb-8">
+          We sent a 6-digit code to <strong className="text-foreground">{otpEmail}</strong>
+        </p>
+
+        <div className="flex justify-center mb-6">
+          <InputOTP
+            maxLength={6}
+            value={otpCode}
+            onChange={setOtpCode}
+          >
+            <InputOTPGroup>
+              <InputOTPSlot index={0} />
+              <InputOTPSlot index={1} />
+              <InputOTPSlot index={2} />
+              <InputOTPSlot index={3} />
+              <InputOTPSlot index={4} />
+              <InputOTPSlot index={5} />
+            </InputOTPGroup>
+          </InputOTP>
+        </div>
+
+        <Button
+          onClick={handleVerifyOtp}
+          className="btn-primary w-full max-w-xs mx-auto mb-4"
+          disabled={otpCode.length !== 6 || isVerifyingOtp}
+        >
+          {isVerifyingOtp ? 'Verifying...' : 'Verify Code'}
+        </Button>
+
+        <div className="flex items-center justify-center gap-2 text-sm">
+          <span className="text-muted-foreground">Didn't receive the code?</span>
+          <button
+            onClick={handleResendOtp}
+            disabled={resendCooldown > 0}
+            className="text-accent hover:underline font-medium disabled:opacity-50 disabled:no-underline flex items-center gap-1"
+          >
+            <RefreshCw className="h-3 w-3" />
+            {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend'}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (completed) {
     return (
@@ -419,7 +581,7 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
     );
   }
 
-  // Sign In Mode - Simple form
+  // Sign In Mode
   if (mode === 'signin') {
     return (
       <div className="glass rounded-3xl p-6 md:p-12">
@@ -468,23 +630,10 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
             </div>
           </div>
 
-          {/* UTAAB Anti-bot Verification */}
-          <UtaabCaptcha
-            ref={utaabRef}
-            onVerify={(token) => setUtaabToken(token)}
-            onError={() => toast({
-              title: 'Error',
-              description: t('auth.captchaFailed'),
-              variant: 'destructive',
-            })}
-            mode="interactive"
-            difficulty="adaptive"
-          />
-
           <Button 
             type="submit" 
             className="btn-primary w-full" 
-            disabled={isSubmitting || !utaabToken}
+            disabled={isSubmitting}
           >
             {isSubmitting ? t('education.registration.signingIn') : t('education.registration.signIn')}
           </Button>
@@ -502,40 +651,9 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
             type="button"
             variant="outline"
             className="w-full glass border-white/20"
-            onClick={async () => {
-              const { error } = await supabase.auth.signInWithOAuth({
-                provider: 'google',
-                options: {
-                  redirectTo: `${window.location.origin}/education`,
-                },
-              });
-              if (error) {
-                toast({
-                  title: 'Error',
-                  description: error.message,
-                  variant: 'destructive',
-                });
-              }
-            }}
+            onClick={handleGoogleSignIn}
           >
-            <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
-              <path
-                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                fill="#4285F4"
-              />
-              <path
-                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                fill="#34A853"
-              />
-              <path
-                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                fill="#FBBC05"
-              />
-              <path
-                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                fill="#EA4335"
-              />
-            </svg>
+            <GoogleIcon />
             {t('auth.continueWithGoogle')}
           </Button>
 
@@ -891,40 +1009,9 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
               type="button"
               variant="outline"
               className="w-full glass border-white/20"
-              onClick={async () => {
-                const { error } = await supabase.auth.signInWithOAuth({
-                  provider: 'google',
-                  options: {
-                    redirectTo: `${window.location.origin}/education/register?complete=true`,
-                  },
-                });
-                if (error) {
-                  toast({
-                    title: 'Error',
-                    description: error.message,
-                    variant: 'destructive',
-                  });
-                }
-              }}
+              onClick={handleGoogleSignIn}
             >
-              <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
-                <path
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                  fill="#4285F4"
-                />
-                <path
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                  fill="#34A853"
-                />
-                <path
-                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                  fill="#FBBC05"
-                />
-                <path
-                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                  fill="#EA4335"
-                />
-              </svg>
+              <GoogleIcon />
               {t('auth.continueWithGoogle')}
             </Button>
 

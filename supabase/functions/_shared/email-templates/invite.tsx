@@ -30,33 +30,35 @@ export const InviteEmail = ({
   confirmationUrl,
 }: InviteEmailProps) => (
   <Html lang="en" dir="ltr">
-    <Head />
+    <Head>
+      <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
+    </Head>
     <Preview>You've been invited to join {siteName}</Preview>
     <Body style={main}>
       <Container style={wrapper}>
         <Container style={container}>
           <Section style={logoSection}>
-            <Img src={LOGO_URL} width="140" height="auto" alt={siteName} style={logo} />
+            <Img src={LOGO_URL} width="160" height="auto" alt={siteName} style={logo} />
           </Section>
+          <Text style={tagline}>CONNECT. LEARN. BUILD.</Text>
           <Heading style={h1}>Join {siteName}</Heading>
           <Text style={text}>
             You've been invited to join{' '}
             <Link href={siteUrl} style={link}>
               <strong>{siteName}</strong>
             </Link>
-            . Click the button below to accept the invitation and create your
-            account.
+            . Click the button below to accept the invitation and create your account.
           </Text>
           <Section style={buttonSection}>
             <Button style={button} href={confirmationUrl}>
               Accept Invitation
             </Button>
           </Section>
+          <Text style={divider}>— — —</Text>
           <Text style={footer}>
-            If you weren't expecting this invitation, you can safely ignore this
-            email.
+            If you weren't expecting this invitation, you can safely ignore this email.
           </Text>
-          <Text style={powered}>Powered by {siteName}</Text>
+          <Text style={powered}>© {siteName} · Powered by UTAAB</Text>
         </Container>
       </Container>
     </Body>
@@ -65,32 +67,18 @@ export const InviteEmail = ({
 
 export default InviteEmail
 
-const main = {
-  backgroundColor: '#081020',
-  fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-  padding: '40px 0',
-}
+const fontFamily = 'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+const main = { backgroundColor: '#081020', fontFamily, padding: '48px 16px' }
 const wrapper = { maxWidth: '480px', margin: '0 auto' }
-const container = {
-  backgroundColor: '#ffffff',
-  borderRadius: '16px',
-  padding: '40px 32px',
-  border: '1px solid #e8e8ec',
-}
-const logoSection = { textAlign: 'center' as const, marginBottom: '24px' }
+const container = { backgroundColor: '#ffffff', borderRadius: '20px', padding: '48px 36px 40px', border: '1px solid #e8e8ec', boxShadow: '0 8px 30px rgba(0,0,0,0.12)' }
+const logoSection = { textAlign: 'center' as const, marginBottom: '8px' }
 const logo = { display: 'inline-block' as const }
-const h1 = { fontSize: '22px', fontWeight: 'bold' as const, color: '#081020', margin: '0 0 20px' }
-const text = { fontSize: '14px', color: '#4A4A52', lineHeight: '1.6', margin: '0 0 25px' }
+const tagline = { fontFamily, fontSize: '11px', fontWeight: '600' as const, color: '#919199', textAlign: 'center' as const, letterSpacing: '3px', margin: '0 0 28px' }
+const h1 = { fontFamily, fontSize: '24px', fontWeight: '700' as const, color: '#081020', margin: '0 0 16px', textAlign: 'center' as const }
+const text = { fontFamily, fontSize: '14px', color: '#4A4A52', lineHeight: '1.7', margin: '0 0 28px' }
 const link = { color: '#0B3C8C', textDecoration: 'underline' }
-const buttonSection = { textAlign: 'center' as const, margin: '0 0 25px' }
-const button = {
-  backgroundColor: '#0B3C8C',
-  color: '#ffffff',
-  fontSize: '14px',
-  fontWeight: '600' as const,
-  borderRadius: '16px',
-  padding: '12px 24px',
-  textDecoration: 'none',
-}
-const footer = { fontSize: '12px', color: '#919199', margin: '30px 0 0' }
-const powered = { fontSize: '11px', color: '#b0b0b8', margin: '12px 0 0', textAlign: 'center' as const }
+const buttonSection = { textAlign: 'center' as const, margin: '0 0 28px' }
+const button = { fontFamily, backgroundColor: '#0B3C8C', color: '#ffffff', fontSize: '14px', fontWeight: '600' as const, borderRadius: '12px', padding: '14px 32px', textDecoration: 'none', display: 'inline-block' as const }
+const divider = { fontFamily, fontSize: '14px', color: '#d0d0d8', textAlign: 'center' as const, margin: '0 0 16px' }
+const footer = { fontFamily, fontSize: '12px', color: '#919199', margin: '0 0 8px', textAlign: 'center' as const }
+const powered = { fontFamily, fontSize: '11px', color: '#b0b0b8', margin: '0', textAlign: 'center' as const }

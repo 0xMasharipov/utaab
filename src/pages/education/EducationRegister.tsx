@@ -1,12 +1,62 @@
+import { useEffect } from 'react';
 import { EducationRegisterForm } from '@/components/forms/EducationRegisterForm';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 export const EducationRegister = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        const user = session.user;
+        const provider = user.app_metadata?.provider || 'email';
+        
+        // Log login
+        try {
+          await supabase.from('login_history').insert({
+            user_id: user.id,
+            email: user.email,
+            provider,
+            user_agent: navigator.userAgent,
+          });
+        } catch (e) {
+          console.error('Failed to log login:', e);
+        }
+
+        // Check if profile exists for OAuth users
+        if (provider !== 'email') {
+          const { data: profile } = await supabase
+            .from('education_profiles')
+            .select('id')
+            .eq('user_id', user.id)
+            .maybeSingle();
+
+          if (!profile) {
+            await supabase.from('education_profiles').insert({
+              user_id: user.id,
+              full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
+              department: 'General',
+              role: 'student',
+              focus_areas: [],
+              kvkk_consent: true,
+              kvkk_consent_version: '1.0',
+              preferred_language: 'en',
+              locale: 'en',
+            });
+          }
+
+          navigate('/education');
+        }
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
 
   return (
     <div className="min-h-screen bg-background gradient-mesh pt-24 pb-20 px-6">
