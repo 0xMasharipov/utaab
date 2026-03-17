@@ -236,14 +236,20 @@ export default function AdminLogin() {
 
       if (sessionError) throw sessionError;
 
-      await logAdminLogin({ event_type: 'admin_login_success', email: email.trim().toLowerCase(), session_token: sessionToken });
-
-      toast({
-        title: t("common.success"),
-        description: "Admin login successful",
+      // 2FA: Sign out immediately and send OTP
+      await supabase.auth.signOut();
+      const { error: otpError } = await supabase.auth.signInWithOtp({
+        email: email.trim().toLowerCase(),
       });
+      if (otpError) throw otpError;
 
-      navigate("/admin/dashboard");
+      setOtpEmail(email.trim().toLowerCase());
+      setAwaitingOtp(true);
+      setResendCooldown(60);
+      toast({
+        title: "Verification Required",
+        description: "A 6-digit code has been sent to your email.",
+      });
     } catch (error: any) {
       console.error("Admin login error:", error);
       
