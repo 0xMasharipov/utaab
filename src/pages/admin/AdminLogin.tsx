@@ -142,7 +142,7 @@ export default function AdminLogin() {
     }
 
     try {
-      await supabase.auth.resend({ type: 'email_change', email: otpEmail });
+      await supabase.auth.signInWithOtp({ email: otpEmail });
       setResendCooldown(60);
       toast({
         title: "Code resent",
@@ -224,26 +224,20 @@ export default function AdminLogin() {
         throw new Error("Access denied. Admin privileges required.");
       }
 
-      // Create admin session
-      const sessionToken = crypto.randomUUID();
-      const { error: sessionError } = await supabase
-        .from('admin_sessions')
-        .insert({
-          user_id: authData.user.id,
-          session_token: sessionToken,
-          expires_at: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString(),
-        });
-
-      if (sessionError) throw sessionError;
-
-      await logAdminLogin({ event_type: 'admin_login_success', email: email.trim().toLowerCase(), session_token: sessionToken });
-
-      toast({
-        title: t("common.success"),
-        description: "Admin login successful",
+      // 2FA: Sign out immediately and send OTP
+      await supabase.auth.signOut();
+      const { error: otpError } = await supabase.auth.signInWithOtp({
+        email: email.trim().toLowerCase(),
       });
+      if (otpError) throw otpError;
 
-      navigate("/admin/dashboard");
+      setOtpEmail(email.trim().toLowerCase());
+      setAwaitingOtp(true);
+      setResendCooldown(60);
+      toast({
+        title: "Verification Required",
+        description: "A 6-digit code has been sent to your email.",
+      });
     } catch (error: any) {
       console.error("Admin login error:", error);
       
@@ -310,30 +304,22 @@ export default function AdminLogin() {
               return;
             }
 
-            const sessionToken = crypto.randomUUID();
-            const { error: sessionError } = await supabase
-              .from('admin_sessions')
-              .insert({
-                user_id: session.user.id,
-                session_token: sessionToken,
-                expires_at: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString(),
-              });
-
-            if (sessionError) throw sessionError;
-
-            await logAdminLogin({ 
-              event_type: 'admin_login_success',
-              email: session.user.email || '',
-              provider: 'google',
-              session_token: sessionToken,
+            // 2FA: Sign out and send OTP for Google OAuth too
+            const googleEmail = session.user.email || '';
+            await supabase.auth.signOut();
+            const { error: otpError } = await supabase.auth.signInWithOtp({
+              email: googleEmail,
             });
+            if (otpError) throw otpError;
 
+            setOtpEmail(googleEmail);
+            setAwaitingOtp(true);
+            setResendCooldown(60);
+            window.history.replaceState({}, '', '/admin/login');
             toast({
-              title: t("common.success"),
-              description: "Admin login successful",
+              title: "Verification Required",
+              description: "A 6-digit code has been sent to your email.",
             });
-
-            navigate("/admin/dashboard");
           } catch (error: any) {
             console.error("OAuth callback error:", error);
             toast({

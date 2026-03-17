@@ -1,38 +1,31 @@
 
 
-# Add Mandatory 2-Step Authentication (Email OTP) to Admin Login
+# Improve Hero Video Loading Speed
 
 ## Problem
-Currently, OTP verification only triggers when email is "not confirmed." Admin login should **always** require a second verification step after password/OAuth authentication to prevent fraud.
+The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
 
-## Flow
-1. Admin enters credentials → password verified + admin role confirmed
-2. **Immediately sign out** (prevent session access before 2FA)
-3. Send OTP via `supabase.auth.signInWithOtp({ email })` 
-4. Show existing OTP verification screen
-5. Admin enters 6-digit code → verified → admin session created → navigate to dashboard
+## Changes
 
-## Changes — `src/pages/admin/AdminLogin.tsx`
+### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
+Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
 
-### `handleLogin` (after successful password + role check)
-- Instead of creating admin session and navigating, **sign out immediately**
-- Call `supabase.auth.signInWithOtp({ email })` to send verification code
-- Set `awaitingOtp = true`, `otpEmail`, `resendCooldown = 60`
-- Show toast informing admin that a code was sent
+### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
+Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
 
-### `handleResendAdminOtp`
-- Change from `supabase.auth.resend({ type: 'email_change' })` to `supabase.auth.signInWithOtp({ email: otpEmail })` — current resend type is incorrect for this flow
+### 3. Preload the video in `index.html`
+Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
+```html
+<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
+```
 
-### OAuth callback
-- After Google OAuth + admin role verification, also trigger OTP:
-  - Sign out, send OTP to user's email, show OTP screen
+### 4. Add loading state with fade-in transition (`Hero.tsx`)
+Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
 
-### Existing OTP verification (`handleVerifyAdminOtp`)
-- Already works correctly — creates admin session on success. No changes needed.
-
-## Files Modified
+## Files to modify
 
 | File | Change |
 |------|--------|
-| `src/pages/admin/AdminLogin.tsx` | Mandatory OTP after auth, fix resend method |
+| `index.html` | Add `<link rel="preload">` for the video |
+| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
 
