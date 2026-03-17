@@ -58,8 +58,8 @@ export const UtaabCaptcha = forwardRef<UtaabCaptchaRef, UtaabCaptchaProps>(
         console.log(`[UTAAB] Risk score: ${score}`);
       },
       onVerdictChange: (v) => {
-        if (v === 'blocked' || v === 'fail') {
-          onError?.(error || 'Verification failed');
+        if (v === 'blocked') {
+          onError?.(error || 'Verification blocked');
         }
       }
     });
