@@ -224,18 +224,6 @@ export default function AdminLogin() {
         throw new Error("Access denied. Admin privileges required.");
       }
 
-      // Create admin session
-      const sessionToken = crypto.randomUUID();
-      const { error: sessionError } = await supabase
-        .from('admin_sessions')
-        .insert({
-          user_id: authData.user.id,
-          session_token: sessionToken,
-          expires_at: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString(),
-        });
-
-      if (sessionError) throw sessionError;
-
       // 2FA: Sign out immediately and send OTP
       await supabase.auth.signOut();
       const { error: otpError } = await supabase.auth.signInWithOtp({
