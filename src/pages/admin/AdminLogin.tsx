@@ -327,19 +327,22 @@ export default function AdminLogin() {
 
             if (sessionError) throw sessionError;
 
-            await logAdminLogin({ 
-              event_type: 'admin_login_success',
-              email: session.user.email || '',
-              provider: 'google',
-              session_token: sessionToken,
+            // 2FA: Sign out and send OTP for Google OAuth too
+            const googleEmail = session.user.email || '';
+            await supabase.auth.signOut();
+            const { error: otpError } = await supabase.auth.signInWithOtp({
+              email: googleEmail,
             });
+            if (otpError) throw otpError;
 
+            setOtpEmail(googleEmail);
+            setAwaitingOtp(true);
+            setResendCooldown(60);
+            window.history.replaceState({}, '', '/admin/login');
             toast({
-              title: t("common.success"),
-              description: "Admin login successful",
+              title: "Verification Required",
+              description: "A 6-digit code has been sent to your email.",
             });
-
-            navigate("/admin/dashboard");
           } catch (error: any) {
             console.error("OAuth callback error:", error);
             toast({
