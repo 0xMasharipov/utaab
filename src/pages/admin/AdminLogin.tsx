@@ -304,17 +304,6 @@ export default function AdminLogin() {
               return;
             }
 
-            const sessionToken = crypto.randomUUID();
-            const { error: sessionError } = await supabase
-              .from('admin_sessions')
-              .insert({
-                user_id: session.user.id,
-                session_token: sessionToken,
-                expires_at: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString(),
-              });
-
-            if (sessionError) throw sessionError;
-
             // 2FA: Sign out and send OTP for Google OAuth too
             const googleEmail = session.user.email || '';
             await supabase.auth.signOut();
