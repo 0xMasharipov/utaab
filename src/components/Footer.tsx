@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Linkedin, Instagram, Twitter, Send } from 'lucide-react';
+import { Linkedin, Instagram, Twitter, Send, Mail } from 'lucide-react';
 import logo from '@/assets/logo-new.png';
 import { BrandText } from '@/components/common/BrandText';
 import AnimatedImage from '@/components/common/AnimatedImage';
@@ -107,6 +107,15 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
                   <social.icon className="h-5 w-5" />
                 </a>
               ))}
+            </div>
+            <div className="mt-4">
+              <a
+                href="mailto:contact@utaab.org"
+                className="inline-flex items-center gap-2 text-muted-foreground hover:text-accent transition-colors"
+              >
+                <Mail className="h-4 w-4" />
+                <span className="text-sm">contact@utaab.org</span>
+              </a>
             </div>
           </div>
 
