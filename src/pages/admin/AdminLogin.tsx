@@ -142,7 +142,7 @@ export default function AdminLogin() {
     }
 
     try {
-      await supabase.auth.resend({ type: 'email_change', email: otpEmail });
+      await supabase.auth.signInWithOtp({ email: otpEmail });
       setResendCooldown(60);
       toast({
         title: "Code resent",
