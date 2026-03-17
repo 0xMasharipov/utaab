@@ -1,46 +1,31 @@
 
 
-# Fix: Error Toast Appearing After Successful UTAAB Verification
+# Improve Hero Video Loading Speed
 
-## Root Cause
+## Problem
+The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
 
-In `UtaabCaptcha.tsx` (lines 60-63), the `onVerdictChange` callback immediately calls `onError` whenever the verdict transitions to `'fail'` or `'blocked'`:
+## Changes
 
-```typescript
-onVerdictChange: (v) => {
-  if (v === 'blocked' || v === 'fail') {
-    onError?.(error || 'Verification failed');
-  }
-}
+### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
+Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
+
+### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
+Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
+
+### 3. Preload the video in `index.html`
+Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
+```html
+<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
 ```
 
-In `AdminLogin.tsx` (lines 482-487), `onError` shows a destructive toast. This fires even during transient/intermediate states before the user completes verification, so the error toast appears alongside the green "Verified" checkmark.
+### 4. Add loading state with fade-in transition (`Hero.tsx`)
+Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
 
-## Fix
-
-**File:** `src/components/security/UtaabCaptcha.tsx`
-
-Remove the `onError` call from `onVerdictChange`. The component already renders inline error UI (the red "Verification Failed" block at lines 214-246) with a retry button. The `onError` prop should only be called when the error is truly final and unrecoverable — not on every verdict transition.
-
-Instead, only call `onError` when the user is in a `'blocked'` state (which is permanent and has no retry). For `'fail'`, the inline UI with the retry button is sufficient — no toast needed.
-
-**Change in `onVerdictChange`:**
-```typescript
-onVerdictChange: (v) => {
-  if (v === 'blocked') {
-    onError?.(error || 'Verification blocked');
-  }
-}
-```
-
-This ensures:
-- Transient `'fail'` states during the flow don't trigger error toasts
-- The inline error UI still shows with retry option for `'fail'`
-- Only permanent `'blocked'` verdicts notify the parent via `onError`
-
-## Files Modified
+## Files to modify
 
 | File | Change |
 |------|--------|
-| `src/components/security/UtaabCaptcha.tsx` | Only fire `onError` for `'blocked'` verdict, not `'fail'` |
+| `index.html` | Add `<link rel="preload">` for the video |
+| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
 
