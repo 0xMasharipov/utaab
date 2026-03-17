@@ -108,6 +108,15 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
                 </a>
               ))}
             </div>
+            <div className="mt-4">
+              <a
+                href="mailto:contact@utaab.org"
+                className="inline-flex items-center gap-2 text-muted-foreground hover:text-accent transition-colors"
+              >
+                <Mail className="h-4 w-4" />
+                <span className="text-sm">contact@utaab.org</span>
+              </a>
+            </div>
           </div>
 
           {/* Newsletter */}
