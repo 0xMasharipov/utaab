@@ -1,31 +1,29 @@
 
 
-# Improve Hero Video Loading Speed
+# Fix: Admin OTP Sends Login Link Instead of 6-Digit Code
 
-## Problem
-The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
+## Root Cause
+
+When `signInWithOtp({ email })` is called, Supabase triggers a `magiclink` auth event. The auth-email-hook renders the **MagicLinkEmail** template, which displays a clickable "Sign In" button/link — not the 6-digit OTP code. The OTP token IS included in the payload (`payload.data.token`) and is already passed to the template as `token`, but the template ignores it and only shows `confirmationUrl`.
 
 ## Changes
 
-### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
-Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
+### 1. Update magic-link email template to show OTP code
+**File:** `supabase/functions/_shared/email-templates/magic-link.tsx`
 
-### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
-Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
+- Add `token` to the props interface
+- Replace the "Sign In" button with a styled 6-digit code display (same style as the reauthentication template)
+- Update heading from "Your Login Link" to "Your Verification Code"
+- Update preview/body text to reference the code
 
-### 3. Preload the video in `index.html`
-Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
-```html
-<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
-```
+### 2. Update email subject
+**File:** `supabase/functions/auth-email-hook/index.ts`
 
-### 4. Add loading state with fade-in transition (`Hero.tsx`)
-Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
+- Change `magiclink` subject from `'Your login link'` to `'Your verification code'`
 
-## Files to modify
+### 3. Redeploy auth-email-hook
+Deploy the updated function so the new template takes effect.
 
-| File | Change |
-|------|--------|
-| `index.html` | Add `<link rel="preload">` for the video |
-| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
+## No client-side changes needed
+The `AdminLogin.tsx` OTP input and `verifyOtp({ type: 'email' })` call already handle 6-digit codes correctly. The issue is purely in the email template rendering a link instead of the code.
 
