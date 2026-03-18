@@ -27,7 +27,7 @@ const Index = () => {
       <Navbar />
       <Hero />
       <HeroCarousel />
-      <Stats />
+      
       <Community />
       <Learn />
       <Events />
