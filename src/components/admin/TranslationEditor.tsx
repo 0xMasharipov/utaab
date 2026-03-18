@@ -132,7 +132,7 @@ export default function TranslationEditor() {
         </div>
       </div>
 
-      <div className="flex items-start gap-2 mb-4 rounded-md border border-yellow-500/30 bg-yellow-500/10 p-3 text-sm text-yellow-700 dark:text-yellow-400">
+      <div className="flex items-start gap-2 mb-4 rounded-md border border-accent/30 bg-accent/10 p-3 text-sm text-muted-foreground">
         <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
         <span>Changes are applied in-memory for this session only. Export the JSON to persist changes across deployments.</span>
       </div>
