@@ -1,29 +1,31 @@
 
 
-# Fix Translation JSON Editor
+# Improve Hero Video Loading Speed
 
 ## Problem
-The Translation Editor component likely has two issues:
-1. After editing JSON and clicking "Apply Changes", the i18n change event doesn't force a re-render across the app — `i18n.addResourceBundle` alone may not trigger component updates reliably
-2. The edits state resets when switching locales since it's only tracked in component state
+The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
 
 ## Changes
 
-**File: `src/components/admin/TranslationEditor.tsx`**
+### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
+Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
 
-1. **Force i18n language change event** after applying bundle — call `i18n.changeLanguage(selectedLocale)` after `addResourceBundle` to trigger re-renders in all components using `useTranslation`
-2. **Add a key counter** to force Textarea re-mount when locale changes (prevents stale values)
-3. **Add confirmation feedback** — show which sections were updated in the success toast
+### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
+Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
 
-**Updated apply logic:**
-```typescript
-i18n.addResourceBundle(selectedLocale, 'translation', merged, true, true);
-// Force re-render across app
-i18n.changeLanguage(selectedLocale);
+### 3. Preload the video in `index.html`
+Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
+```html
+<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
 ```
 
-## Technical Details
-- `addResourceBundle` updates internal resources but doesn't always emit the `languageChanged` event that triggers React re-renders
-- Calling `changeLanguage` with the same language forces the event emission, causing all `useTranslation` hooks to re-read values
-- Single file change, no database or backend modifications needed
+### 4. Add loading state with fade-in transition (`Hero.tsx`)
+Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
+
+## Files to modify
+
+| File | Change |
+|------|--------|
+| `index.html` | Add `<link rel="preload">` for the video |
+| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
 

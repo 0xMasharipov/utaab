@@ -83,7 +83,10 @@ export default function TranslationEditor() {
     }
 
     i18n.addResourceBundle(selectedLocale, 'translation', merged, true, true);
-    toast.success(`Translations applied for ${localeLabels[selectedLocale]} (session only)`);
+    // Force re-render across the app by re-emitting languageChanged
+    i18n.changeLanguage(selectedLocale);
+    const updatedSections = Object.keys(localeEdits).join(', ');
+    toast.success(`Translations applied for ${localeLabels[selectedLocale]}: ${updatedSections} (session only)`);
   };
 
   const handleExport = () => {
