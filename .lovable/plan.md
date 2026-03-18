@@ -1,27 +1,31 @@
 
 
-# Add Translation Content JSON Editor to Admin Localization Tab
+# Improve Hero Video Loading Speed
 
-## Summary
-Add a JSON editor section to the Localization tab in Admin Settings where admins can view and edit the translation content for each language (EN, TR, RU, AR) directly from the admin panel.
+## Problem
+The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
 
 ## Changes
 
-**File:** `src/pages/admin/AdminSettingsNew.tsx`
+### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
+Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
 
-In the Localization `TabsContent` (after the existing Language Settings card, line ~487), add a new card titled "Translation Content" with:
+### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
+Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
 
-1. A language selector dropdown to pick which locale to edit (EN/TR/RU/AR)
-2. A collapsible/accordion list of all top-level translation sections (nav, auth, hero, community, learn, events, projects, resources, join, footer, education, blog, etc.)
-3. Each section expands to show a JSON textarea pre-filled with the current content from the corresponding locale file
-4. An "Apply Changes" button that updates the i18n resources in-memory via `i18next.addResourceBundle()`
-5. A note explaining that changes are session-only unless exported (since locale files are static JSON bundled at build time)
+### 3. Preload the video in `index.html`
+Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
+```html
+<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
+```
 
-**Implementation details:**
-- Import the 4 locale JSON files directly (`en.json`, `tr.json`, `ru.json`, `ar.json`)
-- Use `Accordion` component for each top-level key section
-- Each accordion item contains a `Textarea` with `JSON.stringify(section, null, 2)` as the value
-- On edit, parse the JSON and validate before allowing save
-- Use `i18n.addResourceBundle(locale, 'translation', mergedData, true, true)` to apply changes live
-- Show validation error toast if JSON is malformed
+### 4. Add loading state with fade-in transition (`Hero.tsx`)
+Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
+
+## Files to modify
+
+| File | Change |
+|------|--------|
+| `index.html` | Add `<link rel="preload">` for the video |
+| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
 
