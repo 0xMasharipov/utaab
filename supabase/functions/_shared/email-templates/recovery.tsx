@@ -28,7 +28,7 @@ export const RecoveryEmail = ({
   <Html lang="en" dir="ltr">
     <Head>
       <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
-      <style dangerouslySetInnerHTML={{ __html: `@media (prefers-color-scheme: dark) { body, .email-bg { background-color: #081020 !important; } }` }} />
+      
     </Head>
     <Preview>Reset your password for UTAAB</Preview>
     <Body style={main}>
