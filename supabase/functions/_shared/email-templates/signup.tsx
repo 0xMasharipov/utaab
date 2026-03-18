@@ -69,7 +69,7 @@ export const SignupEmail = ({
 export default SignupEmail
 
 const fontFamily = 'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-const main = { backgroundColor: '#F4F7FB', fontFamily, padding: '48px 16px' }
+const main = { backgroundColor: '#081020', fontFamily, padding: '48px 16px' }
 const wrapper = { maxWidth: '480px', margin: '0 auto' }
 const container = { backgroundColor: '#ffffff', borderRadius: '20px', padding: '48px 36px 40px', border: '1px solid #e8e8ec', boxShadow: '0 8px 30px rgba(0,0,0,0.12)' }
 const logoSection = { textAlign: 'center' as const, marginBottom: '8px' }
