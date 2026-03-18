@@ -9,22 +9,26 @@ export const Learn = () => {
   const { t } = useTranslation();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const navigate = useNavigate();
 
   const resources = [
     {
       icon: BookOpen,
       title: t('learn.guides'),
       description: t('learn.guidesDescription'),
+      path: '/learn/guides',
     },
     {
       icon: Video,
       title: t('learn.tutorials'),
       description: t('learn.tutorialsDescription'),
+      path: '/education',
     },
     {
       icon: GraduationCap,
       title: t('learn.workshops'),
       description: t('learn.workshopsDescription'),
+      path: '/learn/workshops',
     },
   ];
 
