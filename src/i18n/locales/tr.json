@@ -21,7 +21,10 @@
     "contributorMatch": "Katılımcı Eşleştirme",
     "ecosystem": "Ekosistem",
     "explore": "Keşfet",
-    "organization": "Organizasyon"
+    "organization": "Organizasyon",
+    "learnGuidesDesc": "Web3 yolculuğunuza başlamak için adım adım kılavuzlar",
+    "learnVideosDesc": "Seçilmiş blockchain içerikleriyle görsel öğrenme",
+    "learnWorkshopsDesc": "Uygulamalı öğrenme deneyimleri ve etkinlikler"
   },
   "auth": {
     "studentSignIn": "Öğrenci Girişi",

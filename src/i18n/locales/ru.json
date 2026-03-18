@@ -21,7 +21,10 @@
     "contributorMatch": "Подбор роли",
     "ecosystem": "Экосистема",
     "explore": "Исследовать",
-    "organization": "Организация"
+    "organization": "Организация",
+    "learnGuidesDesc": "Пошаговые руководства для начала вашего Web3 пути",
+    "learnVideosDesc": "Визуальное обучение с подобранным блокчейн контентом",
+    "learnWorkshopsDesc": "Практический опыт обучения и мероприятия"
   },
   "auth": {
     "studentSignIn": "Вход для Студентов",

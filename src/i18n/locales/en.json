@@ -21,7 +21,10 @@
     "contributorMatch": "Contributor Match",
     "ecosystem": "Ecosystem",
     "explore": "Explore",
-    "organization": "Organization"
+    "organization": "Organization",
+    "learnGuidesDesc": "Step-by-step guides to start your Web3 journey",
+    "learnVideosDesc": "Visual learning with curated blockchain content",
+    "learnWorkshopsDesc": "Hands-on learning experiences and events"
   },
   "auth": {
     "studentSignIn": "Student Sign In",

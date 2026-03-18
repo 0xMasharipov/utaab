@@ -21,7 +21,10 @@
     "contributorMatch": "مطابقة المساهمين",
     "ecosystem": "النظام البيئي",
     "explore": "استكشف",
-    "organization": "المنظمة"
+    "organization": "المنظمة",
+    "learnGuidesDesc": "أدلة خطوة بخطوة لبدء رحلتك في Web3",
+    "learnVideosDesc": "تعلم بصري مع محتوى بلوكشين منتقى",
+    "learnWorkshopsDesc": "تجارب تعليمية عملية وفعاليات"
   },
   "auth": {
     "studentSignIn": "تسجيل دخول الطالب",

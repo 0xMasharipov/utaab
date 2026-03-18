@@ -260,7 +260,6 @@ export const Navbar = () => {
                   <div className="flex flex-col gap-1">
                     {[
                       { key: 'community', id: 'community' },
-                      { key: 'learn', id: 'learn' },
                       { key: 'events', id: 'events' },
                       { key: 'projects', id: 'projects' },
                     ].map((item, i) => (
@@ -277,6 +276,36 @@ export const Navbar = () => {
                         {t(`nav.${item.key}`)}
                       </motion.button>
                     ))}
+
+                    {/* Learn & Grow sub-menu */}
+                    <div className="mt-2">
+                      <span className="text-xs uppercase tracking-[2px] text-white/30 font-semibold px-4">
+                        {t('learn.title')}
+                      </span>
+                      <div className="flex flex-col gap-0.5 mt-1.5">
+                        {[
+                          { key: 'guides', path: '/learn/guides', descKey: 'nav.learnGuidesDesc' },
+                          { key: 'tutorials', path: '/learn/guides?tab=videos', descKey: 'nav.learnVideosDesc' },
+                          { key: 'workshops', path: '/learn/workshops', descKey: 'nav.learnWorkshopsDesc' },
+                        ].map((item, i) => (
+                          <motion.button
+                            key={item.key}
+                            initial={prefersReducedMotion ? {} : { opacity: 0, y: 6 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.03 * (i + 3), duration: 0.2 }}
+                            onClick={() => handleNavigate(item.path)}
+                            className="text-left px-4 py-2 rounded-xl hover:bg-white/[0.08] transition-all duration-200 group/item"
+                          >
+                            <span className={getTransitionClasses("text-sm font-medium text-white/80 group-hover/item:text-white")}>
+                              {t(`learn.${item.key}`)}
+                            </span>
+                            <span className={getTransitionClasses("block text-[11px] text-white/35 mt-0.5")}>
+                              {t(item.descKey)}
+                            </span>
+                          </motion.button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
