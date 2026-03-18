@@ -1,31 +1,55 @@
 
 
-# Improve Hero Video Loading Speed
+# Localize All Hardcoded English Content
 
-## Problem
-The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
+## Summary
+Add i18n support to 9 components with hardcoded English strings and add the corresponding translation keys to all 4 locale files (EN, TR, RU, AR).
 
-## Changes
+## Components to Localize
 
-### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
-Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
+### 1. Profile Sub-Components (7 files)
+All in `src/components/profile/`:
 
-### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
-Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
+| File | Hardcoded strings |
+|------|------------------|
+| `ProfileOverview.tsx` | "About", "Not specified", "Joined", "Language:", "Focus Areas", "Recent Activity", "No recent activity" |
+| `ProfileSettings.tsx` | "Account Settings", "Profile Information", "Full Name", "Department", "Email Preferences", "Course Updates", "Newsletters", "Marketing Emails", "Save Changes", "Saving...", toast messages |
+| `ProfileCertificates.tsx` | "No certificates yet", "Complete courses to earn certificates", "My Certificates", "Your earned certifications", "Issued:", "Download", "Verify" |
+| `ProfileCourses.tsx` | "No courses yet", "Start learning...", "Browse Courses", "My Courses", "Track your learning progress", "Progress", "Completed", "In Progress", "Review Course", "Continue Learning", "Completed:" |
+| `ProfileNotifications.tsx` | "No notifications", "You're all caught up!", "Notifications", "unread notifications", "All caught up", "Mark all as read", "New", toast messages |
+| `ProfileSaved.tsx` | "No saved items", "Bookmark courses...", "Saved Items", "Your bookmarked content", "Saved", "Item removed" |
+| `ProfilePrivacy.tsx` | "Privacy & Data", "KVKK Consent Status", "Granted", "Not Granted", "Version", "Granted on:", "Data Management", "Download My Data", "Submit KVKK Request", "Delete My Account", "Privacy Documents", "Privacy Policy", "Cookie Policy" |
+| `ProfileAdminMode.tsx` | "Root Admin Mode:", admin tool labels, tab names, descriptions |
 
-### 3. Preload the video in `index.html`
-Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
-```html
-<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
-```
+### 2. Other Components (1 file)
+| File | Hardcoded strings |
+|------|------------------|
+| `CertificateDisplay.tsx` | "Certificate of Completion", "This certifies that", "has successfully completed", "Certificate Number:", "Issued on:", "Download PDF", "Share" |
 
-### 4. Add loading state with fade-in transition (`Hero.tsx`)
-Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
+## Implementation per component
+1. Import `useTranslation` from `react-i18next`
+2. Replace all hardcoded strings with `t('profile.xxx')` or `t('certificate.xxx')` calls
+3. Replace toast message strings with `t()` calls
 
-## Files to modify
+## Locale file updates
+Add new keys under a `profile` section (extending existing keys) in all 4 files:
+- `src/i18n/locales/en.json` -- English values
+- `src/i18n/locales/tr.json` -- Turkish translations
+- `src/i18n/locales/ru.json` -- Russian translations
+- `src/i18n/locales/ar.json` -- Arabic translations
 
-| File | Change |
-|------|--------|
-| `index.html` | Add `<link rel="preload">` for the video |
-| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
+New key groups to add:
+- `profile.overview.*` (about, notSpecified, joined, language, focusAreas, recentActivity, noRecentActivity)
+- `profile.settingsPage.*` (title, subtitle, profileInfo, fullName, department, emailPreferences, courseUpdates, courseUpdatesDesc, newsletters, newslettersDesc, marketing, marketingDesc, saveChanges, saving, savedSuccess, saveFailed)
+- `profile.certificatesPage.*` (noCertificates, noCertificatesDesc, title, subtitle, issued, download, verify, loadFailed)
+- `profile.coursesPage.*` (noCourses, noCoursesDesc, browseCourses, title, subtitle, progress, completed, inProgress, completedDate, reviewCourse, continueLearning, loadFailed)
+- `profile.notificationsPage.*` (noNotifications, allCaughtUp, title, unreadCount, markAllRead, new, markReadFailed, markAllReadSuccess, loadFailed)
+- `profile.savedPage.*` (noSaved, noSavedDesc, title, subtitle, saved, itemRemoved, removeFailed, loadFailed)
+- `profile.privacyPage.*` (title, subtitle, kvkkStatus, granted, notGranted, version, grantedOn, dataManagement, downloadData, submitKvkk, deleteAccount, privacyDocuments, privacyPolicy, kvkkText, cookiePolicy)
+- `profile.adminMode.*` (rootAdminAlert, adminTools, adminToolsDesc, quickUploads, announcements, messages, auditLog + descriptions)
+- `certificate.*` (title, certifiesThat, hasCompleted, certificateNumber, issuedOn, downloadPdf, share, downloadStarting, shareLinkCopied)
+
+## File count
+- 9 component files modified (add `useTranslation`, replace strings)
+- 4 locale JSON files updated (add ~120 new keys each)
 
