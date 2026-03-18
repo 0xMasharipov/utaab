@@ -6,7 +6,7 @@ export const HeroCarousel = () => (
     className="relative z-[5] overflow-hidden select-none"
     style={{
       marginTop: -60,
-      marginBottom: -60,
+      marginBottom: 0,
       padding: '28px 0',
       background: 'linear-gradient(to bottom, rgba(10,40,120,0.4), rgba(5,10,25,0.95))',
       backdropFilter: 'blur(12px)',
