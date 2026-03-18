@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import TranslationEditor from '@/components/admin/TranslationEditor';
 
 export default function AdminSettingsNew() {
   const [settings, setSettings] = useState<any>({});
