@@ -3,8 +3,11 @@ import { Footer } from '@/components/Footer';
 import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
 import { motion } from 'framer-motion';
 import { Rocket } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Workshops = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <AnimatedBlobBackground />
@@ -26,21 +29,21 @@ const Workshops = () => {
           </motion.div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Workshops & Bootcamps
+            {t('learn.workshopsPage.title')}
           </h1>
           <p className="text-lg text-muted-foreground mb-8">
-            Hands-on educational experiences for builders are coming soon.
+            {t('learn.workshopsPage.subtitle')}
           </p>
 
           <div className="inline-block px-6 py-2 rounded-full bg-accent/10 border border-accent/20 mb-6">
-            <span className="text-accent font-bold text-lg tracking-wide">Coming Soon</span>
+            <span className="text-accent font-bold text-lg tracking-wide">{t('learn.workshopsPage.comingSoon')}</span>
           </div>
 
           <p className="text-sm text-muted-foreground max-w-md mx-auto mb-4">
-            We are preparing practical workshops, guided sessions, and future bootcamps for the UTAAB community.
+            {t('learn.workshopsPage.description')}
           </p>
           <p className="text-xs text-muted-foreground/60">
-            Follow UTAAB for future announcements.
+            {t('learn.workshopsPage.followUs')}
           </p>
         </motion.div>
       </main>
