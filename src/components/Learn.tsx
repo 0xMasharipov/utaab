@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { BookOpen, Video, GraduationCap } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export const Learn = () => {
   const { t } = useTranslation();
