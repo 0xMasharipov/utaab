@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { BookOpen, Video, Clock, ArrowRight, Blocks, Wallet, Globe, FileCode, Users, TrendingUp, Play } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
-import { AnimatedBlobBackground } from '@/components/AnimatedBlobBackground';
+import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
