@@ -4,7 +4,7 @@ import { Rocket, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
-import { AnimatedBlobBackground } from '@/components/AnimatedBlobBackground';
+import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
 import { Button } from '@/components/ui/button';
 
 export const LearnWorkshops = () => {
