@@ -21,7 +21,10 @@
     "contributorMatch": "مطابقة المساهمين",
     "ecosystem": "النظام البيئي",
     "explore": "استكشف",
-    "organization": "المنظمة"
+    "organization": "المنظمة",
+    "learnGuidesDesc": "أدلة خطوة بخطوة لبدء رحلتك في Web3",
+    "learnVideosDesc": "تعلم بصري مع محتوى بلوكشين منتقى",
+    "learnWorkshopsDesc": "تجارب تعليمية عملية وفعاليات"
   },
   "auth": {
     "studentSignIn": "تسجيل دخول الطالب",
@@ -92,6 +95,35 @@
     "tutorialsDescription": "دروس فيديو خطوة بخطوة",
     "workshops": "ورش عمل ومعسكرات تدريبية",
     "workshopsDescription": "تجارب تعليمية عملية"
+  },
+  "learnPage": {
+    "heroSubtitle": "ابدأ رحلتك في البلوكشين، خطوة بخطوة",
+    "startLearning": "ابدأ التعلم",
+    "minutes": "دقيقة",
+    "difficulty": { "beginner": "مبتدئ", "intermediate": "متوسط", "advanced": "متقدم" },
+    "guides": {
+      "blockchain": { "title": "ما هو البلوكشين؟", "description": "افهم أساسيات تقنية السجل الموزع وكيف يعمل البلوكشين." },
+      "wallet": { "title": "كيفية إنشاء محفظة", "description": "تعلم كيفية إعداد أول محفظة عملات رقمية وإدارة أصولك الرقمية بأمان." },
+      "web3": { "title": "مقدمة في Web3", "description": "استكشف الويب اللامركزي وافهم كيف يختلف Web3 عن الإنترنت التقليدي." },
+      "smartContracts": { "title": "أساسيات العقود الذكية", "description": "تعلم كتابة ونشر أول عقد ذكي لك على البلوكشين." },
+      "dao": { "title": "كيف تشارك في DAOs", "description": "افهم الحوكمة اللامركزية وكيفية المساهمة بفعالية في DAOs." },
+      "defi": { "title": "أساسيات DeFi", "description": "اكتشف بروتوكولات التمويل اللامركزي والإقراض والتخزين واستراتيجيات العائد." }
+    },
+    "videos": {
+      "blockchainExplained": { "title": "شرح البلوكشين ببساطة", "description": "مقدمة بصرية لكيفية عمل تقنية البلوكشين." },
+      "firstContract": { "title": "أول عقد ذكي لك", "description": "تابع بناء ونشر عقد ذكي من الصفر." },
+      "walletSetup": { "title": "دليل إعداد المحفظة", "description": "دليل فيديو خطوة بخطوة لإنشاء وتأمين محفظة العملات الرقمية." },
+      "defiOverview": { "title": "نظرة عامة على DeFi", "description": "فهم نظام التمويل اللامركزي وبروتوكولاته الرئيسية." },
+      "nftCreation": { "title": "إنشاء أول NFT لك", "description": "تعلم سك وإدراج وإدارة NFTs في الأسواق الشهيرة." },
+      "tonEcosystem": { "title": "نظام TON البيئي", "description": "استكشف بلوكشين TON وبنيته وفرص التطوير." }
+    },
+    "categories": { "fundamentals": "الأساسيات", "development": "التطوير", "defi": "DeFi", "ecosystem": "النظام البيئي" },
+    "workshops": {
+      "comingSoonText": "نحن نحضر ورش عمل ومعسكرات تدريبية عالية التأثير.",
+      "stayTuned": "تابعونا لتجارب تعليمية عملية.",
+      "followUpdates": "تابعنا للتحديثات",
+      "exploreGuides": "استكشف الأدلة"
+    }
   },
   "events": {
     "title": "الفعاليات",
