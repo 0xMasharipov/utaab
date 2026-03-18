@@ -1,31 +1,41 @@
 
 
-# Improve Hero Video Loading Speed
+# Localize Educational Guides & Workshops Pages
 
 ## Problem
-The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
+Both `EducationalGuides.tsx` and `Workshops.tsx` have all content hardcoded in English with no `useTranslation` integration.
 
 ## Changes
 
-### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
-Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
+### 1. Add translation keys to all 4 locale files
+Add new `guides` and `workshops` key groups under the existing `learn` namespace.
 
-### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
-Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
+**~80 new keys per locale** covering:
+- **Guides hero**: badge, title, subtitle, description
+- **Section headers**: "Start Here", "Ethereum Fundamentals", "Build & Explore" (title + subtitle each)
+- **18 guide cards**: title + description each (36 keys)
+- **Difficulty badges**: "Beginner", "Intermediate", "Advanced"
+- **UI labels**: "Read Guide", "Visit Resource", read time suffix
+- **3 ecosystem resources**: name + description each
+- **Ecosystem section**: title + subtitle
+- **6 journey steps** + journey title + subtitle
+- **Workshops page**: title, subtitle, coming soon badge, description lines
 
-### 3. Preload the video in `index.html`
-Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
-```html
-<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
-```
+### 2. Refactor `EducationalGuides.tsx`
+- Import `useTranslation`
+- Convert card arrays from constants to functions that use `t()` calls
+- Replace all hardcoded strings in hero, section headers, ecosystem resources, and journey steps with `t()` keys
+- Pass `t` to `Section` component or make cards dynamic
 
-### 4. Add loading state with fade-in transition (`Hero.tsx`)
-Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
+### 3. Refactor `Workshops.tsx`
+- Import `useTranslation`
+- Replace 5 hardcoded strings with `t()` calls
 
-## Files to modify
-
-| File | Change |
-|------|--------|
-| `index.html` | Add `<link rel="preload">` for the video |
-| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
+### Files Modified
+- `src/pages/learn/EducationalGuides.tsx`
+- `src/pages/learn/Workshops.tsx`
+- `src/i18n/locales/en.json`
+- `src/i18n/locales/tr.json`
+- `src/i18n/locales/ru.json`
+- `src/i18n/locales/ar.json`
 
