@@ -91,7 +91,69 @@
     "tutorials": "Video Tutorials",
     "tutorialsDescription": "Step-by-step video tutorials",
     "workshops": "Workshops & Bootcamps",
-    "workshopsDescription": "Hands-on learning experiences"
+    "workshopsDescription": "Hands-on learning experiences",
+    "guidesPage": {
+      "heroBadge": "Educational Hub",
+      "heroTitle": "Learn & ",
+      "heroTitleAccent": "Grow",
+      "heroSubtitle": "Structured educational materials to help you start, understand, and build in blockchain.",
+      "heroDescription": "Explore foundational guides, ecosystem knowledge, and curated learning paths inspired by leading blockchain education platforms.",
+      "readGuide": "Read Guide",
+      "visitResource": "Visit Resource",
+      "difficultyBeginner": "Beginner",
+      "difficultyIntermediate": "Intermediate",
+      "difficultyAdvanced": "Advanced",
+      "startHereTitle": "Start Here",
+      "startHereSubtitle": "New to blockchain? Begin your journey with these foundational guides.",
+      "ethereumTitle": "Ethereum Fundamentals",
+      "ethereumSubtitle": "Dive into the world's most important smart contract platform.",
+      "buildTitle": "Build & Explore",
+      "buildSubtitle": "Go deeper into ecosystems, developer tools, and Web3 architecture.",
+      "ecosystemTitle": "Recommended Learning Sources",
+      "ecosystemSubtitle": "Trusted ecosystems and platforms curated by UTAAB for your learning journey.",
+      "journeyTitle": "Your Learning Journey",
+      "journeySubtitle": "Follow this suggested path from beginner to builder.",
+      "cards": {
+        "whatIsBlockchain": { "title": "What Is Blockchain?", "description": "Understand the foundational technology behind decentralized systems and why it matters for the future of the internet." },
+        "howBlockchainWorks": { "title": "How Does a Blockchain Work?", "description": "Learn how blocks, nodes, and consensus mechanisms come together to create an immutable, transparent ledger." },
+        "whatIsWeb3": { "title": "What Is Web3?", "description": "Discover the next evolution of the internet — ownership, decentralization, and user-controlled data." },
+        "walletsTokens": { "title": "Wallets, Tokens, and Transactions", "description": "Learn what crypto wallets are, how tokens work, and how transactions flow through a blockchain network." },
+        "publicPrivateKeys": { "title": "Public vs Private Keys", "description": "Understand the cryptographic key pairs that secure your identity and assets on blockchain networks." },
+        "commonTerms": { "title": "Common Terms You Should Know", "description": "A glossary of essential blockchain terminology — from gas fees to smart contracts to consensus." },
+        "whatIsEthereum": { "title": "What Is Ethereum?", "description": "Explore the world's leading smart contract platform and why it serves as the backbone of decentralized finance and applications." },
+        "ethereumVsBitcoin": { "title": "How Ethereum Differs from Bitcoin", "description": "Compare the two largest blockchain networks — from purpose and architecture to consensus mechanisms." },
+        "smartContracts": { "title": "Smart Contracts Explained", "description": "Understand self-executing contracts on the blockchain — how they work, why they matter, and where they're used." },
+        "gasFees": { "title": "Gas Fees and Transactions", "description": "Learn how transaction costs are calculated on Ethereum and strategies to optimize gas usage." },
+        "ethereumAccounts": { "title": "Ethereum Accounts and Wallet Interaction", "description": "Discover the differences between EOAs and contract accounts, and how wallets interact with the network." },
+        "introEthDev": { "title": "Intro to Ethereum Development", "description": "Get started with Ethereum development tools, languages, and frameworks used to build decentralized applications." },
+        "introDapps": { "title": "Intro to dApps", "description": "Understand what decentralized applications are, how they differ from traditional apps, and real-world use cases." },
+        "whatAreDaos": { "title": "What Are DAOs?", "description": "Learn about Decentralized Autonomous Organizations — community-governed entities powered by smart contracts." },
+        "web2VsWeb3": { "title": "Web2 vs Web3", "description": "A clear comparison of centralized and decentralized paradigms across infrastructure, identity, and ownership." },
+        "testnets": { "title": "Blockchain Networks and Testnets", "description": "Explore mainnet vs testnet environments and learn how developers safely experiment before deployment." },
+        "devTooling": { "title": "Intro to Developer Tooling", "description": "An overview of essential tools — Hardhat, Foundry, Remix, Alchemy — that power blockchain development workflows." },
+        "securityBasics": { "title": "Security Basics for New Builders", "description": "Learn common vulnerabilities, best practices, and security patterns every Web3 developer should know." }
+      },
+      "ecosystem": {
+        "ethereum": { "name": "Ethereum", "description": "Foundational educational resources for understanding blockchain, smart contracts, wallets, and development — directly from the Ethereum ecosystem." },
+        "binance": { "name": "Binance Academy", "description": "Accessible educational articles, glossaries, and beginner-friendly content covering blockchain, crypto, Web3 concepts, and trading fundamentals." },
+        "solana": { "name": "Solana", "description": "Both no-code learning paths and developer-oriented resources for ecosystem exploration, building on Solana, and understanding high-performance blockchains." }
+      },
+      "journey": {
+        "step1": "Learn blockchain basics",
+        "step2": "Understand wallets and transactions",
+        "step3": "Explore Ethereum fundamentals",
+        "step4": "Learn smart contracts and dApps",
+        "step5": "Discover ecosystems and tools",
+        "step6": "Join workshops and future bootcamps"
+      }
+    },
+    "workshopsPage": {
+      "title": "Workshops & Bootcamps",
+      "subtitle": "Hands-on educational experiences for builders are coming soon.",
+      "comingSoon": "Coming Soon",
+      "description": "We are preparing practical workshops, guided sessions, and future bootcamps for the UTAAB community.",
+      "followUs": "Follow UTAAB for future announcements."
+    }
   },
   "events": {
     "title": "Events",
