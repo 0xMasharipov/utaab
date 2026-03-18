@@ -5,12 +5,14 @@ import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Award, Download, ExternalLink } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface ProfileCertificatesProps {
   userId: string;
 }
 
 export default function ProfileCertificates({ userId }: ProfileCertificatesProps) {
+  const { t } = useTranslation();
   const [certificates, setCertificates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,7 +31,7 @@ export default function ProfileCertificates({ userId }: ProfileCertificatesProps
       if (error) throw error;
       setCertificates(data || []);
     } catch (error: any) {
-      toast.error('Failed to load certificates: ' + error.message);
+      toast.error(t('profile.certificatesPage.loadFailed') + ': ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -47,9 +49,9 @@ export default function ProfileCertificates({ userId }: ProfileCertificatesProps
     return (
       <Card className="glass-panel p-12 text-center">
         <Award className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-        <h3 className="text-xl font-semibold mb-2">No certificates yet</h3>
+        <h3 className="text-xl font-semibold mb-2">{t('profile.certificatesPage.noCertificates')}</h3>
         <p className="text-muted-foreground">
-          Complete courses to earn certificates
+          {t('profile.certificatesPage.noCertificatesDesc')}
         </p>
       </Card>
     );
@@ -58,8 +60,8 @@ export default function ProfileCertificates({ userId }: ProfileCertificatesProps
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold mb-2">My Certificates</h2>
-        <p className="text-muted-foreground">Your earned certifications</p>
+        <h2 className="text-2xl font-bold mb-2">{t('profile.certificatesPage.title')}</h2>
+        <p className="text-muted-foreground">{t('profile.certificatesPage.subtitle')}</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
@@ -79,17 +81,17 @@ export default function ProfileCertificates({ userId }: ProfileCertificatesProps
               </div>
 
               <div className="text-sm text-muted-foreground">
-                Issued: {new Date(cert.issued_at).toLocaleDateString()}
+                {t('profile.certificatesPage.issued')} {new Date(cert.issued_at).toLocaleDateString()}
               </div>
 
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" className="flex-1 gap-2">
                   <Download className="h-4 w-4" />
-                  Download
+                  {t('profile.certificatesPage.download')}
                 </Button>
                 <Button variant="outline" size="sm" className="flex-1 gap-2">
                   <ExternalLink className="h-4 w-4" />
-                  Verify
+                  {t('profile.certificatesPage.verify')}
                 </Button>
               </div>
             </div>
