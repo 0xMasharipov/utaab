@@ -3,10 +3,10 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 interface ProfileSettingsProps {
   profile: any;
@@ -15,6 +15,7 @@ interface ProfileSettingsProps {
 }
 
 export default function ProfileSettings({ profile, userId, onUpdate }: ProfileSettingsProps) {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     full_name: profile?.full_name || '',
     department: profile?.department || '',
@@ -34,10 +35,10 @@ export default function ProfileSettings({ profile, userId, onUpdate }: ProfileSe
 
       if (error) throw error;
 
-      toast.success('Settings saved successfully');
+      toast.success(t('profile.settingsPage.savedSuccess'));
       onUpdate();
     } catch (error: any) {
-      toast.error('Failed to save settings: ' + error.message);
+      toast.error(t('profile.settingsPage.saveFailed') + ': ' + error.message);
     } finally {
       setSaving(false);
     }
@@ -46,16 +47,15 @@ export default function ProfileSettings({ profile, userId, onUpdate }: ProfileSe
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold mb-2">Account Settings</h2>
-        <p className="text-muted-foreground">Manage your account preferences</p>
+        <h2 className="text-2xl font-bold mb-2">{t('profile.settingsPage.title')}</h2>
+        <p className="text-muted-foreground">{t('profile.settingsPage.subtitle')}</p>
       </div>
 
-      {/* Profile Information */}
       <Card className="glass-panel p-6">
-        <h3 className="text-lg font-semibold mb-4">Profile Information</h3>
+        <h3 className="text-lg font-semibold mb-4">{t('profile.settingsPage.profileInfo')}</h3>
         <div className="space-y-4">
           <div>
-            <Label htmlFor="full_name">Full Name</Label>
+            <Label htmlFor="full_name">{t('profile.settingsPage.fullName')}</Label>
             <Input
               id="full_name"
               value={formData.full_name}
@@ -63,7 +63,7 @@ export default function ProfileSettings({ profile, userId, onUpdate }: ProfileSe
             />
           </div>
           <div>
-            <Label htmlFor="department">Department</Label>
+            <Label htmlFor="department">{t('profile.settingsPage.department')}</Label>
             <Input
               id="department"
               value={formData.department}
@@ -73,15 +73,14 @@ export default function ProfileSettings({ profile, userId, onUpdate }: ProfileSe
         </div>
       </Card>
 
-      {/* Email Preferences */}
       <Card className="glass-panel p-6">
-        <h3 className="text-lg font-semibold mb-4">Email Preferences</h3>
+        <h3 className="text-lg font-semibold mb-4">{t('profile.settingsPage.emailPreferences')}</h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <Label htmlFor="course_updates">Course Updates</Label>
+              <Label htmlFor="course_updates">{t('profile.settingsPage.courseUpdates')}</Label>
               <p className="text-sm text-muted-foreground">
-                Receive notifications about course updates
+                {t('profile.settingsPage.courseUpdatesDesc')}
               </p>
             </div>
             <Switch
@@ -94,9 +93,9 @@ export default function ProfileSettings({ profile, userId, onUpdate }: ProfileSe
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <Label htmlFor="newsletters">Newsletters</Label>
+              <Label htmlFor="newsletters">{t('profile.settingsPage.newsletters')}</Label>
               <p className="text-sm text-muted-foreground">
-                Receive our monthly newsletter
+                {t('profile.settingsPage.newslettersDesc')}
               </p>
             </div>
             <Switch
@@ -109,9 +108,9 @@ export default function ProfileSettings({ profile, userId, onUpdate }: ProfileSe
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <Label htmlFor="marketing">Marketing Emails</Label>
+              <Label htmlFor="marketing">{t('profile.settingsPage.marketing')}</Label>
               <p className="text-sm text-muted-foreground">
-                Receive promotional content and offers
+                {t('profile.settingsPage.marketingDesc')}
               </p>
             </div>
             <Switch
@@ -126,7 +125,7 @@ export default function ProfileSettings({ profile, userId, onUpdate }: ProfileSe
       </Card>
 
       <Button onClick={handleSave} disabled={saving} className="w-full md:w-auto">
-        {saving ? 'Saving...' : 'Save Changes'}
+        {saving ? t('profile.settingsPage.saving') : t('profile.settingsPage.saveChanges')}
       </Button>
     </div>
   );

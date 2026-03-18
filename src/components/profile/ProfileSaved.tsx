@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Bookmark, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface ProfileSavedProps {
   userId: string;
@@ -12,6 +13,7 @@ interface ProfileSavedProps {
 
 export default function ProfileSaved({ userId }: ProfileSavedProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [savedItems, setSavedItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -30,7 +32,7 @@ export default function ProfileSaved({ userId }: ProfileSavedProps) {
       if (error) throw error;
       setSavedItems(data || []);
     } catch (error: any) {
-      toast.error('Failed to load saved items: ' + error.message);
+      toast.error(t('profile.savedPage.loadFailed') + ': ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -44,10 +46,10 @@ export default function ProfileSaved({ userId }: ProfileSavedProps) {
         .eq('id', id);
 
       if (error) throw error;
-      toast.success('Item removed');
+      toast.success(t('profile.savedPage.itemRemoved'));
       fetchSavedItems();
     } catch (error: any) {
-      toast.error('Failed to remove item: ' + error.message);
+      toast.error(t('profile.savedPage.removeFailed') + ': ' + error.message);
     }
   };
 
@@ -63,9 +65,9 @@ export default function ProfileSaved({ userId }: ProfileSavedProps) {
     return (
       <Card className="glass-panel p-12 text-center">
         <Bookmark className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-        <h3 className="text-xl font-semibold mb-2">No saved items</h3>
+        <h3 className="text-xl font-semibold mb-2">{t('profile.savedPage.noSaved')}</h3>
         <p className="text-muted-foreground">
-          Bookmark courses and resources to access them quickly
+          {t('profile.savedPage.noSavedDesc')}
         </p>
       </Card>
     );
@@ -74,8 +76,8 @@ export default function ProfileSaved({ userId }: ProfileSavedProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold mb-2">Saved Items</h2>
-        <p className="text-muted-foreground">Your bookmarked content</p>
+        <h2 className="text-2xl font-bold mb-2">{t('profile.savedPage.title')}</h2>
+        <p className="text-muted-foreground">{t('profile.savedPage.subtitle')}</p>
       </div>
 
       <div className="space-y-4">
@@ -85,7 +87,7 @@ export default function ProfileSaved({ userId }: ProfileSavedProps) {
               <div>
                 <h3 className="font-semibold mb-1">{item.item_type}</h3>
                 <p className="text-sm text-muted-foreground">
-                  Saved {new Date(item.created_at).toLocaleDateString()}
+                  {t('profile.savedPage.saved')} {new Date(item.created_at).toLocaleDateString()}
                 </p>
               </div>
               <Button

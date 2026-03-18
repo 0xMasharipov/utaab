@@ -4,13 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Bell, Check, Trash2 } from 'lucide-react';
+import { Bell, Check } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface ProfileNotificationsProps {
   userId: string;
 }
 
 export default function ProfileNotifications({ userId }: ProfileNotificationsProps) {
+  const { t } = useTranslation();
   const [notifications, setNotifications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,7 +31,7 @@ export default function ProfileNotifications({ userId }: ProfileNotificationsPro
       if (error) throw error;
       setNotifications(data || []);
     } catch (error: any) {
-      toast.error('Failed to load notifications: ' + error.message);
+      toast.error(t('profile.notificationsPage.loadFailed') + ': ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -45,7 +47,7 @@ export default function ProfileNotifications({ userId }: ProfileNotificationsPro
       if (error) throw error;
       fetchNotifications();
     } catch (error: any) {
-      toast.error('Failed to mark as read: ' + error.message);
+      toast.error(t('profile.notificationsPage.markReadFailed') + ': ' + error.message);
     }
   };
 
@@ -58,10 +60,10 @@ export default function ProfileNotifications({ userId }: ProfileNotificationsPro
         .eq('read', false);
 
       if (error) throw error;
-      toast.success('All notifications marked as read');
+      toast.success(t('profile.notificationsPage.markAllReadSuccess'));
       fetchNotifications();
     } catch (error: any) {
-      toast.error('Failed to mark all as read: ' + error.message);
+      toast.error(t('profile.notificationsPage.markAllReadFailed') + ': ' + error.message);
     }
   };
 
@@ -79,9 +81,9 @@ export default function ProfileNotifications({ userId }: ProfileNotificationsPro
     return (
       <Card className="glass-panel p-12 text-center">
         <Bell className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-        <h3 className="text-xl font-semibold mb-2">No notifications</h3>
+        <h3 className="text-xl font-semibold mb-2">{t('profile.notificationsPage.noNotifications')}</h3>
         <p className="text-muted-foreground">
-          You're all caught up!
+          {t('profile.notificationsPage.allCaughtUp')}
         </p>
       </Card>
     );
@@ -91,15 +93,15 @@ export default function ProfileNotifications({ userId }: ProfileNotificationsPro
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold mb-2">Notifications</h2>
+          <h2 className="text-2xl font-bold mb-2">{t('profile.notificationsPage.title')}</h2>
           <p className="text-muted-foreground">
-            {unreadCount > 0 ? `${unreadCount} unread notifications` : 'All caught up'}
+            {unreadCount > 0 ? t('profile.notificationsPage.unreadCount', { count: unreadCount }) : t('profile.notificationsPage.allRead')}
           </p>
         </div>
         {unreadCount > 0 && (
           <Button variant="outline" onClick={handleMarkAllAsRead} className="gap-2">
             <Check className="h-4 w-4" />
-            Mark all as read
+            {t('profile.notificationsPage.markAllRead')}
           </Button>
         )}
       </div>
@@ -114,7 +116,7 @@ export default function ProfileNotifications({ userId }: ProfileNotificationsPro
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
                   <h3 className="font-semibold">{notification.title}</h3>
-                  {!notification.read && <Badge variant="default">New</Badge>}
+                  {!notification.read && <Badge variant="default">{t('profile.notificationsPage.new')}</Badge>}
                 </div>
                 <p className="text-sm text-muted-foreground mb-2">
                   {notification.message}

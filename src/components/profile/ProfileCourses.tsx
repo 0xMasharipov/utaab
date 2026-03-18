@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { BookOpen, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface ProfileCoursesProps {
   userId: string;
@@ -14,6 +15,7 @@ interface ProfileCoursesProps {
 
 export default function ProfileCourses({ userId }: ProfileCoursesProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [enrollments, setEnrollments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -32,7 +34,7 @@ export default function ProfileCourses({ userId }: ProfileCoursesProps) {
       if (error) throw error;
       setEnrollments(data || []);
     } catch (error: any) {
-      toast.error('Failed to load courses: ' + error.message);
+      toast.error(t('profile.coursesPage.loadFailed') + ': ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -50,12 +52,12 @@ export default function ProfileCourses({ userId }: ProfileCoursesProps) {
     return (
       <Card className="glass-panel p-12 text-center">
         <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-        <h3 className="text-xl font-semibold mb-2">No courses yet</h3>
+        <h3 className="text-xl font-semibold mb-2">{t('profile.coursesPage.noCourses')}</h3>
         <p className="text-muted-foreground mb-6">
-          Start learning by exploring our course catalog
+          {t('profile.coursesPage.noCoursesDesc')}
         </p>
         <Button onClick={() => navigate('/education/courses')}>
-          Browse Courses
+          {t('profile.coursesPage.browseCourses')}
         </Button>
       </Card>
     );
@@ -64,8 +66,8 @@ export default function ProfileCourses({ userId }: ProfileCoursesProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold mb-2">My Courses</h2>
-        <p className="text-muted-foreground">Track your learning progress</p>
+        <h2 className="text-2xl font-bold mb-2">{t('profile.coursesPage.title')}</h2>
+        <p className="text-muted-foreground">{t('profile.coursesPage.subtitle')}</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
@@ -78,9 +80,9 @@ export default function ProfileCourses({ userId }: ProfileCoursesProps) {
                     {enrollment.courses?.title_en}
                   </h3>
                   {enrollment.completed ? (
-                    <Badge variant="default">Completed</Badge>
+                    <Badge variant="default">{t('profile.coursesPage.completedBadge')}</Badge>
                   ) : (
-                    <Badge variant="secondary">In Progress</Badge>
+                    <Badge variant="secondary">{t('profile.coursesPage.inProgressBadge')}</Badge>
                   )}
                 </div>
               </div>
@@ -88,7 +90,7 @@ export default function ProfileCourses({ userId }: ProfileCoursesProps) {
               {!enrollment.completed && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Progress</span>
+                    <span className="text-muted-foreground">{t('profile.coursesPage.progress')}</span>
                     <span className="font-medium">{Math.round(enrollment.progress || 0)}%</span>
                   </div>
                   <Progress value={enrollment.progress || 0} />
@@ -102,7 +104,7 @@ export default function ProfileCourses({ userId }: ProfileCoursesProps) {
                 </div>
                 {enrollment.completed_at && (
                   <span>
-                    Completed: {new Date(enrollment.completed_at).toLocaleDateString()}
+                    {t('profile.coursesPage.completedDate')} {new Date(enrollment.completed_at).toLocaleDateString()}
                   </span>
                 )}
               </div>
@@ -111,7 +113,7 @@ export default function ProfileCourses({ userId }: ProfileCoursesProps) {
                 className="w-full"
                 onClick={() => navigate(`/education/learn/${enrollment.courses?.slug}`)}
               >
-                {enrollment.completed ? 'Review Course' : 'Continue Learning'}
+                {enrollment.completed ? t('profile.coursesPage.reviewCourse') : t('profile.coursesPage.continueLearning')}
               </Button>
             </div>
           </Card>
