@@ -233,7 +233,7 @@ const EducationalGuides = () => {
         </section>
       </div>
 
-      <Footer />
+      <Footer onPrivacyClick={() => {}} />
     </div>
   );
 };

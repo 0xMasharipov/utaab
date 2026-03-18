@@ -45,7 +45,7 @@ const Workshops = () => {
         </motion.div>
       </main>
 
-      <Footer />
+      <Footer onPrivacyClick={() => {}} />
     </div>
   );
 };
