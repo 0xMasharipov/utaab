@@ -33,6 +33,7 @@ export const SignupEmail = ({
   <Html lang="en" dir="ltr">
     <Head>
       <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
+      <style dangerouslySetInnerHTML={{ __html: `@media (prefers-color-scheme: dark) { body, .email-bg { background-color: #081020 !important; } }` }} />
     </Head>
     <Preview>Welcome to UTAAB — confirm your email</Preview>
     <Body style={main}>
@@ -68,7 +69,7 @@ export const SignupEmail = ({
 export default SignupEmail
 
 const fontFamily = 'Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-const main = { backgroundColor: '#081020', fontFamily, padding: '48px 16px' }
+const main = { backgroundColor: '#F4F7FB', fontFamily, padding: '48px 16px' }
 const wrapper = { maxWidth: '480px', margin: '0 auto' }
 const container = { backgroundColor: '#ffffff', borderRadius: '20px', padding: '48px 36px 40px', border: '1px solid #e8e8ec', boxShadow: '0 8px 30px rgba(0,0,0,0.12)' }
 const logoSection = { textAlign: 'center' as const, marginBottom: '8px' }
