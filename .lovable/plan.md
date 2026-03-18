@@ -1,31 +1,60 @@
 
 
-# Improve Hero Video Loading Speed
+# Learn & Grow Content Pages Implementation
 
-## Problem
-The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
+## Overview
+Build destination pages and click behavior for the 3 existing Learn & Grow cards on the homepage. No navbar changes.
 
 ## Changes
 
-### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
-Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
+### 1. Update Learn Component — Add Click Navigation
+**File:** `src/components/Learn.tsx`
 
-### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
-Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
+Add `useNavigate` and make each card clickable:
+- **Educational Guides** → `/learn/guides`
+- **Video Tutorials** → `/education` (direct navigation, no new page)
+- **Workshops & Bootcamps** → `/learn/workshops`
 
-### 3. Preload the video in `index.html`
-Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
-```html
-<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
+Wrap each card in a clickable element with navigation on click.
+
+### 2. Create Educational Guides Page
+**File:** `src/pages/learn/EducationalGuides.tsx`
+
+Premium Web3 education hub page at `/learn/guides` with:
+
+- **Hero**: "Learn & Grow" title, subtitle about structured blockchain education, animated blob background, Navbar + Footer
+- **Section A — Start Here**: Beginner cards (What Is Blockchain?, How Does a Blockchain Work?, What Is Web3?, Wallets/Tokens/Transactions, Public vs Private Keys, Common Terms). Each card has title, description, "Beginner" badge, reading time, "Read Guide" CTA
+- **Section B — Ethereum Fundamentals**: Cards for Ethereum-specific content (What Is Ethereum?, Smart Contracts, Gas Fees, etc.) with "Intermediate" badges
+- **Section C — Build & Explore**: More advanced cards (Intro to dApps, DAOs, Web2 vs Web3, Testnets, Dev Tooling, Security Basics)
+- **Section D — Ecosystem Learning Resources**: 3 branded resource panels for Ethereum, Binance Academy, Solana — presented as recommended external learning sources curated by UTAAB
+- **Section E — Learning Journey**: Visual step-flow (6 steps from basics to workshops) using a vertical/horizontal progress tracker
+
+Style: Dark background, glassmorphism cards, Montserrat, UTAAB blue accents, framer-motion animations, fully responsive.
+
+### 3. Create Workshops & Bootcamps Page
+**File:** `src/pages/learn/Workshops.tsx`
+
+Coming Soon page at `/learn/workshops` with:
+- Navbar + AnimatedBlobBackground + Footer
+- Premium hero: "Workshops & Bootcamps" title
+- Centered glass card with "Coming Soon" heading, supporting message about upcoming workshops, and a subtle animation
+- Minimal but polished — not an empty page
+
+### 4. Add Routes
+**File:** `src/App.tsx`
+
+Add two lazy-loaded routes:
+```
+/learn/guides → EducationalGuides
+/learn/workshops → Workshops
 ```
 
-### 4. Add loading state with fade-in transition (`Hero.tsx`)
-Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
-
-## Files to modify
+### Files Modified
 
 | File | Change |
 |------|--------|
-| `index.html` | Add `<link rel="preload">` for the video |
-| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
+| `src/components/Learn.tsx` | Add click navigation to 3 cards |
+| `src/pages/learn/EducationalGuides.tsx` | New comprehensive guides page |
+| `src/pages/learn/Workshops.tsx` | New coming soon page |
+| `src/App.tsx` | Add 2 new routes |
 
