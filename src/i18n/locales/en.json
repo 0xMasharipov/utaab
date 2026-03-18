@@ -21,10 +21,7 @@
     "contributorMatch": "Contributor Match",
     "ecosystem": "Ecosystem",
     "explore": "Explore",
-    "organization": "Organization",
-    "learnGuidesDesc": "Step-by-step guides to start your Web3 journey",
-    "learnVideosDesc": "Visual learning with curated blockchain content",
-    "learnWorkshopsDesc": "Hands-on learning experiences and events"
+    "organization": "Organization"
   },
   "auth": {
     "studentSignIn": "Student Sign In",
@@ -95,80 +92,6 @@
     "tutorialsDescription": "Step-by-step video tutorials",
     "workshops": "Workshops & Bootcamps",
     "workshopsDescription": "Hands-on learning experiences"
-  },
-  "learnPage": {
-    "heroSubtitle": "Start your journey in blockchain, step by step",
-    "startLearning": "Start Learning",
-    "minutes": "min",
-    "difficulty": {
-      "beginner": "Beginner",
-      "intermediate": "Intermediate",
-      "advanced": "Advanced"
-    },
-    "guides": {
-      "blockchain": {
-        "title": "What is Blockchain?",
-        "description": "Understand the fundamentals of distributed ledger technology and how blockchain works."
-      },
-      "wallet": {
-        "title": "How to Create a Wallet",
-        "description": "Learn how to set up your first crypto wallet and manage your digital assets securely."
-      },
-      "web3": {
-        "title": "Introduction to Web3",
-        "description": "Explore the decentralized web and understand how Web3 differs from traditional internet."
-      },
-      "smartContracts": {
-        "title": "Smart Contracts Basics",
-        "description": "Learn to write and deploy your first smart contract on the blockchain."
-      },
-      "dao": {
-        "title": "How to Participate in DAOs",
-        "description": "Understand decentralized governance and how to contribute to DAOs effectively."
-      },
-      "defi": {
-        "title": "DeFi Fundamentals",
-        "description": "Discover decentralized finance protocols, lending, staking, and yield strategies."
-      }
-    },
-    "videos": {
-      "blockchainExplained": {
-        "title": "Blockchain Explained Simply",
-        "description": "A visual introduction to how blockchain technology works under the hood."
-      },
-      "firstContract": {
-        "title": "Your First Smart Contract",
-        "description": "Follow along as we build and deploy a smart contract from scratch."
-      },
-      "walletSetup": {
-        "title": "Wallet Setup Guide",
-        "description": "Step-by-step video guide to creating and securing your crypto wallet."
-      },
-      "defiOverview": {
-        "title": "DeFi Overview",
-        "description": "Understanding the decentralized finance ecosystem and its key protocols."
-      },
-      "nftCreation": {
-        "title": "Creating Your First NFT",
-        "description": "Learn to mint, list, and manage NFTs on popular marketplaces."
-      },
-      "tonEcosystem": {
-        "title": "The TON Ecosystem",
-        "description": "Explore the TON blockchain, its architecture, and development opportunities."
-      }
-    },
-    "categories": {
-      "fundamentals": "Fundamentals",
-      "development": "Development",
-      "defi": "DeFi",
-      "ecosystem": "Ecosystem"
-    },
-    "workshops": {
-      "comingSoonText": "We are preparing high-impact workshops and bootcamps.",
-      "stayTuned": "Stay tuned for hands-on learning experiences.",
-      "followUpdates": "Follow Us for Updates",
-      "exploreGuides": "Explore Guides"
-    }
   },
   "events": {
     "title": "Events",

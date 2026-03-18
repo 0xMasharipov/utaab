@@ -21,10 +21,7 @@
     "contributorMatch": "Katılımcı Eşleştirme",
     "ecosystem": "Ekosistem",
     "explore": "Keşfet",
-    "organization": "Organizasyon",
-    "learnGuidesDesc": "Web3 yolculuğunuza başlamak için adım adım kılavuzlar",
-    "learnVideosDesc": "Seçilmiş blockchain içerikleriyle görsel öğrenme",
-    "learnWorkshopsDesc": "Uygulamalı öğrenme deneyimleri ve etkinlikler"
+    "organization": "Organizasyon"
   },
   "auth": {
     "studentSignIn": "Öğrenci Girişi",
@@ -95,39 +92,6 @@
     "tutorialsDescription": "Adım adım video eğitimleri",
     "workshops": "Atölyeler ve Bootcamp'ler",
     "workshopsDescription": "Uygulamalı öğrenme deneyimleri"
-  },
-  "learnPage": {
-    "heroSubtitle": "Blockchain yolculuğunuza adım adım başlayın",
-    "startLearning": "Öğrenmeye Başla",
-    "minutes": "dk",
-    "difficulty": {
-      "beginner": "Başlangıç",
-      "intermediate": "Orta",
-      "advanced": "İleri"
-    },
-    "guides": {
-      "blockchain": { "title": "Blockchain Nedir?", "description": "Dağıtık defter teknolojisinin temellerini ve blockchain'in nasıl çalıştığını anlayın." },
-      "wallet": { "title": "Cüzdan Nasıl Oluşturulur?", "description": "İlk kripto cüzdanınızı nasıl kuracağınızı ve dijital varlıklarınızı güvenle nasıl yöneteceğinizi öğrenin." },
-      "web3": { "title": "Web3'e Giriş", "description": "Merkeziyetsiz web'i keşfedin ve Web3'ün geleneksel internetten farkını anlayın." },
-      "smartContracts": { "title": "Akıllı Sözleşme Temelleri", "description": "Blockchain üzerinde ilk akıllı sözleşmenizi yazmayı ve dağıtmayı öğrenin." },
-      "dao": { "title": "DAO'lara Nasıl Katılınır?", "description": "Merkeziyetsiz yönetişimi anlayın ve DAO'lara etkili bir şekilde katkıda bulunun." },
-      "defi": { "title": "DeFi Temelleri", "description": "Merkeziyetsiz finans protokollerini, borç verme, staking ve getiri stratejilerini keşfedin." }
-    },
-    "videos": {
-      "blockchainExplained": { "title": "Blockchain Basitçe Anlatıldı", "description": "Blockchain teknolojisinin nasıl çalıştığına görsel bir giriş." },
-      "firstContract": { "title": "İlk Akıllı Sözleşmeniz", "description": "Sıfırdan bir akıllı sözleşme oluşturup dağıtmayı izleyin." },
-      "walletSetup": { "title": "Cüzdan Kurulum Rehberi", "description": "Kripto cüzdanınızı oluşturmak ve güvenceye almak için adım adım video rehberi." },
-      "defiOverview": { "title": "DeFi Genel Bakış", "description": "Merkeziyetsiz finans ekosistemini ve temel protokollerini anlama." },
-      "nftCreation": { "title": "İlk NFT'nizi Oluşturun", "description": "Popüler pazarlarda NFT basmayı, listelemeyi ve yönetmeyi öğrenin." },
-      "tonEcosystem": { "title": "TON Ekosistemi", "description": "TON blockchain'ini, mimarisini ve geliştirme fırsatlarını keşfedin." }
-    },
-    "categories": { "fundamentals": "Temel", "development": "Geliştirme", "defi": "DeFi", "ecosystem": "Ekosistem" },
-    "workshops": {
-      "comingSoonText": "Yüksek etkili atölyeler ve bootcamp'ler hazırlıyoruz.",
-      "stayTuned": "Uygulamalı öğrenme deneyimleri için bizi takip edin.",
-      "followUpdates": "Güncellemeler İçin Takip Edin",
-      "exploreGuides": "Kılavuzları Keşfet"
-    }
   },
   "events": {
     "title": "Etkinlikler",
