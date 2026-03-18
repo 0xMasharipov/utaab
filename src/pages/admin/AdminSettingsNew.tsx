@@ -486,6 +486,8 @@ export default function AdminSettingsNew() {
               </div>
             </div>
           </Card>
+
+          <TranslationEditor />
         </TabsContent>
 
         {/* Privacy */}
