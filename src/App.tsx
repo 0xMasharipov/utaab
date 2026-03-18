@@ -77,6 +77,8 @@ function App() {
             <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/team" element={<TeamPage />} />
             <Route path="/contributor-match" element={<ContributorMatch />} />
+            <Route path="/learn/guides" element={<EducationalGuides />} />
+            <Route path="/learn/workshops" element={<Workshops />} />
             
             {/* Separate Admin Authentication */}
             <Route path="/admin/login" element={<AdminLogin />} />
