@@ -68,7 +68,7 @@ export const LearnWorkshops = () => {
         </div>
       </section>
 
-      <Footer />
+      <Footer onPrivacyClick={() => {}} />
     </div>
   );
 };

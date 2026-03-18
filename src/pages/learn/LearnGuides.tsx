@@ -155,7 +155,7 @@ export const LearnGuides = () => {
         </div>
       </section>
 
-      <Footer />
+      <Footer onPrivacyClick={() => {}} />
     </div>
   );
 };
