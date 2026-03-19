@@ -100,7 +100,20 @@ const BlogPost = () => {
     fetchPost();
   }, [slug]);
 
-  const content: ContentBlock[] = post && Array.isArray(post.content) ? post.content : [];
+  const rawContent = post?.content;
+  const content: ContentBlock[] = useMemo(() => {
+    if (!rawContent) return [];
+    if (Array.isArray(rawContent)) return rawContent;
+    // { "content": { "en": [...], "tr": [...] } }
+    if (rawContent.content && typeof rawContent.content === 'object' && !Array.isArray(rawContent.content)) {
+      const localized = rawContent.content;
+      return Array.isArray(localized[lang]) ? localized[lang] : Array.isArray(localized['en']) ? localized['en'] : [];
+    }
+    // { "en": [...], "tr": [...] }
+    if (Array.isArray(rawContent[lang])) return rawContent[lang];
+    if (Array.isArray(rawContent['en'])) return rawContent['en'];
+    return [];
+  }, [rawContent, lang]);
   const gallery: string[] = post && Array.isArray(post.gallery) ? post.gallery.filter((g: any) => typeof g === 'string') : [];
 
   // Collect all images for lightbox
