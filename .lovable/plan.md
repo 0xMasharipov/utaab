@@ -1,31 +1,40 @@
 
 
-# Improve Hero Video Loading Speed
+# Fix Blog Content JSON Blocks Rendering
 
 ## Problem
-The hero background video (`/videos/hero-cube.mp4`) loads slowly on page refresh because the browser waits for enough data to buffer before displaying anything — no preloading hint, no poster image for instant visual feedback.
+The blog content field supports a localized JSON structure like `{ "content": { "en": [...], "tr": [...] } }`, but the `BlogPost.tsx` renderer (line 103) only handles a flat array format: `Array.isArray(post.content) ? post.content : []`. When the nested/localized format is pasted and saved, the content silently becomes an empty array and nothing renders.
 
 ## Changes
 
-### 1. Add `preload="auto"` to the video element (`Hero.tsx`)
-Currently the video tag has no `preload` attribute, so the browser uses its default heuristic (often `metadata` only). Adding `preload="auto"` tells the browser to start fetching the full video immediately.
+### File: `src/pages/BlogPost.tsx`
+Update the content extraction logic (line 103) to handle three formats:
+1. **Flat array** (legacy): `[{type: "paragraph", ...}]`
+2. **Localized object**: `{ "en": [...], "tr": [...] }`
+3. **Wrapped localized object**: `{ "content": { "en": [...] } }`
 
-### 2. Add a poster frame for instant visual feedback (`Hero.tsx`)
-Extract a still frame from the video (first frame of the cube) and use it as a `poster` attribute. This gives users an immediate visual while the video buffers. We can use a static image or a base64 placeholder. Simplest approach: add `poster="/videos/hero-cube-poster.jpg"` — we'll generate a lightweight JPEG poster.
+For formats 2 and 3, select the array matching the current language, falling back to `en`.
 
-### 3. Preload the video in `index.html`
-Add a `<link rel="preload">` hint in the HTML head so the browser starts fetching the video before React even mounts:
-```html
-<link rel="preload" as="video" href="/videos/hero-cube.mp4" type="video/mp4">
+```typescript
+// Replace line 103
+const rawContent = post?.content;
+const content: ContentBlock[] = useMemo(() => {
+  if (!rawContent) return [];
+  if (Array.isArray(rawContent)) return rawContent;
+  // { "content": { "en": [...] } }
+  if (rawContent.content && typeof rawContent.content === 'object') {
+    return rawContent.content[lang] || rawContent.content['en'] || [];
+  }
+  // { "en": [...], "tr": [...] }
+  if (rawContent[lang]) return rawContent[lang];
+  if (rawContent['en']) return rawContent['en'];
+  return [];
+}, [rawContent, lang]);
 ```
 
-### 4. Add loading state with fade-in transition (`Hero.tsx`)
-Track `onCanPlay` or `onLoadedData` event on the video element. Start with `opacity: 0` and fade to `opacity: 1` when the video is ready. This prevents a jarring pop-in and gives a polished loading experience.
+### File: `src/components/BlogSection.tsx`
+Same fix needed here — the homepage blog cards might also try to render content previews from the same data.
 
-## Files to modify
-
-| File | Change |
-|------|--------|
-| `index.html` | Add `<link rel="preload">` for the video |
-| `src/components/Hero.tsx` | Add `preload="auto"`, `poster`, and fade-in on `onCanPlay` |
+### File: `src/components/admin/BlogPostFormDialog.tsx`
+Update the `useEffect` that loads existing post content (line 56) to properly serialize nested content back to JSON string for editing, and update the save handler to preserve the structure rather than flattening it.
 
