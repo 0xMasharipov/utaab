@@ -53,7 +53,7 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
         excerpt_tr: post.excerpt_tr || '',
         excerpt_ru: post.excerpt_ru || '',
         excerpt_ar: post.excerpt_ar || '',
-        content: JSON.stringify(post.content || []),
+        content: JSON.stringify(post.content || [], null, 2),
         slug: post.slug || '',
         cover_image: post.cover_image || '',
         gallery: Array.isArray(post.gallery) ? post.gallery.filter((g: any) => typeof g === 'string') : [],
