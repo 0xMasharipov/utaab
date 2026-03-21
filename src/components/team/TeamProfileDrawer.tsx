@@ -52,13 +52,18 @@ const TeamProfileDrawer = ({ member, open, onOpenChange }: TeamProfileDrawerProp
             <p className="text-sm text-muted-foreground leading-relaxed mb-5">
               {t(`team.members.${member.key}.description`)}
             </p>
-            <button
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/[0.06] border border-white/[0.1] hover:border-primary/30 hover:bg-white/[0.12] transition-all text-sm text-muted-foreground hover:text-primary"
-              aria-label="LinkedIn"
-            >
-              <Linkedin className="h-4 w-4" />
-              LinkedIn
-            </button>
+            {member.linkedin && (
+              <a
+                href={member.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/[0.06] border border-white/[0.1] hover:border-primary/30 hover:bg-white/[0.12] transition-all text-sm text-muted-foreground hover:text-primary"
+                aria-label={`View ${t(`team.members.${member.key}.name`)}'s LinkedIn profile`}
+              >
+                <Linkedin className="h-4 w-4" />
+                LinkedIn
+              </a>
+            )}
           </div>
         </div>
       </DrawerContent>
