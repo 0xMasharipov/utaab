@@ -180,18 +180,18 @@ export const Hero = () => {
           >
             <button
               onClick={scrollToJoin}
-              className="hero-btn-primary group/btn rounded-full text-white font-semibold transition-all duration-300 hover:scale-105 w-full sm:w-auto flex items-center justify-center gap-2"
+              className="hero-btn-primary group/btn rounded-full text-white text-[15px] tracking-wide transition-all duration-300 hover:scale-105 w-full sm:w-auto flex items-center justify-center gap-2"
             >
               {t('hero.joinUs')}
-              <ArrowRight size={18} className="transition-transform duration-300 group-hover/btn:translate-x-1" />
+              <ArrowRight size={16} className="transition-transform duration-300 group-hover/btn:translate-x-1" />
             </button>
 
             <button
               onClick={scrollToProjects}
-              className="hero-btn-outline rounded-full font-semibold transition-all duration-300 hover:scale-105 w-full sm:w-auto flex items-center justify-center gap-2"
+              className="hero-btn-outline group rounded-full text-[15px] tracking-wide transition-all duration-300 hover:scale-105 w-full sm:w-auto flex items-center justify-center gap-2"
             >
               {t('hero.explore')}
-              <ArrowRight size={18} className="transition-transform duration-300 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0" />
+              <ArrowRight size={16} className="transition-transform duration-300 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0" />
             </button>
           </motion.div>
         </div>
