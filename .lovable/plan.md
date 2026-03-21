@@ -1,36 +1,15 @@
 
 
-# Add LinkedIn Profile Links to Team Members
+# Update Ibrahim's Team Photo
 
 ## Summary
-Add real LinkedIn URLs to the team member data and convert the placeholder `<button>` elements in the modal/drawer into actual `<a>` links that open in new tabs.
+Replace Ibrahim's current team photo with the newly uploaded image (`UTAAB_P_IBRAGIM.png`).
 
 ## Changes
 
-### File: `src/pages/TeamPage.tsx` (lines 28-37)
-Add `linkedin` property to each team member that has one. Members without a provided URL (abdulbaki, umut, ibrahim) keep `linkedin` undefined.
+1. **Copy uploaded image** to `src/assets/team/ibrahim.png` (overwrite existing)
+2. **No code changes needed** — `TeamPage.tsx` already imports `ibrahimImg from '@/assets/team/ibrahim.png'`, so the new image will be picked up automatically.
 
-```
-{ key: 'zinurbek', ..., linkedin: 'https://linkedin.com/in/masharipov' },
-{ key: 'yunus', ..., linkedin: 'https://linkedin.com/in/yunus-emre-e-80921034b' },
-{ key: 'abdulla', ..., linkedin: 'https://linkedin.com/in/abdulla-hamzali-59b5a5229' },
-{ key: 'anar', ..., linkedin: 'https://linkedin.com/in/anar-malikov-0430203b6' },
-{ key: 'yana', ..., linkedin: 'https://linkedin.com/in/yanina-isak-a62191367' },
-{ key: 'shuayb', ..., linkedin: 'https://linkedin.com/in/shuayb-allahverdiyev-933813291' },
-{ key: 'burak', ..., linkedin: 'https://linkedin.com/in/burak-deniz-yaman-63aa263b3' },
-```
-
-### File: `src/components/team/TeamProfileModal.tsx` (lines 66-71)
-Replace `<button>` with `<a>` tag:
-- `href={member.linkedin}`, `target="_blank"`, `rel="noopener noreferrer"`
-- Dynamic `aria-label` using member name
-- Only render when `member.linkedin` exists
-
-### File: `src/components/team/TeamProfileDrawer.tsx` (lines 55-61)
-Same change — replace `<button>` with `<a>` tag with proper attributes. Only render when `member.linkedin` exists.
-
-## Files modified
-- `src/pages/TeamPage.tsx` — add linkedin URLs to data
-- `src/components/team/TeamProfileModal.tsx` — button → link
-- `src/components/team/TeamProfileDrawer.tsx` — button → link
+## Files
+- `src/assets/team/ibrahim.png` — replaced with new photo
 
