@@ -16,6 +16,7 @@ import { PrivacyPopup } from '@/components/PrivacyPopup';
 import { PrivacyCenter } from '@/components/PrivacyCenter';
 import { FloatingPrivacyButton } from '@/components/FloatingPrivacyButton';
 import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
+import BackgroundGrid from '@/components/BackgroundGrid';
 
 
 const Index = () => {
@@ -28,15 +29,17 @@ const Index = () => {
       <Hero />
       <HeroCarousel />
       
-      <Community />
-      <Learn />
-      <Events />
-      <BlogSection />
-      <Projects />
-      <Resources />
-      
-      <Join />
-      <Footer onPrivacyClick={() => setIsPrivacyCenterOpen(true)} />
+      <BackgroundGrid>
+        <Community />
+        <Learn />
+        <Events />
+        <BlogSection />
+        <Projects />
+        <Resources />
+        
+        <Join />
+        <Footer onPrivacyClick={() => setIsPrivacyCenterOpen(true)} />
+      </BackgroundGrid>
       
       <PrivacyPopup
         onAccept={() => console.log('Privacy accepted')}
