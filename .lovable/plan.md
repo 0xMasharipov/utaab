@@ -1,23 +1,30 @@
 
 
-# Create Proper OG Banner Image (1200×630px)
+# Fix OG Image & Favicon for WhatsApp Previews
 
-## Summary
-Generate a 1200×630px OG banner with UTAAB navy background (#081624), centered logo, and tagline text, then replace `public/og-image.png`.
+## Problem
+1. `og:image` (line 17) and `twitter:image` (line 24) still point to the old Google Storage URL — WhatsApp uses these for the preview image
+2. Duplicate meta tags at bottom of `<head>` (lines 64-67) create conflicts
+3. The favicon may still be serving the old Lovable logo (WhatsApp uses favicon as the site icon badge)
 
-## Approach
-Use a script to create the banner image with:
-- **Background**: Solid UTAAB navy (#081624)
-- **Logo**: Centered `src/assets/logo-new.png`, scaled to fit (~200px height)
-- **Tagline**: "Build Your Future in Blockchain" in white Montserrat below the logo
-- **Output**: 1200×630px PNG saved to `public/og-image.png`
+## Changes
 
-## Technical Details
-- Use Python with Pillow to composite the image
-- Download Montserrat font for the tagline text
-- Center everything vertically and horizontally with proper spacing
-- No transparency — solid background ensures visibility on all platforms (WhatsApp, Twitter, Facebook, LinkedIn)
+### File: `index.html`
+Consolidate and fix all meta tags:
+- Update `og:image` and `twitter:image` to `https://utaab.org/og-image.png`
+- Move `og:title`, `og:description`, `twitter:title`, `twitter:description` into the main OG block (lines 12-24)
+- Remove the duplicate meta tags at lines 64-67
+- Ensure favicon references are correct
+
+### File: `public/favicon.png`
+Re-copy the UTAAB logo (`src/assets/logo-new.png`) to `public/favicon.png` to ensure it overwrites any cached/old Lovable favicon.
+
+## Important Note
+After publishing, WhatsApp caches link previews aggressively. You may need to:
+- Wait some time for cache to expire
+- Or share a URL with a query param (e.g. `utaab.org/?v=2`) to force a fresh preview
 
 ## Files Modified
-- `public/og-image.png` — replaced with proper 1200×630 branded banner
+- `index.html` — fix og:image URLs, remove duplicates
+- `public/favicon.png` — ensure UTAAB logo is the favicon
 
