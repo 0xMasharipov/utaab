@@ -81,16 +81,16 @@ const messageSchema = z.object({
 const requestSchema = z.object({
   messages: z.array(messageSchema).min(1).max(50),
   courseContext: z.object({
-    title: z.string().optional(),
-    description: z.string().optional(),
-    level: z.string().optional(),
-    topics: z.array(z.string()).optional(),
+    title: z.string().max(200).optional(),
+    description: z.string().max(1000).optional(),
+    level: z.string().max(50).optional(),
+    topics: z.array(z.string().max(100)).max(20).optional(),
   }).optional(),
   lessonContext: z.object({
-    title: z.string().optional(),
-    description: z.string().optional(),
+    title: z.string().max(200).optional(),
+    description: z.string().max(1000).optional(),
   }).optional(),
-  utaab_token: z.string().optional(),
+  utaab_token: z.string().max(500).optional(),
 });
 
 // Validate UTAAB token against database
@@ -298,6 +298,31 @@ serve(async (req) => {
 
 Your role: Help students understand blockchain concepts. Provide clear educational responses.
 Stay focused on learning and avoid financial advice.`;
+
+    // Check context fields for prompt injection before interpolation
+    const contextStrings: string[] = [];
+    if (courseContext) {
+      if (courseContext.title) contextStrings.push(courseContext.title);
+      if (courseContext.description) contextStrings.push(courseContext.description);
+      if (courseContext.level) contextStrings.push(courseContext.level);
+      if (courseContext.topics) contextStrings.push(...courseContext.topics);
+    }
+    if (lessonContext) {
+      if (lessonContext.title) contextStrings.push(lessonContext.title);
+      if (lessonContext.description) contextStrings.push(lessonContext.description);
+    }
+
+    for (const ctxVal of contextStrings) {
+      for (const pattern of dangerousPatterns) {
+        if (pattern.test(ctxVal)) {
+          await logSuspiciousActivity(supabase, user.id, ctxVal, `context_field:${pattern.source}`);
+          return new Response(
+            JSON.stringify({ error: 'Invalid context content. Please try again.' }),
+            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
+      }
+    }
 
     // Add course context if available
     if (courseContext) {
