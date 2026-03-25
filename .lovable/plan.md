@@ -1,31 +1,23 @@
 
 
-# Update OG/Social Metadata & Favicon to UTAAB Logo
+# Create Proper OG Banner Image (1200×630px)
 
-## Problem
-1. OG meta tags use a generic Google Storage banner URL — need UTAAB branding
-2. og:title and og:description are missing (only twitter variants exist at bottom of `<head>`)
-3. WhatsApp link preview shows Lovable badge because `favicon.png` is the Lovable logo — WhatsApp uses the favicon as the site icon in link previews
+## Summary
+Generate a 1200×630px OG banner with UTAAB navy background (#081624), centered logo, and tagline text, then replace `public/og-image.png`.
 
-## Changes
+## Approach
+Use a script to create the banner image with:
+- **Background**: Solid UTAAB navy (#081624)
+- **Logo**: Centered `src/assets/logo-new.png`, scaled to fit (~200px height)
+- **Tagline**: "Build Your Future in Blockchain" in white Montserrat below the logo
+- **Output**: 1200×630px PNG saved to `public/og-image.png`
 
-### 1. Add UTAAB logo to `public/` for OG image
-Copy `src/assets/logo-new.png` to `public/og-image.png` so it's accessible at a static URL for social crawlers (OG images must be absolute public URLs, not Vite-processed assets).
+## Technical Details
+- Use Python with Pillow to composite the image
+- Download Montserrat font for the tagline text
+- Center everything vertically and horizontally with proper spacing
+- No transparency — solid background ensures visibility on all platforms (WhatsApp, Twitter, Facebook, LinkedIn)
 
-### 2. Update `index.html` meta tags
-- **og:image** and **twitter:image**: Point to `/og-image.png` with full absolute URL (`https://utaablockchain.com/og-image.png`)
-- **og:title**: "UTAAB — Build Your Future in Blockchain"
-- **og:description**: Same as existing meta description
-- **twitter:title** and **twitter:description**: Match OG values
-- Consolidate the duplicate title/description meta tags (currently split between lines 12-24 and lines 63-68)
-
-### 3. Replace favicon with UTAAB logo
-- Overwrite `public/favicon.png` and `public/favicon.ico` with the UTAAB logo (`src/assets/logo-new.png`)
-- This fixes the WhatsApp link preview showing Lovable badge — WhatsApp uses the favicon as the site icon
-- Add `<link rel="apple-touch-icon">` pointing to the same logo for iOS
-
-### Files Modified
-- `public/og-image.png` — new file (copy of logo-new.png)
-- `public/favicon.png` — replaced with UTAAB logo
-- `index.html` — updated meta tags
+## Files Modified
+- `public/og-image.png` — replaced with proper 1200×630 branded banner
 
