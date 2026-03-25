@@ -81,16 +81,16 @@ const messageSchema = z.object({
 const requestSchema = z.object({
   messages: z.array(messageSchema).min(1).max(50),
   courseContext: z.object({
-    title: z.string().optional(),
-    description: z.string().optional(),
-    level: z.string().optional(),
-    topics: z.array(z.string()).optional(),
+    title: z.string().max(200).optional(),
+    description: z.string().max(1000).optional(),
+    level: z.string().max(50).optional(),
+    topics: z.array(z.string().max(100)).max(20).optional(),
   }).optional(),
   lessonContext: z.object({
-    title: z.string().optional(),
-    description: z.string().optional(),
+    title: z.string().max(200).optional(),
+    description: z.string().max(1000).optional(),
   }).optional(),
-  utaab_token: z.string().optional(),
+  utaab_token: z.string().max(500).optional(),
 });
 
 // Validate UTAAB token against database
