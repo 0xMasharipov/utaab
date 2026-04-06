@@ -1,30 +1,24 @@
 
 
-# Fix OG Image & Favicon for WhatsApp Previews
+# Premium Fixed Bottom Gradient Overlay
 
-## Problem
-1. `og:image` (line 17) and `twitter:image` (line 24) still point to the old Google Storage URL — WhatsApp uses these for the preview image
-2. Duplicate meta tags at bottom of `<head>` (lines 64-67) create conflicts
-3. The favicon may still be serving the old Lovable logo (WhatsApp uses favicon as the site icon badge)
+## Summary
+Add a fixed-position bottom gradient overlay component that creates a deep ocean fade effect, reinforcing UTAAB's Web3 premium aesthetic. Always visible, non-interactive, optimized for mobile.
 
-## Changes
+## Implementation
 
-### File: `index.html`
-Consolidate and fix all meta tags:
-- Update `og:image` and `twitter:image` to `https://utaab.org/og-image.png`
-- Move `og:title`, `og:description`, `twitter:title`, `twitter:description` into the main OG block (lines 12-24)
-- Remove the duplicate meta tags at lines 64-67
-- Ensure favicon references are correct
+### New File: `src/components/BottomGradientOverlay.tsx`
+A lightweight component rendering a fixed `div` at the bottom of the viewport:
+- `position: fixed`, `bottom: 0`, `width: 100%`, `pointer-events: none`
+- `z-index: 40` (below modals/nav overlays at 50)
+- Height: `140px` on mobile, `160px` on `md+`, `180px` on `lg+`
+- Multi-stop CSS gradient: `#02050A` (85% opacity) → `#0A1F3A` (50%) → `#0D2847` (20%) → `transparent`
+- `backdrop-filter: blur(8px)` for atmospheric depth
+- Subtle grain noise overlay using the existing `.bg-grain` utility class at ~3% opacity
 
-### File: `public/favicon.png`
-Re-copy the UTAAB logo (`src/assets/logo-new.png`) to `public/favicon.png` to ensure it overwrites any cached/old Lovable favicon.
+### Modified File: `src/pages/Index.tsx`
+Import and render `<BottomGradientOverlay />` as the last child inside the root `div`, so it sits fixed at the bottom across all scroll positions.
 
-## Important Note
-After publishing, WhatsApp caches link previews aggressively. You may need to:
-- Wait some time for cache to expire
-- Or share a URL with a query param (e.g. `utaab.org/?v=2`) to force a fresh preview
-
-## Files Modified
-- `index.html` — fix og:image URLs, remove duplicates
-- `public/favicon.png` — ensure UTAAB logo is the favicon
+### No CSS changes needed
+Uses existing Tailwind utilities and the `.bg-grain` class already defined in `index.css`.
 
