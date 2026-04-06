@@ -17,6 +17,7 @@ import { PrivacyCenter } from '@/components/PrivacyCenter';
 import { FloatingPrivacyButton } from '@/components/FloatingPrivacyButton';
 import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
 import BackgroundGrid from '@/components/BackgroundGrid';
+import BottomGradientOverlay from '@/components/BottomGradientOverlay';
 
 
 const Index = () => {
@@ -50,6 +51,7 @@ const Index = () => {
         onClose={() => setIsPrivacyCenterOpen(false)}
       />
       <FloatingPrivacyButton onClick={() => setIsPrivacyCenterOpen(true)} />
+      <BottomGradientOverlay />
     </div>
   );
 };
