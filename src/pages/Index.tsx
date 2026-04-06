@@ -51,6 +51,7 @@ const Index = () => {
         onClose={() => setIsPrivacyCenterOpen(false)}
       />
       <FloatingPrivacyButton onClick={() => setIsPrivacyCenterOpen(true)} />
+      <BottomGradientOverlay />
     </div>
   );
 };
