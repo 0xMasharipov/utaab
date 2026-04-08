@@ -1,6 +1,6 @@
 const BottomGradientOverlay = () => {
   return (
-    <div className="fixed bottom-0 left-0 w-full pointer-events-none z-40 h-[140px] md:h-[160px] lg:h-[180px]">
+    <div className="fixed bottom-0 left-0 w-full pointer-events-none z-0 h-[140px] md:h-[160px] lg:h-[180px]">
       {/* Main gradient */}
       <div
         className="absolute inset-0"
