@@ -1,24 +1,13 @@
 
 
-# Premium Fixed Bottom Gradient Overlay
+# Fix Bottom Gradient Overlay Z-Index
 
-## Summary
-Add a fixed-position bottom gradient overlay component that creates a deep ocean fade effect, reinforcing UTAAB's Web3 premium aesthetic. Always visible, non-interactive, optimized for mobile.
+## Problem
+The `BottomGradientOverlay` is currently at `z-index: 40`, placing it **on top of** text and content sections. It should sit **behind** content so text and UI elements remain fully visible and unobstructed.
 
-## Implementation
+## Change
 
-### New File: `src/components/BottomGradientOverlay.tsx`
-A lightweight component rendering a fixed `div` at the bottom of the viewport:
-- `position: fixed`, `bottom: 0`, `width: 100%`, `pointer-events: none`
-- `z-index: 40` (below modals/nav overlays at 50)
-- Height: `140px` on mobile, `160px` on `md+`, `180px` on `lg+`
-- Multi-stop CSS gradient: `#02050A` (85% opacity) → `#0A1F3A` (50%) → `#0D2847` (20%) → `transparent`
-- `backdrop-filter: blur(8px)` for atmospheric depth
-- Subtle grain noise overlay using the existing `.bg-grain` utility class at ~3% opacity
-
-### Modified File: `src/pages/Index.tsx`
-Import and render `<BottomGradientOverlay />` as the last child inside the root `div`, so it sits fixed at the bottom across all scroll positions.
-
-### No CSS changes needed
-Uses existing Tailwind utilities and the `.bg-grain` class already defined in `index.css`.
+### File: `src/components/BottomGradientOverlay.tsx`
+- Change `z-40` to `z-0` so the gradient renders behind all content
+- This keeps the atmospheric depth effect visible in gaps between content but never obscures text or interactive elements
 
