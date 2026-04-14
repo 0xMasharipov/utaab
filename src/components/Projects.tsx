@@ -27,36 +27,42 @@ export const Projects = () => {
       descriptionKey: 'projects.ubp.description',
       tags: ['projects.tags.rewards', 'projects.tags.community', 'projects.tags.engagement'],
       status: 'underDevelopment',
+      icon: Coins,
     },
     {
       titleKey: 'projects.tonra.title',
       descriptionKey: 'projects.tonra.description',
       tags: ['projects.tags.ton', 'projects.tags.research', 'projects.tags.academic'],
       status: 'underDevelopment',
+      icon: Search,
     },
     {
       titleKey: 'projects.asn.title',
       descriptionKey: 'projects.asn.description',
       tags: ['projects.tags.payments', 'projects.tags.blockchain', 'projects.tags.university'],
       status: 'planning',
+      icon: CreditCard,
     },
     {
       titleKey: 'projects.dvs.title',
       descriptionKey: 'projects.dvs.description',
       tags: ['projects.tags.identity', 'projects.tags.validation', 'projects.tags.nodes'],
       status: 'planning',
+      icon: ShieldCheck,
     },
     {
       titleKey: 'projects.did.title',
       descriptionKey: 'projects.did.description',
       tags: ['projects.tags.identity', 'projects.tags.privacy', 'projects.tags.layer2'],
       status: 'planning',
+      icon: Fingerprint,
     },
     {
       titleKey: 'projects.dao.title',
       descriptionKey: 'projects.dao.description',
       tags: ['projects.tags.governance', 'projects.tags.dao', 'projects.tags.community'],
       status: 'planning',
+      icon: Vote,
     },
   ];
 
@@ -77,55 +83,50 @@ export const Projects = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {projects.map((project, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.6, delay: 0.2 + index * 0.08 }}
-              className="bg-white/[0.06] backdrop-blur-xl border border-white/[0.12] rounded-[28px] p-6 sm:p-8 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 group flex flex-col"
+              transition={{ duration: 0.5, delay: 0.15 + index * 0.07 }}
             >
-              <div className="mb-3 sm:mb-4">
-                <span
-                  className={`inline-block px-3 py-1 rounded-full text-xs sm:text-sm font-semibold ${
-                    project.status === 'underDevelopment'
-                      ? 'bg-blue-500/20 text-blue-400'
-                      : 'bg-yellow-500/20 text-yellow-400'
-                  }`}
-                >
-                  {t(`projects.status.${project.status}`)}
-                </span>
-              </div>
+              <GlassCard hover className="p-5 sm:p-6 group flex flex-col h-full">
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="w-11 h-11 rounded-xl bg-accent/10 flex items-center justify-center shrink-0 group-hover:bg-accent/20 transition-colors">
+                    <project.icon className="h-5 w-5 text-accent" />
+                  </div>
+                  <div>
+                    <span
+                      className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-semibold mb-1 ${
+                        project.status === 'underDevelopment'
+                          ? 'bg-accent/15 text-accent'
+                          : 'bg-muted/30 text-muted-foreground'
+                      }`}
+                    >
+                      {t(`projects.status.${project.status}`)}
+                    </span>
+                    <h3 className="text-lg font-bold text-foreground group-hover:text-accent transition-colors leading-tight">
+                      {t(project.titleKey)}
+                    </h3>
+                  </div>
+                </div>
 
-              <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2 sm:mb-3 group-hover:text-accent transition-colors">
-                {t(project.titleKey)}
-              </h3>
+                <p className="text-sm text-muted-foreground mb-4 flex-grow line-clamp-3">
+                  {t(project.descriptionKey)}
+                </p>
 
-              <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 flex-grow">
-                {t(project.descriptionKey)}
-              </p>
-
-              <div className="flex flex-wrap gap-2 mb-4 sm:mb-6">
-                {project.tags.map((tag, tagIndex) => (
-                  <span
-                    key={tagIndex}
-                    className="px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm bg-white/[0.08] backdrop-blur-sm border border-white/[0.1]"
-                  >
-                    {t(tag)}
-                  </span>
-                ))}
-              </div>
-
-              <Button variant="outline" className="bg-white/[0.06] border-white/[0.12] hover:bg-white/10 w-full group/btn min-h-[44px]">
-                <span className="flex items-center justify-center gap-2">
-                  {t('projects.viewProject')}
-                  <span className="text-xs text-muted-foreground font-normal opacity-60">
-                    {t('projects.soon')}
-                  </span>
-                  <ExternalLink className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-                </span>
-              </Button>
+                <div className="flex flex-wrap gap-1.5">
+                  {project.tags.map((tag, tagIndex) => (
+                    <span
+                      key={tagIndex}
+                      className="px-2 py-0.5 rounded-full text-[11px] bg-white/[0.06] border border-white/[0.08] text-muted-foreground"
+                    >
+                      {t(tag)}
+                    </span>
+                  ))}
+                </div>
+              </GlassCard>
             </motion.div>
           ))}
         </div>
