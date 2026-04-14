@@ -314,6 +314,7 @@ export const Navbar = () => {
                   </span>
                   <div className="flex flex-col gap-1">
                     {[
+                      { key: 'about', type: 'page', path: '/about', label: 'nav.about' },
                       { key: 'team', type: 'page', path: '/team' },
                       { key: 'contributorMatch', type: 'page', path: '/contributor-match' },
                       { key: 'join', type: 'scroll', id: 'join' },

@@ -21,7 +21,8 @@
     "contributorMatch": "Contributor Match",
     "ecosystem": "Ecosystem",
     "explore": "Explore",
-    "organization": "Organization"
+    "organization": "Organization",
+    "about": "About"
   },
   "auth": {
     "studentSignIn": "Student Sign In",

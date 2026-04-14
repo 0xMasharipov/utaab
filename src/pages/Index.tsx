@@ -5,7 +5,7 @@ import { AboutBlurb } from '@/components/AboutBlurb';
 import { Events } from '@/components/Events';
 import { BlogSection } from '@/components/BlogSection';
 import { Projects } from '@/components/Projects';
-import { Team } from '@/components/Team';
+
 import { Join } from '@/components/Join';
 import { Footer } from '@/components/Footer';
 import { HeroCarousel } from '@/components/HeroCarousel';
@@ -31,7 +31,7 @@ const Index = () => {
         <Projects />
         <Events />
         <BlogSection />
-        <Team />
+        
         <Join />
         <Footer onPrivacyClick={() => setIsPrivacyCenterOpen(true)} />
       </BackgroundGrid>

@@ -21,7 +21,8 @@
     "contributorMatch": "Katılımcı Eşleştirme",
     "ecosystem": "Ekosistem",
     "explore": "Keşfet",
-    "organization": "Organizasyon"
+    "organization": "Organizasyon",
+    "about": "Hakkımızda"
   },
   "auth": {
     "studentSignIn": "Öğrenci Girişi",

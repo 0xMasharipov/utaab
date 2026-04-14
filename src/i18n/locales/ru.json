@@ -21,7 +21,8 @@
     "contributorMatch": "Подбор роли",
     "ecosystem": "Экосистема",
     "explore": "Исследовать",
-    "organization": "Организация"
+    "organization": "Организация",
+    "about": "О нас"
   },
   "auth": {
     "studentSignIn": "Вход для Студентов",
