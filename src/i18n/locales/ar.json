@@ -21,7 +21,8 @@
     "contributorMatch": "مطابقة المساهمين",
     "ecosystem": "النظام البيئي",
     "explore": "استكشف",
-    "organization": "المنظمة"
+    "organization": "المنظمة",
+    "about": "من نحن"
   },
   "auth": {
     "studentSignIn": "تسجيل دخول الطالب",
