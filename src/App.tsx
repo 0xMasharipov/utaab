@@ -49,6 +49,7 @@ const ContributorMatch = lazy(() => import("./pages/ContributorMatch"));
 const AdminContributorAssessments = lazy(() => import("./pages/admin/AdminContributorAssessments"));
 const EducationalGuides = lazy(() => import("./pages/learn/EducationalGuides"));
 const Workshops = lazy(() => import("./pages/learn/Workshops"));
+const About = lazy(() => import("./pages/About"));
 
 const queryClient = new QueryClient();
 
@@ -76,6 +77,7 @@ function App() {
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/team" element={<TeamPage />} />
+            <Route path="/about" element={<About />} />
             <Route path="/contributor-match" element={<ContributorMatch />} />
             <Route path="/learn/guides" element={<EducationalGuides />} />
             <Route path="/learn/workshops" element={<Workshops />} />
