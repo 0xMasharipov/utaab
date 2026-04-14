@@ -2,8 +2,9 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Coins, Search, CreditCard, ShieldCheck, Fingerprint, Vote } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import GlassCard from '@/components/glass/GlassCard';
 
 type ProjectStatus = 'underDevelopment' | 'planning';
 
@@ -12,6 +13,7 @@ interface Project {
   descriptionKey: string;
   tags: string[];
   status: ProjectStatus;
+  icon: React.ElementType;
 }
 
 export const Projects = () => {

@@ -1,14 +1,11 @@
 import { useState } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { Hero } from '@/components/Hero';
-
-import { Community } from '@/components/Community';
-import { Learn } from '@/components/Learn';
+import { AboutBlurb } from '@/components/AboutBlurb';
 import { Events } from '@/components/Events';
 import { BlogSection } from '@/components/BlogSection';
 import { Projects } from '@/components/Projects';
-import { Resources } from '@/components/Resources';
-
+import { Team } from '@/components/Team';
 import { Join } from '@/components/Join';
 import { Footer } from '@/components/Footer';
 import { HeroCarousel } from '@/components/HeroCarousel';
@@ -18,7 +15,6 @@ import { FloatingPrivacyButton } from '@/components/FloatingPrivacyButton';
 import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
 import BackgroundGrid from '@/components/BackgroundGrid';
 import BottomGradientOverlay from '@/components/BottomGradientOverlay';
-
 
 const Index = () => {
   const [isPrivacyCenterOpen, setIsPrivacyCenterOpen] = useState(false);
@@ -31,13 +27,11 @@ const Index = () => {
       <HeroCarousel />
       
       <BackgroundGrid>
-        <Community />
-        <Learn />
+        <AboutBlurb />
+        <Projects />
         <Events />
         <BlogSection />
-        <Projects />
-        <Resources />
-        
+        <Team />
         <Join />
         <Footer onPrivacyClick={() => setIsPrivacyCenterOpen(true)} />
       </BackgroundGrid>
