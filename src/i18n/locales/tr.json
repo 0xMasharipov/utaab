@@ -1298,5 +1298,10 @@
         "description": "Organizasyon yapısını ve ekip gelişimini destekleyerek iç koordinasyonu güçlendiriyor ve ekipler arası iletişimi iyileştiriyor."
       }
     }
+  },
+  "about": {
+    "title": "UTAAB Nedir?",
+    "blurb": "UTAAB, yeni nesil Web3 geliştiricileri için gerçek dünya araçları, eğitim ve topluluk oluşturan üniversite kökenli bir blockchain ekosistemidir.",
+    "learnMore": "UTAAB Hakkında Daha Fazla"
   }
 }
