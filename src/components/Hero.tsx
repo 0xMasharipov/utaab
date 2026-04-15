@@ -60,7 +60,7 @@ export const Hero = () => {
         muted
         loop
         playsInline
-        preload="auto"
+        preload="none"
         controls={false}
         onCanPlay={handleVideoReady}
         controlsList="nodownload nofullscreen noremoteplayback"
