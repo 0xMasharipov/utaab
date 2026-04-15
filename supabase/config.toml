@@ -18,7 +18,7 @@ project_id = "nxbjgqdehvxszqjoxumx"
   [functions.manage-user-role]
     verify_jwt = false
   [functions.process-email-queue]
-    verify_jwt = false
+    verify_jwt = true
   [functions.submit-community-application]
     verify_jwt = false
   [functions.submit-kvkk-request]
