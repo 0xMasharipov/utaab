@@ -1,46 +1,33 @@
 
 
-# Redesign About Page — Full Content & Structure
+# Footer Redesign — Geometric Background Element
 
 ## Summary
-Replace the current minimal About page with a comprehensive, multi-section page matching the provided content structure. Reuse the existing TeamPage's overlapping card layout (with modal/drawer profiles) directly on the About page. All text goes through i18n for 4-language support.
+Redesign the footer with a dark blue gradient background and place the two uploaded geometric images as low-opacity decorative background elements — desktop image for `md+` screens, mobile image for small screens. Center them in the lower portion of the footer.
 
-## Page Sections (in order)
+## Changes
 
-1. **Hero** — Bold headline "Not Just a Community. Building Real-World Impact." + supporting paragraph
-2. **Why UTAAB** — 4 short statements in a stacked layout with subtle glass cards
-3. **Mission & Vision** — Side-by-side glass cards (similar to current but with new copy)
-4. **What We Actually Do** — 4 icon cards: Educate, Build, Connect, Support
-5. **Real-World Impact** — Intro line + visual cards for Projects/Initiatives/Outcomes
-6. **Team** — Reuse TeamOverlapCard grid + TeamProfileModal/Drawer (same as TeamPage)
-7. **Closing CTA** — "Be Part of the Future We're Building" + two buttons
+### 1. Copy uploaded images to project
+- `user-uploads://UTAAB_Footer_2-2.png` → `src/assets/footer-geo-desktop.png`
+- `user-uploads://UTAAB_Footer_mobile-2.png` → `src/assets/footer-geo-mobile.png`
 
-## Files Modified
+### 2. Rewrite `src/components/Footer.tsx`
+- Add `relative overflow-hidden` to the footer wrapper
+- Apply a dark blue gradient background: `bg-gradient-to-b from-[#0a1628] to-[#060e1a]`
+- Add an absolutely positioned decorative `<img>` layer behind all content:
+  - Desktop (`hidden md:block`): `footer-geo-desktop.png`, centered horizontally, anchored to bottom, ~60-70% width, opacity 5-8%
+  - Mobile (`block md:hidden`): `footer-geo-mobile.png`, centered, anchored to bottom, ~80% width, opacity 5-8%
+  - Both use `pointer-events-none`, `z-0`, with content at `z-10` (relative)
+- Keep all existing footer content, links, social icons, newsletter, and dynamic bindings untouched
+- Improve border styling to match the dark blue aesthetic
 
-### `src/pages/About.tsx` — Full rewrite
-- Import TeamOverlapCard, TeamProfileModal, TeamProfileDrawer, useIsMobile
-- Import team member images and data (same array as TeamPage)
-- 7 sections as described above
-- All text via `t('aboutPage.xxx')` keys
+### Files Modified
+- `src/assets/footer-geo-desktop.png` — New asset
+- `src/assets/footer-geo-mobile.png` — New asset
+- `src/components/Footer.tsx` — Visual redesign (background + geometric overlay only)
 
-### `src/i18n/locales/en.json` — Add `aboutPage` namespace
-New keys under `aboutPage`:
-- `hero.title`, `hero.subtitle`
-- `whyUtaab.title`, `whyUtaab.items` (array of 4 statements)
-- `mission.title`, `mission.text`, `vision.title`, `vision.text`
-- `whatWeDo.title`, `whatWeDo.educate.*`, `whatWeDo.build.*`, `whatWeDo.connect.*`, `whatWeDo.support.*`
-- `impact.title`, `impact.subtitle`, `impact.projects.*`, `impact.initiatives.*`, `impact.outcomes.*`
-- `cta.title`, `cta.joinButton`, `cta.exploreButton`
-
-### `src/i18n/locales/tr.json`, `ru.json`, `ar.json` — Same keys (translated)
-
-### No changes to:
-- TeamPage, Team component, admin panel, database, routing (route already exists)
-- TeamOverlapCard, TeamProfileModal, TeamProfileDrawer components
-
-## Technical Notes
-- Team section on About page uses the same overlapping card pattern as `/team` — clicking opens modal (desktop) or drawer (mobile) with LinkedIn links
-- All new text content is parameterized through i18n, editable via admin Translation Editor
-- Icons: GraduationCap (Educate), Wrench (Build), Network (Connect), Heart (Support)
-- Uses existing GlassCard, GlassSectionWrapper, AnimatedBlobBackground components
+### No changes to
+- Any other component or page
+- Footer link functionality, i18n keys, admin bindings
+- Global styles, navigation, layout
 
