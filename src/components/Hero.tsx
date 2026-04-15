@@ -131,9 +131,9 @@ export const Hero = () => {
 
           {/* Headline */}
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 0 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ duration: 0.3 }}
             className="font-montserrat leading-tight mb-4 md:mb-6"
             style={{
               fontWeight: 800,
