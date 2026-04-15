@@ -72,6 +72,16 @@
 
   <body>
     <div id="root"></div>
+    <div class="lcp-placeholder" aria-hidden="true"><h1>From Learning to Building in Web3</h1></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Remove placeholder once React renders
+      const obs = new MutationObserver(() => {
+        const root = document.getElementById('root');
+        const ph = document.querySelector('.lcp-placeholder');
+        if (root && root.children.length > 0 && ph) { ph.remove(); obs.disconnect(); }
+      });
+      obs.observe(document.getElementById('root'), { childList: true });
+    </script>
   </body>
 </html>
