@@ -1,62 +1,28 @@
 
 
-# Obfuscate Admin Routes and Remove Public References
+# Fix Admin Login vs Layout Route Conflict
 
-## Summary
-Replace all `/admin/*` routes with randomized, non-semantic paths. Remove all visible admin links from public UI. Rename page titles to neutral wording.
+## Problem
+`ADMIN_ROUTES.LOGIN` and `ADMIN_ROUTES.BASE` are both `/v8k2m9x4`. When navigating to this path, React Router matches the `AdminLayout` parent route (which has an `index` element rendering `AdminDashboard`), skipping the `AdminLogin` page entirely. The `AdminLayout` then tries to verify admin access and redirects unauthenticated users back to login — creating a loop or showing the verification spinner.
 
-## Randomized Route Map
+## Solution
+Separate the login route from the layout base by giving login its own distinct path.
 
-```text
-/admin/login        → /v8k2m9x4
-/admin              → /v8k2m9x4/p3
-/admin/dashboard    → /v8k2m9x4/p3  (same as index)
-/admin/users        → /v8k2m9x4/q7w
-/admin/communities  → /v8k2m9x4/r2f
-/admin/communities/:id → /v8k2m9x4/r2f/:id
-/admin/events       → /v8k2m9x4/t5j
-/admin/courses      → /v8k2m9x4/k8n
-/admin/blog         → /v8k2m9x4/m4b
-/admin/site-content → /v8k2m9x4/s6c
-/admin/announcements→ /v8k2m9x4/a1x
-/admin/messages     → /v8k2m9x4/d9g
-/admin/media        → /v8k2m9x4/h3v
-/admin/contributors → /v8k2m9x4/w7p
-/admin/security     → /v8k2m9x4/z2e
-/admin/settings     → /v8k2m9x4/y5l
-/admin/audit        → /v8k2m9x4/f8u
-/education/admin    → /v8k2m9x4/p3  (redirect)
-```
+### Changes
 
-## Route Constants File (new)
-Create `src/config/routes.ts` — single source of truth for all obfuscated paths. Every file references this instead of hardcoded strings.
+1. **`src/config/routes.ts`** — Change `LOGIN` to a different random path, e.g. `/j3r7x1w9` (keep `BASE` as `/v8k2m9x4`)
+
+2. **`src/App.tsx`** — The login route already uses `ADMIN_ROUTES.LOGIN`, so it will automatically pick up the new path. No structural change needed.
+
+3. **`src/components/admin/AdminLayout.tsx`** — Already redirects unauthenticated users to `ADMIN_ROUTES.LOGIN`, will work with the new path.
+
+4. **`src/pages/admin/AdminLogin.tsx`** — Already navigates to `ADMIN_ROUTES.DASHBOARD` on success, no change needed.
+
+5. **Legacy redirects in `App.tsx`** — Update the `/admin/*` catch-all to redirect to the new login path (already uses `ADMIN_ROUTES.LOGIN`).
+
+### Single file change
+Only `src/config/routes.ts` needs updating — change `LOGIN` from `/v8k2m9x4` to `/j3r7x1w9`.
 
 ## Files Modified
-
-1. **`src/config/routes.ts`** (new) — Route constants map
-2. **`src/App.tsx`** — Update all route definitions to use constants
-3. **`src/components/admin/AdminLayout.tsx`** — Update sidebar paths, redirect paths, remove "Admin" from visible title
-4. **`src/pages/admin/AdminLogin.tsx`** — Update navigate targets, OAuth redirect, history.replaceState, rename heading to "Sign In" / "Authentication"
-5. **`src/components/Navbar.tsx`** — Remove the "Admin Sign In" button entirely (lines 372-377)
-6. **`src/components/education/EducationNavbar.tsx`** — Remove the admin nav item push (lines 154-156)
-7. **`src/pages/education/UserProfile.tsx`** — Change "Admin Dashboard" button to use obfuscated path, rename label to neutral text like "Management"
-8. **`src/pages/admin/AdminDashboard.tsx`** — Rename heading from "Admin Dashboard" to "Overview"
-9. **`src/pages/admin/AdminCommunityDetail.tsx`** — Update back navigation path
-10. **`src/pages/admin/AdminCommunities.tsx`** — Update navigation path
-
-## Neutral Labels
-- Login page title: "Sign In" / "Authentication"
-- Dashboard heading: "Overview"
-- Sidebar labels stay functional (Dashboard, Users, etc.) — they're only visible to authenticated users inside the protected layout
-- UserProfile button: "Management" instead of "Admin Dashboard"
-
-## Security Note
-This is obscurity only. All actual protection remains via:
-- `check-admin-status` edge function (server-side role verification)
-- `AdminLayout` auth guard with mandatory 2FA
-- RLS policies on all tables
-
-## No changes to
-- Edge functions, database, auth logic, RLS policies
-- Component file names (only route paths change)
+- `src/config/routes.ts` — New distinct login path
 
