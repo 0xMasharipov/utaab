@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Book, MediaVideoList, GraduationCap } from 'iconoir-react';
 import { useNavigate } from 'react-router-dom';
+import GlassCard from '@/components/glass/GlassCard';
 
 export const Learn = () => {
   const { t } = useTranslation();
@@ -13,19 +13,19 @@ export const Learn = () => {
 
   const resources = [
     {
-      icon: Book,
+      image: '/images/learn/UTAAB_Edu_Guides.png',
       title: t('learn.guides'),
       description: t('learn.guidesDescription'),
       path: '/learn/guides',
     },
     {
-      icon: MediaVideoList,
+      image: '/images/learn/UTAAB_Video_Tutorials.png',
       title: t('learn.tutorials'),
       description: t('learn.tutorialsDescription'),
       path: '/education',
     },
     {
-      icon: GraduationCap,
+      image: '/images/learn/UTAAB_Workshops_Bootcamps.png',
       title: t('learn.workshops'),
       description: t('learn.workshopsDescription'),
       path: '/learn/workshops',
@@ -57,11 +57,47 @@ export const Learn = () => {
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
               onClick={() => navigate(resource.path)}
-              className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:bg-white/10 transition-all duration-300 group cursor-pointer"
+              className="cursor-pointer"
             >
-              <resource.icon className="h-10 w-10 sm:h-12 sm:w-12 text-accent mb-3 sm:mb-4 icon-glow" strokeWidth={1.5} />
-              <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2 sm:mb-3">{resource.title}</h3>
-              <p className="text-muted-foreground">{resource.description}</p>
+              <GlassCard hover className="relative overflow-hidden min-h-[280px] h-full group p-0">
+                {/* Layer 1: Grid background */}
+                <div
+                  className="absolute inset-0 z-0 opacity-[0.05]"
+                  style={{
+                    backgroundImage:
+                      'linear-gradient(to right, hsl(213 94% 68%) 1px, transparent 1px), linear-gradient(to bottom, hsl(213 94% 68%) 1px, transparent 1px)',
+                    backgroundSize: '32px 32px',
+                  }}
+                  aria-hidden="true"
+                />
+
+                {/* Layer 2: 3D Image */}
+                <img
+                  src={resource.image}
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute bottom-0 right-0 w-[65%] h-auto object-contain z-10 translate-x-[5%] translate-y-[5%] transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+
+                {/* Layer 3: Gradient overlay */}
+                <div
+                  className="absolute inset-0 z-20"
+                  style={{
+                    background:
+                      'linear-gradient(to top, hsl(217 50% 8% / 0.8) 0%, hsl(217 50% 8% / 0.5) 40%, transparent 100%)',
+                  }}
+                  aria-hidden="true"
+                />
+
+                {/* Layer 4: Text content */}
+                <div className="relative z-30 p-6 sm:p-8 flex flex-col h-full">
+                  <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2 sm:mb-3">
+                    {resource.title}
+                  </h3>
+                  <p className="text-muted-foreground">{resource.description}</p>
+                </div>
+              </GlassCard>
             </motion.div>
           ))}
         </div>
