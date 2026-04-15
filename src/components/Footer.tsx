@@ -34,12 +34,18 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
 
   return (
     <footer className="relative overflow-hidden py-12 sm:py-16 bg-gradient-to-b from-[hsl(217,50%,8%)] to-[hsl(217,55%,4%)]">
+      {/* Top glow line */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+
+      {/* Radial glow behind geometric */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-accent/[0.04] rounded-full blur-3xl pointer-events-none z-0" />
+
       {/* Geometric background — Desktop */}
       <img
         src={footerGeoDesktop}
         alt=""
         aria-hidden="true"
-        className="pointer-events-none select-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[65%] max-w-[900px] opacity-[0.06] z-0 hidden md:block object-contain"
+        className="pointer-events-none select-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[65%] max-w-[900px] opacity-[0.08] z-0 hidden md:block object-contain"
         draggable={false}
       />
       {/* Geometric background — Mobile */}
@@ -47,7 +53,7 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
         src={footerGeoMobile}
         alt=""
         aria-hidden="true"
-        className="pointer-events-none select-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[85%] max-w-[400px] opacity-[0.07] z-0 block md:hidden object-contain"
+        className="pointer-events-none select-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[85%] max-w-[400px] opacity-[0.09] z-0 block md:hidden object-contain"
         draggable={false}
       />
 
@@ -146,7 +152,7 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
         </div>
 
         {/* Bottom */}
-        <div className="pt-8 border-t border-white/10">
+        <div className="pt-10 border-t border-white/[0.08]">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className={getTransitionClasses("text-muted-foreground text-sm")}>
               © {new Date().getFullYear()} {t('footer.brand')}. {t('footer.rights')}

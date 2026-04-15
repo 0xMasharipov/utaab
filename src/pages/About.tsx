@@ -11,42 +11,8 @@ import { FloatingPrivacyButton } from '@/components/FloatingPrivacyButton';
 import GlassCard from '@/components/glass/GlassCard';
 import GlassSectionWrapper from '@/components/glass/GlassSectionWrapper';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import TeamOverlapCard from '@/components/team/TeamOverlapCard';
-import TeamProfileModal from '@/components/team/TeamProfileModal';
-import TeamProfileDrawer from '@/components/team/TeamProfileDrawer';
-import type { TeamMember } from '@/components/team/TeamOverlapCard';
-
-import zinurbekImg from '@/assets/team/zinurbek.png';
-import umutImg from '@/assets/team/umut.png';
-import abdullaImg from '@/assets/team/abdulla.png';
-import yunusImg from '@/assets/team/yunus.png';
-import abdulbakiImg from '@/assets/team/abdulbaki.png';
-import yanaImg from '@/assets/team/yana.png';
-import shuaybImg from '@/assets/team/shuayb.png';
-import ibrahimImg from '@/assets/team/ibrahim.png';
-import burakImg from '@/assets/team/burak.png';
-import anarImg from '@/assets/team/anar.png';
-
-const teamMembers: TeamMember[] = [
-  { key: 'zinurbek', image: zinurbekImg, tag: 'Founder', linkedin: 'https://linkedin.com/in/masharipov' },
-  { key: 'yunus', image: yunusImg, tag: 'Leadership', linkedin: 'https://linkedin.com/in/yunus-emre-e-80921034b' },
-  { key: 'abdulla', image: abdullaImg, tag: 'Engineering', linkedin: 'https://linkedin.com/in/abdulla-hamzali-59b5a5229' },
-  { key: 'abdulbaki', image: abdulbakiImg, tag: 'Operations' },
-  { key: 'umut', image: umutImg, tag: 'Operations' },
-  { key: 'anar', image: anarImg, tag: 'Operations', linkedin: 'https://linkedin.com/in/anar-malikov-0430203b6' },
-  { key: 'yana', image: yanaImg, tag: 'Engineering', linkedin: 'https://linkedin.com/in/yanina-isak-a62191367' },
-  { key: 'shuayb', image: shuaybImg, tag: 'Engineering', linkedin: 'https://linkedin.com/in/shuayb-allahverdiyev-933813291' },
-  { key: 'ibrahim', image: ibrahimImg, tag: 'Marketing' },
-  { key: 'burak', image: burakImg, tag: 'Operations', linkedin: 'https://linkedin.com/in/burak-deniz-yaman-63aa263b3' },
-];
-
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.12 } },
-};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -56,10 +22,7 @@ const fadeUp = {
 const About = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
   const [isPrivacyCenterOpen, setIsPrivacyCenterOpen] = useState(false);
-  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
-  const [profileOpen, setProfileOpen] = useState(false);
   const { getTransitionClasses } = useLanguageTransition();
 
   const whatWeDo = [
@@ -82,18 +45,13 @@ const About = () => {
     'aboutPage.whyUtaab.item4',
   ];
 
-  const handleCardClick = (member: TeamMember) => {
-    setSelectedMember(member);
-    setProfileOpen(true);
-  };
-
   return (
     <div className="min-h-screen bg-background text-foreground">
       <AnimatedBlobBackground />
       <Navbar />
 
       {/* 1. Hero */}
-      <section className="pt-32 pb-16 sm:pb-20">
+      <section className="pt-32 pb-20 sm:pb-24">
         <div className="section-container text-center max-w-4xl mx-auto">
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
@@ -107,10 +65,17 @@ const About = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15, duration: 0.7 }}
-            className={getTransitionClasses("text-muted-foreground text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed")}
+            className={getTransitionClasses("text-muted-foreground text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed mb-8")}
           >
             {t('aboutPage.hero.subtitle')}
           </motion.p>
+          {/* Decorative accent line */}
+          <motion.div
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={{ scaleX: 1, opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+            className="mx-auto w-24 h-1 rounded-full bg-gradient-to-r from-accent/60 via-accent to-accent/60"
+          />
         </div>
       </section>
 
@@ -123,7 +88,10 @@ const About = () => {
           <div className="max-w-3xl mx-auto space-y-4">
             {whyItems.map((key, i) => (
               <motion.div key={i} variants={fadeUp}>
-                <GlassCard variant="subtle" className="p-6">
+                <GlassCard variant="subtle" className="p-6 flex items-start gap-5">
+                  <span className="shrink-0 text-accent/50 font-bold text-sm tracking-widest mt-1 select-none">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
                   <p className={getTransitionClasses("text-muted-foreground text-base sm:text-lg leading-relaxed")}>
                     {t(key)}
                   </p>
@@ -138,7 +106,7 @@ const About = () => {
       <GlassSectionWrapper>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
-            <GlassCard hover className="p-8 sm:p-10 h-full">
+            <GlassCard hover className="p-8 sm:p-10 h-full border-t-2 border-t-accent/30">
               <h2 className={getTransitionClasses("text-2xl sm:text-3xl font-bold mb-4 text-foreground")}>
                 {t('aboutPage.mission.title')}
               </h2>
@@ -148,7 +116,7 @@ const About = () => {
             </GlassCard>
           </motion.div>
           <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }}>
-            <GlassCard hover className="p-8 sm:p-10 h-full">
+            <GlassCard hover className="p-8 sm:p-10 h-full border-t-2 border-t-primary/30">
               <h2 className={getTransitionClasses("text-2xl sm:text-3xl font-bold mb-4 text-foreground")}>
                 {t('aboutPage.vision.title')}
               </h2>
@@ -180,7 +148,9 @@ const About = () => {
               transition={{ duration: 0.6, delay: i * 0.1 }}
             >
               <GlassCard hover glow className="p-6 sm:p-8 text-center h-full group">
-                <item.icon className="h-12 w-12 text-accent mx-auto mb-4 group-hover:scale-110 transition-transform" />
+                <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-5">
+                  <item.icon className="h-8 w-8 text-accent group-hover:scale-110 transition-transform" />
+                </div>
                 <h3 className={getTransitionClasses("text-lg font-bold text-foreground mb-2")}>{t(item.titleKey)}</h3>
                 <p className={getTransitionClasses("text-muted-foreground text-sm leading-relaxed")}>{t(item.descKey)}</p>
               </GlassCard>
@@ -220,7 +190,11 @@ const About = () => {
               transition={{ duration: 0.6, delay: i * 0.12 }}
             >
               <GlassCard hover className="p-8 text-center h-full group">
-                <item.icon className="h-14 w-14 text-accent mx-auto mb-5 group-hover:scale-110 transition-transform" />
+                <div className="w-20 h-20 mx-auto mb-5 rounded-full p-[2px] bg-gradient-to-br from-accent/30 via-primary/20 to-accent/15">
+                  <div className="w-full h-full rounded-full bg-background/40 flex items-center justify-center">
+                    <item.icon className="h-10 w-10 text-accent group-hover:scale-110 transition-transform" />
+                  </div>
+                </div>
                 <h3 className={getTransitionClasses("text-xl font-bold text-foreground mb-3")}>{t(item.titleKey)}</h3>
                 <p className={getTransitionClasses("text-muted-foreground leading-relaxed")}>{t(item.descKey)}</p>
               </GlassCard>
@@ -229,55 +203,20 @@ const About = () => {
         </div>
       </GlassSectionWrapper>
 
-      {/* 6. Team */}
-      <GlassSectionWrapper>
-        <div className="text-center mb-10">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className={getTransitionClasses("text-3xl sm:text-4xl font-bold text-foreground mb-4")}
-          >
-            {t('team.title')}
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className={getTransitionClasses("text-muted-foreground text-lg")}
-          >
-            {t('team.subtitle')}
-          </motion.p>
-        </div>
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-50px' }}
-          className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-7 lg:gap-8 max-w-6xl mx-auto"
-        >
-          {teamMembers.map((member) => (
-            <TeamOverlapCard key={member.key} member={member} onClick={() => handleCardClick(member)} />
-          ))}
-        </motion.div>
-
-        {isMobile ? (
-          <TeamProfileDrawer member={selectedMember} open={profileOpen} onOpenChange={setProfileOpen} />
-        ) : (
-          <TeamProfileModal member={selectedMember} open={profileOpen} onOpenChange={setProfileOpen} />
-        )}
-      </GlassSectionWrapper>
-
-      {/* 7. Closing CTA */}
+      {/* 6. Closing CTA */}
       <GlassSectionWrapper>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
+          className="relative"
         >
-          <GlassCard variant="strong" className="p-10 sm:p-16 text-center max-w-3xl mx-auto">
+          {/* Radial glow behind CTA */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="w-[500px] h-[300px] bg-accent/[0.06] rounded-full blur-3xl" />
+          </div>
+          <GlassCard variant="strong" className="relative p-10 sm:p-16 text-center max-w-3xl mx-auto">
             <Users2 className="h-12 w-12 text-accent mx-auto mb-6" />
             <h2 className={getTransitionClasses("text-3xl sm:text-4xl font-bold text-foreground mb-6")}>
               {t('aboutPage.cta.title')}
