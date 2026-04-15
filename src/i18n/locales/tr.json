@@ -82,6 +82,13 @@
         "title": "Yenilikçi",
         "description": "Blockchain teknolojisinin sınırlarını zorlayın"
       }
+    },
+    "cta": {
+      "title": "Harekete Katıl",
+      "subtitle": "İşbirliği, inovasyon ve Web3 eğitimi aracılığıyla gerçek dünyada etki yaratan yeni neslin parçası olun.",
+      "joinBtn": "Topluluğa Katıl",
+      "projectsBtn": "Projeleri Keşfet",
+      "updatesBtn": "Güncellemeleri Takip Et"
     }
   },
   "learn": {
