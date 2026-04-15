@@ -1,56 +1,47 @@
 
 
-# Refine Privacy Popup — Premium Minimal Design
+# Synchronized Image Fade-In Across Landing Page
 
 ## Summary
-Visual-only refinement of the Privacy & Data Protection popup. Neutralize colors, soften borders, improve typography hierarchy, and refine button styling to match the premium UTAAB design system. Zero functionality changes.
+Update `AnimatedImage` to support viewport-triggered reveal, and replace all raw `<img>` tags in landing page sections with `AnimatedImage` for a cohesive, synchronized fade-in effect when sections scroll into view.
 
-## Changes (`src/components/PrivacyPopup.tsx`)
+## Approach
 
-### Container
-- Replace `glass-strong` with inline styling: `bg-[rgba(8,12,20,0.92)]` + `backdrop-blur-2xl`
-- Soften border from `border-white/20` to `border-white/[0.08]`
-- Replace `shadow-2xl` with custom soft shadow `shadow-[0_8px_40px_rgba(0,0,0,0.4)]`
-- Keep `rounded-2xl sm:rounded-3xl` and padding
+### 1. Enhance `AnimatedImage` component (`src/components/common/AnimatedImage.tsx`)
+- Add an Intersection Observer hook so the fade-in triggers when the image's section enters the viewport (not on page load)
+- The animation: opacity 0→1, scale 0.98→1, translateY 4px→0, duration 400ms, ease-out
+- Keep existing `onLoad` gating — image must be both loaded AND in viewport to reveal
+- No staggered delays; all images in a section reveal simultaneously when the section is visible
 
-### Backdrop
-- Reduce from `bg-black/70` to `bg-black/60`
-- Keep `backdrop-blur-md`
+### 2. Replace raw `<img>` in landing page sections
 
-### Header
-- Shield icon: change from `text-accent` to `text-white/40` for monochrome subtlety, reduce to `h-6 w-6`
-- Title: bump to `text-2xl sm:text-[1.65rem]`, add `tracking-tight`
-- Description: add `leading-[1.7]`, use `text-white/50` instead of `text-muted-foreground`
-- Close button: reduce icon to `h-4 w-4`, smaller padding `p-1.5`, add `rounded-full`
+**`src/components/AboutBlurb.tsx`** (line 75–81)
+- Replace the Layer 2 decorative `<img>` with `AnimatedImage`, preserving all existing classes (absolute positioning, hover scale, lazy loading)
 
-### Dividers & Links
-- Border dividers: reduce from `border-white/20` to `border-white/[0.06]`
-- Link text: change from `text-accent` to `text-white/60 hover:text-white/90`, remove permanent underline (keep `hover:underline` only)
-- Dot separators: use `text-white/20`
+**`src/components/Learn.tsx`** (line 75–81)
+- Same pattern — Layer 2 decorative `<img>` → `AnimatedImage`
 
-### Preference Categories
-- Category cards: `bg-white/[0.03]` and `border-white/[0.06]` (softer than current `bg-white/5` and `border-white/10`)
+**`src/components/Projects.tsx`** (line 104–110)
+- Layer 2 decorative `<img>` → `AnimatedImage`
 
-### Buttons
-- **Accept All (Primary)**: replace `btn-primary` with `bg-[hsl(217,80%,42%)] hover:bg-[hsl(217,80%,48%)] text-white rounded-xl transition-all hover:-translate-y-px`
-- **Customize (Secondary)**: replace `glass` with `bg-white/[0.04] border-white/[0.08] hover:bg-white/[0.08] rounded-xl transition-all`
-- **Reject (Tertiary)**: keep `variant="ghost"`, add `text-white/40 hover:text-white/60 rounded-xl`
-- Increase gap between buttons from `gap-3` to `gap-3.5`
+**`src/components/Resources.tsx`** (lines 82–88 and 101–107)
+- Both Layer 2 background image and Layer 4 icon `<img>` → `AnimatedImage`
 
-### Footer
-- Border: `border-white/[0.06]`
-- Text: `text-white/30` instead of `text-muted-foreground`
+**`src/components/Events.tsx`** (lines 84–88)
+- Event cover image `<img>` → `AnimatedImage`
 
-### Animation
-- Already has `scale: 0.95 → 1` and `opacity: 0 → 1` with 250ms ease — keep as-is (matches requirements)
-
-## What does NOT change
-- All text content, i18n keys, legal links
-- Cookie consent logic, localStorage, version tracking
-- Focus trap, keyboard handling, accessibility
-- Animation timing and reduced-motion support
-- Component props and callbacks
+### 3. What does NOT change
+- Layout, grid, spacing, card structure
+- Existing framer-motion section animations
+- Hover effects on cards
+- CMS/admin functionality
+- Footer geometric backgrounds and Navbar logo (already have their own loading logic)
 
 ## Files Modified
-- `src/components/PrivacyPopup.tsx` — styling classes only
+- `src/components/common/AnimatedImage.tsx` — add Intersection Observer for viewport-triggered reveal
+- `src/components/AboutBlurb.tsx` — swap `<img>` → `AnimatedImage`
+- `src/components/Learn.tsx` — swap `<img>` → `AnimatedImage`
+- `src/components/Projects.tsx` — swap `<img>` → `AnimatedImage`
+- `src/components/Resources.tsx` — swap 2× `<img>` → `AnimatedImage`
+- `src/components/Events.tsx` — swap `<img>` → `AnimatedImage`
 
