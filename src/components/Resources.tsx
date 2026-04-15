@@ -2,8 +2,6 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Page, Code, BookmarkBook } from 'iconoir-react';
-
 export const Resources = () => {
   const { t } = useTranslation();
   const ref = useRef(null);
@@ -11,7 +9,7 @@ export const Resources = () => {
 
   const resources = [
     {
-      icon: Page,
+      image: '/images/resources/UTAAB_Documentation.png',
       title: t('resources.documentationTitle'),
       items: [
         'resources.docs.gettingStarted',
@@ -21,7 +19,7 @@ export const Resources = () => {
       ],
     },
     {
-      icon: Code,
+      image: '/images/resources/UTAAB_Dev_Tools.png',
       title: t('resources.toolsTitle'),
       items: [
         'resources.toolsItems.devEnvironment',
@@ -31,7 +29,7 @@ export const Resources = () => {
       ],
     },
     {
-      icon: BookmarkBook,
+      image: '/images/resources/UTAAB_Research_Papers.png',
       title: t('resources.researchTitle'),
       items: [
         'resources.researchItems.layer2Scaling',
@@ -68,7 +66,7 @@ export const Resources = () => {
               transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
               className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:bg-white/10 transition-all duration-300 group"
             >
-              <resource.icon className="h-10 w-10 sm:h-12 sm:w-12 text-accent mb-4 sm:mb-6 group-hover:scale-110 transition-transform icon-glow" strokeWidth={1.5} />
+              <img src={resource.image} alt="" aria-hidden="true" loading="lazy" className="w-12 h-12 sm:w-14 sm:h-14 object-contain mb-4 sm:mb-6 group-hover:scale-105 transition-transform duration-300" />
               <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6">{resource.title}</h3>
               <ul className="space-y-2 sm:space-y-3">
                 {resource.items.map((item, itemIndex) => (
