@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Linkedin, Instagram, Twitter, Send, Mail } from 'lucide-react';
+import { Linkedin, Instagram, Twitter, SendDiagonal, Mail } from 'iconoir-react';
 import logo from '@/assets/logo-new.png';
 import footerGeoDesktop from '@/assets/footer-geo-desktop.png';
 import footerGeoMobile from '@/assets/footer-geo-mobile.png';
@@ -28,7 +28,7 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
 
   const socialLinks = [
     { name: 'LinkedIn', icon: Linkedin, url: 'https://www.linkedin.com/company/utaa-blockchain/', ariaLabel: 'Visit UTAAB on LinkedIn' },
-    { name: 'Telegram', icon: Send, url: 'https://t.me/utaa_blockchain', ariaLabel: 'Visit UTAAB on Telegram' },
+    { name: 'Telegram', icon: SendDiagonal, url: 'https://t.me/utaa_blockchain', ariaLabel: 'Visit UTAAB on Telegram' },
     { name: 'Instagram', icon: Instagram, url: 'https://www.instagram.com/utaa_blockchain?igsh=MXhpYW55aDYxdjdmeQ%3D%3D&utm_source=qr', ariaLabel: 'Visit UTAAB on Instagram' },
     { name: 'X', icon: Twitter, url: 'https://x.com/utaa_blockchain?s=11', ariaLabel: 'Visit UTAAB on X' },
   ];
@@ -123,7 +123,7 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
                   aria-label={social.ariaLabel}
                   title={social.ariaLabel}
                 >
-                  <social.icon className="h-5 w-5" />
+                  <social.icon className="h-5 w-5" strokeWidth={1.5} />
                 </a>
               ))}
             </div>
@@ -132,7 +132,7 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
                 href="mailto:contact@utaab.org"
                 className="inline-flex items-center gap-2 text-muted-foreground hover:text-accent transition-colors"
               >
-                <Mail className="h-4 w-4" />
+                <Mail className="h-4 w-4" strokeWidth={1.5} />
                 <span className="text-sm">contact@utaab.org</span>
               </a>
             </div>
