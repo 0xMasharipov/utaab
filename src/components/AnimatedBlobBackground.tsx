@@ -1,4 +1,13 @@
+import { useState, useEffect } from 'react';
+
 const AnimatedBlobBackground = () => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    // Defer heavy blur elements to avoid forced reflow during initial paint
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
   return (
     <div
       className="fixed inset-0 -z-10 overflow-hidden pointer-events-none"
