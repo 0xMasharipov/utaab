@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { Users, Target, Lightbulb, ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+
 import { Link } from 'react-router-dom';
 import GlassCard from '@/components/glass/GlassCard';
 
@@ -76,11 +76,12 @@ export const AboutBlurb = () => {
           transition={{ duration: 0.5, delay: 0.6 }}
           className="text-center"
         >
-          <Link to="/about">
-            <Button variant="outline" className="bg-white/[0.06] border-white/[0.12] hover:bg-white/10 group min-h-[44px]">
-              {t('about.learnMore')}
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
+          <Link
+            to="/about"
+            className="group inline-flex items-center gap-2.5 px-8 py-3 rounded-full text-[15px] font-semibold tracking-wide text-foreground bg-white/[0.06] backdrop-blur-xl border border-white/[0.12] transition-all duration-300 hover:border-accent/40 hover:bg-white/[0.10] hover:shadow-[0_0_24px_hsl(var(--accent)/0.2)]"
+          >
+            {t('about.learnMore')}
+            <ArrowRight className="h-4 w-4 opacity-70 transition-all duration-300 group-hover:translate-x-1.5 group-hover:opacity-100" />
           </Link>
         </motion.div>
       </div>
