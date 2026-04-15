@@ -37,7 +37,7 @@ export const Navbar = () => {
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
   const isRTL = i18n.language === 'ar';
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const [prefersReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const { getTransitionClasses } = useLanguageTransition();
 
 
