@@ -672,7 +672,15 @@ export default function AdminUsers() {
       <Dialog open={previewDialogOpen} onOpenChange={setPreviewDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh]">
           <DialogHeader>
-            <DialogTitle>Applicant Details</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              Applicant Details
+              {previewApplicant?.source && (
+                <Badge variant={previewApplicant.source === 'contributor' ? 'secondary' : 'outline'} className="gap-1">
+                  {previewApplicant.source === 'contributor' && <GitMerge className="h-3 w-3" />}
+                  {previewApplicant.source === 'contributor' ? 'Contributor' : 'Community'}
+                </Badge>
+              )}
+            </DialogTitle>
           </DialogHeader>
           {previewApplicant && (
             <ScrollArea className="max-h-[70vh] pr-4">
@@ -689,24 +697,87 @@ export default function AdminUsers() {
                       <Label className="text-muted-foreground text-xs">Email</Label>
                       <p className="font-medium">{previewApplicant.email}</p>
                     </div>
-                    <div>
-                      <Label className="text-muted-foreground text-xs">Telegram</Label>
-                      <p className="font-medium">{previewApplicant.telegram || 'N/A'}</p>
-                    </div>
+                    {previewApplicant.source === 'community' && (
+                      <>
+                        <div>
+                          <Label className="text-muted-foreground text-xs">Telegram</Label>
+                          <p className="font-medium">{previewApplicant.telegram || 'N/A'}</p>
+                        </div>
+                        <div>
+                          <Label className="text-muted-foreground text-xs">Country</Label>
+                          <p className="font-medium">{previewApplicant.country || 'N/A'}</p>
+                        </div>
+                        <div>
+                          <Label className="text-muted-foreground text-xs">City</Label>
+                          <p className="font-medium">{previewApplicant.city || 'N/A'}</p>
+                        </div>
+                      </>
+                    )}
                     <div>
                       <Label className="text-muted-foreground text-xs">Department</Label>
                       <p className="font-medium">{previewApplicant.department || 'N/A'}</p>
                     </div>
-                    <div>
-                      <Label className="text-muted-foreground text-xs">Country</Label>
-                      <p className="font-medium">{previewApplicant.country || 'N/A'}</p>
-                    </div>
-                    <div>
-                      <Label className="text-muted-foreground text-xs">City</Label>
-                      <p className="font-medium">{previewApplicant.city || 'N/A'}</p>
-                    </div>
                   </div>
                 </div>
+
+                {/* AI Matching Results — Contributor only */}
+                {previewApplicant.source === 'contributor' && previewApplicant.ai_result && (
+                  <div className="space-y-3">
+                    <h3 className="font-semibold text-lg border-b pb-2">AI Matching Results</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      {(previewApplicant.ai_result.primaryRole || previewApplicant.ai_result.primary_role) && (
+                        <div>
+                          <Label className="text-muted-foreground text-xs">Primary Role</Label>
+                          <div className="mt-1">
+                            <Badge>{previewApplicant.ai_result.primaryRole || previewApplicant.ai_result.primary_role}</Badge>
+                          </div>
+                        </div>
+                      )}
+                      {previewApplicant.ai_result.secondaryRole && (
+                        <div>
+                          <Label className="text-muted-foreground text-xs">Secondary Role</Label>
+                          <div className="mt-1">
+                            <Badge variant="secondary">{previewApplicant.ai_result.secondaryRole}</Badge>
+                          </div>
+                        </div>
+                      )}
+                      {(previewApplicant.ai_result.matchScore || previewApplicant.ai_result.match_score || previewApplicant.ai_result.score) && (
+                        <div>
+                          <Label className="text-muted-foreground text-xs">Match Score</Label>
+                          <p className="font-medium text-lg text-primary">
+                            {previewApplicant.ai_result.matchScore || previewApplicant.ai_result.match_score || previewApplicant.ai_result.score}%
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    {previewApplicant.ai_result.summary && (
+                      <div>
+                        <Label className="text-muted-foreground text-xs">Profile Summary</Label>
+                        <p className="mt-1 text-sm bg-muted/50 p-3 rounded-md">{previewApplicant.ai_result.summary}</p>
+                      </div>
+                    )}
+                    {previewApplicant.ai_result.strengths && (
+                      <div>
+                        <Label className="text-muted-foreground text-xs">Strengths</Label>
+                        <div className="flex flex-wrap gap-2 mt-1">
+                          {(Array.isArray(previewApplicant.ai_result.strengths) ? previewApplicant.ai_result.strengths : [previewApplicant.ai_result.strengths]).map((s: string, i: number) => (
+                            <Badge key={i} variant="outline">{s}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {previewApplicant.ai_result.growthPaths && (
+                      <div>
+                        <Label className="text-muted-foreground text-xs">Growth Paths</Label>
+                        <div className="flex flex-wrap gap-2 mt-1">
+                          {(Array.isArray(previewApplicant.ai_result.growthPaths) ? previewApplicant.ai_result.growthPaths : [previewApplicant.ai_result.growthPaths]).map((g: string, i: number) => (
+                            <Badge key={i} variant="outline">{g}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Experience & Interests */}
                 <div className="space-y-3">
@@ -721,8 +792,8 @@ export default function AdminUsers() {
                     <div>
                       <Label className="text-muted-foreground text-xs">Interests</Label>
                       <div className="flex flex-wrap gap-2 mt-1">
-                        {previewApplicant.interests.map((interest: string) => (
-                          <Badge key={interest} variant="secondary">{interest}</Badge>
+                        {previewApplicant.interests.map((interest: string, i: number) => (
+                          <Badge key={i} variant="secondary">{interest}</Badge>
                         ))}
                       </div>
                     </div>
@@ -731,8 +802,8 @@ export default function AdminUsers() {
                     <div>
                       <Label className="text-muted-foreground text-xs">Preferred Tracks</Label>
                       <div className="flex flex-wrap gap-2 mt-1">
-                        {previewApplicant.preferred_tracks.map((track: string) => (
-                          <Badge key={track} variant="outline">{track}</Badge>
+                        {previewApplicant.preferred_tracks.map((track: string, i: number) => (
+                          <Badge key={i} variant="outline">{track}</Badge>
                         ))}
                       </div>
                     </div>
@@ -744,34 +815,19 @@ export default function AdminUsers() {
                   <h3 className="font-semibold text-lg border-b pb-2">Links</h3>
                   <div className="grid grid-cols-1 gap-3">
                     {previewApplicant.github_url && (
-                      <a
-                        href={previewApplicant.github_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-primary hover:underline"
-                      >
+                      <a href={previewApplicant.github_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-primary hover:underline">
                         <ExternalLink className="h-4 w-4" />
                         GitHub: {previewApplicant.github_url}
                       </a>
                     )}
                     {previewApplicant.portfolio_url && (
-                      <a
-                        href={previewApplicant.portfolio_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-primary hover:underline"
-                      >
+                      <a href={previewApplicant.portfolio_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-primary hover:underline">
                         <ExternalLink className="h-4 w-4" />
                         Portfolio: {previewApplicant.portfolio_url}
                       </a>
                     )}
                     {previewApplicant.linkedin_url && (
-                      <a
-                        href={previewApplicant.linkedin_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-primary hover:underline"
-                      >
+                      <a href={previewApplicant.linkedin_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-primary hover:underline">
                         <ExternalLink className="h-4 w-4" />
                         LinkedIn: {previewApplicant.linkedin_url}
                       </a>
@@ -808,24 +864,46 @@ export default function AdminUsers() {
                       </p>
                     </div>
                     <div>
-                      <Label className="text-muted-foreground text-xs">Language</Label>
-                      <p className="font-medium">{previewApplicant.locale?.toUpperCase() || 'EN'}</p>
+                      <Label className="text-muted-foreground text-xs">Source</Label>
+                      <Badge variant={previewApplicant.source === 'contributor' ? 'secondary' : 'outline'}>
+                        {previewApplicant.source === 'contributor' ? 'Contributor Assessment' : 'Community Application'}
+                      </Badge>
                     </div>
                     <div>
                       <Label className="text-muted-foreground text-xs">Status</Label>
                       {getStatusBadge(previewApplicant.status || 'pending')}
                     </div>
-                    <div>
-                      <Label className="text-muted-foreground text-xs">KVKK Consent</Label>
-                      <Badge variant={previewApplicant.kvkk_consent ? "default" : "destructive"}>
-                        {previewApplicant.kvkk_consent ? 'Accepted' : 'Not Accepted'}
-                      </Badge>
-                    </div>
+                    {previewApplicant.source === 'community' && (
+                      <>
+                        <div>
+                          <Label className="text-muted-foreground text-xs">Language</Label>
+                          <p className="font-medium">{previewApplicant.locale?.toUpperCase() || 'EN'}</p>
+                        </div>
+                        <div>
+                          <Label className="text-muted-foreground text-xs">KVKK Consent</Label>
+                          <Badge variant={previewApplicant.kvkk_consent ? "default" : "destructive"}>
+                            {previewApplicant.kvkk_consent ? 'Accepted' : 'Not Accepted'}
+                          </Badge>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
 
-                {/* Action Buttons for Pending Applications */}
-                {previewApplicant.status === 'pending' && (
+                {/* Raw Form Data for contributors */}
+                {previewApplicant.source === 'contributor' && previewApplicant.form_data && Object.keys(previewApplicant.form_data).length > 0 && (
+                  <details className="text-xs">
+                    <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
+                      Raw Form Data
+                    </summary>
+                    <pre className="mt-2 p-3 rounded-lg bg-muted/20 overflow-auto max-h-48 text-muted-foreground">
+                      {JSON.stringify(previewApplicant.form_data, null, 2)}
+                    </pre>
+                  </details>
+                )}
+
+                {/* Action Buttons for Pending Community Applications */}
+                {previewApplicant.source === 'community' && previewApplicant.status === 'pending' && (
                   <div className="pt-4 border-t">
                     <Button
                       className="w-full gap-2"
