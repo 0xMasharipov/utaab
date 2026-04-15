@@ -60,11 +60,24 @@ const TeamPage = () => {
       <Navbar />
 
       {/* Hero */}
-      <section className="pt-32 pb-10 sm:pb-14">
+      <section className="pt-32 pb-14 sm:pb-18">
         <div className="section-container text-center">
+          {/* Tagline badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-5"
+          >
+            <span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase bg-accent/10 text-accent border border-accent/20">
+              {t('team.badge', 'The People Behind UTAAB')}
+            </span>
+          </motion.div>
+
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
             className="text-4xl sm:text-5xl md:text-6xl font-bold text-foreground mb-4"
           >
             {t('team.title', 'Our Team')}
@@ -72,23 +85,31 @@ const TeamPage = () => {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-muted-foreground text-lg max-w-2xl mx-auto"
+            transition={{ delay: 0.2 }}
+            className="text-muted-foreground text-lg max-w-2xl mx-auto mb-8"
           >
             {t('team.subtitle', 'Builders of UTAAB')}
           </motion.p>
+
+          {/* Decorative accent line */}
+          <motion.div
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={{ scaleX: 1, opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+            className="mx-auto w-20 h-1 rounded-full bg-gradient-to-r from-accent/60 via-accent to-accent/60"
+          />
         </div>
       </section>
 
       {/* Card Grid */}
-      <section className="pb-24">
+      <section className="pb-28">
         <div className="section-container">
           <motion.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-50px' }}
-            className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-7 lg:gap-8 max-w-6xl mx-auto"
+            className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-7 sm:gap-8 lg:gap-10 max-w-6xl mx-auto"
           >
             {teamMembers.map((member) => (
               <TeamOverlapCard
