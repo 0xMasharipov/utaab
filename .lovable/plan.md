@@ -1,40 +1,48 @@
 
 
-# Replace Resources Section Icons with 3D White Assets
+# Update "Community Projects" Cards with 4-Layer 3D Visuals
 
 ## Summary
-Replace the three Iconoir SVG icons in the Resources section with the uploaded 3D white PNG images. Keep the card layout, text, and list items completely unchanged. Icons stay compact in the top-left, acting as visual accent — not dominating the card.
+Replace icon-based project cards with immersive 4-layer cards featuring the uploaded 3D images, matching the "What We Build" and "Learn & Grow" visual system.
 
 ## Assets
-Copy 3 uploaded images to `public/images/resources/`:
-- `UTAAB_Documentation.png` → Documentation card
-- `UTAAB_Dev_Tools.png` → Development Tools card
-- `UTAAB_Research_Papers.png` → Research Papers card
+Copy 6 uploaded images to `public/images/projects/`:
+- `UTAAB_UBP.png` → UBP card
+- `UTAAB_TonRa.png` → TonRa card
+- `UTAAB_ASN.png` → ASN card
+- `UTAAB_DVS.png` → DVS card
+- `UTAAB_DID.png` → DID card
+- `UTAAB_DAO.png` → DAO card
 
 ## Changes
 
-### `src/components/Resources.tsx`
-1. Remove Iconoir imports (`Page`, `Code`, `BookmarkBook`)
-2. Replace `icon` field in `resources` array with `image` path string:
-   ```ts
-   { image: '/images/resources/UTAAB_Documentation.png', title: ..., items: ... },
-   { image: '/images/resources/UTAAB_Dev_Tools.png', ... },
-   { image: '/images/resources/UTAAB_Research_Papers.png', ... },
-   ```
-3. Replace the `<resource.icon>` element with an `<img>` tag:
-   - Size: `w-12 h-12 sm:w-14 sm:h-14` (slightly larger than current 10-12 SVG icons)
-   - Classes: `object-contain mb-4 sm:mb-6 group-hover:scale-105 transition-transform duration-300`
-   - Add `loading="lazy"`, `alt=""`, `aria-hidden="true"` (decorative)
-4. Everything else stays identical: card classes, text, list, grid, section heading, animations
+### `src/components/Projects.tsx`
 
-## What does NOT change
-- Card layout, spacing, grid (`lg:grid-cols-3`)
-- Text content, i18n keys, list items
-- Section heading and subtitle
-- Hover background effect on cards
+1. Remove iconoir imports (`Coins`, `Search`, `CreditCard`, `ShieldCheck`, `Fingerprint`, `Community`)
+2. Remove `Button` import (unused)
+3. Update `Project` interface: replace `icon: React.ElementType` with `image: string`
+4. Update `projects` array with image paths instead of icon components
+5. Rewrite each card to use the 4-layer structure inside `GlassCard`:
+
+```text
+GlassCard (relative overflow-hidden min-h-[260px] p-0)
+  ├── Layer 1 (z-0):  Grid background — subtle CSS linear-gradient pattern, opacity 0.05
+  ├── Layer 2 (z-10): 3D image — absolute bottom-0 right-0, w-[55%], opacity-85, hover:scale-105
+  ├── Layer 3 (z-20): Dark gradient overlay — linear-gradient to top, 80% → 25% → transparent
+  └── Layer 4 (z-30): Text content — status badge, title, description, tags with padding
+```
+
+6. Keep: status badge styling, tag pills, i18n keys, motion animations, grid `lg:grid-cols-3`, section heading/subtitle
+
+### What does NOT change
+- Section heading, subtitle, spacing
+- Grid layout (`md:grid-cols-2 lg:grid-cols-3`)
+- Text content / i18n keys
+- Status badges and tag pills
+- Motion animations
 - Other sections
 
 ## Files Modified
-- `src/components/Resources.tsx` — icon → image swap
-- `public/images/resources/` — 3 new image assets
+- `src/components/Projects.tsx` — card structure rewrite
+- `public/images/projects/` — 6 new image assets
 
