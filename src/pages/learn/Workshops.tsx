@@ -2,7 +2,7 @@ import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
 import { motion } from 'framer-motion';
-import { Rocket } from 'lucide-react';
+
 import { useTranslation } from 'react-i18next';
 
 const Workshops = () => {
@@ -20,13 +20,9 @@ const Workshops = () => {
           transition={{ duration: 0.7 }}
           className="glass-strong rounded-3xl p-10 sm:p-14 md:p-20 max-w-2xl w-full text-center"
         >
-          <motion.div
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-            className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/20 text-accent mb-8"
-          >
-            <Rocket className="h-8 w-8" />
-          </motion.div>
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/20 mb-8">
+            <img src="/images/rocket.webp" alt="Rocket" className="w-10 h-10 object-contain" />
+          </div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
             {t('learn.workshopsPage.title')}
