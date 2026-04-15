@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Linkedin, Instagram, Twitter, SendDiagonal, Mail } from 'iconoir-react';
+import { Linkedin, Instagram, Twitter, SendDiagonal, Mail, Github } from 'iconoir-react';
 import logo from '@/assets/logo-new.png';
 import footerGeoDesktop from '@/assets/footer-geo-desktop.png';
 import footerGeoMobile from '@/assets/footer-geo-mobile.png';
@@ -27,10 +27,11 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
   ];
 
   const socialLinks = [
-    { name: 'LinkedIn', icon: Linkedin, url: 'https://www.linkedin.com/company/utaa-blockchain/', ariaLabel: 'Visit UTAAB on LinkedIn' },
-    { name: 'Telegram', icon: SendDiagonal, url: 'https://t.me/utaa_blockchain', ariaLabel: 'Visit UTAAB on Telegram' },
-    { name: 'Instagram', icon: Instagram, url: 'https://www.instagram.com/utaa_blockchain?igsh=MXhpYW55aDYxdjdmeQ%3D%3D&utm_source=qr', ariaLabel: 'Visit UTAAB on Instagram' },
-    { name: 'X', icon: Twitter, url: 'https://x.com/utaa_blockchain?s=11', ariaLabel: 'Visit UTAAB on X' },
+    { name: 'LinkedIn', icon: Linkedin, url: 'https://www.linkedin.com/company/utaa-blockchain/', ariaLabel: 'Visit UTAAB on LinkedIn', hoverClass: 'hover:text-[#0A66C2] hover:border-[#0A66C2] hover:shadow-[0_0_20px_rgba(10,102,194,0.3)]' },
+    { name: 'Telegram', icon: SendDiagonal, url: 'https://t.me/utaa_blockchain', ariaLabel: 'Visit UTAAB on Telegram', hoverClass: 'hover:text-[#26A5E4] hover:border-[#26A5E4] hover:shadow-[0_0_20px_rgba(38,165,228,0.3)]' },
+    { name: 'Instagram', icon: Instagram, url: 'https://www.instagram.com/utaa_blockchain', ariaLabel: 'Visit UTAAB on Instagram', hoverClass: 'hover:text-[#E4405F] hover:border-[#E4405F] hover:shadow-[0_0_20px_rgba(228,64,95,0.3)]' },
+    { name: 'X', icon: Twitter, url: 'https://x.com/utaa_blockchain?s=11', ariaLabel: 'Visit UTAAB on X', hoverClass: 'hover:text-white hover:border-white/40 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]' },
+    { name: 'GitHub', icon: Github, url: 'https://github.com/UTAA-Blockchain', ariaLabel: 'Visit UTAAB on GitHub', hoverClass: 'hover:text-white hover:border-white/40 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]' },
   ];
 
   return (
@@ -119,7 +120,7 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="glass border border-white/10 p-3 rounded-xl transition-all hover:scale-110 hover:border-accent hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] min-h-[44px] min-w-[44px] flex items-center justify-center text-muted-foreground hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+                  className={`glass border border-white/10 p-3 rounded-xl transition-all hover:scale-110 min-h-[44px] min-w-[44px] flex items-center justify-center text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background ${social.hoverClass}`}
                   aria-label={social.ariaLabel}
                   title={social.ariaLabel}
                 >
