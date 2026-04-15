@@ -1,33 +1,38 @@
 
 
-# Footer Redesign — Geometric Background Element
+# Set Up App Emails (Transactional)
 
 ## Summary
-Redesign the footer with a dark blue gradient background and place the two uploaded geometric images as low-opacity decorative background elements — desktop image for `md+` screens, mobile image for small screens. Center them in the lower portion of the footer.
+Set up the infrastructure to send app emails — welcome messages, notifications, confirmations, etc. — from your verified domain `notify.utaab.org`.
 
-## Changes
+## What will be created
 
-### 1. Copy uploaded images to project
-- `user-uploads://UTAAB_Footer_2-2.png` → `src/assets/footer-geo-desktop.png`
-- `user-uploads://UTAAB_Footer_mobile-2.png` → `src/assets/footer-geo-mobile.png`
+1. **Email infrastructure** — queue system, retry logic, and processing pipeline for reliable delivery
+2. **Email sending system** — a single backend function that handles all app email types
+3. **Sample template** — a starter React Email template matching UTAAB's brand (navy/white, Montserrat font, UTAAB logo)
+4. **Unsubscribe page** — a branded page where recipients can opt out (required for compliance)
+5. **Suppression handling** — automatic bounce/complaint tracking to protect sender reputation
 
-### 2. Rewrite `src/components/Footer.tsx`
-- Add `relative overflow-hidden` to the footer wrapper
-- Apply a dark blue gradient background: `bg-gradient-to-b from-[#0a1628] to-[#060e1a]`
-- Add an absolutely positioned decorative `<img>` layer behind all content:
-  - Desktop (`hidden md:block`): `footer-geo-desktop.png`, centered horizontally, anchored to bottom, ~60-70% width, opacity 5-8%
-  - Mobile (`block md:hidden`): `footer-geo-mobile.png`, centered, anchored to bottom, ~80% width, opacity 5-8%
-  - Both use `pointer-events-none`, `z-0`, with content at `z-10` (relative)
-- Keep all existing footer content, links, social icons, newsletter, and dynamic bindings untouched
-- Improve border styling to match the dark blue aesthetic
+## Steps
 
-### Files Modified
-- `src/assets/footer-geo-desktop.png` — New asset
-- `src/assets/footer-geo-mobile.png` — New asset
-- `src/components/Footer.tsx` — Visual redesign (background + geometric overlay only)
+1. Call `setup_email_infra` to create the database queue and processing pipeline
+2. Call `scaffold_transactional_email` to create the sending Edge Function, unsubscribe handler, and sample template
+3. Deploy all new Edge Functions
+4. Create the unsubscribe page in the app (matching UTAAB's dark theme)
+5. Style the sample template to match UTAAB branding (navy background, white card, Montserrat, logo)
 
-### No changes to
-- Any other component or page
-- Footer link functionality, i18n keys, admin bindings
-- Global styles, navigation, layout
+## After setup
+
+You'll be able to send emails like:
+- Welcome messages after signup
+- Contact form confirmations
+- Notification emails
+- Any custom app email you need
+
+Each new email type just needs a template file — no additional infrastructure. I can create specific templates for your use cases once the foundation is in place.
+
+## No changes to
+- Existing auth email templates
+- Footer, navbar, or any other page
+- Admin panel or database schema
 
