@@ -85,7 +85,8 @@ export const Resources = () => {
                   alt=""
                   aria-hidden="true"
                   loading="lazy"
-                  className="absolute bottom-0 right-0 w-[40%] z-[5] opacity-[0.12] blur-[1px] object-contain pointer-events-none select-none"
+                  containerClassName="absolute bottom-0 right-0 w-[40%] z-[5] opacity-[0.12] blur-[1px]"
+                  className="w-full h-full object-contain pointer-events-none select-none"
                   placeholderClassName="opacity-0"
                 />
 
@@ -105,6 +106,7 @@ export const Resources = () => {
                     alt=""
                     aria-hidden="true"
                     loading="lazy"
+                    containerClassName="inline-block"
                     className="w-12 h-12 sm:w-14 sm:h-14 object-contain mb-4 sm:mb-6 group-hover:scale-105 transition-transform duration-300"
                     placeholderClassName="opacity-0"
                   />
