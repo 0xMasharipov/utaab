@@ -562,8 +562,8 @@ export default function AdminUsers() {
         </TabsContent>
 
         <TabsContent value="applicants">
-          {/* Status Filter for Applicants */}
-          <div className="flex items-center gap-4 mb-4">
+          {/* Filters for Applicants */}
+          <div className="flex items-center gap-4 mb-4 flex-wrap">
             <div className="flex items-center gap-2">
               <Filter className="h-4 w-4 text-muted-foreground" />
               <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -579,6 +579,18 @@ export default function AdminUsers() {
                 </SelectContent>
               </Select>
             </div>
+            <div className="flex items-center gap-2">
+              <Select value={sourceFilter} onValueChange={setSourceFilter}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Filter by source" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Sources</SelectItem>
+                  <SelectItem value="community">Community</SelectItem>
+                  <SelectItem value="contributor">Contributor</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <div className="text-sm text-muted-foreground">
               {filteredApplicants.length} applicant{filteredApplicants.length !== 1 ? 's' : ''}
             </div>
@@ -590,6 +602,7 @@ export default function AdminUsers() {
                 <TableRow>
                   <TableHead>Name</TableHead>
                   <TableHead>Email</TableHead>
+                  <TableHead>Source</TableHead>
                   <TableHead>Department</TableHead>
                   <TableHead>Experience</TableHead>
                   <TableHead>Status</TableHead>
@@ -599,9 +612,15 @@ export default function AdminUsers() {
               </TableHeader>
               <TableBody>
                 {filteredApplicants.map((applicant) => (
-                  <TableRow key={applicant.id}>
+                  <TableRow key={`${applicant.source}-${applicant.id}`}>
                     <TableCell className="font-medium">{applicant.full_name}</TableCell>
                     <TableCell>{applicant.email}</TableCell>
+                    <TableCell>
+                      <Badge variant={applicant.source === 'contributor' ? 'secondary' : 'outline'} className="gap-1">
+                        {applicant.source === 'contributor' && <GitMerge className="h-3 w-3" />}
+                        {applicant.source === 'contributor' ? 'Contributor' : 'Community'}
+                      </Badge>
+                    </TableCell>
                     <TableCell>{applicant.department || 'N/A'}</TableCell>
                     <TableCell>
                       <Badge variant="outline">{applicant.experience_level || 'N/A'}</Badge>
@@ -621,7 +640,7 @@ export default function AdminUsers() {
                           <Eye className="h-4 w-4" />
                           View
                         </Button>
-                        {applicant.status === 'pending' && (
+                        {applicant.source === 'community' && applicant.status === 'pending' && (
                           <Button
                             variant="default"
                             size="sm"
@@ -638,7 +657,7 @@ export default function AdminUsers() {
                 ))}
                 {filteredApplicants.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                    <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
                       No applicants found
                     </TableCell>
                   </TableRow>
