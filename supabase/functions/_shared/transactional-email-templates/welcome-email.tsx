@@ -22,14 +22,11 @@ const WelcomeEmail = ({ name }: WelcomeEmailProps) => (
     <Preview>Welcome to {SITE_NAME} — Connect. Learn. Build.</Preview>
     <Body style={main}>
       <Container style={container}>
-        {/* Logo + tagline OUTSIDE the card */}
-        <Section style={logoSection}>
-          <Img src={LOGO_URL} alt={SITE_NAME} width="160" style={logo} />
-        </Section>
-        <Text style={tagline}>CONNECT · LEARN · BUILD</Text>
-
-        {/* White card */}
+        {/* White card with logo inside */}
         <Section style={card}>
+          <Img src={LOGO_URL} alt={SITE_NAME} width="160" style={logo} />
+          <Text style={tagline}>CONNECT · LEARN · BUILD</Text>
+
           <Heading style={h1}>
             {name ? `Welcome, ${name}!` : `Welcome to ${SITE_NAME}!`}
           </Heading>
