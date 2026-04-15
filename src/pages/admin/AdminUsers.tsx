@@ -51,6 +51,7 @@ export default function AdminUsers() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [sourceFilter, setSourceFilter] = useState<string>('all');
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [previewApplicant, setPreviewApplicant] = useState<any>(null);
   const [previewDialogOpen, setPreviewDialogOpen] = useState(false);
