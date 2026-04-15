@@ -62,16 +62,19 @@ export const Navbar = () => {
   }, [isMenuOpen, closeMenu]);
 
   // Measure navbar bottom and pill rect for panel positioning
+  // Use rAF to batch reads and avoid forced reflow
   useEffect(() => {
     const updatePositions = () => {
-      if (navRef.current) {
-        const rect = navRef.current.getBoundingClientRect();
-        setPanelTop(rect.bottom + 2);
-      }
-      if (pillRef.current) {
-        const rect = pillRef.current.getBoundingClientRect();
-        setPillRect({ left: rect.left, width: rect.width });
-      }
+      requestAnimationFrame(() => {
+        if (navRef.current) {
+          const rect = navRef.current.getBoundingClientRect();
+          setPanelTop(rect.bottom + 2);
+        }
+        if (pillRef.current) {
+          const rect = pillRef.current.getBoundingClientRect();
+          setPillRect({ left: rect.left, width: rect.width });
+        }
+      });
     };
     updatePositions();
     window.addEventListener('resize', updatePositions);
