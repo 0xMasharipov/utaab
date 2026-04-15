@@ -44,7 +44,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <AnimatedBlobBackground />
+      <Suspense fallback={null}><AnimatedBlobBackground /></Suspense>
       <Navbar />
       <Hero />
       <HeroCarousel />
