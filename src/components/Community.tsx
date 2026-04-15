@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { NavArrowRight, Rocket, Newspaper } from 'iconoir-react';
+import { NavArrowRight, Rocket, Journal } from 'iconoir-react';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 import { Link } from 'react-router-dom';
 
@@ -65,7 +65,7 @@ export const Community = () => {
             to="/blog"
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-muted-foreground font-semibold hover:text-foreground hover:bg-white/[0.04] transition-all duration-300"
           >
-            <Newspaper className="h-5 w-5" strokeWidth={1.5} />
+            <Journal className="h-5 w-5" strokeWidth={1.5} />
             <span className={getTransitionClasses()}>{t('community.cta.updatesBtn')}</span>
           </Link>
         </motion.div>
