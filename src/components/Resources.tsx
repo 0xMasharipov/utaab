@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import GlassCard from '@/components/glass/GlassCard';
+import AnimatedImage from '@/components/common/AnimatedImage';
 
 export const Resources = () => {
   const { t } = useTranslation();
@@ -79,12 +80,13 @@ export const Resources = () => {
                 />
 
                 {/* Layer 2: Subtle background visual */}
-                <img
+                <AnimatedImage
                   src={resource.image}
                   alt=""
                   aria-hidden="true"
                   loading="lazy"
                   className="absolute bottom-0 right-0 w-[40%] z-[5] opacity-[0.12] blur-[1px] object-contain pointer-events-none select-none"
+                  placeholderClassName="opacity-0"
                 />
 
                 {/* Layer 3: Dark gradient overlay */}
@@ -98,12 +100,13 @@ export const Resources = () => {
 
                 {/* Layer 4: Content */}
                 <div className="relative z-20 p-6 sm:p-8">
-                  <img
+                  <AnimatedImage
                     src={resource.image}
                     alt=""
                     aria-hidden="true"
                     loading="lazy"
                     className="w-12 h-12 sm:w-14 sm:h-14 object-contain mb-4 sm:mb-6 group-hover:scale-105 transition-transform duration-300"
+                    placeholderClassName="opacity-0"
                   />
                   <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6">{resource.title}</h3>
                   <ul className="space-y-2 sm:space-y-3">

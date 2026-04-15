@@ -5,6 +5,7 @@ import { useRef } from 'react';
 import { NavArrowRight } from 'iconoir-react';
 import { Link } from 'react-router-dom';
 import GlassCard from '@/components/glass/GlassCard';
+import AnimatedImage from '@/components/common/AnimatedImage';
 
 const cards = [
   {
@@ -72,12 +73,13 @@ export const AboutBlurb = () => {
                 />
 
                 {/* Layer 2: 3D Image */}
-                <img
+                <AnimatedImage
                   src={card.image}
                   alt=""
                   aria-hidden="true"
                   className="absolute bottom-0 right-0 w-[65%] h-auto object-contain z-10 translate-x-[5%] translate-y-[5%] transition-transform duration-500 group-hover:scale-105"
                   loading="lazy"
+                  placeholderClassName="opacity-0"
                 />
 
                 {/* Layer 3: Gradient overlay */}
