@@ -6,6 +6,9 @@ import { Events } from '@/components/Events';
 import { BlogSection } from '@/components/BlogSection';
 import { Projects } from '@/components/Projects';
 
+import { Community } from '@/components/Community';
+import { Learn } from '@/components/Learn';
+import { Resources } from '@/components/Resources';
 import { Join } from '@/components/Join';
 import { Footer } from '@/components/Footer';
 import { HeroCarousel } from '@/components/HeroCarousel';
@@ -28,6 +31,9 @@ const Index = () => {
       
       <BackgroundGrid>
         <AboutBlurb />
+        <Community />
+        <Learn />
+        <Resources />
         <Projects />
         <Events />
         <BlogSection />
