@@ -2,8 +2,6 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Page, Code, BookmarkBook } from 'iconoir-react';
-
 export const Resources = () => {
   const { t } = useTranslation();
   const ref = useRef(null);
@@ -11,7 +9,7 @@ export const Resources = () => {
 
   const resources = [
     {
-      icon: Page,
+      image: '/images/resources/UTAAB_Documentation.png',
       title: t('resources.documentationTitle'),
       items: [
         'resources.docs.gettingStarted',
@@ -21,7 +19,7 @@ export const Resources = () => {
       ],
     },
     {
-      icon: Code,
+      image: '/images/resources/UTAAB_Dev_Tools.png',
       title: t('resources.toolsTitle'),
       items: [
         'resources.toolsItems.devEnvironment',
@@ -31,7 +29,7 @@ export const Resources = () => {
       ],
     },
     {
-      icon: BookmarkBook,
+      image: '/images/resources/UTAAB_Research_Papers.png',
       title: t('resources.researchTitle'),
       items: [
         'resources.researchItems.layer2Scaling',
