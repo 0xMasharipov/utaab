@@ -20,6 +20,7 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
 
   const navLinks = [
     { label: t('footer.home', 'Home'), href: '/' },
+    { label: t('footer.aboutLink', 'About Us'), href: '/about' },
     { label: t('nav.projects'), href: '/#projects' },
     { label: t('footer.blogLink', 'Blog'), href: '/blog' },
     { label: t('footer.teamLink', 'Team'), href: '/team' },
