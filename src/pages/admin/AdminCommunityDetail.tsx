@@ -152,7 +152,7 @@ export default function AdminCommunityDetail() {
         <Button
           variant="ghost"
           className="mb-4 gap-2"
-          onClick={() => navigate('/admin/communities')}
+          onClick={() => navigate('/v8k2m9x4/r2f')}
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Communities

@@ -369,12 +369,6 @@ export const Navbar = () => {
                     <User className="h-3.5 w-3.5 text-white/50" />
                     {t('nav.studentAuthOptions')}
                   </button>
-                  <button
-                    onClick={() => handleNavigate('/admin/login')}
-                    className="text-xs text-white/40 hover:text-white/70 transition-colors duration-200"
-                  >
-                    {t('nav.adminSignIn', 'Admin Sign In')}
-                  </button>
                 </div>
 
                 {/* Right: Language selector */}

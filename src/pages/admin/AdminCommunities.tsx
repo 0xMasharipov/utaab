@@ -182,7 +182,7 @@ export default function AdminCommunities() {
           <Card
             key={community.id}
             className="glass-panel p-6 hover:border-primary/50 transition-all cursor-pointer"
-            onClick={() => navigate(`/admin/communities/${community.id}`)}
+            onClick={() => navigate(`/v8k2m9x4/r2f/${community.id}`)}
           >
             <div className="space-y-4">
               <div className="flex items-start justify-between">
