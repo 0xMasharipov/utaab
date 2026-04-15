@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
+import { ADMIN_ROUTES } from '@/config/routes';
 import { useTranslation } from 'react-i18next';
 import {
   LayoutDashboard,
@@ -23,20 +24,20 @@ import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 
 const sidebarItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
-  { icon: Users, label: 'Users & Roles', path: '/admin/users' },
-  { icon: Users, label: 'Communities', path: '/admin/communities' },
-  { icon: Calendar, label: 'Events', path: '/admin/events' },
-  { icon: BookOpen, label: 'Courses', path: '/admin/courses' },
-  { icon: FileText, label: 'Blog', path: '/admin/blog' },
-  { icon: FileText, label: 'Site Content', path: '/admin/site-content' },
-  { icon: Megaphone, label: 'Announcements', path: '/admin/announcements' },
-  { icon: MessageSquare, label: 'Messages', path: '/admin/messages' },
-  { icon: ImageIcon, label: 'Media Library', path: '/admin/media' },
-  { icon: GitMerge, label: 'Contributors', path: '/admin/contributors' },
-  { icon: Shield, label: 'Security', path: '/admin/security' },
-  { icon: Settings, label: 'Settings', path: '/admin/settings' },
-  { icon: FileText, label: 'Audit Log', path: '/admin/audit' },
+  { icon: LayoutDashboard, label: 'Dashboard', path: ADMIN_ROUTES.DASHBOARD },
+  { icon: Users, label: 'Users & Roles', path: ADMIN_ROUTES.USERS },
+  { icon: Users, label: 'Communities', path: ADMIN_ROUTES.COMMUNITIES },
+  { icon: Calendar, label: 'Events', path: ADMIN_ROUTES.EVENTS },
+  { icon: BookOpen, label: 'Courses', path: ADMIN_ROUTES.COURSES },
+  { icon: FileText, label: 'Blog', path: ADMIN_ROUTES.BLOG },
+  { icon: FileText, label: 'Site Content', path: ADMIN_ROUTES.SITE_CONTENT },
+  { icon: Megaphone, label: 'Announcements', path: ADMIN_ROUTES.ANNOUNCEMENTS },
+  { icon: MessageSquare, label: 'Messages', path: ADMIN_ROUTES.MESSAGES },
+  { icon: ImageIcon, label: 'Media Library', path: ADMIN_ROUTES.MEDIA },
+  { icon: GitMerge, label: 'Contributors', path: ADMIN_ROUTES.CONTRIBUTORS },
+  { icon: Shield, label: 'Security', path: ADMIN_ROUTES.SECURITY },
+  { icon: Settings, label: 'Settings', path: ADMIN_ROUTES.SETTINGS },
+  { icon: FileText, label: 'Audit Log', path: ADMIN_ROUTES.AUDIT },
 ];
 
 export const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
@@ -54,7 +55,7 @@ export const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
         const { data: { session } } = await supabase.auth.getSession();
         
         if (!session) {
-          navigate('/admin/login');
+          navigate(ADMIN_ROUTES.LOGIN);
           return;
         }
 
@@ -65,7 +66,7 @@ export const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
         
         if (error || !data?.isAdmin) {
           await supabase.auth.signOut();
-          navigate('/admin/login');
+          navigate(ADMIN_ROUTES.LOGIN);
           return;
         }
 
@@ -73,7 +74,7 @@ export const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
       } catch (error) {
         console.error('Admin verification failed:', error);
         await supabase.auth.signOut();
-        navigate('/admin/login');
+        navigate(ADMIN_ROUTES.LOGIN);
       }
     };
 
@@ -81,7 +82,7 @@ export const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (!session) {
-        navigate('/admin/login');
+        navigate(ADMIN_ROUTES.LOGIN);
       } else {
         setUser(session.user);
       }
@@ -140,7 +141,7 @@ export const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
           >
             {isMobileMenuOpen ? <X /> : <Menu />}
           </Button>
-          <h1 className="text-lg font-bold">UTAAB Edu Admin</h1>
+          <h1 className="text-lg font-bold">Platform Management</h1>
           <Button variant="ghost" size="sm" onClick={handleSignOut}>
             <LogOut className="h-4 w-4" />
           </Button>
@@ -162,7 +163,7 @@ export const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
             <div className="flex items-center justify-between">
               {isSidebarOpen && (
                 <h1 className="text-xl font-bold">
-                  UTAAB <span className="text-primary">Admin</span>
+                  UTAAB <span className="text-primary">Management</span>
                 </h1>
               )}
               <Button
