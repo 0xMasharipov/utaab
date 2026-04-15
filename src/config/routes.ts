@@ -2,7 +2,7 @@
 // Do NOT use semantic names. These are intentionally random.
 
 export const ADMIN_ROUTES = {
-  LOGIN: '/v8k2m9x4',
+  LOGIN: '/j3r7x1w9',
   BASE: '/v8k2m9x4',
   DASHBOARD: '/v8k2m9x4/p3',
   USERS: '/v8k2m9x4/q7w',
