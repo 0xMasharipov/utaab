@@ -31,6 +31,7 @@ export default defineConfig(({ mode }) => ({
           'vendor-three': ['three', '@react-three/fiber', '@react-three/drei'],
           'vendor-query': ['@tanstack/react-query'],
           'vendor-i18n': ['react-i18next', 'i18next'],
+          'client': ['@supabase/supabase-js'],
         }
       }
     }
