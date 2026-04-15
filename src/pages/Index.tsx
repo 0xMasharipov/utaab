@@ -3,7 +3,9 @@ import { Navbar } from '@/components/Navbar';
 import { Hero } from '@/components/Hero';
 import { HeroCarousel } from '@/components/HeroCarousel';
 import BackgroundGrid from '@/components/BackgroundGrid';
-import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
+
+// Lazy load decorative background (causes forced reflow, not critical for FCP)
+const AnimatedBlobBackground = lazy(() => import('@/components/AnimatedBlobBackground'));
 
 // Lazy load all below-fold sections to reduce TTI
 const AboutBlurb = lazy(() => import('@/components/AboutBlurb').then(m => ({ default: m.AboutBlurb })));
@@ -42,7 +44,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <AnimatedBlobBackground />
+      <Suspense fallback={null}><AnimatedBlobBackground /></Suspense>
       <Navbar />
       <Hero />
       <HeroCarousel />
