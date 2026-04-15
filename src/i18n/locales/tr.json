@@ -1304,5 +1304,66 @@
     "title": "UTAAB Nedir?",
     "blurb": "UTAAB, yeni nesil Web3 geliştiricileri için gerçek dünya araçları, eğitim ve topluluk oluşturan üniversite kökenli bir blockchain ekosistemidir.",
     "learnMore": "UTAAB Hakkında Daha Fazla"
+  },
+  "aboutPage": {
+    "hero": {
+      "title": "Sadece Bir Topluluk Değil. Gerçek Dünyada Etki Yaratıyoruz.",
+      "subtitle": "UTAAB, fikirlerin gerçek dünya projelerine dönüştüğü, blockchain, iş birliği ve ortak bir gelecek vizyonuyla güçlendirilmiş inovasyon odaklı bir ekosistemdir."
+    },
+    "whyUtaab": {
+      "title": "Neden UTAAB?",
+      "item1": "Yeni nesil geliştiriciler için temel oluşturuyoruz.",
+      "item2": "UTAAB'de öğrencilere, büyümeye ve gerçek dünya geliştirmeye odaklanıyoruz — sadece teknik beceriler değil, aynı zamanda zihniyet, dayanıklılık ve vizyon.",
+      "item3": "Bağlantının güç yarattığına inanıyoruz. İnsanları bir araya getirerek sadece maddi değil, zihinsel ve profesyonel destek sağlıyoruz.",
+      "item4": "Çünkü gelecek sadece ürün yaratmakla ilgili değil — nitelikli, sürdürülebilir ve sınırsız bir dünya şekillendirmekle ilgili."
+    },
+    "mission": {
+      "title": "Misyonumuz",
+      "text": "Eğitim, iş birliği ve gerçek dünya geliştirme fırsatları aracılığıyla bireyleri güçlendirmek."
+    },
+    "vision": {
+      "title": "Vizyonumuz",
+      "text": "Nitelikli bireylerin inovasyon ve teknoloji aracılığıyla anlamlı etki yarattığı sınırsız, sürdürülebilir bir ekosistem inşa etmek."
+    },
+    "whatWeDo": {
+      "title": "Gerçekte Ne Yapıyoruz",
+      "educate": {
+        "title": "Eğitim",
+        "description": "Blockchain becerilerini ve zihniyetini geliştirmek için atölyeler, öğrenme kaynakları ve mentorluk."
+      },
+      "build": {
+        "title": "İnşa Et",
+        "description": "Teorinin ötesine geçen gerçek dünya projeleri ve blockchain tabanlı çözümler."
+      },
+      "connect": {
+        "title": "Bağlan",
+        "description": "İnsanları sınırlar ötesinde bir araya getiren topluluk, ağ oluşturma ve iş birliği."
+      },
+      "support": {
+        "title": "Destek",
+        "description": "Ekosistemin her üyesi için finansal, zihinsel ve profesyonel büyüme."
+      }
+    },
+    "impact": {
+      "title": "Gerçek Dünya Etkisi",
+      "subtitle": "Fikirleri eyleme dönüştürüyoruz — dijital alanın ötesinde gerçek etki yaratıyoruz.",
+      "projects": {
+        "title": "Projeler",
+        "description": "DeFi araçlarından merkeziyetsiz kimlik çözümlerine kadar projelerimiz gerçek sorunları çözüyor."
+      },
+      "initiatives": {
+        "title": "Girişimler",
+        "description": "Kalıcı değişim yaratan sınır ötesi iş birlikleri, hackathon'lar ve topluluk odaklı programlar."
+      },
+      "outcomes": {
+        "title": "Sonuçlar",
+        "description": "Yetenekli geliştiriciler, piyasaya sürülen ürünler ve büyüyen bir inşaatçı ve yenilikçi ekosistemi."
+      }
+    },
+    "cta": {
+      "title": "İnşa Ettiğimiz Geleceğin Parçası Olun",
+      "joinButton": "Topluluğa Katıl",
+      "exploreButton": "Projeleri Keşfet"
+    }
   }
 }
