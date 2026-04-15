@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import GlassCard from '@/components/glass/GlassCard';
+
 export const Resources = () => {
   const { t } = useTranslation();
   const ref = useRef(null);
@@ -64,19 +66,57 @@ export const Resources = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
-              className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:bg-white/10 transition-all duration-300 group"
             >
-              <img src={resource.image} alt="" aria-hidden="true" loading="lazy" className="w-12 h-12 sm:w-14 sm:h-14 object-contain mb-4 sm:mb-6 group-hover:scale-105 transition-transform duration-300" />
-              <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6">{resource.title}</h3>
-              <ul className="space-y-2 sm:space-y-3">
-                {resource.items.map((item, itemIndex) => (
-                  <li key={itemIndex}>
-                    <button className="text-sm sm:text-base text-muted-foreground hover:text-accent transition-colors text-left w-full py-1">
-                      • {t(item)}
-                    </button>
-                  </li>
-                ))}
-              </ul>
+              <GlassCard className="relative overflow-hidden min-h-[240px] p-0 group">
+                {/* Layer 1: Grid background */}
+                <div
+                  className="absolute inset-0 z-0 opacity-[0.05]"
+                  style={{
+                    backgroundImage:
+                      'linear-gradient(to right, hsl(213 94% 68% / 0.4) 1px, transparent 1px), linear-gradient(to bottom, hsl(213 94% 68% / 0.4) 1px, transparent 1px)',
+                    backgroundSize: '40px 40px',
+                  }}
+                />
+
+                {/* Layer 2: Subtle background visual */}
+                <img
+                  src={resource.image}
+                  alt=""
+                  aria-hidden="true"
+                  loading="lazy"
+                  className="absolute bottom-0 right-0 w-[40%] z-[5] opacity-[0.12] blur-[1px] object-contain pointer-events-none select-none"
+                />
+
+                {/* Layer 3: Dark gradient overlay */}
+                <div
+                  className="absolute inset-0 z-10"
+                  style={{
+                    background:
+                      'linear-gradient(to top, rgba(0,0,0,0.70) 0%, rgba(0,0,0,0.30) 50%, transparent 100%)',
+                  }}
+                />
+
+                {/* Layer 4: Content */}
+                <div className="relative z-20 p-6 sm:p-8">
+                  <img
+                    src={resource.image}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    className="w-12 h-12 sm:w-14 sm:h-14 object-contain mb-4 sm:mb-6 group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6">{resource.title}</h3>
+                  <ul className="space-y-2 sm:space-y-3">
+                    {resource.items.map((item, itemIndex) => (
+                      <li key={itemIndex}>
+                        <button className="text-sm sm:text-base text-muted-foreground hover:text-accent transition-colors text-left w-full py-1">
+                          • {t(item)}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </GlassCard>
             </motion.div>
           ))}
         </div>
