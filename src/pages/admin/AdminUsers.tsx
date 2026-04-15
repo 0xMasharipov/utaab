@@ -131,7 +131,49 @@ export default function AdminUsers() {
         .order('created_at', { ascending: false });
 
       if (applicantsError) throw applicantsError;
-      setApplicants(applicantsData || []);
+
+      const communityApplicants = (applicantsData || []).map((a: any) => ({
+        ...a,
+        source: 'community' as const,
+      }));
+
+      // Fetch contributor assessments
+      const { data: assessmentsData, error: assessmentsError } = await supabase
+        .from('contributor_assessments')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (assessmentsError) throw assessmentsError;
+
+      const contributorApplicants = (assessmentsData || []).map((a: any) => {
+        const formData = a.form_data || {};
+        const aiResult = a.ai_result || {};
+        return {
+          id: a.id,
+          full_name: a.full_name,
+          email: a.email,
+          created_at: a.created_at,
+          department: formData.trackInterest || aiResult.primaryRole || 'Contributor',
+          experience_level: formData.experienceLevel || aiResult.primaryRole || 'N/A',
+          status: 'pending',
+          motivation: formData.motivation || formData.whyContribute || '',
+          availability_hours: formData.weeklyHours || null,
+          github_url: formData.githubUrl || formData.github_url || null,
+          linkedin_url: formData.linkedinUrl || formData.linkedin_url || null,
+          portfolio_url: formData.portfolioUrl || formData.portfolio_url || null,
+          interests: formData.interests || [],
+          preferred_tracks: formData.preferredTracks || [],
+          source: 'contributor' as const,
+          ai_result: aiResult,
+          form_data: formData,
+        };
+      });
+
+      // Merge and sort by date
+      const allApplicants = [...communityApplicants, ...contributorApplicants]
+        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+      setApplicants(allApplicants);
     } catch (error: any) {
       toast.error('Failed to load users: ' + error.message);
     } finally {
