@@ -286,7 +286,8 @@ export default function AdminUsers() {
       applicant.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       applicant.department?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === 'all' || applicant.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesSource = sourceFilter === 'all' || applicant.source === sourceFilter;
+    return matchesSearch && matchesStatus && matchesSource;
   });
 
   if (loading) {
