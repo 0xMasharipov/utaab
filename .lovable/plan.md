@@ -1,79 +1,63 @@
 
 
-# Replace Icons with Iconoir Across the Website
+# Update "What We Build" Cards with 3D Layered Visuals
 
 ## Summary
-Install `iconoir-react` and replace all lucide-react icon imports in custom components with Iconoir equivalents. Shadcn/ui internal components (accordion, dialog, etc.) will keep lucide-react since they depend on it — only user-facing feature/section icons change.
+Replace the icon-based cards with immersive 4-layer cards featuring the uploaded 3D images, dark gradient overlays, grid backgrounds, and elevated text — creating a premium Web3 aesthetic.
 
-## Scope — Files to Modify (~30 files)
+## Assets
+Copy the 4 uploaded images to `public/images/about/`:
+- `UTAAB_Education.png` — chain ring (Education)
+- `UTAAB_Projects_1.png` — cubes cluster (Projects)
+- `UTAAB_Ecosystem.png` — wireframe sphere (Ecosystem)
+- `UTAAB_Support.png` — pixel heart (Support)
 
-### Homepage Sections
-| File | Lucide Icons | Iconoir Replacements |
-|------|-------------|---------------------|
-| `Hero.tsx` | ArrowRight | NavArrowRight |
-| `AboutBlurb.tsx` | GraduationCap, Rocket, Globe, Heart, ArrowRight | GraduationCap, Rocket, Globe, Heart, NavArrowRight |
-| `Community.tsx` | ArrowRight, Rocket, Newspaper | NavArrowRight, Rocket, Newspaper |
-| `Events.tsx` | Calendar, MapPin, Users, Globe, ExternalLink, Loader2 | Calendar, MapPin, Group, Globe, OpenNewWindow, — (Loader2 stays lucide for spinner) |
-| `Projects.tsx` | ExternalLink, Coins, Search, CreditCard, ShieldCheck, Fingerprint, Vote | OpenNewWindow, BitcoinCircle, Search, CreditCard, ShieldCheck, Fingerprint, CommunityIcon |
-| `Learn.tsx` | BookOpen, Video, GraduationCap | Book, MediaVideoList, GraduationCap |
-| `Resources.tsx` | FileText, Code, BookMarked | Page, Code, BookmarkBook |
-| `BlogSection.tsx` | Loader2, ArrowRight | (Loader2 stays), NavArrowRight |
-| `Team.tsx` | User | User |
+## Changes
 
-### Navigation & Footer
-| File | Changes |
-|------|---------|
-| `Navbar.tsx` | X→Xmark, Globe→Globe, ChevronDown→NavArrowDown, User→User |
-| `Footer.tsx` | Linkedin→Linkedin, Instagram→Instagram, Twitter→X (Twitter), Send→SendDiagonal, Mail→Mail |
+### `src/components/AboutBlurb.tsx` — Card rewrite
 
-### Contributor Pages
-| File | Key Icons |
-|------|-----------|
-| `ContributorHero.tsx` | GitMerge→GitMerge, ArrowDown→NavArrowDown |
-| `ContributorArchetypes.tsx` | Hammer→Hammer, Search→Search, Settings→Settings, Users→Group, Palette→ColorFilter, Lightbulb→LightBulb |
-| `ContributorCTA.tsx` | ArrowRight→NavArrowRight, MessageCircle→ChatBubble |
-| `HowItWorks.tsx` | ClipboardList→ClipboardCheck, Brain→Brain, Target→Target |
-| `AssessmentForm.tsx` | ChevronLeft/Right→NavArrowLeft/Right, Send→SendDiagonal |
-| `AssessmentResult.tsx` | Award→Trophy, Star→StarSolid, TrendingUp→TrendUp, Target→Target, Zap→Flash, ArrowRight→NavArrowRight |
+Replace the current `GlassCard` inner content with a 4-layer structure per card:
 
-### Other Visible Pages
-| File | Key Icons |
-|------|-----------|
-| `About.tsx` | Various — map all to Iconoir equivalents |
-| `Blog.tsx` | Search, Calendar, etc. |
-| `BlogPost.tsx` | ArrowLeft, Calendar, Clock, etc. |
-| `PrivacyPopup.tsx` | X→Xmark, Shield→Shield, Cookie→Cookie, FileText→Page |
-| `FloatingPrivacyButton.tsx` | Shield icon |
-| `WhatsAppButton.tsx` | MessageCircle→ChatBubble, ExternalLink→OpenNewWindow |
-| `EducationNavbar.tsx` | Menu→Menu, X→Xmark, Globe→Globe, User→User, LogOut→LogOut |
+```text
+┌──────────────────────────┐
+│  TEXT (z-30)             │  Title + description, white, top-left or centered
+│                          │
+│  OVERLAY (z-20)          │  Linear gradient: transparent top → dark navy bottom (70% opacity)
+│                          │
+│  3D IMAGE (z-10)         │  Positioned bottom-right, ~70% card width, object-contain
+│                          │
+│  GRID BG (z-0)           │  Subtle dot/line grid pattern at ~5% opacity
+└──────────────────────────┘
+```
 
-### Pages with icon usage
-- `TermsOfService.tsx`, `PrivacyPolicy.tsx`, `KVKKRequest.tsx`, `ContributorMatch.tsx`
-- `Profile.tsx` and profile sub-components
-- Education pages (EducationHome, CourseDetail, etc.)
-- Admin pages (keep as-is or update — admin is internal)
+Each card becomes:
+- `relative overflow-hidden` container with fixed min-height (~280px)
+- **Layer 4 (base)**: CSS background grid pattern (repeating linear gradient, matching site style)
+- **Layer 3**: `<img>` absolutely positioned bottom-right, `w-[65%] h-auto`, with slight translate for off-center feel
+- **Layer 2**: Absolute div with `bg-gradient-to-t from-[hsl(217,50%,8%)/0.75] via-[hsl(217,50%,8%)/0.4] to-transparent`
+- **Layer 1 (top)**: Text content with `relative z-30`, white color, positioned at top-left with padding
 
-## Technical Approach
+Card data array adds an `image` field:
+```ts
+const cards = [
+  { image: '/images/about/UTAAB_Education.png', titleKey: '...', descriptionKey: '...' },
+  { image: '/images/about/UTAAB_Projects_1.png', ... },
+  { image: '/images/about/UTAAB_Ecosystem.png', ... },
+  { image: '/images/about/UTAAB_Support.png', ... },
+];
+```
 
-1. **Install** `iconoir-react` via npm
-2. **Create** `src/components/common/IconProvider.tsx` — wrap app with `IconoirProvider` setting `strokeWidth={1.5}` globally for consistency
-3. **Replace imports** file by file: change `from 'lucide-react'` to `from 'iconoir-react'` with mapped names
-4. **Keep lucide-react** installed — shadcn/ui components depend on it
-5. **Loader2 (spinner)** stays as lucide since Iconoir doesn't have an animated spinner equivalent
-6. **Add subtle glow** via a utility class `.icon-glow` applied to icon containers in feature sections
+Icons removed from cards (no longer needed). Imports for `GraduationCap, Rocket, Globe, Heart` removed.
 
-## Visual Enhancement
-- Add `.icon-glow` CSS class: `filter: drop-shadow(0 0 6px hsl(var(--accent) / 0.3))`
-- Apply to icon containers in AboutBlurb, Projects, Learn, Resources, Events cards
-- Hover effect: scale(1.05) + increased glow opacity (already exists on most cards)
+Keep: GlassCard wrapper (for border/backdrop-blur), motion animations, i18n keys, grid layout, Link button below.
 
-## What Does NOT Change
-- Layout, spacing, text, structure
-- Admin/CMS functionality and connections
-- shadcn/ui internal icons (accordion, dialog, select, etc.)
-- Backend logic, edge functions, database
-- Loader/spinner animations (keep Loader2 from lucide)
+### No other files modified
+- Layout grid stays `lg:grid-cols-4`
+- Section heading/blurb untouched
+- "Learn More" link untouched
+- No i18n changes, no admin changes
 
 ## Files Modified
-~30 component files (icon imports only) + `index.css` (add `.icon-glow` class) + `package.json` (add iconoir-react)
+- `src/components/AboutBlurb.tsx` — card inner structure rewrite
+- `public/images/about/` — 4 new image assets copied
 
