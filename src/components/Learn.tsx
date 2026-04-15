@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { BookOpen, Video, GraduationCap } from 'lucide-react';
+import { Book, MediaVideoList, GraduationCap } from 'iconoir-react';
 import { useNavigate } from 'react-router-dom';
 
 export const Learn = () => {
@@ -13,13 +13,13 @@ export const Learn = () => {
 
   const resources = [
     {
-      icon: BookOpen,
+      icon: Book,
       title: t('learn.guides'),
       description: t('learn.guidesDescription'),
       path: '/learn/guides',
     },
     {
-      icon: Video,
+      icon: MediaVideoList,
       title: t('learn.tutorials'),
       description: t('learn.tutorialsDescription'),
       path: '/education',
@@ -59,7 +59,7 @@ export const Learn = () => {
               onClick={() => navigate(resource.path)}
               className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:bg-white/10 transition-all duration-300 group cursor-pointer"
             >
-              <resource.icon className="h-10 w-10 sm:h-12 sm:w-12 text-accent mb-3 sm:mb-4" />
+              <resource.icon className="h-10 w-10 sm:h-12 sm:w-12 text-accent mb-3 sm:mb-4 icon-glow" strokeWidth={1.5} />
               <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2 sm:mb-3">{resource.title}</h3>
               <p className="text-muted-foreground">{resource.description}</p>
             </motion.div>

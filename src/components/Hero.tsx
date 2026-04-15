@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowRight } from 'lucide-react';
+import { NavArrowRight } from 'iconoir-react';
 
 export const Hero = () => {
   const { t } = useTranslation();
@@ -197,7 +197,7 @@ export const Hero = () => {
               className="hero-btn-primary group/btn rounded-full text-white text-[15px] tracking-wide transition-all duration-300 hover:scale-105 w-full sm:w-auto flex items-center justify-center gap-2"
             >
               {t('hero.explore')}
-              <ArrowRight size={16} className="transition-transform duration-300 group-hover/btn:translate-x-1" />
+              <NavArrowRight width={16} height={16} className="transition-transform duration-300 group-hover/btn:translate-x-1" strokeWidth={1.5} />
             </button>
 
             <button
@@ -205,7 +205,7 @@ export const Hero = () => {
               className="hero-btn-outline group rounded-full text-[15px] tracking-wide transition-all duration-300 hover:scale-105 w-full sm:w-auto flex items-center justify-center gap-2"
             >
               {t('hero.joinUs')}
-              <ArrowRight size={16} className="transition-transform duration-300 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0" />
+              <NavArrowRight width={16} height={16} className="transition-transform duration-300 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0" strokeWidth={1.5} />
             </button>
           </motion.div>
         </div>
