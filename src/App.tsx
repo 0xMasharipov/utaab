@@ -50,6 +50,7 @@ const AdminContributorAssessments = lazy(() => import("./pages/admin/AdminContri
 const EducationalGuides = lazy(() => import("./pages/learn/EducationalGuides"));
 const Workshops = lazy(() => import("./pages/learn/Workshops"));
 const About = lazy(() => import("./pages/About"));
+const Unsubscribe = lazy(() => import("./pages/Unsubscribe"));
 
 const queryClient = new QueryClient();
 
@@ -122,6 +123,7 @@ function App() {
             <Route path="/kvkk-request" element={<KVKKRequest />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/unsubscribe" element={<Unsubscribe />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           </Suspense>
