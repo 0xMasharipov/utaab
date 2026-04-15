@@ -1,26 +1,22 @@
 
 
-# Replace Rocket Icon on Workshops Page
+# Remove Rocket Blue Background & Make It Bigger
 
 ## Summary
-Replace the Lucide `Rocket` SVG icon with the uploaded `ROCKET.webp` image and remove the wiggling (bounce) animation.
+Remove the blue-tinted container background behind the rocket image and increase the image size for more visual impact.
 
 ## Changes
 
 ### `src/pages/learn/Workshops.tsx`
-1. Remove `Rocket` import from `lucide-react`
-2. Replace the `<motion.div animate={{ y: [0, -8, 0] }}>` wrapper (lines 23-29) with a static `<div>` containing an `<img>` tag pointing to `/images/rocket.webp`
-3. Keep the container styling (`w-16 h-16 rounded-2xl bg-primary/20 mb-8`) but remove the infinite bounce animation
-4. Image sized to fit within the container (~`w-10 h-10 object-contain`)
-
-### Asset
-- Copy `ROCKET.webp` to `public/images/rocket.webp`
+- **Line 23**: Remove `bg-primary/20` from the wrapper `div` — this eliminates the blue background
+- **Line 23**: Increase wrapper size from `w-16 h-16` to `w-24 h-24`
+- **Line 24**: Increase image size from `w-10 h-10` to `w-16 h-16`
+- Keep `rounded-2xl`, `mb-8`, and centering classes
 
 ### What does NOT change
-- Page layout, text, translations, glass card, blob background
-- Navbar, Footer
+- Page layout, text, translations, glass card
+- Navbar, Footer, blob background
 
 ## Files Modified
-- `src/pages/learn/Workshops.tsx` — icon swap + remove animation
-- `public/images/rocket.webp` — new asset
+- `src/pages/learn/Workshops.tsx` — remove blue bg, resize icon
 
