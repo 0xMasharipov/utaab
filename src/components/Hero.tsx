@@ -39,12 +39,12 @@ export const Hero = () => {
       ? '/videos/hero-tablet.mp4'
       : '/videos/hero-cube.mp4';
 
-  const scrollToJoin = () => {
-    document.getElementById('join')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   const scrollToProjects = () => {
     document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const scrollToJoin = () => {
+    document.getElementById('join')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -97,8 +97,6 @@ export const Hero = () => {
           pointerEvents: 'none',
         }}
       />
-
-      {/* Bottom fade removed — carousel handles transition */}
 
       {/* Content */}
       <div
@@ -161,7 +159,7 @@ export const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.25 }}
-            className="font-montserrat mb-8 text-base md:text-lg lg:text-xl"
+            className="font-montserrat mb-3 text-base md:text-lg lg:text-xl"
             style={{
               fontWeight: 400,
               color: 'rgba(230,238,248,0.72)',
@@ -171,26 +169,42 @@ export const Hero = () => {
             {t('hero.description')}
           </motion.p>
 
-          {/* Buttons */}
+          {/* Supporting line */}
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.35 }}
+            className="font-montserrat mb-8 text-sm md:text-base"
+            style={{
+              fontWeight: 500,
+              color: 'rgba(127,179,255,0.55)',
+              maxWidth: 480,
+              fontStyle: 'italic',
+            }}
+          >
+            {t('hero.supportingLine')}
+          </motion.p>
+
+          {/* Buttons — Explore Projects (primary) then Join the Movement (outline) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ duration: 0.6, delay: 0.45 }}
             className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
           >
             <button
-              onClick={scrollToJoin}
+              onClick={scrollToProjects}
               className="hero-btn-primary group/btn rounded-full text-white text-[15px] tracking-wide transition-all duration-300 hover:scale-105 w-full sm:w-auto flex items-center justify-center gap-2"
             >
-              {t('hero.joinUs')}
+              {t('hero.explore')}
               <ArrowRight size={16} className="transition-transform duration-300 group-hover/btn:translate-x-1" />
             </button>
 
             <button
-              onClick={scrollToProjects}
+              onClick={scrollToJoin}
               className="hero-btn-outline group rounded-full text-[15px] tracking-wide transition-all duration-300 hover:scale-105 w-full sm:w-auto flex items-center justify-center gap-2"
             >
-              {t('hero.explore')}
+              {t('hero.joinUs')}
               <ArrowRight size={16} className="transition-transform duration-300 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0" />
             </button>
           </motion.div>

@@ -50,12 +50,13 @@
     "privacyNotice": "Devam ederek Gizlilik Politikamızı ve KVKK uyumluluğumuzu kabul etmiş olursunuz. Kötüye kullanımı önlemek için doğrulama araçları kullanırız."
   },
   "hero": {
-    "tagline": "BAĞLAN · ÖĞREN · İNŞA ET",
-    "headline": "Yeni Nesil için Akademik Blokzincir",
-    "headlineHighlight": "Altyapısı",
-    "description": "UTAAB, üniversiteleri, araştırmacıları ve yenilikçileri merkeziyetsiz teknolojilerle birleştiren akademik blokzincir altyapısı kurar.",
-    "joinUs": "Bize Katıl",
-    "explore": "Ekosistemi Keşfet"
+    "tagline": "ÖĞREN · İNŞA ET · ETKİ YARAT",
+    "headline": "Web3'te Öğrenmekten",
+    "headlineHighlight": "İnşa Etmeye",
+    "description": "UTAAB, öğrencilerin gerçek dünya projeleri, eğitim ve iş birliğiyle inşaatçılara dönüştüğü bir ekosistemdir.",
+    "supportingLine": "Sadece bir topluluk değil — gerçek dünyada etki yaratan bir platform.",
+    "joinUs": "Harekete Katıl",
+    "explore": "Projeleri Keşfet"
   },
   "stats": {
     "members": "Üye",
@@ -1308,9 +1309,15 @@
     }
   },
   "about": {
-    "title": "UTAAB Nedir?",
-    "blurb": "UTAAB, yeni nesil Web3 geliştiricileri için gerçek dünya araçları, eğitim ve topluluk oluşturan üniversite kökenli bir blockchain ekosistemidir.",
-    "learnMore": "UTAAB Hakkında Daha Fazla"
+    "title": "Ne İnşa Ediyoruz",
+    "blurb": "Sadece öğretmiyoruz — inşa ediyor, başlatıyor ve gerçek etki yaratıyoruz.",
+    "learnMore": "UTAAB Hakkında Daha Fazla",
+    "cards": {
+      "education": { "title": "Eğitim", "description": "Web3 geliştirme için atölyeler, mentorluk ve yapılandırılmış öğrenme." },
+      "projects": { "title": "Gerçek Projeler", "description": "Gerçek dünya uygulamalarıyla blockchain tabanlı çözümler geliştirme." },
+      "ecosystem": { "title": "Ekosistem", "description": "Öğrencileri, geliştiricileri ve yenilikçileri aktif bir ağda birleştirme." },
+      "support": { "title": "Destek", "description": "Finansal, zihinsel ve profesyonel büyümeyi mümkün kılma." }
+    }
   },
   "aboutPage": {
     "hero": {

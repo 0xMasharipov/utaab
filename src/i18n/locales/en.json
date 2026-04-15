@@ -50,12 +50,13 @@
     "privacyNotice": "By continuing, you agree to our Privacy Policy and KVKK compliance. We use verification tools to prevent abuse."
   },
   "hero": {
-    "tagline": "CONNECT · LEARN · BUILD",
-    "headline": "Academic Blockchain Infrastructure for the",
-    "headlineHighlight": "Next Generation",
-    "description": "UTAAB builds academic blockchain infrastructure connecting universities, researchers and innovators through decentralized technologies.",
-    "joinUs": "Join Us",
-    "explore": "Explore Ecosystem"
+    "tagline": "LEARN · BUILD · IMPACT",
+    "headline": "From Learning to Building in",
+    "headlineHighlight": "Web3",
+    "description": "UTAAB is an ecosystem where students become builders through real-world projects, education, and collaboration.",
+    "supportingLine": "Not just a community — a platform for real-world impact.",
+    "joinUs": "Join the Movement",
+    "explore": "Explore Projects"
   },
   "stats": {
     "members": "Members",
@@ -1308,9 +1309,15 @@
     }
   },
   "about": {
-    "title": "What is UTAAB?",
-    "blurb": "UTAAB is a university-born blockchain ecosystem building real-world tools, education, and community for the next generation of Web3 builders.",
-    "learnMore": "Learn More About UTAAB"
+    "title": "What We Build",
+    "blurb": "We don't just teach — we build, launch, and create real impact.",
+    "learnMore": "Learn More About UTAAB",
+    "cards": {
+      "education": { "title": "Education", "description": "Workshops, mentorship, and structured learning for Web3 development." },
+      "projects": { "title": "Real Projects", "description": "Building blockchain-based solutions with real-world applications." },
+      "ecosystem": { "title": "Ecosystem", "description": "Connecting students, developers, and innovators into an active network." },
+      "support": { "title": "Support", "description": "Enabling financial, mental, and professional growth." }
+    }
   },
   "aboutPage": {
     "hero": {
