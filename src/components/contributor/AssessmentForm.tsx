@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Send } from 'lucide-react';
+import { NavArrowLeft, NavArrowRight, SendDiagonal } from 'iconoir-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -349,15 +349,15 @@ const AssessmentForm = ({ onSubmit, isSubmitting }: AssessmentFormProps) => {
               disabled={step === 0}
               className="bg-white/[0.04] border-white/[0.1] hover:bg-white/[0.08]"
             >
-              <ChevronLeft className="w-4 h-4 mr-1" /> {t('contributor.form.previous')}
+              <NavArrowLeft className="w-4 h-4 mr-1" strokeWidth={1.5} /> {t('contributor.form.previous')}
             </Button>
             {step < STEPS.length - 1 ? (
               <Button onClick={nextStep} className="bg-primary/80 hover:bg-primary text-primary-foreground">
-                {t('contributor.form.next')} <ChevronRight className="w-4 h-4 ml-1" />
+                {t('contributor.form.next')} <NavArrowRight className="w-4 h-4 ml-1" strokeWidth={1.5} />
               </Button>
             ) : (
               <Button onClick={handleSubmit} disabled={isSubmitting} className="bg-primary/80 hover:bg-primary text-primary-foreground">
-                {isSubmitting ? t('contributor.form.submitting') : t('contributor.form.submitAssessment')} <Send className="w-4 h-4 ml-2" />
+                {isSubmitting ? t('contributor.form.submitting') : t('contributor.form.submitAssessment')} <SendDiagonal className="w-4 h-4 ml-2" strokeWidth={1.5} />
               </Button>
             )}
           </div>

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { X, Shield, Cookie, FileText } from 'lucide-react';
+import { Xmark, Shield, Cookie, Page } from 'iconoir-react';
 import { Switch } from '@/components/ui/switch';
 
 interface PrivacyPopupProps {
@@ -214,7 +214,7 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                 {/* Header */}
                 <div className="flex items-start justify-between mb-6">
                   <div className="flex items-start gap-3 flex-1">
-                    <Shield className="h-7 w-7 text-accent flex-shrink-0 mt-0.5" aria-hidden="true" />
+                    <Shield className="h-7 w-7 text-accent flex-shrink-0 mt-0.5" aria-hidden="true" strokeWidth={1.5} />
                     <div className="flex-1">
                       <h2 
                         id="privacy-popup-title" 
@@ -236,7 +236,7 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                     className="text-muted-foreground hover:text-foreground transition-colors p-2 rounded-lg hover:bg-white/10 -mt-1 flex-shrink-0 ml-2"
                     aria-label={t('common.close')}
                   >
-                    <X className="h-5 w-5" />
+                    <Xmark className="h-5 w-5" strokeWidth={1.5} />
                   </button>
                 </div>
 
@@ -247,7 +247,7 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                       onClick={handleCustomize}
                       className="inline-flex items-center gap-1.5 text-accent hover:text-accent/90 transition-colors font-medium hover:underline underline-offset-4"
                     >
-                      <FileText className="h-4 w-4" />
+                       <Page className="h-4 w-4" strokeWidth={1.5} />
                       {t('privacy.center.links.kvkkNotice')}
                     </button>
                     <span className="text-muted-foreground/50">•</span>
@@ -255,7 +255,7 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                       onClick={handleCustomize}
                       className="inline-flex items-center gap-1.5 text-accent hover:text-accent/90 transition-colors font-medium hover:underline underline-offset-4"
                     >
-                      <FileText className="h-4 w-4" />
+                      <Page className="h-4 w-4" strokeWidth={1.5} />
                       {t('privacy.center.links.privacyPolicy')}
                     </button>
                     <span className="text-muted-foreground/50">•</span>
@@ -263,7 +263,7 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                       onClick={() => setShowPreferences(!showPreferences)}
                       className="inline-flex items-center gap-1.5 text-accent hover:text-accent/90 transition-colors font-medium hover:underline underline-offset-4"
                     >
-                      <Cookie className="h-4 w-4" />
+                      <Cookie className="h-4 w-4" strokeWidth={1.5} />
                       {t('privacy.center.links.cookiePolicy')}
                     </button>
                   </div>

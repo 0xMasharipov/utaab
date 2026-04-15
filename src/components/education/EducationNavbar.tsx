@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Globe, User, LogOut } from 'lucide-react';
+import { Menu, Xmark, Globe, User, LogOut } from 'iconoir-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -270,7 +270,7 @@ export const EducationNavbar = () => {
                   className="glass hover:bg-white/10 rounded-full px-3 min-w-[52px] justify-center"
                   aria-label="Select language"
                 >
-                  <Globe className="h-4 w-4 sm:mr-2" />
+                  <Globe className="h-4 w-4 sm:mr-2" strokeWidth={1.5} />
                   <span className="hidden sm:inline">{currentLanguage.flag}</span>
                 </Button>
               </DropdownMenuTrigger>
@@ -304,7 +304,7 @@ export const EducationNavbar = () => {
                     size="sm"
                     className="glass hover:bg-white/10 rounded-full px-3"
                   >
-                    <User className="h-4 w-4" />
+                    <User className="h-4 w-4" strokeWidth={1.5} />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
@@ -312,12 +312,12 @@ export const EducationNavbar = () => {
                   className="glass-strong border-white/20 backdrop-blur-2xl rounded-2xl z-[100]"
                 >
                   <DropdownMenuItem onClick={() => navigate('/education/profile')}>
-                    <User className="h-4 w-4 mr-2" />
+                     <User className="h-4 w-4 mr-2" strokeWidth={1.5} />
                     {t('educationNav.profile')}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-white/10" />
                   <DropdownMenuItem onClick={handleSignOut}>
-                    <LogOut className="h-4 w-4 mr-2" />
+                     <LogOut className="h-4 w-4 mr-2" strokeWidth={1.5} />
                     {t('educationNav.signOut')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -341,7 +341,7 @@ export const EducationNavbar = () => {
               aria-expanded={isMobileMenuOpen}
               aria-controls="education-mobile-menu"
             >
-              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isMobileMenuOpen ? <Xmark className="h-6 w-6" strokeWidth={1.5} /> : <Menu className="h-6 w-6" strokeWidth={1.5} />}
             </button>
           </div>
         </div>
@@ -396,7 +396,7 @@ export const EducationNavbar = () => {
                     className="text-white hover:text-accent transition-colors p-2 rounded-full hover:bg-white/20"
                     aria-label={t('educationNav.closeMenu')}
                   >
-                    <X className="h-6 w-6" />
+                    <Xmark className="h-6 w-6" strokeWidth={1.5} />
                   </button>
                 </div>
 

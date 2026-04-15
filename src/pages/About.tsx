@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { GraduationCap, Wrench, Network, Heart, Rocket, Globe, TrendingUp, ArrowRight, Users2 } from 'lucide-react';
+import { GraduationCap, Wrench, Network, Heart, Rocket, Globe, GraphUp, NavArrowRight, Group } from 'iconoir-react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
@@ -35,7 +35,7 @@ const About = () => {
   const impact = [
     { icon: Rocket, titleKey: 'aboutPage.impact.projects.title', descKey: 'aboutPage.impact.projects.description' },
     { icon: Globe, titleKey: 'aboutPage.impact.initiatives.title', descKey: 'aboutPage.impact.initiatives.description' },
-    { icon: TrendingUp, titleKey: 'aboutPage.impact.outcomes.title', descKey: 'aboutPage.impact.outcomes.description' },
+    { icon: GraphUp, titleKey: 'aboutPage.impact.outcomes.title', descKey: 'aboutPage.impact.outcomes.description' },
   ];
 
   const whyItems = [
@@ -149,7 +149,7 @@ const About = () => {
             >
               <GlassCard hover glow className="p-6 sm:p-8 text-center h-full group">
                 <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-5">
-                  <item.icon className="h-8 w-8 text-accent group-hover:scale-110 transition-transform" />
+                  <item.icon className="h-8 w-8 text-accent group-hover:scale-110 transition-transform icon-glow" strokeWidth={1.5} />
                 </div>
                 <h3 className={getTransitionClasses("text-lg font-bold text-foreground mb-2")}>{t(item.titleKey)}</h3>
                 <p className={getTransitionClasses("text-muted-foreground text-sm leading-relaxed")}>{t(item.descKey)}</p>
@@ -192,7 +192,7 @@ const About = () => {
               <GlassCard hover className="p-8 text-center h-full group">
                 <div className="w-20 h-20 mx-auto mb-5 rounded-full p-[2px] bg-gradient-to-br from-accent/30 via-primary/20 to-accent/15">
                   <div className="w-full h-full rounded-full bg-background/40 flex items-center justify-center">
-                    <item.icon className="h-10 w-10 text-accent group-hover:scale-110 transition-transform" />
+                    <item.icon className="h-10 w-10 text-accent group-hover:scale-110 transition-transform icon-glow" strokeWidth={1.5} />
                   </div>
                 </div>
                 <h3 className={getTransitionClasses("text-xl font-bold text-foreground mb-3")}>{t(item.titleKey)}</h3>
@@ -217,7 +217,7 @@ const About = () => {
             <div className="w-[500px] h-[300px] bg-accent/[0.06] rounded-full blur-3xl" />
           </div>
           <GlassCard variant="strong" className="relative p-10 sm:p-16 text-center max-w-3xl mx-auto">
-            <Users2 className="h-12 w-12 text-accent mx-auto mb-6" />
+            <Group className="h-12 w-12 text-accent mx-auto mb-6" strokeWidth={1.5} />
             <h2 className={getTransitionClasses("text-3xl sm:text-4xl font-bold text-foreground mb-6")}>
               {t('aboutPage.cta.title')}
             </h2>
@@ -227,7 +227,7 @@ const About = () => {
                 className="bg-accent hover:bg-accent/90 text-accent-foreground rounded-full px-8 py-3 text-base"
               >
                 {t('aboutPage.cta.joinButton')}
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <NavArrowRight className="ml-2 h-4 w-4" strokeWidth={1.5} />
               </Button>
               <Button
                 variant="outline"

@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Search, Calendar, Loader2 } from 'lucide-react';
+import { Search, Calendar } from 'iconoir-react';
+import { Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Navbar } from '@/components/Navbar';
@@ -108,7 +109,7 @@ const Blog = () => {
                     <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 group-hover:text-accent transition-colors">{featuredTitle}</h2>
                     {featuredExcerpt && <p className="text-muted-foreground mb-4 line-clamp-3">{featuredExcerpt}</p>}
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Calendar className="h-4 w-4" />
+                      <Calendar className="h-4 w-4" strokeWidth={1.5} />
                       <span>{featured.publish_date ? format(new Date(featured.publish_date), 'MMMM d, yyyy') : ''}</span>
                     </div>
                   </div>
@@ -124,7 +125,7 @@ const Blog = () => {
         <div className="section-container">
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
               <Input
                 placeholder={t('blog.search', 'Search posts...')}
                 value={search}

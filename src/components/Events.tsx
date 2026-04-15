@@ -2,7 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Calendar, MapPin, Users, Globe, ExternalLink, Loader2 } from 'lucide-react';
+import { Calendar, MapPin, Group, Globe, OpenNewWindow } from 'iconoir-react';
+import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -47,13 +48,13 @@ export const Events = () => {
       <div className="space-y-2">
         {(locationType === 'physical' || locationType === 'hybrid') && event.location_address && (
           <div className="flex items-center gap-2">
-            <MapPin className="h-5 w-5 text-accent flex-shrink-0" />
+            <MapPin className="h-5 w-5 text-accent flex-shrink-0" strokeWidth={1.5} />
             <span className="text-muted-foreground">{event.location_address}</span>
           </div>
         )}
         {(locationType === 'online' || locationType === 'hybrid') && (
           <div className="flex items-center gap-2">
-            <Globe className="h-5 w-5 text-accent flex-shrink-0" />
+            <Globe className="h-5 w-5 text-accent flex-shrink-0" strokeWidth={1.5} />
             <span className="text-muted-foreground">{t('events.onlineEvent')}</span>
             {event.location_online_link && (
               <a 
@@ -62,7 +63,7 @@ export const Events = () => {
                 rel="noopener noreferrer"
                 className="text-accent hover:underline inline-flex items-center gap-1"
               >
-                <ExternalLink className="h-4 w-4" />
+                <OpenNewWindow className="h-4 w-4" strokeWidth={1.5} />
               </a>
             )}
           </div>
@@ -96,7 +97,7 @@ export const Events = () => {
       )}
       <div className="space-y-3 text-muted-foreground">
         <div className="flex items-center gap-2">
-          <Calendar className="h-5 w-5 text-accent" />
+          <Calendar className="h-5 w-5 text-accent" strokeWidth={1.5} />
           <span>
             {format(new Date(event.start_date), 'PPP')}
             {event.end_date && ` - ${format(new Date(event.end_date), 'PPP')}`}
@@ -105,8 +106,8 @@ export const Events = () => {
         {renderLocationInfo(event)}
         {event.capacity && (
           <div className="flex items-center gap-2">
-            <Users className="h-5 w-5 text-accent" />
-            <span>{t('events.capacity', { count: event.capacity })}</span>
+             <Group className="h-5 w-5 text-accent" strokeWidth={1.5} />
+             <span>{t('events.capacity', { count: event.capacity })}</span>
           </div>
         )}
       </div>

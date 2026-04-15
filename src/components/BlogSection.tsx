@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Loader2, ArrowRight } from 'lucide-react';
+import { NavArrowRight } from 'iconoir-react';
+import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -63,7 +64,7 @@ export const BlogSection = () => {
               <Link to="/blog">
                 <Button variant="outline" className="rounded-full gap-2 border-white/20 hover:bg-white/[0.08]">
                   {t('blog.viewAll', 'View All Posts')}
-                  <ArrowRight className="h-4 w-4" />
+                  <NavArrowRight className="h-4 w-4" strokeWidth={1.5} />
                 </Button>
               </Link>
             </motion.div>

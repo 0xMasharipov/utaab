@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { GraduationCap, Rocket, Globe, Heart, ArrowRight } from 'lucide-react';
+import { GraduationCap, Rocket, Globe, Heart, NavArrowRight } from 'iconoir-react';
 
 import { Link } from 'react-router-dom';
 import GlassCard from '@/components/glass/GlassCard';
@@ -61,8 +61,8 @@ export const AboutBlurb = () => {
               transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
             >
               <GlassCard hover className="p-6 sm:p-8 text-center h-full group">
-                <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
-                  <card.icon className="h-7 w-7 text-accent" />
+                <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors icon-glow">
+                  <card.icon className="h-7 w-7 text-accent" strokeWidth={1.5} />
                 </div>
                 <h3 className="text-lg font-bold text-foreground mb-2">
                   {t(card.titleKey)}
@@ -86,7 +86,7 @@ export const AboutBlurb = () => {
             className="group inline-flex items-center gap-2.5 px-8 py-3 rounded-full text-[15px] font-semibold tracking-wide text-foreground bg-white/[0.06] backdrop-blur-xl border border-white/[0.12] transition-all duration-300 hover:border-accent/40 hover:bg-white/[0.10] hover:shadow-[0_0_24px_hsl(var(--accent)/0.2)]"
           >
             {t('about.learnMore')}
-            <ArrowRight className="h-4 w-4 opacity-70 transition-all duration-300 group-hover:translate-x-1.5 group-hover:opacity-100" />
+            <NavArrowRight className="h-4 w-4 opacity-70 transition-all duration-300 group-hover:translate-x-1.5 group-hover:opacity-100" strokeWidth={1.5} />
           </Link>
         </motion.div>
       </div>

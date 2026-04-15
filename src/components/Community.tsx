@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { ArrowRight, Rocket, Newspaper } from 'lucide-react';
+import { NavArrowRight, Rocket, Journal } from 'iconoir-react';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 import { Link } from 'react-router-dom';
 
@@ -47,7 +47,7 @@ export const Community = () => {
             onClick={() => scrollToSection('join')}
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-accent/20 border border-accent/30 text-accent font-semibold backdrop-blur-sm hover:bg-accent/30 hover:border-accent/50 hover:shadow-[0_0_30px_hsl(var(--accent)/0.25)] transition-all duration-300"
           >
-            <ArrowRight className="h-5 w-5" />
+            <NavArrowRight className="h-5 w-5" strokeWidth={1.5} />
             <span className={getTransitionClasses()}>{t('community.cta.joinBtn')}</span>
           </button>
 
@@ -56,7 +56,7 @@ export const Community = () => {
             onClick={() => scrollToSection('projects')}
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full border border-border/40 text-foreground font-semibold backdrop-blur-sm hover:bg-white/[0.06] hover:border-border/60 transition-all duration-300"
           >
-            <Rocket className="h-5 w-5" />
+            <Rocket className="h-5 w-5" strokeWidth={1.5} />
             <span className={getTransitionClasses()}>{t('community.cta.projectsBtn')}</span>
           </button>
 
@@ -65,7 +65,7 @@ export const Community = () => {
             to="/blog"
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-muted-foreground font-semibold hover:text-foreground hover:bg-white/[0.04] transition-all duration-300"
           >
-            <Newspaper className="h-5 w-5" />
+            <Journal className="h-5 w-5" strokeWidth={1.5} />
             <span className={getTransitionClasses()}>{t('community.cta.updatesBtn')}</span>
           </Link>
         </motion.div>

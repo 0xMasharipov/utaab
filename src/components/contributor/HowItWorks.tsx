@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
-import { ClipboardList, Brain, Target } from 'lucide-react';
+import { ClipboardCheck, Brain, Archery } from 'iconoir-react';
 import GlassCard from '@/components/glass/GlassCard';
 import { useTranslation } from 'react-i18next';
 
-const icons = [ClipboardList, Brain, Target];
+const icons = [ClipboardCheck, Brain, Archery];
 
 const HowItWorks = () => {
   const { t } = useTranslation();
@@ -40,7 +40,7 @@ const HowItWorks = () => {
             >
               <GlassCard hover glow className="p-8 h-full text-center">
                 <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center mx-auto mb-5">
-                  <step.icon className="w-7 h-7 text-secondary" />
+                  <step.icon className="w-7 h-7 text-secondary" strokeWidth={1.5} />
                 </div>
                 <div className="text-sm font-semibold text-secondary mb-2 tracking-wider uppercase">{t('contributor.howItWorks.step')} {i + 1}</div>
                 <h3 className="text-xl font-bold text-foreground mb-3">{step.title}</h3>

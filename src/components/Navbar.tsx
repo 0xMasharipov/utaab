@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { X, Globe, ChevronDown, User } from 'lucide-react';
+import { Xmark, Globe, NavArrowDown, User } from 'iconoir-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -180,7 +180,7 @@ export const Navbar = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm" className="glass hover:bg-white/10 rounded-full px-3 min-w-[52px] justify-center" aria-label="Select language">
-                    <Globe className="h-4 w-4 sm:mr-2" />
+                    <Globe className="h-4 w-4 sm:mr-2" strokeWidth={1.5} />
                     <span className="hidden sm:inline">{currentLanguage.flag}</span>
                   </Button>
                 </DropdownMenuTrigger>
@@ -248,7 +248,7 @@ export const Navbar = () => {
                 className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 rounded-full bg-white/[0.08] hover:bg-white/[0.15] border border-white/10 transition-colors z-10"
                 aria-label={t('nav.close')}
               >
-                <X className="h-5 w-5 text-white/80" />
+                <Xmark className="h-5 w-5 text-white/80" strokeWidth={1.5} />
               </button>
               {/* 3-Column Navigation Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-12 lg:gap-20">
@@ -366,7 +366,7 @@ export const Navbar = () => {
                     onClick={() => handleNavigate('/education/sign-in')}
                     className="flex items-center justify-center gap-2 text-sm font-medium text-white/70 border border-white/[0.12] hover:bg-white/[0.08] transition-all duration-200 py-2 px-5 rounded-full bg-transparent"
                   >
-                    <User className="h-3.5 w-3.5 text-white/50" />
+                    <User className="h-3.5 w-3.5 text-white/50" strokeWidth={1.5} />
                     {t('nav.studentAuthOptions')}
                   </button>
                 </div>

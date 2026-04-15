@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Hammer, Search, Settings, Users, Palette, Lightbulb } from 'lucide-react';
+import { Hammer, Search, Settings, Group, Palette, LightBulb } from 'iconoir-react';
 import GlassCard from '@/components/glass/GlassCard';
 import { useTranslation } from 'react-i18next';
 
@@ -26,7 +26,7 @@ const ContributorArchetypes = () => {
       roles: [t('contributor.archetypes.roles.operations'), t('contributor.archetypes.roles.strategy'), t('contributor.archetypes.roles.events')],
     },
     {
-      icon: Users,
+      icon: Group,
       name: t('contributor.archetypes.connector'),
       description: t('contributor.archetypes.connectorDesc'),
       roles: [t('contributor.archetypes.roles.community'), t('contributor.archetypes.roles.partnerships'), t('contributor.archetypes.roles.events')],
@@ -38,7 +38,7 @@ const ContributorArchetypes = () => {
       roles: [t('contributor.archetypes.roles.design'), t('contributor.archetypes.roles.content')],
     },
     {
-      icon: Lightbulb,
+      icon: LightBulb,
       name: t('contributor.archetypes.strategist'),
       description: t('contributor.archetypes.strategistDesc'),
       roles: [t('contributor.archetypes.roles.strategy'), t('contributor.archetypes.roles.product'), t('contributor.archetypes.roles.partnerships')],
@@ -71,7 +71,7 @@ const ContributorArchetypes = () => {
             >
               <GlassCard hover className="p-7 h-full flex flex-col">
                 <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center mb-4">
-                  <a.icon className="w-6 h-6 text-secondary" />
+                  <a.icon className="w-6 h-6 text-secondary" strokeWidth={1.5} />
                 </div>
                 <h3 className="text-xl font-bold text-foreground mb-2">{a.name}</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-1">{a.description}</p>

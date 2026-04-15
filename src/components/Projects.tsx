@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { ExternalLink, Coins, Search, CreditCard, ShieldCheck, Fingerprint, Vote } from 'lucide-react';
+import { Coins, Search, CreditCard, ShieldCheck, Fingerprint, Community } from 'iconoir-react';
 import { Button } from '@/components/ui/button';
 import GlassCard from '@/components/glass/GlassCard';
 
@@ -62,7 +62,7 @@ export const Projects = () => {
       descriptionKey: 'projects.dao.description',
       tags: ['projects.tags.governance', 'projects.tags.dao', 'projects.tags.community'],
       status: 'planning',
-      icon: Vote,
+      icon: Community,
     },
   ];
 
@@ -93,9 +93,9 @@ export const Projects = () => {
             >
               <GlassCard hover className="p-5 sm:p-6 group flex flex-col h-full">
                 <div className="flex items-start gap-4 mb-4">
-                  <div className="w-11 h-11 rounded-xl bg-accent/10 flex items-center justify-center shrink-0 group-hover:bg-accent/20 transition-colors">
-                    <project.icon className="h-5 w-5 text-accent" />
-                  </div>
+                   <div className="w-11 h-11 rounded-xl bg-accent/10 flex items-center justify-center shrink-0 group-hover:bg-accent/20 transition-colors icon-glow">
+                     <project.icon className="h-5 w-5 text-accent" strokeWidth={1.5} />
+                   </div>
                   <div>
                     <span
                       className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-semibold mb-1 ${

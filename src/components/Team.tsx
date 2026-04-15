@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { User } from 'lucide-react';
+import { User } from 'iconoir-react';
 import GlassCard from '@/components/glass/GlassCard';
 import GlassSectionWrapper from '@/components/glass/GlassSectionWrapper';
 import AnimatedImage from '@/components/common/AnimatedImage';
@@ -86,7 +86,7 @@ export const Team = () => {
                       containerClassName="w-full h-full"
                     />
                   ) : (
-                    <User className="w-8 h-8 text-muted-foreground group-hover:text-accent transition-colors duration-300" />
+                    <User className="w-8 h-8 text-muted-foreground group-hover:text-accent transition-colors duration-300" strokeWidth={1.5} />
                   )}
                 </div>
               </div>
