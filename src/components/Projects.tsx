@@ -2,8 +2,6 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Coins, Search, CreditCard, ShieldCheck, Fingerprint, Community } from 'iconoir-react';
-import { Button } from '@/components/ui/button';
 import GlassCard from '@/components/glass/GlassCard';
 
 type ProjectStatus = 'underDevelopment' | 'planning';
@@ -13,7 +11,7 @@ interface Project {
   descriptionKey: string;
   tags: string[];
   status: ProjectStatus;
-  icon: React.ElementType;
+  image: string;
 }
 
 export const Projects = () => {
@@ -27,42 +25,42 @@ export const Projects = () => {
       descriptionKey: 'projects.ubp.description',
       tags: ['projects.tags.rewards', 'projects.tags.community', 'projects.tags.engagement'],
       status: 'underDevelopment',
-      icon: Coins,
+      image: '/images/projects/UTAAB_UBP.png',
     },
     {
       titleKey: 'projects.tonra.title',
       descriptionKey: 'projects.tonra.description',
       tags: ['projects.tags.ton', 'projects.tags.research', 'projects.tags.academic'],
       status: 'underDevelopment',
-      icon: Search,
+      image: '/images/projects/UTAAB_TonRa.png',
     },
     {
       titleKey: 'projects.asn.title',
       descriptionKey: 'projects.asn.description',
       tags: ['projects.tags.payments', 'projects.tags.blockchain', 'projects.tags.university'],
       status: 'planning',
-      icon: CreditCard,
+      image: '/images/projects/UTAAB_ASN.png',
     },
     {
       titleKey: 'projects.dvs.title',
       descriptionKey: 'projects.dvs.description',
       tags: ['projects.tags.identity', 'projects.tags.validation', 'projects.tags.nodes'],
       status: 'planning',
-      icon: ShieldCheck,
+      image: '/images/projects/UTAAB_DVS.png',
     },
     {
       titleKey: 'projects.did.title',
       descriptionKey: 'projects.did.description',
       tags: ['projects.tags.identity', 'projects.tags.privacy', 'projects.tags.layer2'],
       status: 'planning',
-      icon: Fingerprint,
+      image: '/images/projects/UTAAB_DID.png',
     },
     {
       titleKey: 'projects.dao.title',
       descriptionKey: 'projects.dao.description',
       tags: ['projects.tags.governance', 'projects.tags.dao', 'projects.tags.community'],
       status: 'planning',
-      icon: Community,
+      image: '/images/projects/UTAAB_DAO.png',
     },
   ];
 
@@ -91,14 +89,40 @@ export const Projects = () => {
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.5, delay: 0.15 + index * 0.07 }}
             >
-              <GlassCard hover className="p-5 sm:p-6 group flex flex-col h-full">
-                <div className="flex items-start gap-4 mb-4">
-                   <div className="w-11 h-11 rounded-xl bg-accent/10 flex items-center justify-center shrink-0 group-hover:bg-accent/20 transition-colors icon-glow">
-                     <project.icon className="h-5 w-5 text-accent" strokeWidth={1.5} />
-                   </div>
-                  <div>
+              <GlassCard className="relative overflow-hidden min-h-[260px] p-0 group flex flex-col">
+                {/* Layer 1: Grid background */}
+                <div
+                  className="absolute inset-0 z-0 opacity-[0.05]"
+                  style={{
+                    backgroundImage:
+                      'linear-gradient(to right, hsl(213 94% 68% / 0.4) 1px, transparent 1px), linear-gradient(to bottom, hsl(213 94% 68% / 0.4) 1px, transparent 1px)',
+                    backgroundSize: '40px 40px',
+                  }}
+                />
+
+                {/* Layer 2: 3D image */}
+                <img
+                  src={project.image}
+                  alt=""
+                  aria-hidden="true"
+                  loading="lazy"
+                  className="absolute bottom-0 right-0 w-[55%] z-10 opacity-[0.85] object-contain transition-transform duration-500 group-hover:scale-105 pointer-events-none select-none"
+                />
+
+                {/* Layer 3: Dark gradient overlay */}
+                <div
+                  className="absolute inset-0 z-20"
+                  style={{
+                    background:
+                      'linear-gradient(to top, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.45) 40%, rgba(0,0,0,0.25) 70%, transparent 100%)',
+                  }}
+                />
+
+                {/* Layer 4: Text content */}
+                <div className="relative z-30 p-5 sm:p-6 flex flex-col h-full">
+                  <div className="mb-3">
                     <span
-                      className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-semibold mb-1 ${
+                      className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-semibold ${
                         project.status === 'underDevelopment'
                           ? 'bg-accent/15 text-accent'
                           : 'bg-muted/30 text-muted-foreground'
@@ -106,25 +130,26 @@ export const Projects = () => {
                     >
                       {t(`projects.status.${project.status}`)}
                     </span>
-                    <h3 className="text-lg font-bold text-foreground group-hover:text-accent transition-colors leading-tight">
-                      {t(project.titleKey)}
-                    </h3>
                   </div>
-                </div>
 
-                <p className="text-sm text-muted-foreground mb-4 flex-grow line-clamp-3">
-                  {t(project.descriptionKey)}
-                </p>
+                  <h3 className="text-lg font-bold text-foreground mb-2 leading-tight">
+                    {t(project.titleKey)}
+                  </h3>
 
-                <div className="flex flex-wrap gap-1.5">
-                  {project.tags.map((tag, tagIndex) => (
-                    <span
-                      key={tagIndex}
-                      className="px-2 py-0.5 rounded-full text-[11px] bg-white/[0.06] border border-white/[0.08] text-muted-foreground"
-                    >
-                      {t(tag)}
-                    </span>
-                  ))}
+                  <p className="text-sm text-muted-foreground mb-4 flex-grow line-clamp-3">
+                    {t(project.descriptionKey)}
+                  </p>
+
+                  <div className="flex flex-wrap gap-1.5 mt-auto">
+                    {project.tags.map((tag, tagIndex) => (
+                      <span
+                        key={tagIndex}
+                        className="px-2 py-0.5 rounded-full text-[11px] bg-white/[0.06] border border-white/[0.08] text-muted-foreground"
+                      >
+                        {t(tag)}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </GlassCard>
             </motion.div>
