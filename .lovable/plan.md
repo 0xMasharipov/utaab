@@ -1,48 +1,45 @@
 
 
-# Update "Community Projects" Cards with 4-Layer 3D Visuals
+# Add 4-Layer Visual System to Resources Section Cards
 
 ## Summary
-Replace icon-based project cards with immersive 4-layer cards featuring the uploaded 3D images, matching the "What We Build" and "Learn & Grow" visual system.
-
-## Assets
-Copy 6 uploaded images to `public/images/projects/`:
-- `UTAAB_UBP.png` → UBP card
-- `UTAAB_TonRa.png` → TonRa card
-- `UTAAB_ASN.png` → ASN card
-- `UTAAB_DVS.png` → DVS card
-- `UTAAB_DID.png` → DID card
-- `UTAAB_DAO.png` → DAO card
+Wrap the existing Resources cards in the same layered structure used in "What We Build" and "Community Projects", but at much lower visual intensity. Existing 3D icons stay in their current position as primary content indicators. Background visuals reuse the same images at very low opacity as subtle ambient decoration.
 
 ## Changes
 
-### `src/components/Projects.tsx`
+### `src/components/Resources.tsx`
 
-1. Remove iconoir imports (`Coins`, `Search`, `CreditCard`, `ShieldCheck`, `Fingerprint`, `Community`)
-2. Remove `Button` import (unused)
-3. Update `Project` interface: replace `icon: React.ElementType` with `image: string`
-4. Update `projects` array with image paths instead of icon components
-5. Rewrite each card to use the 4-layer structure inside `GlassCard`:
+1. Import `GlassCard` from `@/components/glass/GlassCard`
+2. Replace the current `<motion.div className="glass ...">` card wrapper with a `GlassCard` inside the `motion.div`, using `relative overflow-hidden p-0 group` (same pattern as Projects)
+3. Add 4-layer structure inside each card:
 
 ```text
-GlassCard (relative overflow-hidden min-h-[260px] p-0)
-  ├── Layer 1 (z-0):  Grid background — subtle CSS linear-gradient pattern, opacity 0.05
-  ├── Layer 2 (z-10): 3D image — absolute bottom-0 right-0, w-[55%], opacity-85, hover:scale-105
-  ├── Layer 3 (z-20): Dark gradient overlay — linear-gradient to top, 80% → 25% → transparent
-  └── Layer 4 (z-30): Text content — status badge, title, description, tags with padding
+GlassCard (relative overflow-hidden min-h-[240px] p-0 group)
+  ├── Layer 1 (z-0):  Grid background — same CSS linear-gradient pattern, opacity 0.05
+  ├── Layer 2 (z-5):  Subtle background visual — same card image, absolute bottom-0 right-0,
+  │                    w-[40%], opacity-[0.12], blur-[1px], pointer-events-none
+  ├── Layer 3 (z-10): Dark gradient overlay — linear-gradient to top,
+  │                    rgba(0,0,0,0.70) bottom → rgba(0,0,0,0.30) top → transparent
+  └── Layer 4 (z-20): Content — existing icon (img), title, bullet list with padding p-6 sm:p-8
 ```
 
-6. Keep: status badge styling, tag pills, i18n keys, motion animations, grid `lg:grid-cols-3`, section heading/subtitle
+4. Key differences from Projects section:
+   - Background image opacity is **0.12** (vs 0.85 in Projects) — very subtle
+   - Image width is **40%** (vs 55%) — smaller footprint
+   - Optional slight blur on background image
+   - Icons remain as explicit `<img>` elements in the content layer (not replaced)
+   - Overlay is lighter at top (0.30 vs 0.25) since icons need clear space
+
+5. Keep: all i18n keys, icon hover scale, bullet list, section heading, grid `lg:grid-cols-3`, animations
 
 ### What does NOT change
 - Section heading, subtitle, spacing
-- Grid layout (`md:grid-cols-2 lg:grid-cols-3`)
-- Text content / i18n keys
-- Status badges and tag pills
+- Icons (stay as-is, same size and position)
+- Text content, bullet lists, i18n keys
+- Grid layout
 - Motion animations
 - Other sections
 
 ## Files Modified
-- `src/components/Projects.tsx` — card structure rewrite
-- `public/images/projects/` — 6 new image assets
+- `src/components/Resources.tsx` — card structure upgrade with 4-layer system
 
