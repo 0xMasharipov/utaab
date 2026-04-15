@@ -2,7 +2,7 @@ import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
 import { motion } from 'framer-motion';
-import { Rocket } from 'lucide-react';
+
 import { useTranslation } from 'react-i18next';
 
 const Workshops = () => {
