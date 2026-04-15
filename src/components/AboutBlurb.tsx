@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { Users, Target, Lightbulb, ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+
 import { Link } from 'react-router-dom';
 import GlassCard from '@/components/glass/GlassCard';
 
