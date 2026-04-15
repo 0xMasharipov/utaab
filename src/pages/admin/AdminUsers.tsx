@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, UserPlus, Mail, Shield, Users as UsersIcon, Clock, Eye, FileUser, ExternalLink, Filter } from 'lucide-react';
+import { Search, UserPlus, Mail, Shield, Users as UsersIcon, Clock, Eye, FileUser, ExternalLink, Filter, GitMerge } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
