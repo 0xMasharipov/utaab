@@ -1,63 +1,40 @@
 
 
-# Update "What We Build" Cards with 3D Layered Visuals
+# Update "Learn & Grow" Cards with 4-Layer 3D Visuals
 
 ## Summary
-Replace the icon-based cards with immersive 4-layer cards featuring the uploaded 3D images, dark gradient overlays, grid backgrounds, and elevated text — creating a premium Web3 aesthetic.
+Apply the same layered visual system from "What We Build" (AboutBlurb) to the Learn section's 3 cards, replacing icon-based cards with immersive 3D image cards using the uploaded assets.
 
 ## Assets
-Copy the 4 uploaded images to `public/images/about/`:
-- `UTAAB_Education.png` — chain ring (Education)
-- `UTAAB_Projects_1.png` — cubes cluster (Projects)
-- `UTAAB_Ecosystem.png` — wireframe sphere (Ecosystem)
-- `UTAAB_Support.png` — pixel heart (Support)
+Copy 3 uploaded images to `public/images/learn/`:
+- `UTAAB_Edu_Guides.png` → Educational Guides
+- `UTAAB_Video_Tutorials.png` → Video Tutorials
+- `UTAAB_Workshops_Bootcamps.png` → Workshops & Bootcamps
 
 ## Changes
 
-### `src/components/AboutBlurb.tsx` — Card rewrite
+### `src/components/Learn.tsx` — Card rewrite
 
-Replace the current `GlassCard` inner content with a 4-layer structure per card:
+Replace current flat glass cards with the exact 4-layer structure from AboutBlurb:
 
-```text
-┌──────────────────────────┐
-│  TEXT (z-30)             │  Title + description, white, top-left or centered
-│                          │
-│  OVERLAY (z-20)          │  Linear gradient: transparent top → dark navy bottom (70% opacity)
-│                          │
-│  3D IMAGE (z-10)         │  Positioned bottom-right, ~70% card width, object-contain
-│                          │
-│  GRID BG (z-0)           │  Subtle dot/line grid pattern at ~5% opacity
-└──────────────────────────┘
-```
+1. Update `resources` array to include `image` field instead of `icon`
+2. Remove iconoir imports (`Book`, `MediaVideoList`, `GraduationCap`)
+3. Import `GlassCard` from `@/components/glass/GlassCard`
+4. Each card becomes a `GlassCard` with `relative overflow-hidden min-h-[280px] p-0`:
+   - **Layer 1 (z-0)**: Grid background pattern (identical CSS to AboutBlurb)
+   - **Layer 2 (z-10)**: `<img>` positioned `absolute bottom-0 right-0 w-[65%]` with hover scale
+   - **Layer 3 (z-20)**: Dark gradient overlay (`linear-gradient to top`, 80% → 50% → transparent)
+   - **Layer 4 (z-30)**: Text content (title + description) with padding
+5. Keep: `onClick` navigation, motion animations, i18n keys, `cursor-pointer`, section heading/subtitle unchanged
+6. Grid stays `md:grid-cols-3`
 
-Each card becomes:
-- `relative overflow-hidden` container with fixed min-height (~280px)
-- **Layer 4 (base)**: CSS background grid pattern (repeating linear gradient, matching site style)
-- **Layer 3**: `<img>` absolutely positioned bottom-right, `w-[65%] h-auto`, with slight translate for off-center feel
-- **Layer 2**: Absolute div with `bg-gradient-to-t from-[hsl(217,50%,8%)/0.75] via-[hsl(217,50%,8%)/0.4] to-transparent`
-- **Layer 1 (top)**: Text content with `relative z-30`, white color, positioned at top-left with padding
-
-Card data array adds an `image` field:
-```ts
-const cards = [
-  { image: '/images/about/UTAAB_Education.png', titleKey: '...', descriptionKey: '...' },
-  { image: '/images/about/UTAAB_Projects_1.png', ... },
-  { image: '/images/about/UTAAB_Ecosystem.png', ... },
-  { image: '/images/about/UTAAB_Support.png', ... },
-];
-```
-
-Icons removed from cards (no longer needed). Imports for `GraduationCap, Rocket, Globe, Heart` removed.
-
-Keep: GlassCard wrapper (for border/backdrop-blur), motion animations, i18n keys, grid layout, Link button below.
-
-### No other files modified
-- Layout grid stays `lg:grid-cols-4`
-- Section heading/blurb untouched
-- "Learn More" link untouched
-- No i18n changes, no admin changes
+### What does NOT change
+- Section heading, subtitle, spacing
+- Text content / i18n keys
+- Navigation behavior (click → route)
+- Other sections
 
 ## Files Modified
-- `src/components/AboutBlurb.tsx` — card inner structure rewrite
-- `public/images/about/` — 4 new image assets copied
+- `src/components/Learn.tsx` — card inner structure rewrite
+- `public/images/learn/` — 3 new image assets
 
