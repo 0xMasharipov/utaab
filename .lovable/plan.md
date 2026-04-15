@@ -1,38 +1,49 @@
 
 
-# Set Up App Emails (Transactional)
+# Improve About Page, Footer, and Team Page Aesthetics
 
 ## Summary
-Set up the infrastructure to send app emails — welcome messages, notifications, confirmations, etc. — from your verified domain `notify.utaab.org`.
+Three changes: (1) Remove team section from About page and polish its visual hierarchy, (2) Enhance Team page with richer hero and visual polish, (3) Refine footer aesthetics with better spacing, typography, and visual depth.
 
-## What will be created
+## 1. About Page (`src/pages/About.tsx`)
 
-1. **Email infrastructure** — queue system, retry logic, and processing pipeline for reliable delivery
-2. **Email sending system** — a single backend function that handles all app email types
-3. **Sample template** — a starter React Email template matching UTAAB's brand (navy/white, Montserrat font, UTAAB logo)
-4. **Unsubscribe page** — a branded page where recipients can opt out (required for compliance)
-5. **Suppression handling** — automatic bounce/complaint tracking to protect sender reputation
+**Remove team section entirely** (lines 232-270) — all team imports, state, and the TeamOverlapCard/Modal/Drawer code.
 
-## Steps
+**Visual improvements:**
+- Hero: Add a subtle accent gradient line or decorative element below headline; increase bottom padding
+- Why UTAAB: Add numbered accent indicators (01, 02, 03, 04) on each glass card for visual rhythm
+- Mission & Vision: Add accent-colored top border or icon to differentiate the two cards
+- What We Do: Add gradient accent backgrounds to icon containers (rounded circle with accent/10 bg)
+- Impact: Use larger icon containers with gradient rings similar to team cards
+- CTA: Add a subtle radial gradient glow behind the card for depth
 
-1. Call `setup_email_infra` to create the database queue and processing pipeline
-2. Call `scaffold_transactional_email` to create the sending Edge Function, unsubscribe handler, and sample template
-3. Deploy all new Edge Functions
-4. Create the unsubscribe page in the app (matching UTAAB's dark theme)
-5. Style the sample template to match UTAAB branding (navy background, white card, Montserrat, logo)
+## 2. Team Page (`src/pages/TeamPage.tsx`)
 
-## After setup
+**Enhanced hero:**
+- Add a subtle tagline/badge above the title (e.g., "The People Behind UTAAB")
+- Add a decorative accent line below subtitle
+- Increase vertical spacing for more breathing room
 
-You'll be able to send emails like:
-- Welcome messages after signup
-- Contact form confirmations
-- Notification emails
-- Any custom app email you need
+**Grid improvements:**
+- Add a subtle section divider or decorative element between hero and grid
+- Slightly larger gap on desktop for premium feel
 
-Each new email type just needs a template file — no additional infrastructure. I can create specific templates for your use cases once the foundation is in place.
+## 3. Footer (`src/components/Footer.tsx`)
+
+**Visual refinements:**
+- Add a subtle top gradient border/glow line at the very top of the footer for visual separation
+- Increase geometric background opacity slightly (0.06 -> 0.08 desktop, 0.07 -> 0.09 mobile) for stronger brand presence
+- Add subtle radial gradient overlay in the center behind the geometric image for depth
+- Refine bottom bar with slightly more padding and a softer separator
+
+## Files Modified
+- `src/pages/About.tsx` — Remove team section, add visual polish to remaining 6 sections
+- `src/pages/TeamPage.tsx` — Enhanced hero section with badge and decorative elements
+- `src/components/Footer.tsx` — Refined visual depth, top glow line, stronger geometric presence
 
 ## No changes to
-- Existing auth email templates
-- Footer, navbar, or any other page
-- Admin panel or database schema
+- i18n files (reuse existing keys)
+- TeamOverlapCard, TeamProfileModal, TeamProfileDrawer components
+- GlassCard, GlassSectionWrapper components
+- Any admin, database, or routing logic
 
