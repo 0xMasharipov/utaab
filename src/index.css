@@ -201,6 +201,12 @@
     animation: gradient-flow 15s ease infinite;
   }
   
+  /* Blob fade-in (pure CSS, no JS reflow) */
+  @keyframes blob-fade-in {
+    from { opacity: 0; }
+    to { opacity: 0.4; }
+  }
+
   /* Animation utilities */
   .animate-float {
     animation: float 6s ease-in-out infinite;
