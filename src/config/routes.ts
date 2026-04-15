@@ -1,0 +1,40 @@
+// Obfuscated route paths — single source of truth
+// Do NOT use semantic names. These are intentionally random.
+
+export const ADMIN_ROUTES = {
+  LOGIN: '/v8k2m9x4',
+  BASE: '/v8k2m9x4',
+  DASHBOARD: '/v8k2m9x4/p3',
+  USERS: '/v8k2m9x4/q7w',
+  COMMUNITIES: '/v8k2m9x4/r2f',
+  COMMUNITY_DETAIL: '/v8k2m9x4/r2f/:id',
+  EVENTS: '/v8k2m9x4/t5j',
+  COURSES: '/v8k2m9x4/k8n',
+  BLOG: '/v8k2m9x4/m4b',
+  SITE_CONTENT: '/v8k2m9x4/s6c',
+  ANNOUNCEMENTS: '/v8k2m9x4/a1x',
+  MESSAGES: '/v8k2m9x4/d9g',
+  MEDIA: '/v8k2m9x4/h3v',
+  CONTRIBUTORS: '/v8k2m9x4/w7p',
+  SECURITY: '/v8k2m9x4/z2e',
+  SETTINGS: '/v8k2m9x4/y5l',
+  AUDIT: '/v8k2m9x4/f8u',
+} as const;
+
+// Relative sub-paths for sidebar navigation inside the layout
+export const ADMIN_SUB_PATHS = {
+  DASHBOARD: 'p3',
+  USERS: 'q7w',
+  COMMUNITIES: 'r2f',
+  EVENTS: 't5j',
+  COURSES: 'k8n',
+  BLOG: 'm4b',
+  SITE_CONTENT: 's6c',
+  ANNOUNCEMENTS: 'a1x',
+  MESSAGES: 'd9g',
+  MEDIA: 'h3v',
+  CONTRIBUTORS: 'w7p',
+  SECURITY: 'z2e',
+  SETTINGS: 'y5l',
+  AUDIT: 'f8u',
+} as const;

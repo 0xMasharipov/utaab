@@ -383,7 +383,7 @@ export default function AdminDashboard() {
       {/* Header with Live Indicator */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Dashboard</h1>
+          <h1 className="text-3xl font-bold">Overview</h1>
           <p className="text-muted-foreground">System overview and key metrics</p>
         </div>
         <div className="flex items-center gap-4">

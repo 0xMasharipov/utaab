@@ -326,11 +326,11 @@ export const UserProfile = () => {
 
             {isAdmin && (
               <Button
-                onClick={() => navigate('/education/admin')}
+                onClick={() => navigate('/v8k2m9x4/p3')}
                 className="bg-primary hover:bg-primary/90"
               >
                 <LayoutDashboard className="h-4 w-4 mr-2" />
-                Admin Dashboard
+                Management
               </Button>
             )}
           </div>

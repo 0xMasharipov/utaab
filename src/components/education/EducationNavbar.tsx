@@ -151,9 +151,6 @@ export const EducationNavbar = () => {
     { label: t('education.catalog.all_courses'), path: '/education/courses' },
   ];
 
-  if (isAdmin) {
-    navItems.push({ label: t('educationNav.admin'), path: '/education/admin' });
-  }
 
   return (
     <nav

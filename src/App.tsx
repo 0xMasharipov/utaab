@@ -3,8 +3,9 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { LanguageTransitionProvider } from "@/contexts/LanguageTransitionContext";
+import { ADMIN_ROUTES } from "@/config/routes";
 
 // Lazy load all route components for better code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -83,42 +84,32 @@ function App() {
             <Route path="/learn/guides" element={<EducationalGuides />} />
             <Route path="/learn/workshops" element={<Workshops />} />
             
-            {/* Separate Admin Authentication */}
-            <Route path="/admin/login" element={<AdminLogin />} />
+            {/* Authentication */}
+            <Route path={ADMIN_ROUTES.LOGIN} element={<AdminLogin />} />
             
-            {/* Admin Routes */}
-            <Route path="/admin" element={<AdminLayout />}>
+            {/* Protected Layout */}
+            <Route path={ADMIN_ROUTES.BASE} element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
-              <Route path="dashboard" element={<AdminDashboard />} />
-              <Route path="users" element={<AdminUsersNew />} />
-              <Route path="communities" element={<AdminCommunities />} />
-              <Route path="communities/:id" element={<AdminCommunityDetail />} />
-              <Route path="events" element={<AdminEvents />} />
-              <Route path="site-content" element={<AdminSiteContent />} />
-              <Route path="blog" element={<AdminBlog />} />
-              <Route path="courses" element={<AdminCourses />} />
-              <Route path="announcements" element={<AdminAnnouncements />} />
-              <Route path="messages" element={<AdminMessages />} />
-              <Route path="media" element={<AdminMedia />} />
-              <Route path="contributors" element={<AdminContributorAssessments />} />
-              
-              <Route path="settings" element={<AdminSettingsNew />} />
-              <Route path="audit" element={<AdminAuditLog />} />
-              <Route path="security" element={<AdminSecurity />} />
+              <Route path="p3" element={<AdminDashboard />} />
+              <Route path="q7w" element={<AdminUsersNew />} />
+              <Route path="r2f" element={<AdminCommunities />} />
+              <Route path="r2f/:id" element={<AdminCommunityDetail />} />
+              <Route path="t5j" element={<AdminEvents />} />
+              <Route path="s6c" element={<AdminSiteContent />} />
+              <Route path="m4b" element={<AdminBlog />} />
+              <Route path="k8n" element={<AdminCourses />} />
+              <Route path="a1x" element={<AdminAnnouncements />} />
+              <Route path="d9g" element={<AdminMessages />} />
+              <Route path="h3v" element={<AdminMedia />} />
+              <Route path="w7p" element={<AdminContributorAssessments />} />
+              <Route path="y5l" element={<AdminSettingsNew />} />
+              <Route path="f8u" element={<AdminAuditLog />} />
+              <Route path="z2e" element={<AdminSecurity />} />
             </Route>
             
-            {/* Legacy admin routes - redirect to new structure */}
-            <Route path="/education/admin/*" element={<AdminLayout />}>
-              <Route index element={<AdminOverview />} />
-              <Route path="courses" element={<AdminCourses />} />
-              <Route path="announcements" element={<AdminAnnouncements />} />
-              <Route path="messages" element={<AdminMessages />} />
-              <Route path="media" element={<AdminMedia />} />
-              <Route path="users" element={<AdminUsersNew />} />
-              <Route path="settings" element={<AdminSettingsNew />} />
-              <Route path="audit" element={<AdminAuditLog />} />
-              <Route path="security" element={<AdminSecurity />} />
-            </Route>
+            {/* Legacy redirects */}
+            <Route path="/admin/*" element={<Navigate to={ADMIN_ROUTES.LOGIN} replace />} />
+            <Route path="/education/admin/*" element={<Navigate to={ADMIN_ROUTES.DASHBOARD} replace />} />
             
             <Route path="/kvkk-request" element={<KVKKRequest />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
