@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import GlassCard from '@/components/glass/GlassCard';
+import AnimatedImage from '@/components/common/AnimatedImage';
 
 type ProjectStatus = 'underDevelopment' | 'planning';
 
@@ -101,12 +102,13 @@ export const Projects = () => {
                 />
 
                 {/* Layer 2: 3D image */}
-                <img
+                <AnimatedImage
                   src={project.image}
                   alt=""
                   aria-hidden="true"
                   loading="lazy"
                   className="absolute bottom-0 right-0 w-[55%] z-10 opacity-[0.85] object-contain transition-transform duration-500 group-hover:scale-105 pointer-events-none select-none"
+                  placeholderClassName="opacity-0"
                 />
 
                 {/* Layer 3: Dark gradient overlay */}

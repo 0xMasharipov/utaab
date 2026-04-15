@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
+import AnimatedImage from '@/components/common/AnimatedImage';
 
 export const Events = () => {
   const { t, i18n } = useTranslation();
@@ -81,10 +82,11 @@ export const Events = () => {
       className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 hover:bg-white/10 transition-all duration-300 group"
     >
       {event.cover_image && (
-        <img 
+        <AnimatedImage 
           src={event.cover_image} 
           alt={getLocalizedTitle(event)}
           className="w-full h-40 object-cover rounded-xl mb-4"
+          placeholderClassName="rounded-xl"
         />
       )}
       <h4 className="text-xl font-bold text-foreground mb-2 group-hover:text-accent transition-colors">
