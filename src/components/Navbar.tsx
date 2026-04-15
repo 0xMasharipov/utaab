@@ -128,18 +128,18 @@ export const Navbar = () => {
           ref={pillRef}
           className={`rounded-full px-4 sm:px-5 md:px-8 py-3 sm:py-4 border transition-all duration-300 ${
             isScrolled
-              ? 'border-white/20 shadow-xl shadow-primary/15'
-              : 'border-white/10 shadow-lg shadow-primary/5'
+              ? 'border-white/[0.12] shadow-xl'
+              : 'border-white/[0.06] shadow-lg'
           }`}
           style={{
             background: isScrolled
-              ? 'linear-gradient(135deg, rgba(10, 10, 20, 0.9) 0%, rgba(20, 30, 60, 0.85) 100%)'
-              : 'linear-gradient(135deg, rgba(6, 18, 36, 0.4) 0%, rgba(20, 40, 80, 0.3) 50%, rgba(6, 18, 36, 0.4) 100%)',
-            backdropFilter: 'blur(24px) saturate(200%) brightness(0.95)',
-            WebkitBackdropFilter: 'blur(24px) saturate(200%) brightness(0.95)',
+              ? 'linear-gradient(135deg, rgba(10, 10, 20, 0.9) 0%, rgba(15, 20, 35, 0.85) 100%)'
+              : 'linear-gradient(135deg, rgba(10, 15, 25, 0.35) 0%, rgba(10, 15, 25, 0.3) 50%, rgba(10, 15, 25, 0.35) 100%)',
+            backdropFilter: 'blur(24px) saturate(180%) brightness(0.95)',
+            WebkitBackdropFilter: 'blur(24px) saturate(180%) brightness(0.95)',
             boxShadow: isScrolled
-              ? '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-              : '0 4px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
+              ? '0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08)'
+              : '0 4px 24px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.06)',
           }}
         >
           <div className="flex items-center justify-between">

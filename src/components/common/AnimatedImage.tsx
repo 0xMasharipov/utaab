@@ -28,7 +28,7 @@ const AnimatedImage = forwardRef<HTMLImageElement, AnimatedImageProps>(
           }}
           className={cn(
             'transition-all duration-500 ease-out',
-            loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95',
+            loaded ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-[0.97] translate-y-2',
             className
           )}
         />

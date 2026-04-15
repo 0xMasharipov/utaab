@@ -90,8 +90,8 @@ export const Hero = () => {
         className="absolute inset-0"
         style={{
           background: [
-            'radial-gradient(ellipse at 65% 50%, rgba(47,111,181,0.15), transparent 70%)',
-            'radial-gradient(ellipse at 20% 40%, rgba(28,63,104,0.2), transparent 60%)',
+            'radial-gradient(ellipse at 65% 50%, rgba(47,111,181,0.08), transparent 70%)',
+            'radial-gradient(ellipse at 20% 40%, rgba(28,63,104,0.12), transparent 60%)',
           ].join(', '),
           zIndex: 2,
           pointerEvents: 'none',
@@ -176,10 +176,9 @@ export const Hero = () => {
             transition={{ duration: 0.5, delay: 0.35 }}
             className="font-montserrat mb-8 text-sm md:text-base"
             style={{
-              fontWeight: 500,
-              color: 'rgba(127,179,255,0.55)',
+              fontWeight: 600,
+              color: 'rgba(200,220,255,0.65)',
               maxWidth: 480,
-              fontStyle: 'italic',
             }}
           >
             {t('hero.supportingLine')}
