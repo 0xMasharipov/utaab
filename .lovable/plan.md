@@ -1,28 +1,27 @@
 
 
-# Fix Admin Login vs Layout Route Conflict
+# Refine "Learn More About UTAAB" Button
 
-## Problem
-`ADMIN_ROUTES.LOGIN` and `ADMIN_ROUTES.BASE` are both `/v8k2m9x4`. When navigating to this path, React Router matches the `AdminLayout` parent route (which has an `index` element rendering `AdminDashboard`), skipping the `AdminLogin` page entirely. The `AdminLayout` then tries to verify admin access and redirects unauthenticated users back to login — creating a loop or showing the verification spinner.
+## Summary
+Upgrade the button from a plain outline style to a polished, branded glass button with a subtle glow and arrow animation — matching the hero section's visual language.
 
-## Solution
-Separate the login route from the layout base by giving login its own distinct path.
+## Changes to `src/components/AboutBlurb.tsx`
 
-### Changes
+### Replace the current Button (lines 79-84)
+- Swap the generic `<Button variant="outline">` for a custom styled `<Link>` button
+- Apply the same glass aesthetic as `hero-btn-outline` but adapted for in-page use:
+  - Glass background (`rgba(255,255,255,0.06)`) with `backdrop-blur`
+  - Subtle glowing border (`border-white/[0.12]` → on hover `border-accent/40`)
+  - Soft box-shadow glow on hover (`0 0 24px rgba(var(--accent), 0.2)`)
+  - Rounded-full pill shape for a modern look
+  - Larger padding (`px-8 py-3`) and slightly bigger text (`text-[15px]`)
+  - Arrow icon slides right on hover with opacity transition
+  - `tracking-wide` and `font-semibold` for crispness
 
-1. **`src/config/routes.ts`** — Change `LOGIN` to a different random path, e.g. `/j3r7x1w9` (keep `BASE` as `/v8k2m9x4`)
-
-2. **`src/App.tsx`** — The login route already uses `ADMIN_ROUTES.LOGIN`, so it will automatically pick up the new path. No structural change needed.
-
-3. **`src/components/admin/AdminLayout.tsx`** — Already redirects unauthenticated users to `ADMIN_ROUTES.LOGIN`, will work with the new path.
-
-4. **`src/pages/admin/AdminLogin.tsx`** — Already navigates to `ADMIN_ROUTES.DASHBOARD` on success, no change needed.
-
-5. **Legacy redirects in `App.tsx`** — Update the `/admin/*` catch-all to redirect to the new login path (already uses `ADMIN_ROUTES.LOGIN`).
-
-### Single file change
-Only `src/config/routes.ts` needs updating — change `LOGIN` from `/v8k2m9x4` to `/j3r7x1w9`.
+### Visual result
+- At rest: subtle glass pill with light border, readable text, small arrow
+- On hover: border brightens to accent blue, faint glow appears, arrow slides right — inviting click without being loud
 
 ## Files Modified
-- `src/config/routes.ts` — New distinct login path
+- `src/components/AboutBlurb.tsx` — Button styling upgrade (lines 79-84)
 
