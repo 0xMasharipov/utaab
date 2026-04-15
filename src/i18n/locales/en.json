@@ -1304,5 +1304,66 @@
     "title": "What is UTAAB?",
     "blurb": "UTAAB is a university-born blockchain ecosystem building real-world tools, education, and community for the next generation of Web3 builders.",
     "learnMore": "Learn More About UTAAB"
+  },
+  "aboutPage": {
+    "hero": {
+      "title": "Not Just a Community. Building Real-World Impact.",
+      "subtitle": "UTAAB is an innovation-driven ecosystem where ideas evolve into real-world projects — powered by blockchain, collaboration, and a shared vision for the future."
+    },
+    "whyUtaab": {
+      "title": "Why UTAAB?",
+      "item1": "We are building the foundation for the next generation of developers.",
+      "item2": "At UTAAB, we focus on students, growth, and real-world development — not just technical skills, but mindset, resilience, and vision.",
+      "item3": "We believe that connection creates strength. By bringing people together, we enable support not only financially, but mentally and professionally.",
+      "item4": "Because the future isn't just about creating products — it's about shaping a qualified, sustainable, and borderless world."
+    },
+    "mission": {
+      "title": "Our Mission",
+      "text": "Empower individuals through education, collaboration, and real-world development opportunities."
+    },
+    "vision": {
+      "title": "Our Vision",
+      "text": "To build a borderless, sustainable ecosystem where qualified individuals create meaningful impact through innovation and technology."
+    },
+    "whatWeDo": {
+      "title": "What We Actually Do",
+      "educate": {
+        "title": "Educate",
+        "description": "Workshops, learning resources, and mentorship to develop blockchain skills and mindset."
+      },
+      "build": {
+        "title": "Build",
+        "description": "Real-world projects and blockchain-based solutions that go beyond theory."
+      },
+      "connect": {
+        "title": "Connect",
+        "description": "Community, networking, and collaboration that brings people together across borders."
+      },
+      "support": {
+        "title": "Support",
+        "description": "Financial, mental, and professional growth for every member of the ecosystem."
+      }
+    },
+    "impact": {
+      "title": "Real-World Impact",
+      "subtitle": "We turn ideas into execution — creating real impact beyond the digital space.",
+      "projects": {
+        "title": "Projects",
+        "description": "From DeFi tools to decentralized identity solutions, our projects solve real problems."
+      },
+      "initiatives": {
+        "title": "Initiatives",
+        "description": "Cross-border collaborations, hackathons, and community-driven programs that create lasting change."
+      },
+      "outcomes": {
+        "title": "Outcomes",
+        "description": "Skilled developers, launched products, and a growing ecosystem of builders and innovators."
+      }
+    },
+    "cta": {
+      "title": "Be Part of the Future We're Building",
+      "joinButton": "Join Community",
+      "exploreButton": "Explore Projects"
+    }
   }
 }
