@@ -1,4 +1,22 @@
+import { useState, useEffect } from 'react';
+
 const AnimatedBlobBackground = () => {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    // Defer blob rendering to after initial paint to avoid forced reflow
+    const id = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setReady(true);
+      });
+    });
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  if (!ready) {
+    return <div className="fixed inset-0 -z-10 pointer-events-none" />;
+  }
+
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none" style={{ contain: 'strict' }}>
       {/* Blob 1 - Large blue */}
