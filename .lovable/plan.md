@@ -1,54 +1,33 @@
 
 
-# Transform Community Section into CTA Section
+# Fix OTP Not Working for New Registered Users
 
-## Summary
-Replace the informational Community section with a bold, conversion-focused CTA block — "Join the Movement" — with 3 action buttons, a subtle glow background, and i18n support.
+## Root Cause
 
-## Changes
+Auto-confirm email signups is currently **enabled** in the authentication settings. This means:
+- When a user signs up, their account is immediately confirmed — no verification email is sent
+- The auth logs confirm this: `immediate_login_after_signup: true`
+- But the registration form still shows an OTP verification screen after signup, asking users to enter a 6-digit code from an email that was never sent
+- The `email_send_log` has zero `signup` entries — confirming no signup emails are being dispatched
 
-### `src/components/Community.tsx` — Full rewrite
+## Solution
 
-Replace all content with:
+**Disable auto-confirm** so that signup emails (with OTP codes) are actually sent to new users. The auth-email-hook and email infrastructure are already properly configured — the `magiclink` template (which handles OTP codes) works correctly (confirmed by successful sends to admin). The only issue is that auto-confirm bypasses the email sending entirely.
 
-- **Headline**: "Join the Movement" (via `community.cta.title` i18n key)
-- **Subtext**: "Be part of a new generation building real-world impact through collaboration, innovation, and Web3 education." (via `community.cta.subtitle`)
-- **3 CTA buttons** in a centered flex row:
-  1. **Join Community** — links to `/#join` (scrolls to existing Join form), styled as primary glass pill with glow
-  2. **Explore Projects** — links to `/#projects`, styled as outline glass pill
-  3. **Follow Updates** — links to `/blog`, styled as subtle ghost pill
-- **Background**: subtle radial gradient glow (accent blue, low opacity) positioned behind the content — CSS only, no heavy animation
-- **Preserve**: `id="community"` for navbar scroll targeting, `useInView` for entrance animation, `useTranslation` for i18n, `useLanguageTransition` for text swap animations
+### Step 1: Disable auto-confirm email signups
+Use the `configure_auth` tool to set `auto_confirm_email` to `false`. This will make the auth system send confirmation emails (routed through `auth-email-hook`) with OTP codes when users register.
 
-### `src/i18n/locales/en.json` — Add new keys
-```json
-"community.cta.title": "Join the Movement",
-"community.cta.subtitle": "Be part of a new generation building real-world impact through collaboration, innovation, and Web3 education.",
-"community.cta.joinBtn": "Join Community",
-"community.cta.projectsBtn": "Explore Projects",
-"community.cta.updatesBtn": "Follow Updates"
-```
+### Step 2: Redeploy auth-email-hook (safety check)
+Redeploy `auth-email-hook` to ensure the latest version is active and handling signup events correctly.
 
-### `src/i18n/locales/tr.json`, `ar.json`, `ru.json` — Add translated keys
-Add equivalent translations for the 5 new keys in each locale file.
+### No code changes needed
+The registration form (`EducationRegisterForm.tsx`) already has the correct OTP flow:
+- After signup → shows OTP input screen
+- Calls `supabase.auth.verifyOtp()` with type `signup`
+- Has resend functionality via `supabase.auth.resend({ type: 'signup' })`
 
-### Visual spec
-- Section padding: `py-24 md:py-36` (generous whitespace)
-- Background: `radial-gradient(ellipse at 50% 50%, hsl(var(--accent)/0.08), transparent 70%)` as a pseudo-element
-- Headline: `text-4xl md:text-6xl font-bold text-glow-soft`
-- Subtext: `text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto`
-- Buttons row: `flex flex-wrap justify-center gap-4 mt-10`
-- Primary button: same glass style as the refined AboutBlurb button with accent glow
-- Secondary/tertiary: lighter glass variants
-
-### Not modified
-- `Index.tsx` — no changes, `<Community />` stays in place
-- No other sections, styles, backend, or admin logic touched
+The email templates (`signup.tsx`, `magic-link.tsx`) are already configured and working. The only fix is turning off auto-confirm so the system actually sends the emails.
 
 ## Files Modified
-- `src/components/Community.tsx`
-- `src/i18n/locales/en.json`
-- `src/i18n/locales/tr.json`
-- `src/i18n/locales/ar.json`
-- `src/i18n/locales/ru.json`
+- None — this is a configuration change only (auth settings)
 
