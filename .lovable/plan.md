@@ -1,33 +1,65 @@
 
 
-# Fix OTP Not Working for New Registered Users
+# Update Hero Section + First Section Below It
 
-## Root Cause
+## Summary
+Rewrite the hero text content and transform the AboutBlurb into a "What We Build" section with 4 visual cards. Only i18n keys and two components change — no layout, backend, or other section modifications.
 
-Auto-confirm email signups is currently **enabled** in the authentication settings. This means:
-- When a user signs up, their account is immediately confirmed — no verification email is sent
-- The auth logs confirm this: `immediate_login_after_signup: true`
-- But the registration form still shows an OTP verification screen after signup, asking users to enter a 6-digit code from an email that was never sent
-- The `email_send_log` has zero `signup` entries — confirming no signup emails are being dispatched
+## Changes
 
-## Solution
+### 1. `src/i18n/locales/en.json` — Update hero + about keys
 
-**Disable auto-confirm** so that signup emails (with OTP codes) are actually sent to new users. The auth-email-hook and email infrastructure are already properly configured — the `magiclink` template (which handles OTP codes) works correctly (confirmed by successful sends to admin). The only issue is that auto-confirm bypasses the email sending entirely.
+**Hero keys:**
+```json
+"hero": {
+  "tagline": "LEARN · BUILD · IMPACT",
+  "headline": "From Learning to Building in",
+  "headlineHighlight": "Web3",
+  "description": "UTAAB is an ecosystem where students become builders through real-world projects, education, and collaboration.",
+  "supportingLine": "Not just a community — a platform for real-world impact.",
+  "joinUs": "Join the Movement",
+  "explore": "Explore Projects"
+}
+```
 
-### Step 1: Disable auto-confirm email signups
-Use the `configure_auth` tool to set `auto_confirm_email` to `false`. This will make the auth system send confirmation emails (routed through `auth-email-hook`) with OTP codes when users register.
+**About keys (for the "What We Build" section):**
+```json
+"about": {
+  "title": "What We Build",
+  "blurb": "We don't just teach — we build, launch, and create real impact.",
+  "learnMore": "Learn More About UTAAB",
+  "cards": {
+    "education": { "title": "Education", "description": "Workshops, mentorship, and structured learning for Web3 development." },
+    "projects": { "title": "Real Projects", "description": "Building blockchain-based solutions with real-world applications." },
+    "ecosystem": { "title": "Ecosystem", "description": "Connecting students, developers, and innovators into an active network." },
+    "support": { "title": "Support", "description": "Enabling financial, mental, and professional growth." }
+  }
+}
+```
 
-### Step 2: Redeploy auth-email-hook (safety check)
-Redeploy `auth-email-hook` to ensure the latest version is active and handling signup events correctly.
+### 2. `src/i18n/locales/tr.json`, `ar.json`, `ru.json` — Add equivalent translations for all new/changed keys
 
-### No code changes needed
-The registration form (`EducationRegisterForm.tsx`) already has the correct OTP flow:
-- After signup → shows OTP input screen
-- Calls `supabase.auth.verifyOtp()` with type `signup`
-- Has resend functionality via `supabase.auth.resend({ type: 'signup' })`
+### 3. `src/components/Hero.tsx` — Update content structure
 
-The email templates (`signup.tsx`, `magic-link.tsx`) are already configured and working. The only fix is turning off auto-confirm so the system actually sends the emails.
+- Add a new `supportingLine` below the description (small, muted text)
+- Swap button order: "Explore Projects" first (primary), "Join the Movement" second (outline)
+- Keep all existing video logic, overlays, animations, and scroll functions intact
+
+### 4. `src/components/AboutBlurb.tsx` — Rewrite to 4-card grid
+
+- Replace the 3-card `values` array with 4 cards: Education (`GraduationCap`), Real Projects (`Rocket`), Ecosystem (`Globe`), Support (`Heart`)
+- Use i18n keys `about.cards.education.*`, etc.
+- Change grid from `md:grid-cols-3` to `md:grid-cols-2 lg:grid-cols-4`
+- Keep existing GlassCard, motion animations, Link to `/about`, and `id="about"`
+
+### Not modified
+- `Index.tsx`, `HeroCarousel`, `Community`, `Navbar`, `Footer`, backend, admin — all untouched
 
 ## Files Modified
-- None — this is a configuration change only (auth settings)
+- `src/components/Hero.tsx`
+- `src/components/AboutBlurb.tsx`
+- `src/i18n/locales/en.json`
+- `src/i18n/locales/tr.json`
+- `src/i18n/locales/ar.json`
+- `src/i18n/locales/ru.json`
 
