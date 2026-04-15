@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavArrowRight } from 'iconoir-react';
@@ -110,12 +109,7 @@ export const Hero = () => {
         {/* Left column — text */}
         <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
           {/* Tagline */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-6"
-          >
+          <div className="mb-6 hero-fade-in" style={{ animationDelay: '0s' }}>
             <span
               style={{
                 color: 'rgba(127,179,255,0.7)',
@@ -127,13 +121,10 @@ export const Hero = () => {
             >
               {t('hero.tagline')}
             </span>
-          </motion.div>
+          </div>
 
           {/* Headline */}
-          <motion.h1
-            initial={{ opacity: 1, y: 0 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
+          <h1
             className="font-montserrat leading-tight mb-4 md:mb-6"
             style={{
               fontWeight: 800,
@@ -152,44 +143,38 @@ export const Hero = () => {
             >
               {t('hero.headlineHighlight')}
             </span>
-          </motion.h1>
+          </h1>
 
           {/* Description */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.25 }}
-            className="font-montserrat mb-3 text-base md:text-lg lg:text-xl"
+          <p
+            className="font-montserrat mb-3 text-base md:text-lg lg:text-xl hero-fade-in"
             style={{
               fontWeight: 400,
               color: 'rgba(230,238,248,0.72)',
               maxWidth: 520,
+              animationDelay: '0.25s',
             }}
           >
             {t('hero.description')}
-          </motion.p>
+          </p>
 
           {/* Supporting line */}
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.35 }}
-            className="font-montserrat mb-8 text-sm md:text-base"
+          <p
+            className="font-montserrat mb-8 text-sm md:text-base hero-fade-in"
             style={{
               fontWeight: 600,
               color: 'rgba(200,220,255,0.65)',
               maxWidth: 480,
+              animationDelay: '0.35s',
             }}
           >
             {t('hero.supportingLine')}
-          </motion.p>
+          </p>
 
-          {/* Buttons — Explore Projects (primary) then Join the Movement (outline) */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.45 }}
-            className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
+          {/* Buttons */}
+          <div
+            className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto hero-fade-in"
+            style={{ animationDelay: '0.45s' }}
           >
             <button
               onClick={scrollToProjects}
@@ -206,7 +191,7 @@ export const Hero = () => {
               {t('hero.joinUs')}
               <NavArrowRight width={16} height={16} className="transition-transform duration-300 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0" strokeWidth={1.5} />
             </button>
-          </motion.div>
+          </div>
         </div>
 
         {/* Right column — spacer (video shows through) */}
