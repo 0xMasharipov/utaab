@@ -20,8 +20,8 @@ const Workshops = () => {
           transition={{ duration: 0.7 }}
           className="glass-strong rounded-3xl p-10 sm:p-14 md:p-20 max-w-2xl w-full text-center"
         >
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/20 mb-8">
-            <img src="/images/rocket.webp" alt="Rocket" className="w-10 h-10 object-contain" />
+          <div className="inline-flex items-center justify-center w-24 h-24 rounded-2xl mb-8">
+            <img src="/images/rocket.webp" alt="Rocket" className="w-16 h-16 object-contain" />
           </div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
