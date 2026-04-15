@@ -2,8 +2,9 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Users, Target, Lightbulb } from 'lucide-react';
+import { ArrowRight, Rocket, Newspaper } from 'lucide-react';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
+import { Link } from 'react-router-dom';
 
 export const Community = () => {
   const { t } = useTranslation();
@@ -11,82 +12,63 @@ export const Community = () => {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const { getTransitionClasses } = useLanguageTransition();
 
-  const features = [
-    {
-      icon: Users,
-      titleKey: 'community.features.collaborative.title',
-      descriptionKey: 'community.features.collaborative.description',
-    },
-    {
-      icon: Target,
-      titleKey: 'community.features.goalOriented.title',
-      descriptionKey: 'community.features.goalOriented.description',
-    },
-    {
-      icon: Lightbulb,
-      titleKey: 'community.features.innovative.title',
-      descriptionKey: 'community.features.innovative.description',
-    },
-  ];
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
-    <section id="community" className="py-20 md:py-32 relative" ref={ref}>
-      <div className="section-container">
+    <section id="community" className="relative py-24 md:py-36 overflow-hidden" ref={ref}>
+      {/* Subtle radial glow background */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,hsl(var(--accent)/0.08),transparent_70%)]" />
+
+      <div className="section-container relative z-10 text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
         >
-          <h2 className={getTransitionClasses("text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-glow-soft px-2")}>
-            {t('community.title')}
+          <h2 className={getTransitionClasses("text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-glow-soft")}>
+            {t('community.cta.title')}
           </h2>
-          <p className={getTransitionClasses("text-lg sm:text-xl md:text-2xl text-accent font-semibold mb-3 sm:mb-4 px-2")}>
-            {t('community.subtitle')}
+          <p className={getTransitionClasses("text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed")}>
+            {t('community.cta.subtitle')}
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10"
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="flex flex-wrap justify-center gap-4 mt-10"
+        >
+          {/* Primary CTA */}
+          <button
+            onClick={() => scrollToSection('join')}
+            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-accent/20 border border-accent/30 text-accent font-semibold backdrop-blur-sm hover:bg-accent/30 hover:border-accent/50 hover:shadow-[0_0_30px_hsl(var(--accent)/0.25)] transition-all duration-300"
           >
-            <h3 className={getTransitionClasses("text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-foreground")}>{t('community.mission')}</h3>
-            <p className={getTransitionClasses("text-muted-foreground text-lg leading-relaxed")}>
-              {t('community.description')}
-            </p>
-          </motion.div>
+            <ArrowRight className="h-5 w-5" />
+            <span className={getTransitionClasses()}>{t('community.cta.joinBtn')}</span>
+          </button>
 
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10"
+          {/* Secondary CTA */}
+          <button
+            onClick={() => scrollToSection('projects')}
+            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full border border-border/40 text-foreground font-semibold backdrop-blur-sm hover:bg-white/[0.06] hover:border-border/60 transition-all duration-300"
           >
-            <h3 className={getTransitionClasses("text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-foreground")}>{t('community.visionTitle')}</h3>
-            <p className={getTransitionClasses("text-muted-foreground text-lg leading-relaxed")}>
-              {t('community.vision')}
-            </p>
-          </motion.div>
-        </div>
+            <Rocket className="h-5 w-5" />
+            <span className={getTransitionClasses()}>{t('community.cta.projectsBtn')}</span>
+          </button>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
-              className="glass rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 group"
-            >
-              <feature.icon className="h-12 w-12 text-accent mb-4 group-hover:scale-110 transition-transform" />
-              <h4 className={getTransitionClasses("text-xl font-bold mb-2 text-foreground")}>{t(feature.titleKey)}</h4>
-              <p className={getTransitionClasses("text-muted-foreground")}>{t(feature.descriptionKey)}</p>
-            </motion.div>
-          ))}
-        </div>
+          {/* Tertiary CTA */}
+          <Link
+            to="/blog"
+            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-muted-foreground font-semibold hover:text-foreground hover:bg-white/[0.04] transition-all duration-300"
+          >
+            <Newspaper className="h-5 w-5" />
+            <span className={getTransitionClasses()}>{t('community.cta.updatesBtn')}</span>
+          </Link>
+        </motion.div>
       </div>
     </section>
   );

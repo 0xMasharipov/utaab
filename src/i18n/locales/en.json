@@ -82,6 +82,13 @@
         "title": "Innovative",
         "description": "Push the boundaries of blockchain technology"
       }
+    },
+    "cta": {
+      "title": "Join the Movement",
+      "subtitle": "Be part of a new generation building real-world impact through collaboration, innovation, and Web3 education.",
+      "joinBtn": "Join Community",
+      "projectsBtn": "Explore Projects",
+      "updatesBtn": "Follow Updates"
     }
   },
   "learn": {
