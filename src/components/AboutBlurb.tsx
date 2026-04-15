@@ -77,7 +77,8 @@ export const AboutBlurb = () => {
                   src={card.image}
                   alt=""
                   aria-hidden="true"
-                  className="absolute bottom-0 right-0 w-[65%] h-auto object-contain z-10 translate-x-[5%] translate-y-[5%] transition-transform duration-500 group-hover:scale-105"
+                  containerClassName="absolute bottom-0 right-0 w-[65%] h-auto z-10 translate-x-[5%] translate-y-[5%]"
+                  className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
                   loading="lazy"
                   placeholderClassName="opacity-0"
                 />
