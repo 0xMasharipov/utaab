@@ -4,10 +4,19 @@ const AnimatedBlobBackground = () => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Defer heavy blur elements well past initial paint to avoid forced reflow
-    // and improve Speed Index / FCP by keeping the main thread free
-    const id = setTimeout(() => setMounted(true), 200);
-    return () => clearTimeout(id);
+    // Defer heavy blur elements well past TTI to avoid forced reflow
+    // and reduce main-thread work during critical loading phase
+    let cancelled = false;
+    const schedule = typeof requestIdleCallback === 'function'
+      ? (cb: () => void) => requestIdleCallback(cb, { timeout: 2000 })
+      : (cb: () => void) => setTimeout(cb, 1500);
+    const id = schedule(() => { if (!cancelled) setMounted(true); });
+    return () => {
+      cancelled = true;
+      if (typeof cancelIdleCallback === 'function' && typeof id === 'number') {
+        cancelIdleCallback(id);
+      }
+    };
   }, []);
   return (
     <div
