@@ -22,14 +22,11 @@ const WelcomeEmail = ({ name }: WelcomeEmailProps) => (
     <Preview>Welcome to {SITE_NAME} — Connect. Learn. Build.</Preview>
     <Body style={main}>
       <Container style={container}>
-        {/* Logo + tagline OUTSIDE the card */}
-        <Section style={logoSection}>
-          <Img src={LOGO_URL} alt={SITE_NAME} width="160" style={logo} />
-        </Section>
-        <Text style={tagline}>CONNECT · LEARN · BUILD</Text>
-
-        {/* White card */}
+        {/* White card with logo inside */}
         <Section style={card}>
+          <Img src={LOGO_URL} alt={SITE_NAME} width="160" style={logo} />
+          <Text style={tagline}>CONNECT · LEARN · BUILD</Text>
+
           <Heading style={h1}>
             {name ? `Welcome, ${name}!` : `Welcome to ${SITE_NAME}!`}
           </Heading>
@@ -78,13 +75,8 @@ const container: React.CSSProperties = {
   margin: '0 auto',
 }
 
-const logoSection: React.CSSProperties = {
-  textAlign: 'center' as const,
-  padding: '0 0 12px',
-}
-
 const logo: React.CSSProperties = {
-  margin: '0 auto',
+  margin: '0 auto 12px',
 }
 
 const tagline: React.CSSProperties = {
@@ -93,7 +85,7 @@ const tagline: React.CSSProperties = {
   color: '#919199',
   letterSpacing: '3px',
   textAlign: 'center' as const,
-  margin: '0 0 24px',
+  margin: '0 0 32px',
 }
 
 const card: React.CSSProperties = {
@@ -101,7 +93,7 @@ const card: React.CSSProperties = {
   borderRadius: '20px',
   border: '1px solid #e8e8ec',
   boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-  padding: '48px 36px 40px',
+  padding: '40px 36px 40px',
 }
 
 const h1: React.CSSProperties = {
