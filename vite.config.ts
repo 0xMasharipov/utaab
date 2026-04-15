@@ -29,6 +29,8 @@ export default defineConfig(({ mode }) => ({
           'vendor-router': ['react-router-dom'],
           'vendor-motion': ['framer-motion'],
           'vendor-three': ['three', '@react-three/fiber', '@react-three/drei'],
+          'vendor-query': ['@tanstack/react-query'],
+          'vendor-i18n': ['react-i18next', 'i18next'],
         }
       }
     }
