@@ -4,9 +4,10 @@ const AnimatedBlobBackground = () => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Defer heavy blur elements to avoid forced reflow during initial paint
-    const id = requestAnimationFrame(() => setMounted(true));
-    return () => cancelAnimationFrame(id);
+    // Defer heavy blur elements well past initial paint to avoid forced reflow
+    // and improve Speed Index / FCP by keeping the main thread free
+    const id = setTimeout(() => setMounted(true), 200);
+    return () => clearTimeout(id);
   }, []);
   return (
     <div
