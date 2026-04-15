@@ -57,6 +57,9 @@
   <style>
     body{background:#0a0a0f;color:#fafafa;font-family:system-ui,-apple-system,sans-serif;margin:0}
     #root{min-height:100vh}
+    .lcp-placeholder{position:absolute;top:0;left:0;width:100%;min-height:100vh;background:#061224;display:flex;align-items:center;z-index:0}
+    .lcp-placeholder h1{font-family:'Montserrat',system-ui,sans-serif;font-weight:800;font-size:clamp(36px,6vw,80px);line-height:1.1;color:#F3F7FB;margin:0;padding:0 2rem;max-width:700px}
+    #root:not(:empty) + .lcp-placeholder{display:none}
   </style>
   
 
