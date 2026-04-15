@@ -1,6 +1,6 @@
 const AnimatedBlobBackground = () => {
   return (
-    <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+    <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none" style={{ contain: 'strict' }}>
       {/* Blob 1 - Large blue */}
       <div
         className="absolute w-[600px] h-[600px] opacity-45 animate-blob-1"
@@ -9,6 +9,8 @@ const AnimatedBlobBackground = () => {
           filter: 'blur(90px)',
           top: '10%',
           left: '15%',
+          willChange: 'transform',
+          contain: 'layout style paint',
         }}
       />
       {/* Blob 2 - Purple accent */}
@@ -19,6 +21,8 @@ const AnimatedBlobBackground = () => {
           filter: 'blur(85px)',
           top: '50%',
           right: '10%',
+          willChange: 'transform',
+          contain: 'layout style paint',
         }}
       />
       {/* Blob 3 - Bright blue */}
@@ -29,6 +33,8 @@ const AnimatedBlobBackground = () => {
           filter: 'blur(80px)',
           bottom: '10%',
           left: '40%',
+          willChange: 'transform',
+          contain: 'layout style paint',
         }}
       />
       {/* Blob 4 - Deep blue */}
@@ -39,6 +45,8 @@ const AnimatedBlobBackground = () => {
           filter: 'blur(80px)',
           top: '30%',
           left: '60%',
+          willChange: 'transform',
+          contain: 'layout style paint',
         }}
       />
       {/* Blob 5 - Cyan accent */}
@@ -49,6 +57,8 @@ const AnimatedBlobBackground = () => {
           filter: 'blur(90px)',
           top: '70%',
           left: '15%',
+          willChange: 'transform',
+          contain: 'layout style paint',
         }}
       />
       {/* Grain overlay */}
