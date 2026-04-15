@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { supabase } from '@/integrations/supabase/client';
-import logo from '@/assets/logo-new.png';
+import logo from '@/assets/logo-new.webp';
 import { BrandText } from '@/components/common/BrandText';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 

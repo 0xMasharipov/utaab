@@ -9,22 +9,22 @@ import AnimatedImage from '@/components/common/AnimatedImage';
 
 const cards = [
   {
-    image: '/images/about/UTAAB_Education.png',
+    image: '/images/about/UTAAB_Education.webp',
     titleKey: 'about.cards.education.title',
     descriptionKey: 'about.cards.education.description',
   },
   {
-    image: '/images/about/UTAAB_Projects_1.png',
+    image: '/images/about/UTAAB_Projects_1.webp',
     titleKey: 'about.cards.projects.title',
     descriptionKey: 'about.cards.projects.description',
   },
   {
-    image: '/images/about/UTAAB_Ecosystem.png',
+    image: '/images/about/UTAAB_Ecosystem.webp',
     titleKey: 'about.cards.ecosystem.title',
     descriptionKey: 'about.cards.ecosystem.description',
   },
   {
-    image: '/images/about/UTAAB_Support.png',
+    image: '/images/about/UTAAB_Support.webp',
     titleKey: 'about.cards.support.title',
     descriptionKey: 'about.cards.support.description',
   },
