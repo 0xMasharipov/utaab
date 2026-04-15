@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Linkedin, Instagram, Twitter, SendDiagonal, Mail, Github } from 'iconoir-react';
-import logo from '@/assets/logo-new.png';
+import logo from '@/assets/logo-new.webp';
 import footerGeoDesktop from '@/assets/footer-geo-desktop.png';
 import footerGeoMobile from '@/assets/footer-geo-mobile.png';
 import { BrandText } from '@/components/common/BrandText';
