@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { motion, AnimatePresence } from 'framer-motion';
+// framer-motion removed from critical path — CSS animations used instead
 import { cn } from '@/lib/utils';
 import logo from '@/assets/logo-new-small.webp';
 import { BrandText } from '@/components/common/BrandText';
@@ -218,19 +218,14 @@ export const Navbar = () => {
       </nav>
 
       {/* Premium frosted glass mega menu panel */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
+      {isMenuOpen && (
+          <div
             id="nav-overlay"
             ref={menuRef}
             role="dialog"
             aria-modal="true"
             aria-label={t('nav.menu')}
-            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
-            transition={{ duration: prefersReducedMotion ? 0.1 : 0.22, ease: 'easeOut' }}
-            className="fixed z-[80] overflow-y-auto"
+            className="fixed z-[80] overflow-y-auto nav-menu-enter"
             style={{
               top: `${panelTop}px`,
               left: `${pillRect.left}px`,
@@ -267,18 +262,16 @@ export const Navbar = () => {
                       { key: 'events', id: 'events' },
                       { key: 'projects', id: 'projects' },
                     ].map((item, i) => (
-                      <motion.button
+                      <button
                         key={item.key}
-                        initial={prefersReducedMotion ? {} : { opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.03 * i, duration: 0.2 }}
                         onClick={() => scrollToSection(item.id)}
                         className={getTransitionClasses(
-                          "text-left text-lg font-semibold tracking-wide text-white/90 hover:text-white hover:bg-white/[0.08] transition-all duration-200 px-4 py-2.5 rounded-xl"
+                          "text-left text-lg font-semibold tracking-wide text-white/90 hover:text-white hover:bg-white/[0.08] transition-all duration-200 px-4 py-2.5 rounded-xl nav-menu-item"
                         )}
+                        style={{ animationDelay: `${0.03 * i}s` }}
                       >
                         {t(`nav.${item.key}`)}
-                      </motion.button>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -294,18 +287,16 @@ export const Navbar = () => {
                       { key: 'blog', type: 'page', path: '/blog' },
                       { key: 'education', type: 'page', path: '/education', label: 'education.title' },
                     ].map((item, i) => (
-                      <motion.button
+                      <button
                         key={item.key}
-                        initial={prefersReducedMotion ? {} : { opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.03 * (i + 4), duration: 0.2 }}
                         onClick={() => item.type === 'scroll' ? scrollToSection(item.id!) : handleNavigate(item.path!)}
                         className={getTransitionClasses(
-                          "text-left text-lg font-semibold tracking-wide text-white/90 hover:text-white hover:bg-white/[0.08] transition-all duration-200 px-4 py-2.5 rounded-xl"
+                          "text-left text-lg font-semibold tracking-wide text-white/90 hover:text-white hover:bg-white/[0.08] transition-all duration-200 px-4 py-2.5 rounded-xl nav-menu-item"
                         )}
+                        style={{ animationDelay: `${0.03 * (i + 4)}s` }}
                       >
                         {t(item.label || `nav.${item.key}`)}
-                      </motion.button>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -322,18 +313,16 @@ export const Navbar = () => {
                       { key: 'contributorMatch', type: 'page', path: '/contributor-match' },
                       { key: 'join', type: 'scroll', id: 'join' },
                     ].map((item, i) => (
-                      <motion.button
+                      <button
                         key={item.key}
-                        initial={prefersReducedMotion ? {} : { opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.03 * (i + 7), duration: 0.2 }}
                         onClick={() => item.type === 'scroll' ? scrollToSection(item.id!) : handleNavigate(item.path!)}
                         className={getTransitionClasses(
-                          "text-left text-lg font-semibold tracking-wide text-white/90 hover:text-white hover:bg-white/[0.08] transition-all duration-200 px-4 py-2.5 rounded-xl"
+                          "text-left text-lg font-semibold tracking-wide text-white/90 hover:text-white hover:bg-white/[0.08] transition-all duration-200 px-4 py-2.5 rounded-xl nav-menu-item"
                         )}
+                        style={{ animationDelay: `${0.03 * (i + 7)}s` }}
                       >
                         {t(`nav.${item.key}`)}
-                      </motion.button>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -393,9 +382,8 @@ export const Navbar = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
     </>
   );
 };
