@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
-import { ClipboardCheck, Brain, Target } from 'iconoir-react';
+import { ClipboardCheck, Brain, Archery } from 'iconoir-react';
 import GlassCard from '@/components/glass/GlassCard';
 import { useTranslation } from 'react-i18next';
 
-const icons = [ClipboardCheck, Brain, Target];
+const icons = [ClipboardCheck, Brain, Archery];
 
 const HowItWorks = () => {
   const { t } = useTranslation();

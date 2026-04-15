@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Trophy, Star, TrendingUp, Target, Flash, NavArrowRight } from 'iconoir-react';
+import { Trophy, Star, GraphUp, Archery, Flash, NavArrowRight } from 'iconoir-react';
 import GlassCard from '@/components/glass/GlassCard';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -128,7 +128,7 @@ const AssessmentResult = ({ result, isLoading }: AssessmentResultProps) => {
               <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
                 <GlassCard className="p-6">
                   <div className="flex items-center gap-2 mb-2">
-                    <Target className="w-5 h-5 text-muted-foreground" strokeWidth={1.5} />
+                    <Archery className="w-5 h-5 text-muted-foreground" strokeWidth={1.5} />
                     <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">{t('contributor.result.secondaryMatch')}</span>
                   </div>
                   <h3 className="text-xl font-bold text-foreground">{result.secondary_role}</h3>
@@ -165,7 +165,7 @@ const AssessmentResult = ({ result, isLoading }: AssessmentResultProps) => {
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
                 <GlassCard variant="subtle" className="p-5 h-full">
                   <div className="flex items-center gap-2 mb-2">
-                    <TrendingUp className="w-4 h-4 text-secondary" strokeWidth={1.5} />
+                    <GraphUp className="w-4 h-4 text-secondary" strokeWidth={1.5} />
                     <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider">{t('contributor.result.growthPath')}</h4>
                   </div>
                   <p className="text-sm text-foreground">{result.growth_path}</p>

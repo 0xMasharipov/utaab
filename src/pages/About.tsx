@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { GraduationCap, Wrench, Network, Heart, Rocket, Globe, TrendingUp, NavArrowRight, Group } from 'iconoir-react';
+import { GraduationCap, Wrench, Network, Heart, Rocket, Globe, GraphUp, NavArrowRight, Group } from 'iconoir-react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
@@ -35,7 +35,7 @@ const About = () => {
   const impact = [
     { icon: Rocket, titleKey: 'aboutPage.impact.projects.title', descKey: 'aboutPage.impact.projects.description' },
     { icon: Globe, titleKey: 'aboutPage.impact.initiatives.title', descKey: 'aboutPage.impact.initiatives.description' },
-    { icon: TrendingUp, titleKey: 'aboutPage.impact.outcomes.title', descKey: 'aboutPage.impact.outcomes.description' },
+    { icon: GraphUp, titleKey: 'aboutPage.impact.outcomes.title', descKey: 'aboutPage.impact.outcomes.description' },
   ];
 
   const whyItems = [
