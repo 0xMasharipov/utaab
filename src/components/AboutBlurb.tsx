@@ -2,29 +2,28 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { GraduationCap, Rocket, Globe, Heart, NavArrowRight } from 'iconoir-react';
-
+import { NavArrowRight } from 'iconoir-react';
 import { Link } from 'react-router-dom';
 import GlassCard from '@/components/glass/GlassCard';
 
 const cards = [
   {
-    icon: GraduationCap,
+    image: '/images/about/UTAAB_Education.png',
     titleKey: 'about.cards.education.title',
     descriptionKey: 'about.cards.education.description',
   },
   {
-    icon: Rocket,
+    image: '/images/about/UTAAB_Projects_1.png',
     titleKey: 'about.cards.projects.title',
     descriptionKey: 'about.cards.projects.description',
   },
   {
-    icon: Globe,
+    image: '/images/about/UTAAB_Ecosystem.png',
     titleKey: 'about.cards.ecosystem.title',
     descriptionKey: 'about.cards.ecosystem.description',
   },
   {
-    icon: Heart,
+    image: '/images/about/UTAAB_Support.png',
     titleKey: 'about.cards.support.title',
     descriptionKey: 'about.cards.support.description',
   },
@@ -60,16 +59,46 @@ export const AboutBlurb = () => {
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
             >
-              <GlassCard hover className="p-6 sm:p-8 text-center h-full group">
-                <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors icon-glow">
-                  <card.icon className="h-7 w-7 text-accent" strokeWidth={1.5} />
+              <GlassCard hover className="relative overflow-hidden min-h-[280px] h-full group p-0">
+                {/* Layer 1: Grid background */}
+                <div
+                  className="absolute inset-0 z-0 opacity-[0.05]"
+                  style={{
+                    backgroundImage:
+                      'linear-gradient(to right, hsl(213 94% 68%) 1px, transparent 1px), linear-gradient(to bottom, hsl(213 94% 68%) 1px, transparent 1px)',
+                    backgroundSize: '32px 32px',
+                  }}
+                  aria-hidden="true"
+                />
+
+                {/* Layer 2: 3D Image */}
+                <img
+                  src={card.image}
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute bottom-0 right-0 w-[65%] h-auto object-contain z-10 translate-x-[5%] translate-y-[5%] transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+
+                {/* Layer 3: Gradient overlay */}
+                <div
+                  className="absolute inset-0 z-20"
+                  style={{
+                    background:
+                      'linear-gradient(to top, hsl(217 50% 8% / 0.8) 0%, hsl(217 50% 8% / 0.5) 40%, transparent 100%)',
+                  }}
+                  aria-hidden="true"
+                />
+
+                {/* Layer 4: Text content */}
+                <div className="relative z-30 p-6 sm:p-8 flex flex-col h-full">
+                  <h3 className="text-lg font-bold text-foreground mb-2">
+                    {t(card.titleKey)}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {t(card.descriptionKey)}
+                  </p>
                 </div>
-                <h3 className="text-lg font-bold text-foreground mb-2">
-                  {t(card.titleKey)}
-                </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {t(card.descriptionKey)}
-                </p>
               </GlassCard>
             </motion.div>
           ))}
