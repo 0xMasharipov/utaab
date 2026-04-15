@@ -1,37 +1,39 @@
 
 
-# Fix Navbar Resources Navigation + Add About Us to Footer
+# Show Contributor Assessments in Admin Applicants Tab
 
-## Problem
-The navbar has items (Resources, Learn, Community) that try to scroll to sections not present on the Index page. The "Resources" click does nothing. Footer is also missing an "About Us" link.
+## Summary
+Merge `contributor_assessments` data into the Applicants tab alongside `community_applications`, so admins can see and manage both types of applicants in one unified view.
 
-## Solution
+## Changes
 
-### 1. Add missing sections to Index page (`src/pages/Index.tsx`)
-Add `<Community />`, `<Learn />`, and `<Resources />` components to the Index page inside `<BackgroundGrid>`, restoring the scroll targets:
+### `src/pages/admin/AdminUsers.tsx`
 
-```
-<AboutBlurb />
-<Community />    ← add
-<Learn />        ← add
-<Resources />    ← add
-<Projects />
-<Events />
-<BlogSection />
-<Join />
-<Footer />
-```
+1. **Fetch contributor assessments** in `fetchData()` — query `contributor_assessments` table, normalize each record into the same shape as community applicants with a `source` field:
+   - Map `full_name`, `email`, `created_at` directly
+   - Extract `form_data` fields for department-equivalent info (e.g. `trackInterest`, `weeklyHours`)
+   - Extract AI result data (`ai_result`) for experience/role info
+   - Set `status` to `'pending'` (contributor assessments have no status column)
+   - Add `source: 'contributor'` vs `source: 'community'` to distinguish them
 
-### 2. Add "About Us" link to Footer (`src/components/Footer.tsx`)
-Add an "About Us" entry to the `navLinks` array, linking to `/about`:
+2. **Merge both lists** into the `applicants` state array, sorted by `created_at` descending
 
-```ts
-{ label: t('footer.aboutLink', 'About Us'), href: '/about' },
-```
+3. **Add a source badge** in the Applicants table — a small "Community" or "Contributor" badge next to each row so admins can tell them apart
 
-Place it after "Home" and before "Projects".
+4. **Add source filter** alongside the existing status filter — options: All Sources, Community, Contributor
+
+5. **Update the Preview Dialog** to handle contributor assessments:
+   - Show AI matching results (primary role, secondary role, match score) when `source === 'contributor'`
+   - Show form data fields (university, strengths, motivations, work style) mapped from `form_data`
+   - Show links (GitHub, LinkedIn, portfolio) from `form_data`
+
+6. **Update stats card** — the Applicants count will naturally include both sources
+
+7. **Update `filteredApplicants`** to also filter by source when selected
+
+### No database or edge function changes needed
+The `contributor_assessments` table already has admin SELECT RLS policy in place.
 
 ## Files Modified
-- `src/pages/Index.tsx` — Import and render Community, Learn, Resources sections
-- `src/components/Footer.tsx` — Add About Us nav link
+- `src/pages/admin/AdminUsers.tsx` — Fetch, merge, display contributor assessments in Applicants tab
 
