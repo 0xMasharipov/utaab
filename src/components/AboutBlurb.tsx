@@ -2,26 +2,31 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Users, Target, Lightbulb, ArrowRight } from 'lucide-react';
+import { GraduationCap, Rocket, Globe, Heart, ArrowRight } from 'lucide-react';
 
 import { Link } from 'react-router-dom';
 import GlassCard from '@/components/glass/GlassCard';
 
-const values = [
+const cards = [
   {
-    icon: Users,
-    titleKey: 'community.features.collaborative.title',
-    descriptionKey: 'community.features.collaborative.description',
+    icon: GraduationCap,
+    titleKey: 'about.cards.education.title',
+    descriptionKey: 'about.cards.education.description',
   },
   {
-    icon: Target,
-    titleKey: 'community.features.goalOriented.title',
-    descriptionKey: 'community.features.goalOriented.description',
+    icon: Rocket,
+    titleKey: 'about.cards.projects.title',
+    descriptionKey: 'about.cards.projects.description',
   },
   {
-    icon: Lightbulb,
-    titleKey: 'community.features.innovative.title',
-    descriptionKey: 'community.features.innovative.description',
+    icon: Globe,
+    titleKey: 'about.cards.ecosystem.title',
+    descriptionKey: 'about.cards.ecosystem.description',
+  },
+  {
+    icon: Heart,
+    titleKey: 'about.cards.support.title',
+    descriptionKey: 'about.cards.support.description',
   },
 ];
 
@@ -47,8 +52,8 @@ export const AboutBlurb = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 mb-10">
-          {values.map((value, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 mb-10">
+          {cards.map((card, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
@@ -57,13 +62,13 @@ export const AboutBlurb = () => {
             >
               <GlassCard hover className="p-6 sm:p-8 text-center h-full group">
                 <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
-                  <value.icon className="h-7 w-7 text-accent" />
+                  <card.icon className="h-7 w-7 text-accent" />
                 </div>
                 <h3 className="text-lg font-bold text-foreground mb-2">
-                  {t(value.titleKey)}
+                  {t(card.titleKey)}
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  {t(value.descriptionKey)}
+                  {t(card.descriptionKey)}
                 </p>
               </GlassCard>
             </motion.div>
