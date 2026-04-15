@@ -22,16 +22,17 @@ const WelcomeEmail = ({ name }: WelcomeEmailProps) => (
     <Preview>Welcome to {SITE_NAME} — Connect. Learn. Build.</Preview>
     <Body style={main}>
       <Container style={container}>
+        {/* Logo + tagline OUTSIDE the card */}
         <Section style={logoSection}>
-          <Img src={LOGO_URL} alt={SITE_NAME} width="180" style={logo} />
+          <Img src={LOGO_URL} alt={SITE_NAME} width="160" style={logo} />
         </Section>
+        <Text style={tagline}>CONNECT · LEARN · BUILD</Text>
 
+        {/* White card */}
         <Section style={card}>
           <Heading style={h1}>
             {name ? `Welcome, ${name}!` : `Welcome to ${SITE_NAME}!`}
           </Heading>
-
-          <Text style={tagline}>CONNECT · LEARN · BUILD</Text>
 
           <Text style={text}>
             Thank you for joining {SITE_NAME}. We're an innovation-driven ecosystem where
@@ -45,7 +46,10 @@ const WelcomeEmail = ({ name }: WelcomeEmailProps) => (
 
           <Hr style={divider} />
 
-          <Text style={footer}>
+          <Text style={footerDisclaimer}>
+            You received this email because you joined {SITE_NAME}.
+          </Text>
+          <Text style={footerCopy}>
             © Powered by {SITE_NAME}
           </Text>
         </Section>
@@ -62,54 +66,57 @@ export const template = {
   previewData: { name: 'Jane' },
 } satisfies TemplateEntry
 
-// Styles — matches UTAAB auth email branding
+// ── Styles ──────────────────────────────────────────────────────────
 const main: React.CSSProperties = {
   backgroundColor: '#081020',
-  fontFamily: "'Montserrat', 'Helvetica Neue', Arial, sans-serif",
+  fontFamily: "'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
   padding: '40px 0',
 }
 
 const container: React.CSSProperties = {
-  maxWidth: '560px',
+  maxWidth: '480px',
   margin: '0 auto',
 }
 
 const logoSection: React.CSSProperties = {
   textAlign: 'center' as const,
-  padding: '0 0 24px',
+  padding: '0 0 12px',
 }
 
 const logo: React.CSSProperties = {
   margin: '0 auto',
 }
 
+const tagline: React.CSSProperties = {
+  fontSize: '11px',
+  fontWeight: 600,
+  color: '#919199',
+  letterSpacing: '3px',
+  textAlign: 'center' as const,
+  margin: '0 0 24px',
+}
+
 const card: React.CSSProperties = {
   backgroundColor: '#ffffff',
-  borderRadius: '16px',
-  padding: '40px 32px',
+  borderRadius: '20px',
+  border: '1px solid #e8e8ec',
+  boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+  padding: '48px 36px 40px',
 }
 
 const h1: React.CSSProperties = {
   fontSize: '24px',
   fontWeight: 700,
   color: '#081020',
-  margin: '0 0 8px',
-  textAlign: 'center' as const,
-}
-
-const tagline: React.CSSProperties = {
-  fontSize: '12px',
-  fontWeight: 600,
-  color: '#6366f1',
-  letterSpacing: '3px',
-  textAlign: 'center' as const,
   margin: '0 0 24px',
+  textAlign: 'center' as const,
 }
 
 const text: React.CSSProperties = {
   fontSize: '15px',
   color: '#374151',
   lineHeight: '1.6',
+  textAlign: 'center' as const,
   margin: '0 0 16px',
 }
 
@@ -118,7 +125,14 @@ const divider: React.CSSProperties = {
   margin: '24px 0',
 }
 
-const footer: React.CSSProperties = {
+const footerDisclaimer: React.CSSProperties = {
+  fontSize: '12px',
+  color: '#9ca3af',
+  textAlign: 'center' as const,
+  margin: '0 0 4px',
+}
+
+const footerCopy: React.CSSProperties = {
   fontSize: '12px',
   color: '#9ca3af',
   textAlign: 'center' as const,
