@@ -1,40 +1,37 @@
 
 
-# Update "Learn & Grow" Cards with 4-Layer 3D Visuals
+# Add GitHub to Footer Social Section & Rename to "Follow Us"
 
-## Summary
-Apply the same layered visual system from "What We Build" (AboutBlurb) to the Learn section's 3 cards, replacing icon-based cards with immersive 3D image cards using the uploaded assets.
-
-## Assets
-Copy 3 uploaded images to `public/images/learn/`:
-- `UTAAB_Edu_Guides.png` → Educational Guides
-- `UTAAB_Video_Tutorials.png` → Video Tutorials
-- `UTAAB_Workshops_Bootcamps.png` → Workshops & Bootcamps
+## Current State
+The footer already has a "Social" section with 4 icons (LinkedIn, Telegram, Instagram, X) using Iconoir. The user wants to add GitHub and update the section to feel like a "Follow Us" section with brand-color hover effects.
 
 ## Changes
 
-### `src/components/Learn.tsx` — Card rewrite
+### `src/components/Footer.tsx`
+1. Import `GitHub` from `iconoir-react` (add to existing import)
+2. Add GitHub entry to `socialLinks` array:
+   ```ts
+   { name: 'GitHub', icon: GitHub, url: 'https://github.com/UTAA-Blockchain', ariaLabel: 'Visit UTAAB on GitHub', hoverColor: 'hover:text-white' }
+   ```
+3. Update Instagram URL to clean version: `https://www.instagram.com/utaa_blockchain`
+4. Add per-icon brand-color hover effects via a `hoverClass` field on each social link:
+   - LinkedIn: `hover:text-[#0A66C2]` (LinkedIn blue)
+   - Telegram: `hover:text-[#26A5E4]` (Telegram blue)
+   - Instagram: `hover:text-[#E4405F]` (Instagram pink)
+   - X: `hover:text-white`
+   - GitHub: `hover:text-white`
+5. Apply the per-icon `hoverClass` instead of the generic `hover:text-accent` on the icon links
+6. Keep existing border glow, scale, glass styling, and layout unchanged
 
-Replace current flat glass cards with the exact 4-layer structure from AboutBlurb:
+### `src/i18n/locales/en.json`, `tr.json`, `ar.json`, `ru.json`
+- Update `footer.social` key from current value to "Follow Us" (and translations: "Bizi Takip Edin", "تابعنا", "Подписывайтесь")
 
-1. Update `resources` array to include `image` field instead of `icon`
-2. Remove iconoir imports (`Book`, `MediaVideoList`, `GraduationCap`)
-3. Import `GlassCard` from `@/components/glass/GlassCard`
-4. Each card becomes a `GlassCard` with `relative overflow-hidden min-h-[280px] p-0`:
-   - **Layer 1 (z-0)**: Grid background pattern (identical CSS to AboutBlurb)
-   - **Layer 2 (z-10)**: `<img>` positioned `absolute bottom-0 right-0 w-[65%]` with hover scale
-   - **Layer 3 (z-20)**: Dark gradient overlay (`linear-gradient to top`, 80% → 50% → transparent)
-   - **Layer 4 (z-30)**: Text content (title + description) with padding
-5. Keep: `onClick` navigation, motion animations, i18n keys, `cursor-pointer`, section heading/subtitle unchanged
-6. Grid stays `md:grid-cols-3`
-
-### What does NOT change
-- Section heading, subtitle, spacing
-- Text content / i18n keys
-- Navigation behavior (click → route)
-- Other sections
+## What does NOT change
+- Footer layout, grid, spacing, other columns
+- Newsletter, Navigation, Brand sections
+- No new dependencies — `GitHub` icon exists in `iconoir-react`
 
 ## Files Modified
-- `src/components/Learn.tsx` — card inner structure rewrite
-- `public/images/learn/` — 3 new image assets
+- `src/components/Footer.tsx`
+- `src/i18n/locales/en.json`, `tr.json`, `ar.json`, `ru.json` (one key each)
 
