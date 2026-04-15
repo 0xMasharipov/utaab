@@ -2,6 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
+import { ADMIN_ROUTES } from "@/config/routes";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -116,7 +120,7 @@ export default function AdminLogin() {
         description: "Admin login successful",
       });
 
-      navigate("/admin/dashboard");
+      navigate(ADMIN_ROUTES.DASHBOARD);
     } catch (error: any) {
       toast({
         title: t("common.error"),
@@ -264,7 +268,7 @@ export default function AdminLogin() {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/admin/login?oauth=callback`,
+          redirectTo: `${window.location.origin}${ADMIN_ROUTES.LOGIN}?oauth=callback`,
         },
       });
 
@@ -300,7 +304,7 @@ export default function AdminLogin() {
                 description: "This Google account isn't authorized for admin access.",
                 variant: "destructive",
               });
-              window.history.replaceState({}, '', '/admin/login');
+              window.history.replaceState({}, '', ADMIN_ROUTES.LOGIN);
               return;
             }
 
@@ -315,7 +319,7 @@ export default function AdminLogin() {
             setOtpEmail(googleEmail);
             setAwaitingOtp(true);
             setResendCooldown(60);
-            window.history.replaceState({}, '', '/admin/login');
+            window.history.replaceState({}, '', ADMIN_ROUTES.LOGIN);
             toast({
               title: "Verification Required",
               description: "A 6-digit code has been sent to your email.",
@@ -408,9 +412,9 @@ export default function AdminLogin() {
           <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
             <Shield className="w-8 h-8 text-primary" />
           </div>
-          <CardTitle className="text-2xl font-bold">Admin Login</CardTitle>
+          <CardTitle className="text-2xl font-bold">Sign In</CardTitle>
           <CardDescription>
-            Secure access for administrators only
+            Secure access — authorized personnel only
           </CardDescription>
         </CardHeader>
         <CardContent>
