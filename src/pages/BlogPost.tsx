@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Calendar, User } from 'lucide-react';
+import { ArrowLeft, Calendar, User } from 'iconoir-react';
 import { Button } from '@/components/ui/button';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
@@ -175,7 +175,7 @@ const BlogPost = () => {
           )}
           <div className="relative z-10 section-container pt-12">
             <Button variant="ghost" asChild className="mb-6 text-muted-foreground hover:text-foreground">
-              <Link to="/blog"><ArrowLeft className="h-4 w-4 mr-2" /> {t('blog.backToBlog', 'Back to Blog')}</Link>
+              <Link to="/blog"><ArrowLeft className="h-4 w-4 mr-2" strokeWidth={1.5} /> {t('blog.backToBlog', 'Back to Blog')}</Link>
             </Button>
 
             <motion.h1
@@ -188,10 +188,10 @@ const BlogPost = () => {
 
             <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-6">
               {post.author_name && (
-                <div className="flex items-center gap-2"><User className="h-4 w-4" /> {post.author_name}</div>
+                <div className="flex items-center gap-2"><User className="h-4 w-4" strokeWidth={1.5} /> {post.author_name}</div>
               )}
               {post.publish_date && (
-                <div className="flex items-center gap-2"><Calendar className="h-4 w-4" /> {format(new Date(post.publish_date), 'MMMM d, yyyy')}</div>
+                <div className="flex items-center gap-2"><Calendar className="h-4 w-4" strokeWidth={1.5} /> {format(new Date(post.publish_date), 'MMMM d, yyyy')}</div>
               )}
             </div>
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { MessageCircle, ExternalLink } from 'lucide-react';
+import { ChatBubble, OpenNewWindow } from 'iconoir-react';
 import { WHATSAPP_CONFIG } from '@/config/whatsapp';
 import { motion } from 'framer-motion';
 
@@ -73,9 +73,9 @@ export const WhatsAppButton = ({
             handleClick();
           }}
         >
-          <MessageCircle className="mr-2 h-5 w-5" />
-          {message}
-          <ExternalLink className="ml-2 h-4 w-4" />
+           <ChatBubble className="mr-2 h-5 w-5" strokeWidth={1.5} />
+           {message}
+           <OpenNewWindow className="ml-2 h-4 w-4" strokeWidth={1.5} />
         </a>
       </Button>
       
