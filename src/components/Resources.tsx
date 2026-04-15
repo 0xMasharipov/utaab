@@ -12,7 +12,7 @@ export const Resources = () => {
 
   const resources = [
     {
-      image: '/images/resources/UTAAB_Documentation.png',
+      image: '/images/resources/UTAAB_Documentation.webp',
       title: t('resources.documentationTitle'),
       items: [
         'resources.docs.gettingStarted',
@@ -22,7 +22,7 @@ export const Resources = () => {
       ],
     },
     {
-      image: '/images/resources/UTAAB_Dev_Tools.png',
+      image: '/images/resources/UTAAB_Dev_Tools.webp',
       title: t('resources.toolsTitle'),
       items: [
         'resources.toolsItems.devEnvironment',
@@ -32,7 +32,7 @@ export const Resources = () => {
       ],
     },
     {
-      image: '/images/resources/UTAAB_Research_Papers.png',
+      image: '/images/resources/UTAAB_Research_Papers.webp',
       title: t('resources.researchTitle'),
       items: [
         'resources.researchItems.layer2Scaling',

@@ -14,19 +14,19 @@ export const Learn = () => {
 
   const resources = [
     {
-      image: '/images/learn/UTAAB_Edu_Guides.png',
+      image: '/images/learn/UTAAB_Edu_Guides.webp',
       title: t('learn.guides'),
       description: t('learn.guidesDescription'),
       path: '/learn/guides',
     },
     {
-      image: '/images/learn/UTAAB_Video_Tutorials.png',
+      image: '/images/learn/UTAAB_Video_Tutorials.webp',
       title: t('learn.tutorials'),
       description: t('learn.tutorialsDescription'),
       path: '/education',
     },
     {
-      image: '/images/learn/UTAAB_Workshops_Bootcamps.png',
+      image: '/images/learn/UTAAB_Workshops_Bootcamps.webp',
       title: t('learn.workshops'),
       description: t('learn.workshopsDescription'),
       path: '/learn/workshops',
