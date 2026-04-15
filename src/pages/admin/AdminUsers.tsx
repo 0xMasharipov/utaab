@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, UserPlus, Mail, Shield, Users as UsersIcon, Clock, Eye, FileUser, ExternalLink, Filter } from 'lucide-react';
+import { Search, UserPlus, Mail, Shield, Users as UsersIcon, Clock, Eye, FileUser, ExternalLink, Filter, GitMerge } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -51,6 +51,7 @@ export default function AdminUsers() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [sourceFilter, setSourceFilter] = useState<string>('all');
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [previewApplicant, setPreviewApplicant] = useState<any>(null);
   const [previewDialogOpen, setPreviewDialogOpen] = useState(false);
@@ -130,7 +131,49 @@ export default function AdminUsers() {
         .order('created_at', { ascending: false });
 
       if (applicantsError) throw applicantsError;
-      setApplicants(applicantsData || []);
+
+      const communityApplicants = (applicantsData || []).map((a: any) => ({
+        ...a,
+        source: 'community' as const,
+      }));
+
+      // Fetch contributor assessments
+      const { data: assessmentsData, error: assessmentsError } = await supabase
+        .from('contributor_assessments')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (assessmentsError) throw assessmentsError;
+
+      const contributorApplicants = (assessmentsData || []).map((a: any) => {
+        const formData = a.form_data || {};
+        const aiResult = a.ai_result || {};
+        return {
+          id: a.id,
+          full_name: a.full_name,
+          email: a.email,
+          created_at: a.created_at,
+          department: formData.trackInterest || aiResult.primaryRole || 'Contributor',
+          experience_level: formData.experienceLevel || aiResult.primaryRole || 'N/A',
+          status: 'pending',
+          motivation: formData.motivation || formData.whyContribute || '',
+          availability_hours: formData.weeklyHours || null,
+          github_url: formData.githubUrl || formData.github_url || null,
+          linkedin_url: formData.linkedinUrl || formData.linkedin_url || null,
+          portfolio_url: formData.portfolioUrl || formData.portfolio_url || null,
+          interests: formData.interests || [],
+          preferred_tracks: formData.preferredTracks || [],
+          source: 'contributor' as const,
+          ai_result: aiResult,
+          form_data: formData,
+        };
+      });
+
+      // Merge and sort by date
+      const allApplicants = [...communityApplicants, ...contributorApplicants]
+        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+      setApplicants(allApplicants);
     } catch (error: any) {
       toast.error('Failed to load users: ' + error.message);
     } finally {
@@ -243,7 +286,8 @@ export default function AdminUsers() {
       applicant.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       applicant.department?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === 'all' || applicant.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesSource = sourceFilter === 'all' || applicant.source === sourceFilter;
+    return matchesSearch && matchesStatus && matchesSource;
   });
 
   if (loading) {
@@ -518,8 +562,8 @@ export default function AdminUsers() {
         </TabsContent>
 
         <TabsContent value="applicants">
-          {/* Status Filter for Applicants */}
-          <div className="flex items-center gap-4 mb-4">
+          {/* Filters for Applicants */}
+          <div className="flex items-center gap-4 mb-4 flex-wrap">
             <div className="flex items-center gap-2">
               <Filter className="h-4 w-4 text-muted-foreground" />
               <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -535,6 +579,18 @@ export default function AdminUsers() {
                 </SelectContent>
               </Select>
             </div>
+            <div className="flex items-center gap-2">
+              <Select value={sourceFilter} onValueChange={setSourceFilter}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Filter by source" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Sources</SelectItem>
+                  <SelectItem value="community">Community</SelectItem>
+                  <SelectItem value="contributor">Contributor</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <div className="text-sm text-muted-foreground">
               {filteredApplicants.length} applicant{filteredApplicants.length !== 1 ? 's' : ''}
             </div>
@@ -546,6 +602,7 @@ export default function AdminUsers() {
                 <TableRow>
                   <TableHead>Name</TableHead>
                   <TableHead>Email</TableHead>
+                  <TableHead>Source</TableHead>
                   <TableHead>Department</TableHead>
                   <TableHead>Experience</TableHead>
                   <TableHead>Status</TableHead>
@@ -555,9 +612,15 @@ export default function AdminUsers() {
               </TableHeader>
               <TableBody>
                 {filteredApplicants.map((applicant) => (
-                  <TableRow key={applicant.id}>
+                  <TableRow key={`${applicant.source}-${applicant.id}`}>
                     <TableCell className="font-medium">{applicant.full_name}</TableCell>
                     <TableCell>{applicant.email}</TableCell>
+                    <TableCell>
+                      <Badge variant={applicant.source === 'contributor' ? 'secondary' : 'outline'} className="gap-1">
+                        {applicant.source === 'contributor' && <GitMerge className="h-3 w-3" />}
+                        {applicant.source === 'contributor' ? 'Contributor' : 'Community'}
+                      </Badge>
+                    </TableCell>
                     <TableCell>{applicant.department || 'N/A'}</TableCell>
                     <TableCell>
                       <Badge variant="outline">{applicant.experience_level || 'N/A'}</Badge>
@@ -577,7 +640,7 @@ export default function AdminUsers() {
                           <Eye className="h-4 w-4" />
                           View
                         </Button>
-                        {applicant.status === 'pending' && (
+                        {applicant.source === 'community' && applicant.status === 'pending' && (
                           <Button
                             variant="default"
                             size="sm"
@@ -594,7 +657,7 @@ export default function AdminUsers() {
                 ))}
                 {filteredApplicants.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                    <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
                       No applicants found
                     </TableCell>
                   </TableRow>
@@ -609,7 +672,15 @@ export default function AdminUsers() {
       <Dialog open={previewDialogOpen} onOpenChange={setPreviewDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh]">
           <DialogHeader>
-            <DialogTitle>Applicant Details</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              Applicant Details
+              {previewApplicant?.source && (
+                <Badge variant={previewApplicant.source === 'contributor' ? 'secondary' : 'outline'} className="gap-1">
+                  {previewApplicant.source === 'contributor' && <GitMerge className="h-3 w-3" />}
+                  {previewApplicant.source === 'contributor' ? 'Contributor' : 'Community'}
+                </Badge>
+              )}
+            </DialogTitle>
           </DialogHeader>
           {previewApplicant && (
             <ScrollArea className="max-h-[70vh] pr-4">
@@ -626,24 +697,87 @@ export default function AdminUsers() {
                       <Label className="text-muted-foreground text-xs">Email</Label>
                       <p className="font-medium">{previewApplicant.email}</p>
                     </div>
-                    <div>
-                      <Label className="text-muted-foreground text-xs">Telegram</Label>
-                      <p className="font-medium">{previewApplicant.telegram || 'N/A'}</p>
-                    </div>
+                    {previewApplicant.source === 'community' && (
+                      <>
+                        <div>
+                          <Label className="text-muted-foreground text-xs">Telegram</Label>
+                          <p className="font-medium">{previewApplicant.telegram || 'N/A'}</p>
+                        </div>
+                        <div>
+                          <Label className="text-muted-foreground text-xs">Country</Label>
+                          <p className="font-medium">{previewApplicant.country || 'N/A'}</p>
+                        </div>
+                        <div>
+                          <Label className="text-muted-foreground text-xs">City</Label>
+                          <p className="font-medium">{previewApplicant.city || 'N/A'}</p>
+                        </div>
+                      </>
+                    )}
                     <div>
                       <Label className="text-muted-foreground text-xs">Department</Label>
                       <p className="font-medium">{previewApplicant.department || 'N/A'}</p>
                     </div>
-                    <div>
-                      <Label className="text-muted-foreground text-xs">Country</Label>
-                      <p className="font-medium">{previewApplicant.country || 'N/A'}</p>
-                    </div>
-                    <div>
-                      <Label className="text-muted-foreground text-xs">City</Label>
-                      <p className="font-medium">{previewApplicant.city || 'N/A'}</p>
-                    </div>
                   </div>
                 </div>
+
+                {/* AI Matching Results — Contributor only */}
+                {previewApplicant.source === 'contributor' && previewApplicant.ai_result && (
+                  <div className="space-y-3">
+                    <h3 className="font-semibold text-lg border-b pb-2">AI Matching Results</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      {(previewApplicant.ai_result.primaryRole || previewApplicant.ai_result.primary_role) && (
+                        <div>
+                          <Label className="text-muted-foreground text-xs">Primary Role</Label>
+                          <div className="mt-1">
+                            <Badge>{previewApplicant.ai_result.primaryRole || previewApplicant.ai_result.primary_role}</Badge>
+                          </div>
+                        </div>
+                      )}
+                      {previewApplicant.ai_result.secondaryRole && (
+                        <div>
+                          <Label className="text-muted-foreground text-xs">Secondary Role</Label>
+                          <div className="mt-1">
+                            <Badge variant="secondary">{previewApplicant.ai_result.secondaryRole}</Badge>
+                          </div>
+                        </div>
+                      )}
+                      {(previewApplicant.ai_result.matchScore || previewApplicant.ai_result.match_score || previewApplicant.ai_result.score) && (
+                        <div>
+                          <Label className="text-muted-foreground text-xs">Match Score</Label>
+                          <p className="font-medium text-lg text-primary">
+                            {previewApplicant.ai_result.matchScore || previewApplicant.ai_result.match_score || previewApplicant.ai_result.score}%
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    {previewApplicant.ai_result.summary && (
+                      <div>
+                        <Label className="text-muted-foreground text-xs">Profile Summary</Label>
+                        <p className="mt-1 text-sm bg-muted/50 p-3 rounded-md">{previewApplicant.ai_result.summary}</p>
+                      </div>
+                    )}
+                    {previewApplicant.ai_result.strengths && (
+                      <div>
+                        <Label className="text-muted-foreground text-xs">Strengths</Label>
+                        <div className="flex flex-wrap gap-2 mt-1">
+                          {(Array.isArray(previewApplicant.ai_result.strengths) ? previewApplicant.ai_result.strengths : [previewApplicant.ai_result.strengths]).map((s: string, i: number) => (
+                            <Badge key={i} variant="outline">{s}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {previewApplicant.ai_result.growthPaths && (
+                      <div>
+                        <Label className="text-muted-foreground text-xs">Growth Paths</Label>
+                        <div className="flex flex-wrap gap-2 mt-1">
+                          {(Array.isArray(previewApplicant.ai_result.growthPaths) ? previewApplicant.ai_result.growthPaths : [previewApplicant.ai_result.growthPaths]).map((g: string, i: number) => (
+                            <Badge key={i} variant="outline">{g}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Experience & Interests */}
                 <div className="space-y-3">
@@ -658,8 +792,8 @@ export default function AdminUsers() {
                     <div>
                       <Label className="text-muted-foreground text-xs">Interests</Label>
                       <div className="flex flex-wrap gap-2 mt-1">
-                        {previewApplicant.interests.map((interest: string) => (
-                          <Badge key={interest} variant="secondary">{interest}</Badge>
+                        {previewApplicant.interests.map((interest: string, i: number) => (
+                          <Badge key={i} variant="secondary">{interest}</Badge>
                         ))}
                       </div>
                     </div>
@@ -668,8 +802,8 @@ export default function AdminUsers() {
                     <div>
                       <Label className="text-muted-foreground text-xs">Preferred Tracks</Label>
                       <div className="flex flex-wrap gap-2 mt-1">
-                        {previewApplicant.preferred_tracks.map((track: string) => (
-                          <Badge key={track} variant="outline">{track}</Badge>
+                        {previewApplicant.preferred_tracks.map((track: string, i: number) => (
+                          <Badge key={i} variant="outline">{track}</Badge>
                         ))}
                       </div>
                     </div>
@@ -681,34 +815,19 @@ export default function AdminUsers() {
                   <h3 className="font-semibold text-lg border-b pb-2">Links</h3>
                   <div className="grid grid-cols-1 gap-3">
                     {previewApplicant.github_url && (
-                      <a
-                        href={previewApplicant.github_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-primary hover:underline"
-                      >
+                      <a href={previewApplicant.github_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-primary hover:underline">
                         <ExternalLink className="h-4 w-4" />
                         GitHub: {previewApplicant.github_url}
                       </a>
                     )}
                     {previewApplicant.portfolio_url && (
-                      <a
-                        href={previewApplicant.portfolio_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-primary hover:underline"
-                      >
+                      <a href={previewApplicant.portfolio_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-primary hover:underline">
                         <ExternalLink className="h-4 w-4" />
                         Portfolio: {previewApplicant.portfolio_url}
                       </a>
                     )}
                     {previewApplicant.linkedin_url && (
-                      <a
-                        href={previewApplicant.linkedin_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-primary hover:underline"
-                      >
+                      <a href={previewApplicant.linkedin_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-primary hover:underline">
                         <ExternalLink className="h-4 w-4" />
                         LinkedIn: {previewApplicant.linkedin_url}
                       </a>
@@ -745,24 +864,46 @@ export default function AdminUsers() {
                       </p>
                     </div>
                     <div>
-                      <Label className="text-muted-foreground text-xs">Language</Label>
-                      <p className="font-medium">{previewApplicant.locale?.toUpperCase() || 'EN'}</p>
+                      <Label className="text-muted-foreground text-xs">Source</Label>
+                      <Badge variant={previewApplicant.source === 'contributor' ? 'secondary' : 'outline'}>
+                        {previewApplicant.source === 'contributor' ? 'Contributor Assessment' : 'Community Application'}
+                      </Badge>
                     </div>
                     <div>
                       <Label className="text-muted-foreground text-xs">Status</Label>
                       {getStatusBadge(previewApplicant.status || 'pending')}
                     </div>
-                    <div>
-                      <Label className="text-muted-foreground text-xs">KVKK Consent</Label>
-                      <Badge variant={previewApplicant.kvkk_consent ? "default" : "destructive"}>
-                        {previewApplicant.kvkk_consent ? 'Accepted' : 'Not Accepted'}
-                      </Badge>
-                    </div>
+                    {previewApplicant.source === 'community' && (
+                      <>
+                        <div>
+                          <Label className="text-muted-foreground text-xs">Language</Label>
+                          <p className="font-medium">{previewApplicant.locale?.toUpperCase() || 'EN'}</p>
+                        </div>
+                        <div>
+                          <Label className="text-muted-foreground text-xs">KVKK Consent</Label>
+                          <Badge variant={previewApplicant.kvkk_consent ? "default" : "destructive"}>
+                            {previewApplicant.kvkk_consent ? 'Accepted' : 'Not Accepted'}
+                          </Badge>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
 
-                {/* Action Buttons for Pending Applications */}
-                {previewApplicant.status === 'pending' && (
+                {/* Raw Form Data for contributors */}
+                {previewApplicant.source === 'contributor' && previewApplicant.form_data && Object.keys(previewApplicant.form_data).length > 0 && (
+                  <details className="text-xs">
+                    <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
+                      Raw Form Data
+                    </summary>
+                    <pre className="mt-2 p-3 rounded-lg bg-muted/20 overflow-auto max-h-48 text-muted-foreground">
+                      {JSON.stringify(previewApplicant.form_data, null, 2)}
+                    </pre>
+                  </details>
+                )}
+
+                {/* Action Buttons for Pending Community Applications */}
+                {previewApplicant.source === 'community' && previewApplicant.status === 'pending' && (
                   <div className="pt-4 border-t">
                     <Button
                       className="w-full gap-2"
