@@ -1,37 +1,40 @@
 
 
-# Add GitHub to Footer Social Section & Rename to "Follow Us"
+# Replace Resources Section Icons with 3D White Assets
 
-## Current State
-The footer already has a "Social" section with 4 icons (LinkedIn, Telegram, Instagram, X) using Iconoir. The user wants to add GitHub and update the section to feel like a "Follow Us" section with brand-color hover effects.
+## Summary
+Replace the three Iconoir SVG icons in the Resources section with the uploaded 3D white PNG images. Keep the card layout, text, and list items completely unchanged. Icons stay compact in the top-left, acting as visual accent — not dominating the card.
+
+## Assets
+Copy 3 uploaded images to `public/images/resources/`:
+- `UTAAB_Documentation.png` → Documentation card
+- `UTAAB_Dev_Tools.png` → Development Tools card
+- `UTAAB_Research_Papers.png` → Research Papers card
 
 ## Changes
 
-### `src/components/Footer.tsx`
-1. Import `GitHub` from `iconoir-react` (add to existing import)
-2. Add GitHub entry to `socialLinks` array:
+### `src/components/Resources.tsx`
+1. Remove Iconoir imports (`Page`, `Code`, `BookmarkBook`)
+2. Replace `icon` field in `resources` array with `image` path string:
    ```ts
-   { name: 'GitHub', icon: GitHub, url: 'https://github.com/UTAA-Blockchain', ariaLabel: 'Visit UTAAB on GitHub', hoverColor: 'hover:text-white' }
+   { image: '/images/resources/UTAAB_Documentation.png', title: ..., items: ... },
+   { image: '/images/resources/UTAAB_Dev_Tools.png', ... },
+   { image: '/images/resources/UTAAB_Research_Papers.png', ... },
    ```
-3. Update Instagram URL to clean version: `https://www.instagram.com/utaa_blockchain`
-4. Add per-icon brand-color hover effects via a `hoverClass` field on each social link:
-   - LinkedIn: `hover:text-[#0A66C2]` (LinkedIn blue)
-   - Telegram: `hover:text-[#26A5E4]` (Telegram blue)
-   - Instagram: `hover:text-[#E4405F]` (Instagram pink)
-   - X: `hover:text-white`
-   - GitHub: `hover:text-white`
-5. Apply the per-icon `hoverClass` instead of the generic `hover:text-accent` on the icon links
-6. Keep existing border glow, scale, glass styling, and layout unchanged
-
-### `src/i18n/locales/en.json`, `tr.json`, `ar.json`, `ru.json`
-- Update `footer.social` key from current value to "Follow Us" (and translations: "Bizi Takip Edin", "تابعنا", "Подписывайтесь")
+3. Replace the `<resource.icon>` element with an `<img>` tag:
+   - Size: `w-12 h-12 sm:w-14 sm:h-14` (slightly larger than current 10-12 SVG icons)
+   - Classes: `object-contain mb-4 sm:mb-6 group-hover:scale-105 transition-transform duration-300`
+   - Add `loading="lazy"`, `alt=""`, `aria-hidden="true"` (decorative)
+4. Everything else stays identical: card classes, text, list, grid, section heading, animations
 
 ## What does NOT change
-- Footer layout, grid, spacing, other columns
-- Newsletter, Navigation, Brand sections
-- No new dependencies — `GitHub` icon exists in `iconoir-react`
+- Card layout, spacing, grid (`lg:grid-cols-3`)
+- Text content, i18n keys, list items
+- Section heading and subtitle
+- Hover background effect on cards
+- Other sections
 
 ## Files Modified
-- `src/components/Footer.tsx`
-- `src/i18n/locales/en.json`, `tr.json`, `ar.json`, `ru.json` (one key each)
+- `src/components/Resources.tsx` — icon → image swap
+- `public/images/resources/` — 3 new image assets
 
