@@ -29,6 +29,9 @@ const Index = () => {
   const [showDeferred, setShowDeferred] = useState(false);
 
   useEffect(() => {
+    // Load deferred CSS for below-fold components
+    import('@/styles/deferred.css');
+    
     // Defer privacy components until browser is idle
     const id = 'requestIdleCallback' in window
       ? (window as any).requestIdleCallback(() => setShowDeferred(true), { timeout: 3000 })
