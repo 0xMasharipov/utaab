@@ -42,7 +42,7 @@ const Index = () => {
       if ('requestIdleCallback' in window) {
         idleId = (window as any).requestIdleCallback(() => setShowBelowFold(true), { timeout: 1500 });
       } else {
-        timeoutId = window.setTimeout(() => setShowBelowFold(true), 200);
+        timeoutId = window.setTimeout(() => setShowBelowFold(true), 200) as unknown as number;
       }
     });
 
