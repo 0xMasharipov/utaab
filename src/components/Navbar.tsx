@@ -62,23 +62,38 @@ export const Navbar = () => {
   }, [isMenuOpen, closeMenu]);
 
   // Measure navbar bottom and pill rect for panel positioning
-  // Use rAF to batch reads and avoid forced reflow
+  // Use rAF + debounce to batch reads and avoid forced reflow
   useEffect(() => {
-    const updatePositions = () => {
-      requestAnimationFrame(() => {
-        if (navRef.current) {
-          const rect = navRef.current.getBoundingClientRect();
-          setPanelTop(rect.bottom + 2);
-        }
-        if (pillRef.current) {
-          const rect = pillRef.current.getBoundingClientRect();
-          setPillRect({ left: rect.left, width: rect.width });
-        }
+    let rafId = 0;
+    let resizeTimer: ReturnType<typeof setTimeout> | undefined;
+
+    const measure = () => {
+      // Batch all DOM reads inside a single rAF, after layout is committed
+      rafId = requestAnimationFrame(() => {
+        const navEl = navRef.current;
+        const pillEl = pillRef.current;
+        // Read both rects together so the browser only flushes layout once
+        const navRect = navEl?.getBoundingClientRect();
+        const pillRect = pillEl?.getBoundingClientRect();
+        if (navRect) setPanelTop(navRect.bottom + 2);
+        if (pillRect) setPillRect({ left: pillRect.left, width: pillRect.width });
       });
     };
-    updatePositions();
-    window.addEventListener('resize', updatePositions);
-    return () => window.removeEventListener('resize', updatePositions);
+
+    // Defer initial measurement until after first paint to avoid forced reflow on mount
+    const initialId = requestAnimationFrame(measure);
+
+    const onResize = () => {
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(measure, 100);
+    };
+    window.addEventListener('resize', onResize, { passive: true });
+    return () => {
+      window.removeEventListener('resize', onResize);
+      cancelAnimationFrame(initialId);
+      cancelAnimationFrame(rafId);
+      if (resizeTimer) clearTimeout(resizeTimer);
+    };
   }, []);
 
   // Escape key
