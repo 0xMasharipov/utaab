@@ -27,16 +27,35 @@ const FloatingPrivacyButton = lazy(() => import('@/components/FloatingPrivacyBut
 const Index = () => {
   const [isPrivacyCenterOpen, setIsPrivacyCenterOpen] = useState(false);
   const [showDeferred, setShowDeferred] = useState(false);
+  const [showBelowFold, setShowBelowFold] = useState(false);
 
   useEffect(() => {
     // Load deferred CSS for below-fold components
     import('@/styles/deferred.css');
-    
-    // Defer privacy components until browser is idle
+
+    // Mount below-fold sections after the hero has painted to shorten
+    // the initial critical request chain. Uses rAF + idle callback to
+    // ensure LCP element renders first, then trigger the lazy wave.
+    let idleId: number | undefined;
+    let timeoutId: number | undefined;
+    const rafId = requestAnimationFrame(() => {
+      if ('requestIdleCallback' in window) {
+        idleId = (window as any).requestIdleCallback(() => setShowBelowFold(true), { timeout: 1500 });
+      } else {
+        timeoutId = (window as any).setTimeout(() => setShowBelowFold(true), 200);
+      }
+    });
+
+    // Defer privacy components until browser is idle (longer delay)
     const id = 'requestIdleCallback' in window
       ? (window as any).requestIdleCallback(() => setShowDeferred(true), { timeout: 3000 })
       : setTimeout(() => setShowDeferred(true), 1500);
     return () => {
+      cancelAnimationFrame(rafId);
+      if (idleId !== undefined && 'cancelIdleCallback' in window) {
+        (window as any).cancelIdleCallback(idleId);
+      }
+      if (timeoutId !== undefined) clearTimeout(timeoutId);
       if ('requestIdleCallback' in window) {
         (window as any).cancelIdleCallback(id);
       } else {
@@ -52,19 +71,21 @@ const Index = () => {
       <Hero />
       <HeroCarousel />
       
-      <Suspense fallback={null}>
-        <BackgroundGrid>
-          <AboutBlurb />
-          <Community />
-          <Learn />
-          <Resources />
-          <Projects />
-          <Events />
-          <BlogSection />
-          <Join />
-          <Footer onPrivacyClick={() => setIsPrivacyCenterOpen(true)} />
-        </BackgroundGrid>
-      </Suspense>
+      {showBelowFold && (
+        <Suspense fallback={null}>
+          <BackgroundGrid>
+            <AboutBlurb />
+            <Community />
+            <Learn />
+            <Resources />
+            <Projects />
+            <Events />
+            <BlogSection />
+            <Join />
+            <Footer onPrivacyClick={() => setIsPrivacyCenterOpen(true)} />
+          </BackgroundGrid>
+        </Suspense>
+      )}
       
       {showDeferred && (
         <Suspense fallback={null}>
