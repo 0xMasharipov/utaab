@@ -1,11 +1,10 @@
-/* Deferred CSS — loaded asynchronously for below-fold / lazy components */
+/* Deferred CSS — loaded asynchronously for below-fold / lazy components.
+   Keyframes (@keyframes hero-carousel-scroll, nav-menu-enter, nav-menu-item-enter,
+   lang-text-swap, float, glow, blob-fade-in, mobile-hero-pulse) live in tailwind.config.ts
+   so the JIT compiler ships only what's referenced. The utility classes below
+   reference those keyframes by name and bundle reduced-motion handling. */
 
 /* Infinite carousel */
-@keyframes hero-carousel-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
 .hero-carousel-track {
   display: flex;
   width: max-content;
@@ -16,97 +15,6 @@
 }
 
 .hero-carousel-item {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.25em;
-  font-size: clamp(1rem, 2.5vw, 1.5rem);
-  color: rgba(255, 255, 255, 0.8);
-  text-shadow: 0 0 20px rgba(0, 150, 255, 0.3);
-  white-space: nowrap;
-}
-
-/* Premium technical grid */
-.bg-technical-grid {
-  background-image:
-    linear-gradient(to right, rgba(47, 128, 237, 0.07) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(47, 128, 237, 0.07) 1px, transparent 1px);
-  background-size: 80px 80px;
-}
-
-@media (max-width: 768px) {
-  .bg-technical-grid {
-    background-image:
-      linear-gradient(to right, rgba(47, 128, 237, 0.04) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(47, 128, 237, 0.04) 1px, transparent 1px);
-    background-size: 100px 100px;
-  }
-}
-
-/* Grain noise overlay for blob background */
-.bg-grain {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 256px 256px;
-}
-
-/* Icon glow utility for Iconoir icons */
-.icon-glow {
-  filter: drop-shadow(0 0 6px hsl(var(--accent) / 0.3));
-}
-.icon-glow:hover,
-.group:hover .icon-glow {
-  filter: drop-shadow(0 0 10px hsl(var(--accent) / 0.45));
-}
-
-/* Nav menu panel animation */
-@keyframes nav-menu-enter {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.nav-menu-enter {
-  animation: nav-menu-enter 0.22s ease-out forwards;
-}
-@keyframes nav-menu-item-enter {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.nav-menu-item {
-  opacity: 0;
-  animation: nav-menu-item-enter 0.2s ease-out forwards;
-}
-@media (prefers-reduced-motion: reduce) {
-  .nav-menu-enter { animation-duration: 0.1s; }
-  .nav-menu-item { opacity: 1; animation: none; }
-}
-
-/* Language transition utilities */
-.lang-transition {
-  transition: opacity 0.2s ease-out, transform 0.2s ease-out, filter 0.2s ease-out;
-}
-
-.lang-transitioning {
-  animation: lang-text-swap 0.35s ease-in-out;
-}
-
-@keyframes lang-text-swap {
-  0%   { opacity: 1; transform: translateY(0); filter: blur(0); }
-  35%  { opacity: 0; transform: translateY(-6px); filter: blur(4px); }
-  65%  { opacity: 0; transform: translateY(6px); filter: blur(4px); }
-  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .lang-transition {
-    transition: none;
-  }
-  .lang-transitioning {
-    animation: none;
-    opacity: 1;
-    transform: none;
-    filter: none;
-  }
-}
 
 /* Hide default dialog close button for CUTII AI */
 .cutii-ai-dialog > button[aria-label="Close"] {
