@@ -1,69 +1,72 @@
 
-## Site Loading Optimization Plan
+## Migrate Static CSS Animations to Tailwind + TS-Driven Logic
 
-### Current state assessment
+### Current state
 
-After 6 prior optimization rounds (async CSS, deferred below-fold, lazy privacy widgets, rAF Navbar, network chain shortening), the homepage is at **performance score 92/100**. The remaining "static / laggy" feel is driven by **assets, not code**:
+The project already uses **Tailwind CSS + TypeScript** as the foundation. However, there are two `.css` files carrying overhead:
 
-| Issue | Impact | Cause |
-|---|---|---|
-| `hero-cube.mp4` = 15.3 MB, refetched 3-4× | ~12s load delay, biggest single drag | No HTTP caching + oversized encoding |
-| 5 Project PNGs at 980×595 (displayed 215×130) | ~1.4 MB wasted bytes | Wrong format (PNG vs WebP) + wrong dimensions |
-| Images appear "static" / pop in suddenly | Perceived lag | `AnimatedImage` waits for full decode before fade-in; no `loading="lazy"` / `decoding="async"` on many `<img>` tags; no LQIP/blur placeholder |
-| Hero video competes with LCP text | Render delay | Video starts loading immediately, blocking main thread for decode |
-| Below-fold images load all at once when scrolled | Scroll jank | No native lazy-loading hints; IntersectionObserver fires too late |
+1. **`src/App.css`** (~40 lines) — **completely unused**. Leftover from Vite scaffolding (logo spin animations, `.read-the-docs`, etc.). Not imported anywhere meaningful.
+2. **`src/styles/deferred.css`** (~200 lines) — contains hand-written keyframes and utilities, several of which **duplicate Tailwind config** or could be moved into `tailwind.config.ts` so Tailwind's JIT compiler only ships what's actually used (tree-shaking).
 
-### What this plan does (3 layers)
+### What this plan does
 
-**Layer 1 — Re-encode the hero video (biggest single win, ~12s saved)**
-- Re-encode `public/videos/hero-cube.mp4` from 15.3 MB to ~2 MB using ffmpeg (H.264 CRF 30, 1280×720 max, 24fps, no audio track since it's muted anyway).
-- Re-encode `public/videos/hero-mobile.mp4` similarly to ~800 KB.
-- Visually identical at typical viewing distance — same content, lower bitrate.
+**Step 1 — Delete dead CSS**
+- Remove `src/App.css` entirely (zero usages confirmed via search).
+- Saves a small bundle + one less HTTP parse.
 
-**Layer 2 — Re-encode project images (~1.3 MB saved, sharper at display size)**
-- Convert these 5 PNGs to WebP at 430×260 (2× display size for retina):
-  - `UTAAB_UBP.png` (549 KB → ~25 KB)
-  - `UTAAB_DVS.png` (289 KB → ~20 KB)
-  - `UTAAB_ASN.png` (229 KB → ~18 KB)
-  - `UTAAB_DAO.png` (181 KB → ~15 KB)
-  - `UTAAB_DID.png` (140 KB → ~14 KB)
-- Update `Projects.tsx` import paths to `.webp`.
+**Step 2 — Move reusable keyframes into `tailwind.config.ts`**
 
-**Layer 3 — Smooth the perceived loading (eliminate "static" feel)**
-- Add `loading="lazy"` and `decoding="async"` to all below-fold `<img>` tags (Resources, Learn, About, Events, Blog cards, Projects).
-- Add `fetchpriority="high"` to the hero video `<source>` so it starts decoding immediately while still being smaller.
-- In `AnimatedImage.tsx`: reduce IntersectionObserver `rootMargin` from `50px` to `200px` so images start loading earlier as the user scrolls (no more pop-in).
-- Shorten the fade-in duration from 400ms to 250ms for snappier feel.
-- Add CSS `content-visibility: auto` to below-fold sections so the browser skips rendering work for off-screen content (massive scroll perf win).
+Migrate these from `deferred.css` into Tailwind's `theme.extend.keyframes` / `animation` so they become tree-shakeable utility classes:
+
+| Currently in deferred.css | Becomes Tailwind utility |
+|---|---|
+| `@keyframes hero-carousel-scroll` | `animate-carousel-scroll` |
+| `@keyframes nav-menu-enter` | `animate-nav-enter` |
+| `@keyframes nav-menu-item-enter` | `animate-nav-item-enter` |
+| `@keyframes lang-text-swap` | `animate-lang-swap` |
+| `@keyframes float` | `animate-float` (consolidate; already partial) |
+| `@keyframes glow` | `animate-glow` |
+| `@keyframes blob-fade-in` | `animate-blob-fade` |
+| `@keyframes mobile-hero-pulse` | `animate-mobile-hero-pulse` |
+
+Result: only the keyframes actually referenced in JSX get included in the final CSS bundle. Unused ones are tree-shaken.
+
+**Step 3 — Keep what truly belongs in CSS**
+
+These stay in `deferred.css` because they can't be expressed cleanly in Tailwind utilities:
+- `.bg-technical-grid` (complex layered linear-gradients)
+- `.bg-grain` (inline SVG data URI)
+- Native video control hiding (`::-webkit-media-controls-*`)
+- `.cv-auto` (already added — `content-visibility` not in Tailwind)
+- `.scrollbar-hide`, `.pb-safe` (browser-specific)
+- `prefers-reduced-motion` overrides (media-query-scoped rules)
+
+**Step 4 — Convert remaining inline component styles where it helps**
+- `BrandText.tsx`, `GlassCard.tsx` — already pure Tailwind, no change needed
+- Audit `Hero.tsx` for any inline `style={{}}` blocks that could be Tailwind classes (reduces runtime style recalc)
 
 ### Files to modify
 
-- `public/videos/hero-cube.mp4` — re-encode (binary)
-- `public/videos/hero-mobile.mp4` — re-encode (binary)
-- `public/images/projects/*.png` → `*.webp` — convert (binary)
-- `src/components/Projects.tsx` — update image paths
-- `src/components/common/AnimatedImage.tsx` — earlier observer, snappier fade
-- `src/components/Resources.tsx`, `src/components/Learn.tsx`, `src/components/AboutBlurb.tsx`, `src/components/Events.tsx`, `src/components/blog/BlogCard.tsx` — add `loading="lazy" decoding="async"` to `<img>` tags
-- `src/components/Hero.tsx` — add `fetchpriority` hint to video
-- `src/styles/deferred.css` — add `content-visibility: auto` utility for below-fold sections
+- **Delete**: `src/App.css`
+- **Edit**: `tailwind.config.ts` — add 8 keyframes + 8 animation utilities
+- **Edit**: `src/styles/deferred.css` — remove the migrated keyframes, keep the genuinely CSS-only rules
+- **Edit (search-and-replace class names)**: any component using the old class names (e.g. `hero-carousel-track` → `animate-carousel-scroll` on the relevant element). Components touched will be limited to: `HeroCarousel.tsx`, `Navbar.tsx`, components using `lang-transitioning`.
 
 ### Expected outcome
 
-- Initial page weight drops from ~16 MB → ~3 MB (5× faster on slow connections)
-- Hero video loads in ~1s instead of 8-12s
-- Images fade in smoothly as user scrolls (no static pop-in)
-- Scroll feels buttery (content-visibility skips off-screen layout work)
-- Lighthouse Performance: ~92 → ~98+
+- **Bundle size**: ~3-5 KB CSS reduction (App.css gone + tree-shaken unused keyframes)
+- **Runtime**: fewer style recalculations (Tailwind's atomic classes are cheaper than custom keyframe lookups)
+- **Maintainability**: single source of truth for animations (tailwind.config.ts)
+- **No visual change**: every animation behaves identically — same duration, easing, keyframes
+- **No functional change**: pure refactor
 
-### What this plan does NOT change
+### What this plan does NOT do
 
-- Visual design, colors, layout, animations — all preserved exactly
-- No removed features, no changed components
-- Hero video still plays, looks identical
-- Project images sharper (since 430×260 > displayed 215×130)
+- Doesn't touch component logic, behavior, props, or state
+- Doesn't change visual design, colors, spacing, animations' look
+- Doesn't migrate `index.css` (contains the design system tokens — must stay)
+- Doesn't touch the recently-optimized images/videos
 
-### Risks & mitigations
+### Risk
 
-- **Video re-encoding**: I'll keep originals as `hero-cube-original.mp4` backup before overwriting, in case visual quality regresses
-- **WebP**: Universally supported (96%+ browsers); fallback not needed
-- **content-visibility**: Safari 18+ supports it; older Safari just ignores it (graceful)
+- **Low**. The migration is mechanical: same `@keyframes` definitions move from raw CSS into Tailwind config. Any class-name rename is search-and-replaced atomically. If a class is missed, the animation simply won't fire — caught instantly in preview.
