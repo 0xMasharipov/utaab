@@ -52,6 +52,18 @@ export const Hero = () => {
       className="relative min-h-[100svh] md:min-h-screen overflow-hidden"
       style={{ background: '#061224' }}
     >
+      {/* Crossfade base layer — animated gradient that smoothly hands off to video */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none transition-opacity duration-700"
+        style={{
+          zIndex: 0,
+          opacity: videoReady ? 0 : 1,
+          background:
+            'radial-gradient(ellipse at 30% 50%, rgba(28,63,104,0.55), transparent 60%), radial-gradient(ellipse at 70% 50%, rgba(47,111,181,0.35), transparent 65%), #061224',
+        }}
+      />
+
       {/* Background Video */}
       <video
         key={deviceType}
