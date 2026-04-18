@@ -1,11 +1,11 @@
-/* Deferred CSS — loaded asynchronously for below-fold / lazy components */
+/* Deferred CSS — loaded asynchronously for below-fold / lazy components.
+   Keyframes (hero-carousel-scroll, nav-menu-enter, nav-menu-item-enter,
+   lang-text-swap, float, glow, blob-fade-in, mobile-hero-pulse) live in
+   tailwind.config.ts so the JIT compiler ships only what's referenced.
+   The utility classes below reference those keyframes by name and bundle
+   reduced-motion handling that Tailwind utilities can't express. */
 
 /* Infinite carousel */
-@keyframes hero-carousel-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
 .hero-carousel-track {
   display: flex;
   width: max-content;
@@ -59,17 +59,9 @@
   filter: drop-shadow(0 0 10px hsl(var(--accent) / 0.45));
 }
 
-/* Nav menu panel animation */
-@keyframes nav-menu-enter {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+/* Nav menu panel animation — wraps Tailwind keyframe with reduced-motion fallback */
 .nav-menu-enter {
   animation: nav-menu-enter 0.22s ease-out forwards;
-}
-@keyframes nav-menu-item-enter {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 .nav-menu-item {
   opacity: 0;
@@ -84,22 +76,11 @@
 .lang-transition {
   transition: opacity 0.2s ease-out, transform 0.2s ease-out, filter 0.2s ease-out;
 }
-
 .lang-transitioning {
   animation: lang-text-swap 0.35s ease-in-out;
 }
-
-@keyframes lang-text-swap {
-  0%   { opacity: 1; transform: translateY(0); filter: blur(0); }
-  35%  { opacity: 0; transform: translateY(-6px); filter: blur(4px); }
-  65%  { opacity: 0; transform: translateY(6px); filter: blur(4px); }
-  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .lang-transition {
-    transition: none;
-  }
+  .lang-transition { transition: none; }
   .lang-transitioning {
     animation: none;
     opacity: 1;
@@ -132,47 +113,6 @@
   @apply truncate max-w-[100px] md:max-w-[120px] lg:max-w-none;
 }
 
-/* Blob fade-in (pure CSS, no JS reflow) */
-@keyframes blob-fade-in {
-  from { opacity: 0; }
-  to { opacity: 0.4; }
-}
-
-/* Animation utilities */
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-}
-
-.animate-glow {
-  animation: glow 2s ease-in-out infinite alternate;
-}
-
-@keyframes glow {
-  from {
-    text-shadow: 0 0 20px hsl(var(--glow-blue) / 0.3);
-  }
-  to {
-    text-shadow: 0 0 30px hsl(var(--glow-blue) / 0.6),
-                 0 0 40px hsl(var(--glow-blue) / 0.4);
-  }
-}
-
-@keyframes liquidGlass {
-  0%, 100% {
-    background-position: 0% 50%;
-    background-size: 200% 200%;
-  }
-  50% {
-    background-position: 100% 50%;
-    background-size: 200% 200%;
-  }
-}
-
 /* Off-screen rendering optimization — browser skips layout/paint for sections
    that aren't on screen, dramatically reducing scroll jank on long pages.
    `contain-intrinsic-size` reserves space so scrollbar doesn't jump. */
@@ -180,4 +120,3 @@
   content-visibility: auto;
   contain-intrinsic-size: 1px 700px;
 }
-

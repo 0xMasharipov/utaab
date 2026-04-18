@@ -103,6 +103,44 @@ export default {
           "0%, 100%": { transform: "translate(0, 0) scale(1)" },
           "50%": { transform: "translate(-50px, 40px) scale(1.1)" },
         },
+        "hero-carousel-scroll": {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(-50%)" },
+        },
+        "nav-menu-enter": {
+          from: { opacity: "0", transform: "translateY(-10px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        "nav-menu-item-enter": {
+          from: { opacity: "0", transform: "translateY(6px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        "lang-text-swap": {
+          "0%": { opacity: "1", transform: "translateY(0)", filter: "blur(0)" },
+          "35%": { opacity: "0", transform: "translateY(-6px)", filter: "blur(4px)" },
+          "65%": { opacity: "0", transform: "translateY(6px)", filter: "blur(4px)" },
+          "100%": { opacity: "1", transform: "translateY(0)", filter: "blur(0)" },
+        },
+        "float": {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-20px)" },
+        },
+        "glow": {
+          from: { textShadow: "0 0 20px hsl(var(--glow-blue) / 0.3)" },
+          to: { textShadow: "0 0 30px hsl(var(--glow-blue) / 0.6), 0 0 40px hsl(var(--glow-blue) / 0.4)" },
+        },
+        "blob-fade-in": {
+          from: { opacity: "0" },
+          to: { opacity: "0.4" },
+        },
+        "mobile-hero-pulse": {
+          "0%, 100%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+        },
+        "liquidGlass": {
+          "0%, 100%": { backgroundPosition: "0% 50%", backgroundSize: "200% 200%" },
+          "50%": { backgroundPosition: "100% 50%", backgroundSize: "200% 200%" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -114,6 +152,8 @@ export default {
         "blob-2": "blob-2 25s ease-in-out infinite",
         "blob-3": "blob-3 22s ease-in-out infinite",
         "blob-4": "blob-4 18s ease-in-out infinite",
+        "float": "float 6s ease-in-out infinite",
+        "glow": "glow 2s ease-in-out infinite alternate",
       },
     },
   },
