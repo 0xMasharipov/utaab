@@ -7,7 +7,7 @@ interface AnimatedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
 }
 
 const AnimatedImage = forwardRef<HTMLImageElement, AnimatedImageProps>(
-  ({ placeholderClassName, containerClassName, className, onLoad, ...props }, ref) => {
+  ({ placeholderClassName, containerClassName, className, onLoad, loading, decoding, ...props }, ref) => {
     const [loaded, setLoaded] = useState(false);
     const [inView, setInView] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -22,7 +22,9 @@ const AnimatedImage = forwardRef<HTMLImageElement, AnimatedImageProps>(
             observer.disconnect();
           }
         },
-        { rootMargin: '50px' }
+        // Larger rootMargin starts loading earlier so images are decoded before
+        // they enter the viewport — eliminates the "static pop-in" effect.
+        { rootMargin: '300px' }
       );
       observer.observe(el);
       return () => observer.disconnect();
@@ -34,7 +36,7 @@ const AnimatedImage = forwardRef<HTMLImageElement, AnimatedImageProps>(
       <div ref={containerRef} className={cn('relative overflow-hidden', containerClassName)}>
         <div
           className={cn(
-            'absolute inset-0 bg-muted animate-pulse rounded-md pointer-events-none transition-opacity duration-500',
+            'absolute inset-0 bg-muted/40 animate-pulse rounded-md pointer-events-none transition-opacity duration-300',
             visible ? 'opacity-0' : 'opacity-100',
             placeholderClassName
           )}
@@ -42,13 +44,15 @@ const AnimatedImage = forwardRef<HTMLImageElement, AnimatedImageProps>(
         <img
           ref={ref}
           {...props}
+          loading={loading ?? 'lazy'}
+          decoding={decoding ?? 'async'}
           onLoad={(e) => {
             setLoaded(true);
             onLoad?.(e);
           }}
           className={cn(
-            'transition-all duration-[400ms] ease-out',
-            visible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-[0.98] translate-y-1',
+            'transition-all duration-[250ms] ease-out',
+            visible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-[0.99] translate-y-0.5',
             className
           )}
         />

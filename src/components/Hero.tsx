@@ -59,7 +59,9 @@ export const Hero = () => {
         muted
         loop
         playsInline
-        preload="none"
+        preload="auto"
+        // @ts-ignore — fetchpriority is valid HTML, not yet in React types
+        fetchpriority="high"
         controls={false}
         onCanPlay={handleVideoReady}
         controlsList="nodownload nofullscreen noremoteplayback"
