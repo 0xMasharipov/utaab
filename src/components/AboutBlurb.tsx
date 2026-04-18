@@ -36,7 +36,7 @@ export const AboutBlurb = () => {
   const isInView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
-    <section id="about" className="py-20 md:py-28 relative" ref={ref}>
+    <section id="about" className="py-20 md:py-28 relative cv-auto" ref={ref}>
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

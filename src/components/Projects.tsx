@@ -26,47 +26,47 @@ export const Projects = () => {
       descriptionKey: 'projects.ubp.description',
       tags: ['projects.tags.rewards', 'projects.tags.community', 'projects.tags.engagement'],
       status: 'underDevelopment',
-      image: '/images/projects/UTAAB_UBP.png',
+      image: '/images/projects/UTAAB_UBP.webp',
     },
     {
       titleKey: 'projects.tonra.title',
       descriptionKey: 'projects.tonra.description',
       tags: ['projects.tags.ton', 'projects.tags.research', 'projects.tags.academic'],
       status: 'underDevelopment',
-      image: '/images/projects/UTAAB_TonRa.png',
+      image: '/images/projects/UTAAB_TonRa.webp',
     },
     {
       titleKey: 'projects.asn.title',
       descriptionKey: 'projects.asn.description',
       tags: ['projects.tags.payments', 'projects.tags.blockchain', 'projects.tags.university'],
       status: 'planning',
-      image: '/images/projects/UTAAB_ASN.png',
+      image: '/images/projects/UTAAB_ASN.webp',
     },
     {
       titleKey: 'projects.dvs.title',
       descriptionKey: 'projects.dvs.description',
       tags: ['projects.tags.identity', 'projects.tags.validation', 'projects.tags.nodes'],
       status: 'planning',
-      image: '/images/projects/UTAAB_DVS.png',
+      image: '/images/projects/UTAAB_DVS.webp',
     },
     {
       titleKey: 'projects.did.title',
       descriptionKey: 'projects.did.description',
       tags: ['projects.tags.identity', 'projects.tags.privacy', 'projects.tags.layer2'],
       status: 'planning',
-      image: '/images/projects/UTAAB_DID.png',
+      image: '/images/projects/UTAAB_DID.webp',
     },
     {
       titleKey: 'projects.dao.title',
       descriptionKey: 'projects.dao.description',
       tags: ['projects.tags.governance', 'projects.tags.dao', 'projects.tags.community'],
       status: 'planning',
-      image: '/images/projects/UTAAB_DAO.png',
+      image: '/images/projects/UTAAB_DAO.webp',
     },
   ];
 
   return (
-    <section id="projects" className="py-20 md:py-32 relative" ref={ref}>
+    <section id="projects" className="py-20 md:py-32 relative cv-auto" ref={ref}>
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

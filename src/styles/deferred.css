@@ -172,3 +172,12 @@
     background-size: 200% 200%;
   }
 }
+
+/* Off-screen rendering optimization — browser skips layout/paint for sections
+   that aren't on screen, dramatically reducing scroll jank on long pages.
+   `contain-intrinsic-size` reserves space so scrollbar doesn't jump. */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 700px;
+}
+

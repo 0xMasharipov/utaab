@@ -125,7 +125,7 @@ export const Events = () => {
   );
 
   return (
-    <section id="events" className="py-20 md:py-32 relative" ref={ref}>
+    <section id="events" className="py-20 md:py-32 relative cv-auto" ref={ref}>
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
