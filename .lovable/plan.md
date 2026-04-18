@@ -1,72 +1,68 @@
 
-## Migrate Static CSS Animations to Tailwind + TS-Driven Logic
 
-### Current state
+## Fix Loading Bugs — Skeleton, Text Flash, Image Pop-In
 
-The project already uses **Tailwind CSS + TypeScript** as the foundation. However, there are two `.css` files carrying overhead:
+### Bugs identified
 
-1. **`src/App.css`** (~40 lines) — **completely unused**. Leftover from Vite scaffolding (logo spin animations, `.read-the-docs`, etc.). Not imported anywhere meaningful.
-2. **`src/styles/deferred.css`** (~200 lines) — contains hand-written keyframes and utilities, several of which **duplicate Tailwind config** or could be moved into `tailwind.config.ts` so Tailwind's JIT compiler only ships what's actually used (tree-shaking).
+| # | Bug | Cause |
+|---|---|---|
+| 1 | English hero text flashes briefly before the real hero loads (worst on TR/RU/AR users — they see EN first) | `index.html` hardcodes `<div class="lcp-placeholder"><h1>From Learning to Building in Web3</h1></div>` as a paint-stand-in. It gets removed only after React mounts. |
+| 2 | Below-fold images "pop in" statically while scrolling | Images only start loading when their `IntersectionObserver` fires; nothing pre-warms them during the idle window after hero paints. |
+| 3 | Brief flicker between solid navy bg → video fade-in on slower connections | Video fades via opacity but no proper crossfade with the placeholder layer. |
+| 4 | No real visual loading skeleton — page just shows solid color, then full hero | Missing a branded shimmer/skeleton that matches the final layout (currently it's just a flat `#061224`). |
 
-### What this plan does
+### Fix plan (4 targeted changes)
 
-**Step 1 — Delete dead CSS**
-- Remove `src/App.css` entirely (zero usages confirmed via search).
-- Saves a small bundle + one less HTTP parse.
+**Fix 1 — Replace the hardcoded English text placeholder with a language-neutral branded skeleton**
 
-**Step 2 — Move reusable keyframes into `tailwind.config.ts`**
+In `index.html`, swap the `<h1>From Learning to Building in Web3</h1>` for a pure-visual skeleton: a centered animated gradient shimmer block matching the hero text dimensions, plus a subtle UTAAB monogram. No translatable text → no flash, no language mismatch. Uses pure CSS `@keyframes` (already inline).
 
-Migrate these from `deferred.css` into Tailwind's `theme.extend.keyframes` / `animation` so they become tree-shakeable utility classes:
+```text
+[ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░ ]   <- shimmer bar (where headline goes)
+[ ▓▓▓▓▓▓▓▓░░░░░░░░ ]   <- shimmer bar (where subtitle goes)
+[  ●●  ●●  ]            <- 2 button-shaped shimmers
+```
 
-| Currently in deferred.css | Becomes Tailwind utility |
-|---|---|
-| `@keyframes hero-carousel-scroll` | `animate-carousel-scroll` |
-| `@keyframes nav-menu-enter` | `animate-nav-enter` |
-| `@keyframes nav-menu-item-enter` | `animate-nav-item-enter` |
-| `@keyframes lang-text-swap` | `animate-lang-swap` |
-| `@keyframes float` | `animate-float` (consolidate; already partial) |
-| `@keyframes glow` | `animate-glow` |
-| `@keyframes blob-fade-in` | `animate-blob-fade` |
-| `@keyframes mobile-hero-pulse` | `animate-mobile-hero-pulse` |
+This is the modern pattern used by Linear, Vercel, GitHub: a *content-shaped* skeleton, not literal text.
 
-Result: only the keyframes actually referenced in JSX get included in the final CSS bundle. Unused ones are tree-shaken.
+**Fix 2 — Pre-warm below-fold images during the idle window**
 
-**Step 3 — Keep what truly belongs in CSS**
+After the hero paints, instead of waiting for the user to scroll, use the modern `<link rel="preload" as="image" fetchpriority="low">` API injected dynamically for the 5 highest-priority below-fold images (project covers, about images). They'll be sitting in browser cache by the time the IntersectionObserver triggers — no pop-in.
 
-These stay in `deferred.css` because they can't be expressed cleanly in Tailwind utilities:
-- `.bg-technical-grid` (complex layered linear-gradients)
-- `.bg-grain` (inline SVG data URI)
-- Native video control hiding (`::-webkit-media-controls-*`)
-- `.cv-auto` (already added — `content-visibility` not in Tailwind)
-- `.scrollbar-hide`, `.pb-safe` (browser-specific)
-- `prefers-reduced-motion` overrides (media-query-scoped rules)
+Implementation: add a small effect in `Index.tsx` that runs inside `requestIdleCallback` and creates `<link rel="preload">` tags for the project/about/learn webp images.
 
-**Step 4 — Convert remaining inline component styles where it helps**
-- `BrandText.tsx`, `GlassCard.tsx` — already pure Tailwind, no change needed
-- Audit `Hero.tsx` for any inline `style={{}}` blocks that could be Tailwind classes (reduces runtime style recalc)
+**Fix 3 — Smooth hero video crossfade with `poster`-equivalent CSS layer**
+
+Add a CSS-only animated gradient layer behind the video that fades out *as* the video fades in (instead of before). Uses CSS `@starting-style` (modern, supported in Chrome 117+ / Safari 17.5+) with graceful fallback to current behavior. Result: zero perceptible transition.
+
+**Fix 4 — Ensure skeleton stays visible until React's hero is *painted*, not just mounted**
+
+The current `MutationObserver` removes the placeholder as soon as `#root` has *any* child, but React might mount the wrapper `<div>` before the Hero's video/text is laid out — causing a 1-frame flash of nothing. Switch to: wait until `#root` contains an element with `id="hero"` (so we know the actual hero section has rendered into the DOM), then fade out over 200ms.
 
 ### Files to modify
 
-- **Delete**: `src/App.css`
-- **Edit**: `tailwind.config.ts` — add 8 keyframes + 8 animation utilities
-- **Edit**: `src/styles/deferred.css` — remove the migrated keyframes, keep the genuinely CSS-only rules
-- **Edit (search-and-replace class names)**: any component using the old class names (e.g. `hero-carousel-track` → `animate-carousel-scroll` on the relevant element). Components touched will be limited to: `HeroCarousel.tsx`, `Navbar.tsx`, components using `lang-transitioning`.
+- `index.html` — replace English `<h1>` with language-neutral shimmer skeleton; update the MutationObserver to wait for `#hero` and fade out gracefully
+- `src/pages/Index.tsx` — add idle-time `<link rel="preload">` injector for below-fold images
+- `src/components/Hero.tsx` — add the crossfade base layer behind the video (pure CSS, no JS)
 
-### Expected outcome
+### What this does NOT change
 
-- **Bundle size**: ~3-5 KB CSS reduction (App.css gone + tree-shaken unused keyframes)
-- **Runtime**: fewer style recalculations (Tailwind's atomic classes are cheaper than custom keyframe lookups)
-- **Maintainability**: single source of truth for animations (tailwind.config.ts)
-- **No visual change**: every animation behaves identically — same duration, easing, keyframes
-- **No functional change**: pure refactor
+- No design changes (colors, fonts, layout identical)
+- No removed features
+- No new dependencies
+- No translation/i18n changes
+- Hero video behavior identical, just smoother handoff
+- All recently-optimized assets (videos, webps) preserved
 
-### What this plan does NOT do
+### Modern but trusted methods used
 
-- Doesn't touch component logic, behavior, props, or state
-- Doesn't change visual design, colors, spacing, animations' look
-- Doesn't migrate `index.css` (contains the design system tokens — must stay)
-- Doesn't touch the recently-optimized images/videos
+| Technique | Browser support | Why it's safe |
+|---|---|---|
+| `<link rel="preload" as="image" fetchpriority="low">` | 95%+ | W3C standard since 2020, falls back to no-op |
+| `@starting-style` CSS | 89%+ (Chrome 117+, Safari 17.5+, Firefox 129+) | Pure CSS, ignored by older browsers (graceful) |
+| `MutationObserver` with attribute filter | 99%+ | Already used; just narrowing the trigger |
+| `requestIdleCallback` for preload injection | 96%+ | Already used elsewhere in this codebase |
 
-### Risk
+### Risk: very low
+All changes are additive or replace inert visual placeholders. No component logic, no state machines, no API surfaces touched.
 
-- **Low**. The migration is mechanical: same `@keyframes` definitions move from raw CSS into Tailwind config. Any class-name rename is search-and-replaced atomically. If a class is missed, the animation simply won't fire — caught instantly in preview.
