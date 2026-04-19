@@ -1,70 +1,40 @@
 
-## Speed Up Hero Video Loading
+## Fix navbar dropdown text disappearing
 
-### Why it feels slow
+### Root cause
+The dropdown item text depends on classes defined in `src/styles/deferred.css`:
 
-The video files are actually tiny (197 KB desktop / 285 KB mobile / 429 KB tablet) — the problem is **when** the browser starts fetching them, not their size:
+- `.nav-menu-item { opacity: 0; animation: nav-menu-item-enter ... }`
+- `.nav-menu-enter { ... }`
+- `.lang-transition`, `.lang-transitioning`
 
-1. **Video fetch starts only after React hydrates `Hero.tsx`.** The `<video>` tag doesn't exist in `index.html`, so the browser doesn't know about it until JS parses, mounts `<App>`, runs `useEffect` to detect device type, then renders the `<video>` element. That's typically 1.5–3s on cold load.
-2. **No `<link rel="preload" as="video">`** in `index.html` — the browser can't start the video download in parallel with JS/CSS.
-3. **`key={deviceType}` forces a remount.** First render uses default `'desktop'`, then the effect detects mobile and React rebuilds the `<video>` element, re-issuing the network request. The first download is wasted.
-4. **`preload="auto"` on desktop** competes with JS chunks for bandwidth even though the video is invisible until `onCanPlay`.
+But that stylesheet is only loaded inside `src/pages/Index.tsx` via `import('@/styles/deferred.css')` in a `useEffect`.
 
-### Fix plan (4 small, surgical changes)
+That creates two problems:
+1. On the homepage, the menu can open before the deferred CSS finishes loading.
+2. On all other pages (`/about`, `/team`, `/blog`, etc.), the navbar renders without those shared navbar classes being guaranteed at all.
 
-**Fix 1 — Preload the right video in `index.html` (parallel to JS)**
+So the dropdown ends up with incomplete animation/text styles and the menu text can disappear.
 
-Add a small inline script in `<head>` that detects viewport width before any framework loads and injects:
+### Plan
+1. Move the navbar-critical classes out of deferred loading.
+   - Make `nav-menu-enter`, `nav-menu-item`, `lang-transition`, and `lang-transitioning` available in the main global CSS path (`src/index.css`), since the navbar is site-wide and above-the-fold.
+2. Keep only truly below-fold / non-critical styles in `src/styles/deferred.css`.
+   - Leave things like carousel/grid/other deferred utilities there if they are not needed immediately.
+3. Preserve current behavior.
+   - Keep the same animations, delays, reduced-motion fallback, and existing visual design.
+4. Audit for duplication/conflicts.
+   - Ensure these shared classes are defined in one place only after the move, so there is no override mismatch between main CSS and deferred CSS.
 
-```html
-<link rel="preload" as="video" href="/videos/hero-{mobile|tablet|cube}.mp4" type="video/mp4" fetchpriority="high">
-```
+### Files to update
+- `src/index.css` — add the navbar-critical shared classes
+- `src/styles/deferred.css` — remove the moved navbar/language classes or keep only non-critical utilities
+- `src/pages/Index.tsx` — keep deferred import only for below-fold styling, not navbar-critical behavior
 
-This kicks off the video download immediately — in parallel with React/Vite chunks — so by the time `Hero.tsx` mounts, the file is already in the HTTP cache and `<video>` plays instantly.
+### Expected result
+- Navbar dropdown text is visible immediately on `/`
+- Same fix works consistently on `/about`, `/team`, `/blog`, and other pages using the same Navbar
+- No more race condition where menu opens before its CSS exists
 
-**Fix 2 — Detect device type synchronously in `Hero.tsx`**
-
-Replace the lazy `useState('desktop') + useEffect` pattern with a synchronous initializer:
-
-```ts
-const [deviceType] = useState(() => {
-  if (typeof window === 'undefined') return 'desktop';
-  if (window.matchMedia('(max-width: 767px)').matches) return 'mobile';
-  if (window.matchMedia('(max-width: 1023px)').matches) return 'tablet';
-  return 'desktop';
-});
-```
-
-This eliminates the wrong-source first render and the wasted re-download. Keep a `matchMedia` listener for live viewport changes (rare).
-
-**Fix 3 — Remove the `key={deviceType}` remount**
-
-Instead of forcing a full element remount when device type changes, swap `<source src>` with a `useEffect` that calls `videoRef.current.load()`. This avoids React tearing down and rebuilding the element on initial render.
-
-**Fix 4 — Use `preload="auto"` everywhere with `fetchpriority="high"`**
-
-Since the file is already in cache from Fix 1, `auto` is essentially free. Drop the mobile `metadata` branch — the preload tag already gates by viewport and the file is so small (285 KB) that Save-Data users barely notice.
-
-Add a `navigator.connection.saveData` check in the inline preload script: if Data Saver is on or `effectiveType === 'slow-2g' | '2g'`, skip the preload tag entirely (graceful degradation — video still loads later on demand).
-
-### Expected outcome
-
-- Video starts downloading at ~50 ms after navigation (instead of ~1500 ms after JS hydration)
-- No wasted desktop-then-mobile double download
-- Smooth crossfade fires almost immediately on first paint
-- Save-Data users still protected
-
-### Files to modify
-
-- `index.html` — add inline detection script + dynamic `<link rel="preload" as="video">`
-- `src/components/Hero.tsx` — synchronous device detection + `videoRef.load()` instead of `key` remount
-
-### What this does NOT change
-
-- Visual design, layout, animations, crossfade behavior
-- Video sources or compression
-- Mobile / tablet / desktop breakpoints
-- Skeleton, fonts, or any other component
-
-### Risk: very low
-All changes are progressive enhancements with safe fallbacks. If the inline preload script fails (CSP, no JS), the video still loads via the React component as today.
+### Risk
+Very low. This is a CSS-loading fix, not a layout or routing change.
