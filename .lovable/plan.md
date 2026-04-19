@@ -1,59 +1,42 @@
 
 
-## Fix invisible navbar dropdown items (definitive fix)
+## Replace hero videos with new high-res versions
 
-### Diagnosis
+### Mapping (by aspect ratio)
 
-From the screenshot, all three column headers (ECOSYSTEM / EXPLORE / ORGANIZATION) render, the bottom CTA row renders, but the menu items themselves are completely invisible. The button DOM is present (you confirmed in code) but visually empty.
+| Uploaded file | Likely target | Reason |
+|---|---|---|
+| `hf_20260304_042253_561d7c06...3.mp4` | `public/videos/hero-cube.mp4` (desktop) | Landscape/widescreen master |
+| `UTAAB_HERO_600x839-2.mp4` | `public/videos/hero-tablet.mp4` | 600×839 portrait-ish — tablet |
+| `UTAAB_Mobile-2.mp4` | `public/videos/hero-mobile.mp4` | Explicitly named "Mobile" |
 
-The root cause is `.nav-menu-item` in `src/index.css`:
+I'll verify dimensions with `ffprobe` once in default mode and confirm the mapping before overwriting; if any file's aspect doesn't match the slot it's named for, I'll re-route accordingly (e.g. swap tablet/desktop).
 
-```css
-.nav-menu-item {
-  opacity: 0;                                          /* hidden by default */
-  animation: nav-menu-item-enter 0.2s ease-out forwards;
-}
-```
+### Steps
 
-It defaults to `opacity: 0` and relies on the `@keyframes nav-menu-item-enter` animating opacity back to `1`. If the keyframes rule is missing from the shipped CSS for any reason — Tailwind purge edge cases, CSS load order race, browser cache of an older build, or any future regression — the items stay at `opacity: 0` forever.
+1. Copy the 3 uploaded videos into `public/videos/`, overwriting:
+   - `hero-cube.mp4` (desktop)
+   - `hero-tablet.mp4`
+   - `hero-mobile.mp4`
+2. Run `ffprobe` to confirm resolution/duration on each replaced file and log it.
+3. Verify file sizes are still reasonable for hero preload (the inline `<link rel="preload" as="video">` in `index.html` already auto-skips on Save-Data / 2g, so no code changes needed).
+4. No changes to `Hero.tsx`, `index.html`, paths, breakpoints, or autoplay/muted/loop logic — same filenames means existing preload + crossfade keeps working.
 
-The previous fix (registering animations in `tailwind.config.ts` and moving the class to `src/index.css`) was correct in theory but the symptom is still occurring on the user's screen. We need a fix that **cannot regress**.
+### Files changed
 
-### Fix — make items visible by default, treat animation as pure enhancement
+- `public/videos/hero-cube.mp4` (replaced)
+- `public/videos/hero-tablet.mp4` (replaced)
+- `public/videos/hero-mobile.mp4` (replaced)
 
-Change `.nav-menu-item` so the default state is **visible**, and the animation only adds a subtle slide-up. If keyframes ever fail to load, items still show.
+### Does NOT change
 
-**`src/index.css`** — replace the `.nav-menu-item` block:
+- `Hero.tsx`, `index.html`, viewport detection, preload script, crossfade timing
+- Skeleton, layout, animations, captions
+- Other videos (`hero-bg.mp4`, `hero-cube-poster.jpg`) untouched
 
-```css
-.nav-menu-item {
-  opacity: 1;                  /* always visible — never depends on animation */
-  transform: translateY(0);
-  animation: nav-menu-item-enter 0.2s ease-out both;
-}
-@media (prefers-reduced-motion: reduce) {
-  .nav-menu-item { animation: none; }
-}
-```
+### Risk: very low
+Pure asset swap. If a new file is heavier and feels slow on first load, we can re-encode (H.264 high profile, CRF 26, faststart) in a follow-up — file names and code stay the same.
 
-The `@keyframes nav-menu-item-enter` (already defined in `tailwind.config.ts`) goes from `opacity:0, translateY(6px)` → `opacity:1, translateY(0)`. With `animation-fill-mode: both`, it still produces the nice fade-in/slide-up effect when keyframes are present, but if they're ever stripped, the element stays at the default `opacity:1` state we just set.
-
-Same hardening for `.nav-menu-enter` (panel) and `.lang-transitioning` (language swap) — set safe visible defaults, animation becomes additive only.
-
-### Files modified
-
-- `src/index.css` — change `.nav-menu-item`, `.nav-menu-enter`, `.lang-transitioning` to visible-by-default; animation becomes enhancement only.
-
-### What this does NOT change
-
-- Visual design, layout, animation feel (when keyframes load, behavior is identical)
-- Component logic, props, routing
-- Tailwind config, deferred.css, or any other file
-
-### Risk: zero
-Items can never be invisible again, regardless of CSS load timing or build issues. Animation gracefully degrades to "no animation" instead of "permanently hidden".
-
-### Verification
-
-Open menu → all items in all 3 columns visible immediately. Clicking "Team" navigates to `/team`. Reduced-motion users see items instantly with no animation.
+### Note on caching
+Browsers/CDN may cache the old files. After deploy, a hard refresh shows the new clips. No code change is needed for cache busting since these are direct `/videos/*.mp4` references.
 
