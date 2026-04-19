@@ -35,33 +35,41 @@ const Index = () => {
 
     // Pre-warm below-fold images during the idle window so they're cached
     // before the IntersectionObserver triggers — eliminates static pop-in.
-    const preloadImages = [
+    // Network-aware: skip on Save-Data / 2g; trim list on 3g / mobile.
+    const allPreloadImages = [
       '/images/about/UTAAB_Education.webp',
       '/images/about/UTAAB_Projects_1.webp',
       '/images/projects/UTAAB_UBP.webp',
       '/images/projects/UTAAB_TonRa.webp',
       '/images/learn/UTAAB_Edu_Guides.webp',
     ];
-    const preloadId = 'requestIdleCallback' in window
-      ? (window as any).requestIdleCallback(() => {
-          preloadImages.forEach((href) => {
-            const link = document.createElement('link');
-            link.rel = 'preload';
-            link.as = 'image';
-            link.href = href;
-            (link as any).fetchPriority = 'low';
-            document.head.appendChild(link);
-          });
-        }, { timeout: 2500 })
-      : setTimeout(() => {
-          preloadImages.forEach((href) => {
-            const link = document.createElement('link');
-            link.rel = 'preload';
-            link.as = 'image';
-            link.href = href;
-            document.head.appendChild(link);
-          });
-        }, 800);
+    const conn = (navigator as any).connection;
+    const saveData = conn?.saveData === true;
+    const effective = conn?.effectiveType as string | undefined;
+    const isMobileVp = window.matchMedia('(max-width: 767px)').matches;
+    let preloadImages: string[] = allPreloadImages;
+    if (saveData || effective === 'slow-2g' || effective === '2g') {
+      preloadImages = [];
+    } else if (effective === '3g') {
+      preloadImages = allPreloadImages.slice(0, 2);
+    } else if (isMobileVp) {
+      preloadImages = allPreloadImages.slice(0, 3);
+    }
+    const injectPreloads = () => {
+      preloadImages.forEach((href) => {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.href = href;
+        (link as any).fetchPriority = 'low';
+        document.head.appendChild(link);
+      });
+    };
+    const preloadId = preloadImages.length === 0
+      ? undefined
+      : 'requestIdleCallback' in window
+        ? (window as any).requestIdleCallback(injectPreloads, { timeout: 2500 })
+        : setTimeout(injectPreloads, 800);
 
     // Mount below-fold sections after the hero has painted to shorten
     // the initial critical request chain. Uses rAF + idle callback to
@@ -88,10 +96,10 @@ const Index = () => {
       if (timeoutId !== undefined) clearTimeout(timeoutId);
       if ('requestIdleCallback' in window) {
         (window as any).cancelIdleCallback(id);
-        (window as any).cancelIdleCallback(preloadId);
+        if (preloadId !== undefined) (window as any).cancelIdleCallback(preloadId);
       } else {
         clearTimeout(id);
-        clearTimeout(preloadId as any);
+        if (preloadId !== undefined) clearTimeout(preloadId as any);
       }
     };
   }, []);

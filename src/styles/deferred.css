@@ -115,8 +115,15 @@
 
 /* Off-screen rendering optimization — browser skips layout/paint for sections
    that aren't on screen, dramatically reducing scroll jank on long pages.
-   `contain-intrinsic-size` reserves space so scrollbar doesn't jump. */
+   `contain-intrinsic-size` reserves space so scrollbar doesn't jump.
+   Mobile sections stack vertically and are taller, so use a larger reservation
+   to prevent scroll-position jumps when off-screen sections render. */
 .cv-auto {
   content-visibility: auto;
   contain-intrinsic-size: 1px 700px;
+}
+@media (max-width: 767px) {
+  .cv-auto {
+    contain-intrinsic-size: 1px 1100px;
+  }
 }

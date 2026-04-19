@@ -63,6 +63,15 @@
     .lcp-buttons{display:flex;gap:.75rem;margin-top:1.5rem}
     .lcp-btn{height:44px;width:140px;border-radius:9999px;background:linear-gradient(90deg,rgba(127,179,255,.08) 0%,rgba(127,179,255,.20) 50%,rgba(127,179,255,.08) 100%);background-size:200% 100%;animation:lcp-shimmer 1.6s ease-in-out infinite}
     @keyframes lcp-shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    @media (max-width:640px){
+      .lcp-placeholder{align-items:flex-start;padding-top:25vh}
+      .lcp-skeleton{padding:0 1.25rem;max-width:320px;gap:.75rem}
+      .lcp-bar{height:clamp(28px,7vw,40px);border-radius:6px}
+      .lcp-bar.short{height:clamp(16px,3.5vw,20px);width:70%}
+      .lcp-bar.tiny{height:clamp(12px,3vw,16px);width:48%}
+      .lcp-buttons{margin-top:1rem;gap:.5rem}
+      .lcp-btn{height:40px;width:108px}
+    }
     @media (prefers-reduced-motion: reduce){.lcp-bar,.lcp-btn{animation:none}}
   </style>
   
