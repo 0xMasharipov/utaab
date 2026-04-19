@@ -296,15 +296,18 @@
 /* Navbar-critical animations — must be available immediately on every route
    (not deferred) so dropdown items don't render with opacity:0. */
 .nav-menu-enter {
-  animation: nav-menu-enter 0.22s ease-out forwards;
+  opacity: 1;
+  transform: translateY(0);
+  animation: nav-menu-enter 0.22s ease-out both;
 }
 .nav-menu-item {
-  opacity: 0;
-  animation: nav-menu-item-enter 0.2s ease-out forwards;
+  opacity: 1;
+  transform: translateY(0);
+  animation: nav-menu-item-enter 0.2s ease-out both;
 }
 @media (prefers-reduced-motion: reduce) {
-  .nav-menu-enter { animation-duration: 0.1s; }
-  .nav-menu-item { opacity: 1; animation: none; }
+  .nav-menu-enter { animation: none; }
+  .nav-menu-item { animation: none; }
 }
 
 /* Language transition utilities — used by site-wide Navbar */
@@ -312,7 +315,10 @@
   transition: opacity 0.2s ease-out, transform 0.2s ease-out, filter 0.2s ease-out;
 }
 .lang-transitioning {
-  animation: lang-text-swap 0.35s ease-in-out;
+  opacity: 1;
+  transform: none;
+  filter: none;
+  animation: lang-text-swap 0.35s ease-in-out both;
 }
 @media (prefers-reduced-motion: reduce) {
   .lang-transition { transition: none; }
