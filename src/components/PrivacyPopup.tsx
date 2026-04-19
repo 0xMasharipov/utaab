@@ -189,7 +189,7 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
             {...backdropAnimationProps}
             animate={{ opacity: 1 }}
             transition={{ duration: prefersReducedMotion ? 0 : 0.2 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-md z-[9998]"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[9998]"
             onClick={handleReject}
             aria-hidden="true"
           />
@@ -210,39 +210,42 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
               className="w-full max-w-[600px] max-h-[90vh] overflow-y-auto"
               dir={isRTL ? 'rtl' : 'ltr'}
             >
-              <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 bg-[rgba(8,12,20,0.92)] backdrop-blur-2xl border border-white/[0.08] shadow-[0_8px_40px_rgba(0,0,0,0.4)]">
+              <div className="rounded-3xl p-7 sm:p-9 bg-white/[0.06] backdrop-blur-2xl backdrop-saturate-150 border border-white/15 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.08)]">
                 {/* Header */}
-                <div className="flex items-start justify-between mb-6">
-                  <div className="flex items-start gap-3 flex-1">
-                    <Shield className="h-6 w-6 text-white/40 flex-shrink-0 mt-0.5" aria-hidden="true" strokeWidth={1.5} />
-                    <div className="flex-1">
-                      <h2 
-                        id="privacy-popup-title" 
-                        className="text-2xl sm:text-[1.65rem] font-bold text-foreground mb-2 tracking-tight"
+                <div className="flex items-start justify-between gap-3 mb-7">
+                  <div className="flex items-center gap-3.5 flex-1 min-w-0">
+                    <div className="w-9 h-9 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center flex-shrink-0">
+                      <Shield className="h-4 w-4 text-white/60" aria-hidden="true" strokeWidth={1.5} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h2
+                        id="privacy-popup-title"
+                        className="text-xl sm:text-2xl font-bold text-foreground tracking-tight leading-tight"
                       >
                         {t('privacy.popup.title')}
                       </h2>
-                      <p 
-                        id="privacy-popup-description" 
-                        className="text-sm sm:text-base text-white/50 leading-[1.7]"
-                      >
-                        {t('privacy.popup.description')}
-                      </p>
                     </div>
                   </div>
                   <button
                     ref={closeButtonRef}
                     onClick={handleReject}
-                    className="text-white/40 hover:text-white/70 transition-colors p-1.5 rounded-full hover:bg-white/[0.06] -mt-1 flex-shrink-0 ml-2"
+                    className="w-9 h-9 rounded-full bg-white/[0.04] border border-white/10 text-white/50 hover:text-white/80 hover:bg-white/[0.08] transition-colors flex items-center justify-center flex-shrink-0"
                     aria-label={t('common.close')}
                   >
                     <Xmark className="h-4 w-4" strokeWidth={1.5} />
                   </button>
                 </div>
 
+                <p
+                  id="privacy-popup-description"
+                  className="text-sm sm:text-base text-white/55 leading-[1.7] mb-7"
+                >
+                  {t('privacy.popup.description')}
+                </p>
+
                 {/* Quick Links */}
-                <div className="mb-6 pb-6 border-b border-white/[0.06]">
-                  <div className="flex flex-wrap gap-3 text-sm">
+                <div className="mb-7 pb-7 border-b border-white/[0.08]">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
                     <button
                       onClick={handleCustomize}
                       className="inline-flex items-center gap-1.5 text-white/60 hover:text-white/90 transition-colors font-medium hover:underline underline-offset-4"
@@ -250,7 +253,7 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                        <Page className="h-4 w-4" strokeWidth={1.5} />
                       {t('privacy.center.links.kvkkNotice')}
                     </button>
-                    <span className="text-white/20">•</span>
+                    <span className="text-white/15">•</span>
                     <button
                       onClick={handleCustomize}
                       className="inline-flex items-center gap-1.5 text-white/60 hover:text-white/90 transition-colors font-medium hover:underline underline-offset-4"
@@ -258,7 +261,7 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                       <Page className="h-4 w-4" strokeWidth={1.5} />
                       {t('privacy.center.links.privacyPolicy')}
                     </button>
-                    <span className="text-white/20">•</span>
+                    <span className="text-white/15">•</span>
                     <button
                       onClick={() => setShowPreferences(!showPreferences)}
                       className="inline-flex items-center gap-1.5 text-white/60 hover:text-white/90 transition-colors font-medium hover:underline underline-offset-4"
@@ -276,14 +279,14 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                       {...preferencesAnimationProps}
                       animate={{ height: 'auto', opacity: 1 }}
                       transition={{ duration: 0.2 }}
-                      className="mb-6 space-y-3 overflow-hidden"
+                      className="mb-7 space-y-3 overflow-hidden"
                     >
                       <h3 className="text-base font-semibold text-foreground mb-4">
                         {t('privacy.center.categories')}
                       </h3>
 
                       {/* Essential */}
-                      <div className="flex items-start gap-3 p-4 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+                      <div className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.04] border border-white/10">
                         <Switch
                           checked={preferences.essential}
                           disabled
@@ -293,14 +296,14 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                           <div className="font-medium text-sm text-foreground mb-1">
                             {t('privacy.center.essential')}
                           </div>
-                          <div className="text-xs text-muted-foreground leading-relaxed">
+                          <div className="text-xs text-white/50 leading-relaxed">
                             {t('privacy.center.essentialDesc')}
                           </div>
                         </div>
                       </div>
 
                       {/* Analytics */}
-                      <div className="flex items-start gap-3 p-4 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+                      <div className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.04] border border-white/10">
                         <Switch
                           checked={preferences.analytics}
                           onCheckedChange={(checked) => 
@@ -312,14 +315,14 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                           <div className="font-medium text-sm text-foreground mb-1">
                             {t('privacy.center.analytics')}
                           </div>
-                          <div className="text-xs text-muted-foreground leading-relaxed">
+                          <div className="text-xs text-white/50 leading-relaxed">
                             {t('privacy.center.analyticsDesc')}
                           </div>
                         </div>
                       </div>
 
                       {/* Performance */}
-                      <div className="flex items-start gap-3 p-4 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+                      <div className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.04] border border-white/10">
                         <Switch
                           checked={preferences.performance}
                           onCheckedChange={(checked) => 
@@ -331,14 +334,14 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                           <div className="font-medium text-sm text-foreground mb-1">
                             {t('privacy.center.performance')}
                           </div>
-                          <div className="text-xs text-muted-foreground leading-relaxed">
+                          <div className="text-xs text-white/50 leading-relaxed">
                             {t('privacy.center.performanceDesc')}
                           </div>
                         </div>
                       </div>
 
                       {/* Marketing */}
-                      <div className="flex items-start gap-3 p-4 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+                      <div className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.04] border border-white/10">
                         <Switch
                           checked={preferences.marketing}
                           onCheckedChange={(checked) => 
@@ -350,7 +353,7 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                           <div className="font-medium text-sm text-foreground mb-1">
                             {t('privacy.center.marketing')}
                           </div>
-                          <div className="text-xs text-muted-foreground leading-relaxed">
+                          <div className="text-xs text-white/50 leading-relaxed">
                             {t('privacy.center.marketingDesc')}
                           </div>
                         </div>
@@ -360,53 +363,53 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                 </AnimatePresence>
 
                 {/* Actions */}
-                <div className="flex flex-col gap-3.5">
+                <div className="flex flex-col gap-3">
                   {showPreferences ? (
                     <>
                       <Button
                         ref={firstFocusableRef}
                         onClick={handleSavePreferences}
-                        className="bg-[hsl(217,80%,42%)] hover:bg-[hsl(217,80%,48%)] text-white w-full min-h-[48px] text-base font-semibold rounded-xl transition-all hover:-translate-y-px"
+                        className="bg-white/10 hover:bg-white/15 border border-white/20 text-white w-full h-12 text-base font-semibold rounded-xl transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
                       >
                         {t('privacy.center.savePreferences')}
                       </Button>
-                      <div className="grid grid-cols-2 gap-3.5">
+                      <div className="grid grid-cols-2 gap-3">
                         <Button
                           onClick={handleAccept}
                           variant="outline"
-                          className="bg-white/[0.04] border-white/[0.08] hover:bg-white/[0.08] min-h-[48px] font-medium rounded-xl transition-all"
+                          className="bg-white/[0.04] border-white/10 hover:bg-white/[0.08] text-white h-12 font-medium rounded-xl transition-all"
                         >
                           {t('privacy.popup.accept')}
                         </Button>
                         <Button
                           onClick={handleReject}
                           variant="ghost"
-                          className="text-white/40 hover:text-white/60 hover:bg-white/[0.04] min-h-[48px] font-medium rounded-xl transition-all"
+                          className="text-white/50 hover:text-white/80 hover:bg-white/[0.04] h-12 font-medium rounded-xl transition-all"
                         >
                           {t('privacy.popup.reject')}
                         </Button>
                       </div>
                     </>
                   ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <Button
                         ref={firstFocusableRef}
                         onClick={handleAccept}
-                        className="bg-[hsl(217,80%,42%)] hover:bg-[hsl(217,80%,48%)] text-white min-h-[48px] text-base font-semibold rounded-xl transition-all hover:-translate-y-px"
+                        className="bg-white/10 hover:bg-white/15 border border-white/20 text-white h-12 text-base font-semibold rounded-xl transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
                       >
                         {t('privacy.popup.accept')}
                       </Button>
                       <Button
                         onClick={() => setShowPreferences(true)}
                         variant="outline"
-                        className="bg-white/[0.04] border-white/[0.08] hover:bg-white/[0.08] min-h-[48px] font-medium rounded-xl transition-all"
+                        className="bg-white/[0.04] border-white/10 hover:bg-white/[0.08] text-white h-12 font-medium rounded-xl transition-all"
                       >
                         {t('privacy.popup.customize')}
                       </Button>
                       <Button
                         onClick={handleReject}
                         variant="ghost"
-                        className="text-white/40 hover:text-white/60 hover:bg-white/[0.04] min-h-[48px] font-medium rounded-xl transition-all"
+                        className="text-white/50 hover:text-white/80 hover:bg-white/[0.04] h-12 font-medium rounded-xl transition-all"
                       >
                         {t('privacy.popup.reject')}
                       </Button>
@@ -415,8 +418,8 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                 </div>
 
                 {/* Footer Note */}
-                <div className="mt-6 pt-6 border-t border-white/[0.06]">
-                  <p className="text-xs text-white/30 text-center leading-relaxed">
+                <div className="mt-5 pt-5 border-t border-white/[0.08]">
+                  <p className="text-xs text-white/40 text-center leading-relaxed">
                     {t('privacy.center.version')}: {CONSENT_VERSION} • KVKK (Law No. 6698)
                   </p>
                 </div>
