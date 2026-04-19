@@ -1,68 +1,69 @@
 
+## Mobile Optimization — Apply Recent Improvements to Mobile
 
-## Fix Loading Bugs — Skeleton, Text Flash, Image Pop-In
+### Current state on mobile
 
-### Bugs identified
+Recent optimizations (skeleton fix, image preloading, video crossfade, content-visibility) were applied globally but **mobile has specific issues** not yet addressed:
 
-| # | Bug | Cause |
+| # | Mobile-specific issue | Cause |
 |---|---|---|
-| 1 | English hero text flashes briefly before the real hero loads (worst on TR/RU/AR users — they see EN first) | `index.html` hardcodes `<div class="lcp-placeholder"><h1>From Learning to Building in Web3</h1></div>` as a paint-stand-in. It gets removed only after React mounts. |
-| 2 | Below-fold images "pop in" statically while scrolling | Images only start loading when their `IntersectionObserver` fires; nothing pre-warms them during the idle window after hero paints. |
-| 3 | Brief flicker between solid navy bg → video fade-in on slower connections | Video fades via opacity but no proper crossfade with the placeholder layer. |
-| 4 | No real visual loading skeleton — page just shows solid color, then full hero | Missing a branded shimmer/skeleton that matches the final layout (currently it's just a flat `#061224`). |
+| 1 | LCP skeleton sized for desktop hero — looks oversized/misaligned on 375px screens | `.lcp-skeleton` in `index.html` uses fixed widths (e.g. `max-width: 600px` bars) without mobile breakpoint |
+| 2 | Hero video preload still triggers on mobile even though `MobileHeroBackground` is shown | `Hero.tsx` doesn't gate video `preload="auto"` by viewport — wastes bandwidth on cellular |
+| 3 | Idle preload in `Index.tsx` preloads all 5 below-fold images on mobile too — wastes data on cellular connections | No `navigator.connection.saveData` / `effectiveType` check |
+| 4 | `cv-auto` `contain-intrinsic-size: 1px 700px` is desktop-tuned — mobile sections are taller (~1100px), causing scroll-position jump when sections render | Same intrinsic size for all viewports |
+| 5 | `AnimatedImage` `rootMargin: 300px` is too aggressive on mobile (preloads images user may never reach), wastes bandwidth | No mobile-aware margin |
+| 6 | Mobile hero shows `MobileHeroBackground` (CSS gradients) but no crossfade — pops in instantly when React mounts | Crossfade layer added in last update only covers video path |
 
-### Fix plan (4 targeted changes)
+### Fix plan (6 mobile-targeted changes)
 
-**Fix 1 — Replace the hardcoded English text placeholder with a language-neutral branded skeleton**
+**Fix 1 — Responsive skeleton in `index.html`**
+- Add mobile-specific media query: bars shrink to `max-width: 280px` and reduce height/spacing on screens `< 640px`. Same shimmer animation, scaled.
 
-In `index.html`, swap the `<h1>From Learning to Building in Web3</h1>` for a pure-visual skeleton: a centered animated gradient shimmer block matching the hero text dimensions, plus a subtle UTAAB monogram. No translatable text → no flash, no language mismatch. Uses pure CSS `@keyframes` (already inline).
+**Fix 2 — Mobile-aware video loading in `Hero.tsx`**
+- Detect `window.innerWidth < 768` before setting `preload="auto"` — use `preload="none"` on mobile (mobile uses `MobileHeroBackground` anyway, never plays video). Saves ~200KB on every mobile visit.
 
-```text
-[ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░ ]   <- shimmer bar (where headline goes)
-[ ▓▓▓▓▓▓▓▓░░░░░░░░ ]   <- shimmer bar (where subtitle goes)
-[  ●●  ●●  ]            <- 2 button-shaped shimmers
-```
+**Fix 3 — Network-aware image preloading in `Index.tsx`**
+- Inside the `requestIdleCallback`, check `navigator.connection?.saveData` and `navigator.connection?.effectiveType`. Skip preloading on `slow-2g`, `2g`, or when Data Saver is on. On `3g`, preload only the first 2 images instead of 5.
 
-This is the modern pattern used by Linear, Vercel, GitHub: a *content-shaped* skeleton, not literal text.
+**Fix 4 — Viewport-aware `cv-auto` in `deferred.css`**
+- Add a `cv-auto-mobile` variant with `contain-intrinsic-size: 1px 1100px` and use a media query to switch between desktop/mobile intrinsic sizes automatically. Prevents scroll jump.
 
-**Fix 2 — Pre-warm below-fold images during the idle window**
+**Fix 5 — Mobile-aware `rootMargin` in `AnimatedImage.tsx`**
+- Use `rootMargin: window.innerWidth < 768 ? '150px' : '300px'`. Mobile gets less aggressive preloading (saves cellular data, still smooth since mobile scroll is slower per-pixel).
 
-After the hero paints, instead of waiting for the user to scroll, use the modern `<link rel="preload" as="image" fetchpriority="low">` API injected dynamically for the 5 highest-priority below-fold images (project covers, about images). They'll be sitting in browser cache by the time the IntersectionObserver triggers — no pop-in.
-
-Implementation: add a small effect in `Index.tsx` that runs inside `requestIdleCallback` and creates `<link rel="preload">` tags for the project/about/learn webp images.
-
-**Fix 3 — Smooth hero video crossfade with `poster`-equivalent CSS layer**
-
-Add a CSS-only animated gradient layer behind the video that fades out *as* the video fades in (instead of before). Uses CSS `@starting-style` (modern, supported in Chrome 117+ / Safari 17.5+) with graceful fallback to current behavior. Result: zero perceptible transition.
-
-**Fix 4 — Ensure skeleton stays visible until React's hero is *painted*, not just mounted**
-
-The current `MutationObserver` removes the placeholder as soon as `#root` has *any* child, but React might mount the wrapper `<div>` before the Hero's video/text is laid out — causing a 1-frame flash of nothing. Switch to: wait until `#root` contains an element with `id="hero"` (so we know the actual hero section has rendered into the DOM), then fade out over 200ms.
+**Fix 6 — Crossfade for mobile hero in `Hero.tsx`**
+- Apply the same fade-in opacity transition to the `MobileHeroBackground` wrapper (200ms fade-in on mount) so it matches the desktop video crossfade smoothness.
 
 ### Files to modify
 
-- `index.html` — replace English `<h1>` with language-neutral shimmer skeleton; update the MutationObserver to wait for `#hero` and fade out gracefully
-- `src/pages/Index.tsx` — add idle-time `<link rel="preload">` injector for below-fold images
-- `src/components/Hero.tsx` — add the crossfade base layer behind the video (pure CSS, no JS)
+- `index.html` — responsive skeleton CSS (media query)
+- `src/components/Hero.tsx` — mobile-aware `preload` + mobile crossfade wrapper
+- `src/pages/Index.tsx` — network-aware preload list
+- `src/styles/deferred.css` — mobile `cv-auto` variant
+- `src/components/common/AnimatedImage.tsx` — mobile-aware rootMargin
 
-### What this does NOT change
+### Modern but trusted methods
 
-- No design changes (colors, fonts, layout identical)
-- No removed features
-- No new dependencies
-- No translation/i18n changes
-- Hero video behavior identical, just smoother handoff
-- All recently-optimized assets (videos, webps) preserved
-
-### Modern but trusted methods used
-
-| Technique | Browser support | Why it's safe |
+| API | Support | Fallback |
 |---|---|---|
-| `<link rel="preload" as="image" fetchpriority="low">` | 95%+ | W3C standard since 2020, falls back to no-op |
-| `@starting-style` CSS | 89%+ (Chrome 117+, Safari 17.5+, Firefox 129+) | Pure CSS, ignored by older browsers (graceful) |
-| `MutationObserver` with attribute filter | 99%+ | Already used; just narrowing the trigger |
-| `requestIdleCallback` for preload injection | 96%+ | Already used elsewhere in this codebase |
+| `navigator.connection.effectiveType` / `saveData` | 75% (Chromium-based; Safari ignores) | Falls back to "preload everything" — same as today |
+| CSS media queries | 100% | n/a |
+| `window.innerWidth` check | 100% | n/a |
+
+### Expected outcome
+
+- Mobile data usage drops ~300-500 KB per visit (no video preload + smarter image preload)
+- Skeleton looks correctly sized on phones (no oversized bars)
+- Smooth crossfade on mobile matches desktop
+- No scroll jump when below-fold sections render
+- Save-Data users get minimal asset loading
+
+### Does NOT change
+
+- Visual design, layout, animations on any viewport
+- Component behavior, state, props
+- Desktop experience (all changes are additive mobile branches)
+- Translations / i18n
 
 ### Risk: very low
-All changes are additive or replace inert visual placeholders. No component logic, no state machines, no API surfaces touched.
-
+All changes are guarded by viewport/network checks with safe fallbacks to current behavior.
