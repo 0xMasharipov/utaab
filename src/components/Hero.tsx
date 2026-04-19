@@ -1,24 +1,29 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavArrowRight } from 'iconoir-react';
 
+type DeviceType = 'mobile' | 'tablet' | 'desktop';
+
+const detectDevice = (): DeviceType => {
+  if (typeof window === 'undefined') return 'desktop';
+  if (window.matchMedia('(max-width: 767px)').matches) return 'mobile';
+  if (window.matchMedia('(min-width: 768px) and (max-width: 1023px)').matches) return 'tablet';
+  return 'desktop';
+};
+
 export const Hero = () => {
   const { t } = useTranslation();
-  const [deviceType, setDeviceType] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
+  // Synchronous initializer — no wrong-source first render, no wasted download.
+  const [deviceType, setDeviceType] = useState<DeviceType>(() => detectDevice());
   const [videoReady, setVideoReady] = useState(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const handleVideoReady = useCallback(() => setVideoReady(true), []);
 
   useEffect(() => {
     const mqlMobile = window.matchMedia('(max-width: 767px)');
     const mqlTablet = window.matchMedia('(min-width: 768px) and (max-width: 1023px)');
-    const getDevice = () => {
-      if (mqlMobile.matches) return 'mobile';
-      if (mqlTablet.matches) return 'tablet';
-      return 'desktop';
-    };
-    setDeviceType(getDevice());
-    const onChange = () => setDeviceType(getDevice());
+    const onChange = () => setDeviceType(detectDevice());
     mqlMobile.addEventListener('change', onChange);
     mqlTablet.addEventListener('change', onChange);
     return () => {
@@ -27,16 +32,21 @@ export const Hero = () => {
     };
   }, []);
 
-  useEffect(() => {
-    setVideoReady(false);
-  }, [deviceType]);
-
   const isMobile = deviceType === 'mobile';
   const videoSrc = deviceType === 'mobile'
     ? '/videos/hero-mobile.mp4'
     : deviceType === 'tablet'
       ? '/videos/hero-tablet.mp4'
       : '/videos/hero-cube.mp4';
+
+  // Swap source without remounting the <video> element when the viewport class changes.
+  useEffect(() => {
+    setVideoReady(false);
+    const v = videoRef.current;
+    if (v) {
+      try { v.load(); } catch {}
+    }
+  }, [videoSrc]);
 
   const scrollToProjects = () => {
     document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
@@ -64,17 +74,17 @@ export const Hero = () => {
         }}
       />
 
-      {/* Background Video — on mobile use lighter preload to save cellular bandwidth.
-          The crossfade gradient layer above masks the slightly later video paint. */}
+      {/* Background Video — preloaded via <link rel="preload"> in index.html so the
+          file is already cached by the time this element mounts. */}
       <video
-        key={deviceType}
+        ref={videoRef}
         autoPlay
         muted
         loop
         playsInline
-        preload={isMobile ? 'metadata' : 'auto'}
+        preload="auto"
         // @ts-ignore — fetchpriority is valid HTML, not yet in React types
-        fetchpriority={isMobile ? 'low' : 'high'}
+        fetchpriority="high"
         controls={false}
         onCanPlay={handleVideoReady}
         controlsList="nodownload nofullscreen noremoteplayback"
