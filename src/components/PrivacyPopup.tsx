@@ -279,14 +279,14 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                       {...preferencesAnimationProps}
                       animate={{ height: 'auto', opacity: 1 }}
                       transition={{ duration: 0.2 }}
-                      className="mb-6 space-y-3 overflow-hidden"
+                      className="mb-7 space-y-3 overflow-hidden"
                     >
                       <h3 className="text-base font-semibold text-foreground mb-4">
                         {t('privacy.center.categories')}
                       </h3>
 
                       {/* Essential */}
-                      <div className="flex items-start gap-3 p-4 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+                      <div className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.04] border border-white/10">
                         <Switch
                           checked={preferences.essential}
                           disabled
@@ -296,14 +296,14 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                           <div className="font-medium text-sm text-foreground mb-1">
                             {t('privacy.center.essential')}
                           </div>
-                          <div className="text-xs text-muted-foreground leading-relaxed">
+                          <div className="text-xs text-white/50 leading-relaxed">
                             {t('privacy.center.essentialDesc')}
                           </div>
                         </div>
                       </div>
 
                       {/* Analytics */}
-                      <div className="flex items-start gap-3 p-4 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+                      <div className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.04] border border-white/10">
                         <Switch
                           checked={preferences.analytics}
                           onCheckedChange={(checked) => 
@@ -315,14 +315,14 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                           <div className="font-medium text-sm text-foreground mb-1">
                             {t('privacy.center.analytics')}
                           </div>
-                          <div className="text-xs text-muted-foreground leading-relaxed">
+                          <div className="text-xs text-white/50 leading-relaxed">
                             {t('privacy.center.analyticsDesc')}
                           </div>
                         </div>
                       </div>
 
                       {/* Performance */}
-                      <div className="flex items-start gap-3 p-4 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+                      <div className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.04] border border-white/10">
                         <Switch
                           checked={preferences.performance}
                           onCheckedChange={(checked) => 
@@ -334,14 +334,14 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                           <div className="font-medium text-sm text-foreground mb-1">
                             {t('privacy.center.performance')}
                           </div>
-                          <div className="text-xs text-muted-foreground leading-relaxed">
+                          <div className="text-xs text-white/50 leading-relaxed">
                             {t('privacy.center.performanceDesc')}
                           </div>
                         </div>
                       </div>
 
                       {/* Marketing */}
-                      <div className="flex items-start gap-3 p-4 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+                      <div className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.04] border border-white/10">
                         <Switch
                           checked={preferences.marketing}
                           onCheckedChange={(checked) => 
@@ -353,7 +353,7 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                           <div className="font-medium text-sm text-foreground mb-1">
                             {t('privacy.center.marketing')}
                           </div>
-                          <div className="text-xs text-muted-foreground leading-relaxed">
+                          <div className="text-xs text-white/50 leading-relaxed">
                             {t('privacy.center.marketingDesc')}
                           </div>
                         </div>
