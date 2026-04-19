@@ -1,69 +1,63 @@
 
-## Mobile Optimization — Apply Recent Improvements to Mobile
+## Add Loading Fade-In Animation to Landing Page Images
 
-### Current state on mobile
+### Current state
 
-Recent optimizations (skeleton fix, image preloading, video crossfade, content-visibility) were applied globally but **mobile has specific issues** not yet addressed:
+The `AnimatedImage` component (`src/components/common/AnimatedImage.tsx`) already has a fade-in system:
+- Skeleton shimmer placeholder while loading
+- `opacity-0 → opacity-100` + `scale-[0.99] → scale-100` + slight `translate-y` on load
+- 250ms ease-out duration
 
-| # | Mobile-specific issue | Cause |
-|---|---|---|
-| 1 | LCP skeleton sized for desktop hero — looks oversized/misaligned on 375px screens | `.lcp-skeleton` in `index.html` uses fixed widths (e.g. `max-width: 600px` bars) without mobile breakpoint |
-| 2 | Hero video preload still triggers on mobile even though `MobileHeroBackground` is shown | `Hero.tsx` doesn't gate video `preload="auto"` by viewport — wastes bandwidth on cellular |
-| 3 | Idle preload in `Index.tsx` preloads all 5 below-fold images on mobile too — wastes data on cellular connections | No `navigator.connection.saveData` / `effectiveType` check |
-| 4 | `cv-auto` `contain-intrinsic-size: 1px 700px` is desktop-tuned — mobile sections are taller (~1100px), causing scroll-position jump when sections render | Same intrinsic size for all viewports |
-| 5 | `AnimatedImage` `rootMargin: 300px` is too aggressive on mobile (preloads images user may never reach), wastes bandwidth | No mobile-aware margin |
-| 6 | Mobile hero shows `MobileHeroBackground` (CSS gradients) but no crossfade — pops in instantly when React mounts | Crossfade layer added in last update only covers video path |
+But the user perceives images as still "popping in" rather than smoothly fading. The likely reasons:
 
-### Fix plan (6 mobile-targeted changes)
+1. **Duration too short** (250ms) — feels snappy, not smooth
+2. **No blur-up** — modern sites (Unsplash, Vercel, Linear) use a subtle blur fade for premium feel
+3. **Some landing page images may not use `AnimatedImage`** — need to audit the homepage components for raw `<img>` tags
+4. **Skeleton disappears too abruptly** — current 300ms opacity transition could be smoother
 
-**Fix 1 — Responsive skeleton in `index.html`**
-- Add mobile-specific media query: bars shrink to `max-width: 280px` and reduce height/spacing on screens `< 640px`. Same shimmer animation, scaled.
+### What to change
 
-**Fix 2 — Mobile-aware video loading in `Hero.tsx`**
-- Detect `window.innerWidth < 768` before setting `preload="auto"` — use `preload="none"` on mobile (mobile uses `MobileHeroBackground` anyway, never plays video). Saves ~200KB on every mobile visit.
+**1. Enhance `AnimatedImage` fade-in animation**
+- Increase fade duration from 250ms → 600ms for a smoother, more premium feel
+- Add a subtle `blur(8px) → blur(0)` transition (the "blur-up" technique used by Next.js Image, Cloudinary)
+- Smoother easing: `cubic-bezier(0.16, 1, 0.3, 1)` (ease-out-expo) for a graceful settle
+- Slightly more pronounced scale: `0.97 → 1` for visible "settling in" effect
+- Skeleton fades out in 400ms (was 300ms) for smoother handoff
 
-**Fix 3 — Network-aware image preloading in `Index.tsx`**
-- Inside the `requestIdleCallback`, check `navigator.connection?.saveData` and `navigator.connection?.effectiveType`. Skip preloading on `slow-2g`, `2g`, or when Data Saver is on. On `3g`, preload only the first 2 images instead of 5.
+**2. Audit landing page for raw `<img>` tags**
+Check these components for `<img>` that should use `AnimatedImage`:
+- `Hero.tsx`, `HeroCarousel.tsx`
+- `AboutBlurb.tsx` (already uses it ✓)
+- `Community.tsx`, `Learn.tsx`, `Resources.tsx`, `Projects.tsx`, `Events.tsx`, `BlogSection.tsx`, `Join.tsx`
+- `Footer.tsx`, `Navbar.tsx` (logo)
 
-**Fix 4 — Viewport-aware `cv-auto` in `deferred.css`**
-- Add a `cv-auto-mobile` variant with `contain-intrinsic-size: 1px 1100px` and use a media query to switch between desktop/mobile intrinsic sizes automatically. Prevents scroll jump.
+Replace any raw `<img>` with `AnimatedImage` so the new fade applies consistently across the entire landing page.
 
-**Fix 5 — Mobile-aware `rootMargin` in `AnimatedImage.tsx`**
-- Use `rootMargin: window.innerWidth < 768 ? '150px' : '300px'`. Mobile gets less aggressive preloading (saves cellular data, still smooth since mobile scroll is slower per-pixel).
-
-**Fix 6 — Crossfade for mobile hero in `Hero.tsx`**
-- Apply the same fade-in opacity transition to the `MobileHeroBackground` wrapper (200ms fade-in on mount) so it matches the desktop video crossfade smoothness.
+**3. Respect `prefers-reduced-motion`**
+Add a media query check — users with reduced motion preference get instant opacity fade only (no blur, no scale, no translate).
 
 ### Files to modify
 
-- `index.html` — responsive skeleton CSS (media query)
-- `src/components/Hero.tsx` — mobile-aware `preload` + mobile crossfade wrapper
-- `src/pages/Index.tsx` — network-aware preload list
-- `src/styles/deferred.css` — mobile `cv-auto` variant
-- `src/components/common/AnimatedImage.tsx` — mobile-aware rootMargin
+- `src/components/common/AnimatedImage.tsx` — enhanced animation (blur-up, longer duration, premium easing)
+- Any landing page component using raw `<img>` for content images (will be identified during implementation; logos/icons stay as `<img>`)
 
-### Modern but trusted methods
+### Visual outcome
 
-| API | Support | Fallback |
-|---|---|---|
-| `navigator.connection.effectiveType` / `saveData` | 75% (Chromium-based; Safari ignores) | Falls back to "preload everything" — same as today |
-| CSS media queries | 100% | n/a |
-| `window.innerWidth` check | 100% | n/a |
+```text
+Before:  [skeleton] → 250ms snap → [image]
+After:   [skeleton] → 400ms fade out
+                   ↘ 600ms blur+fade+scale → [image settled]
+```
 
-### Expected outcome
-
-- Mobile data usage drops ~300-500 KB per visit (no video preload + smarter image preload)
-- Skeleton looks correctly sized on phones (no oversized bars)
-- Smooth crossfade on mobile matches desktop
-- No scroll jump when below-fold sections render
-- Save-Data users get minimal asset loading
+Result: images "develop" into view like a Polaroid — same loading mechanism, but smoother and more premium.
 
 ### Does NOT change
 
-- Visual design, layout, animations on any viewport
-- Component behavior, state, props
-- Desktop experience (all changes are additive mobile branches)
-- Translations / i18n
+- Image sources, paths, dimensions, layout
+- Loading strategy (still `loading="lazy"`, `decoding="async"`)
+- `IntersectionObserver` preload margins (already mobile-tuned)
+- Component logic, props, or any data flow
+- Skeleton appearance (just smoother fade-out)
 
 ### Risk: very low
-All changes are guarded by viewport/network checks with safe fallbacks to current behavior.
+Pure CSS animation tweak inside an existing component. All changes respect `prefers-reduced-motion`. Fallback: if animation looks off, revert to current values in one edit.
