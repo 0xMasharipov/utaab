@@ -1,42 +1,59 @@
 
 
-## Replace hero videos with new high-res versions
+## Refine Privacy & Cookie Popup — Clear Glass, Aesthetic Alignment
 
-### Mapping (by aspect ratio)
+### Goal
+Remove the colored/dark fill so the popup reads as **pure transparent glass** (no blue/black tint), tighten alignment, and elevate the visual polish — without changing functionality, copy, or behavior.
 
-| Uploaded file | Likely target | Reason |
-|---|---|---|
-| `hf_20260304_042253_561d7c06...3.mp4` | `public/videos/hero-cube.mp4` (desktop) | Landscape/widescreen master |
-| `UTAAB_HERO_600x839-2.mp4` | `public/videos/hero-tablet.mp4` | 600×839 portrait-ish — tablet |
-| `UTAAB_Mobile-2.mp4` | `public/videos/hero-mobile.mp4` | Explicitly named "Mobile" |
+### Current issues (from `src/components/PrivacyPopup.tsx`)
+- Container uses **`bg-[rgba(8,12,20,0.92)]`** — that's a near-opaque dark navy fill. Looks like a colored block, not glass.
+- Primary CTA uses a **solid blue** (`bg-[hsl(217,80%,42%)]`) which clashes with the "no color" request.
+- Header alignment is slightly off — Shield icon, title and close button don't sit on the same optical baseline.
+- Quick-link row, expandable preference cards, and footer note have inconsistent spacing rhythm.
+- Backdrop blur is heavy (`backdrop-blur-md` + `bg-black/60`) making the modal feel weighty.
 
-I'll verify dimensions with `ffprobe` once in default mode and confirm the mapping before overwriting; if any file's aspect doesn't match the slot it's named for, I'll re-route accordingly (e.g. swap tablet/desktop).
+### Changes (all in `src/components/PrivacyPopup.tsx` only)
 
-### Steps
+**1. Container — true frosted glass, no color**
+- Replace `bg-[rgba(8,12,20,0.92)] backdrop-blur-2xl border-white/[0.08]` with:
+  - `bg-white/[0.06] backdrop-blur-2xl backdrop-saturate-150 border border-white/15`
+  - Soft inner highlight: `shadow-[0_20px_60px_-20px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.08)]`
+  - Keep `rounded-3xl`, slightly increase padding to `p-7 sm:p-9` for breathing room.
 
-1. Copy the 3 uploaded videos into `public/videos/`, overwriting:
-   - `hero-cube.mp4` (desktop)
-   - `hero-tablet.mp4`
-   - `hero-mobile.mp4`
-2. Run `ffprobe` to confirm resolution/duration on each replaced file and log it.
-3. Verify file sizes are still reasonable for hero preload (the inline `<link rel="preload" as="video">` in `index.html` already auto-skips on Save-Data / 2g, so no code changes needed).
-4. No changes to `Hero.tsx`, `index.html`, paths, breakpoints, or autoplay/muted/loop logic — same filenames means existing preload + crossfade keeps working.
+**2. Backdrop — lighter, cleaner**
+- `bg-black/40 backdrop-blur-sm` (was `bg-black/60 backdrop-blur-md`) so the popup feels lifted, not buried.
 
-### Files changed
+**3. Header alignment**
+- Switch outer wrapper to `flex items-center` and align icon vertically with the title (no `mt-0.5` nudge).
+- Use a small icon chip: `w-9 h-9 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center` containing the Shield (creates a balanced anchor point).
+- Close button moves to top-right with consistent padding; same chip treatment (`w-9 h-9 rounded-full`).
+- Title and description left-align flush under the chip, consistent line-height.
 
-- `public/videos/hero-cube.mp4` (replaced)
-- `public/videos/hero-tablet.mp4` (replaced)
-- `public/videos/hero-mobile.mp4` (replaced)
+**4. Buttons — neutral glass, no blue fill**
+- **Primary "Accept"**: glass instead of solid blue → `bg-white/10 hover:bg-white/15 border border-white/20 text-white` (still visually dominant via slight brightness + subtle inner highlight).
+- **Customize / Reject**: keep glass-ghost but unify height (`h-12`), unify radius (`rounded-xl`), unify font weight.
+- Add a faint top-border highlight (`shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]`) on Accept for premium feel.
 
-### Does NOT change
+**5. Quick links row**
+- Bump separator opacity down (`text-white/15`), align items center, even gap-4 for rhythm.
+- Increase the bottom border breathing space (`mb-7 pb-7`).
 
-- `Hero.tsx`, `index.html`, viewport detection, preload script, crossfade timing
-- Skeleton, layout, animations, captions
-- Other videos (`hero-bg.mp4`, `hero-cube-poster.jpg`) untouched
+**6. Preference cards (when expanded)**
+- Lighter glass: `bg-white/[0.04] border-white/10 rounded-xl p-4`.
+- Switch + text vertically centered (`items-center`).
+- Consistent gap-4 instead of gap-3.
 
-### Risk: very low
-Pure asset swap. If a new file is heavier and feels slow on first load, we can re-encode (H.264 high profile, CRF 26, faststart) in a follow-up — file names and code stay the same.
+**7. Footer note**
+- Center-aligned, `text-white/40`, slightly smaller margin-top, single subtle divider.
 
-### Note on caching
-Browsers/CDN may cache the old files. After deploy, a hard refresh shows the new clips. No code change is needed for cache busting since these are direct `/videos/*.mp4` references.
+### What stays untouched
+- All translation keys, props, callbacks (`onAccept`, `onCustomize`, save logic, focus trap, ESC handling, RTL).
+- Animation timings, framer-motion logic, reduced-motion fallback.
+- `PrivacyCenter`, `FloatingPrivacyButton`, consent-version logic.
+
+### Risk
+Very low — pure styling changes scoped to one file. No logic, i18n, or accessibility changes.
+
+### Verification
+Open `/` → wait 1s → popup appears as transparent frosted glass with no blue/dark tint, perfectly aligned header, neutral glass buttons. Expand "Customize" → preference cards match the same glass language. Test on mobile viewport for stacking.
 
