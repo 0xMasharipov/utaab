@@ -244,8 +244,8 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                 </p>
 
                 {/* Quick Links */}
-                <div className="mb-6 pb-6 border-b border-white/[0.06]">
-                  <div className="flex flex-wrap gap-3 text-sm">
+                <div className="mb-7 pb-7 border-b border-white/[0.08]">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
                     <button
                       onClick={handleCustomize}
                       className="inline-flex items-center gap-1.5 text-white/60 hover:text-white/90 transition-colors font-medium hover:underline underline-offset-4"
@@ -253,7 +253,7 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                        <Page className="h-4 w-4" strokeWidth={1.5} />
                       {t('privacy.center.links.kvkkNotice')}
                     </button>
-                    <span className="text-white/20">•</span>
+                    <span className="text-white/15">•</span>
                     <button
                       onClick={handleCustomize}
                       className="inline-flex items-center gap-1.5 text-white/60 hover:text-white/90 transition-colors font-medium hover:underline underline-offset-4"
@@ -261,7 +261,7 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                       <Page className="h-4 w-4" strokeWidth={1.5} />
                       {t('privacy.center.links.privacyPolicy')}
                     </button>
-                    <span className="text-white/20">•</span>
+                    <span className="text-white/15">•</span>
                     <button
                       onClick={() => setShowPreferences(!showPreferences)}
                       className="inline-flex items-center gap-1.5 text-white/60 hover:text-white/90 transition-colors font-medium hover:underline underline-offset-4"
