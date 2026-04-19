@@ -210,35 +210,38 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
               className="w-full max-w-[600px] max-h-[90vh] overflow-y-auto"
               dir={isRTL ? 'rtl' : 'ltr'}
             >
-              <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 bg-[rgba(8,12,20,0.92)] backdrop-blur-2xl border border-white/[0.08] shadow-[0_8px_40px_rgba(0,0,0,0.4)]">
+              <div className="rounded-3xl p-7 sm:p-9 bg-white/[0.06] backdrop-blur-2xl backdrop-saturate-150 border border-white/15 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.08)]">
                 {/* Header */}
-                <div className="flex items-start justify-between mb-6">
-                  <div className="flex items-start gap-3 flex-1">
-                    <Shield className="h-6 w-6 text-white/40 flex-shrink-0 mt-0.5" aria-hidden="true" strokeWidth={1.5} />
-                    <div className="flex-1">
-                      <h2 
-                        id="privacy-popup-title" 
-                        className="text-2xl sm:text-[1.65rem] font-bold text-foreground mb-2 tracking-tight"
+                <div className="flex items-start justify-between gap-3 mb-7">
+                  <div className="flex items-center gap-3.5 flex-1 min-w-0">
+                    <div className="w-9 h-9 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center flex-shrink-0">
+                      <Shield className="h-4 w-4 text-white/60" aria-hidden="true" strokeWidth={1.5} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h2
+                        id="privacy-popup-title"
+                        className="text-xl sm:text-2xl font-bold text-foreground tracking-tight leading-tight"
                       >
                         {t('privacy.popup.title')}
                       </h2>
-                      <p 
-                        id="privacy-popup-description" 
-                        className="text-sm sm:text-base text-white/50 leading-[1.7]"
-                      >
-                        {t('privacy.popup.description')}
-                      </p>
                     </div>
                   </div>
                   <button
                     ref={closeButtonRef}
                     onClick={handleReject}
-                    className="text-white/40 hover:text-white/70 transition-colors p-1.5 rounded-full hover:bg-white/[0.06] -mt-1 flex-shrink-0 ml-2"
+                    className="w-9 h-9 rounded-full bg-white/[0.04] border border-white/10 text-white/50 hover:text-white/80 hover:bg-white/[0.08] transition-colors flex items-center justify-center flex-shrink-0"
                     aria-label={t('common.close')}
                   >
                     <Xmark className="h-4 w-4" strokeWidth={1.5} />
                   </button>
                 </div>
+
+                <p
+                  id="privacy-popup-description"
+                  className="text-sm sm:text-base text-white/55 leading-[1.7] mb-7"
+                >
+                  {t('privacy.popup.description')}
+                </p>
 
                 {/* Quick Links */}
                 <div className="mb-6 pb-6 border-b border-white/[0.06]">
