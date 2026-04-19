@@ -363,53 +363,53 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                 </AnimatePresence>
 
                 {/* Actions */}
-                <div className="flex flex-col gap-3.5">
+                <div className="flex flex-col gap-3">
                   {showPreferences ? (
                     <>
                       <Button
                         ref={firstFocusableRef}
                         onClick={handleSavePreferences}
-                        className="bg-[hsl(217,80%,42%)] hover:bg-[hsl(217,80%,48%)] text-white w-full min-h-[48px] text-base font-semibold rounded-xl transition-all hover:-translate-y-px"
+                        className="bg-white/10 hover:bg-white/15 border border-white/20 text-white w-full h-12 text-base font-semibold rounded-xl transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
                       >
                         {t('privacy.center.savePreferences')}
                       </Button>
-                      <div className="grid grid-cols-2 gap-3.5">
+                      <div className="grid grid-cols-2 gap-3">
                         <Button
                           onClick={handleAccept}
                           variant="outline"
-                          className="bg-white/[0.04] border-white/[0.08] hover:bg-white/[0.08] min-h-[48px] font-medium rounded-xl transition-all"
+                          className="bg-white/[0.04] border-white/10 hover:bg-white/[0.08] text-white h-12 font-medium rounded-xl transition-all"
                         >
                           {t('privacy.popup.accept')}
                         </Button>
                         <Button
                           onClick={handleReject}
                           variant="ghost"
-                          className="text-white/40 hover:text-white/60 hover:bg-white/[0.04] min-h-[48px] font-medium rounded-xl transition-all"
+                          className="text-white/50 hover:text-white/80 hover:bg-white/[0.04] h-12 font-medium rounded-xl transition-all"
                         >
                           {t('privacy.popup.reject')}
                         </Button>
                       </div>
                     </>
                   ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <Button
                         ref={firstFocusableRef}
                         onClick={handleAccept}
-                        className="bg-[hsl(217,80%,42%)] hover:bg-[hsl(217,80%,48%)] text-white min-h-[48px] text-base font-semibold rounded-xl transition-all hover:-translate-y-px"
+                        className="bg-white/10 hover:bg-white/15 border border-white/20 text-white h-12 text-base font-semibold rounded-xl transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
                       >
                         {t('privacy.popup.accept')}
                       </Button>
                       <Button
                         onClick={() => setShowPreferences(true)}
                         variant="outline"
-                        className="bg-white/[0.04] border-white/[0.08] hover:bg-white/[0.08] min-h-[48px] font-medium rounded-xl transition-all"
+                        className="bg-white/[0.04] border-white/10 hover:bg-white/[0.08] text-white h-12 font-medium rounded-xl transition-all"
                       >
                         {t('privacy.popup.customize')}
                       </Button>
                       <Button
                         onClick={handleReject}
                         variant="ghost"
-                        className="text-white/40 hover:text-white/60 hover:bg-white/[0.04] min-h-[48px] font-medium rounded-xl transition-all"
+                        className="text-white/50 hover:text-white/80 hover:bg-white/[0.04] h-12 font-medium rounded-xl transition-all"
                       >
                         {t('privacy.popup.reject')}
                       </Button>
@@ -418,8 +418,8 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
                 </div>
 
                 {/* Footer Note */}
-                <div className="mt-6 pt-6 border-t border-white/[0.06]">
-                  <p className="text-xs text-white/30 text-center leading-relaxed">
+                <div className="mt-5 pt-5 border-t border-white/[0.08]">
+                  <p className="text-xs text-white/40 text-center leading-relaxed">
                     {t('privacy.center.version')}: {CONSENT_VERSION} • KVKK (Law No. 6698)
                   </p>
                 </div>
