@@ -1,63 +1,58 @@
 
-## Add Loading Fade-In Animation to Landing Page Images
 
-### Current state
+## Fix Invisible Navbar Menu Items (Team, Blog, About, etc.)
 
-The `AnimatedImage` component (`src/components/common/AnimatedImage.tsx`) already has a fade-in system:
-- Skeleton shimmer placeholder while loading
-- `opacity-0 → opacity-100` + `scale-[0.99] → scale-100` + slight `translate-y` on load
-- 250ms ease-out duration
+### Root cause
 
-But the user perceives images as still "popping in" rather than smoothly fading. The likely reasons:
+The hamburger menu opens, but **all navigation items inside the 3 columns are invisible** (only the column headers ECOSYSTEM / EXPLORE / ORGANIZATION and the bottom CTA buttons render). That's why the user can't click "Team" — the link exists in the DOM but is rendered with `opacity: 0`.
 
-1. **Duration too short** (250ms) — feels snappy, not smooth
-2. **No blur-up** — modern sites (Unsplash, Vercel, Linear) use a subtle blur fade for premium feel
-3. **Some landing page images may not use `AnimatedImage`** — need to audit the homepage components for raw `<img>` tags
-4. **Skeleton disappears too abruptly** — current 300ms opacity transition could be smoother
+**Why**: In `src/styles/deferred.css`, the items use:
 
-### What to change
-
-**1. Enhance `AnimatedImage` fade-in animation**
-- Increase fade duration from 250ms → 600ms for a smoother, more premium feel
-- Add a subtle `blur(8px) → blur(0)` transition (the "blur-up" technique used by Next.js Image, Cloudinary)
-- Smoother easing: `cubic-bezier(0.16, 1, 0.3, 1)` (ease-out-expo) for a graceful settle
-- Slightly more pronounced scale: `0.97 → 1` for visible "settling in" effect
-- Skeleton fades out in 400ms (was 300ms) for smoother handoff
-
-**2. Audit landing page for raw `<img>` tags**
-Check these components for `<img>` that should use `AnimatedImage`:
-- `Hero.tsx`, `HeroCarousel.tsx`
-- `AboutBlurb.tsx` (already uses it ✓)
-- `Community.tsx`, `Learn.tsx`, `Resources.tsx`, `Projects.tsx`, `Events.tsx`, `BlogSection.tsx`, `Join.tsx`
-- `Footer.tsx`, `Navbar.tsx` (logo)
-
-Replace any raw `<img>` with `AnimatedImage` so the new fade applies consistently across the entire landing page.
-
-**3. Respect `prefers-reduced-motion`**
-Add a media query check — users with reduced motion preference get instant opacity fade only (no blur, no scale, no translate).
-
-### Files to modify
-
-- `src/components/common/AnimatedImage.tsx` — enhanced animation (blur-up, longer duration, premium easing)
-- Any landing page component using raw `<img>` for content images (will be identified during implementation; logos/icons stay as `<img>`)
-
-### Visual outcome
-
-```text
-Before:  [skeleton] → 250ms snap → [image]
-After:   [skeleton] → 400ms fade out
-                   ↘ 600ms blur+fade+scale → [image settled]
+```css
+.nav-menu-item {
+  opacity: 0;
+  animation: nav-menu-item-enter 0.2s ease-out forwards;
+}
 ```
 
-Result: images "develop" into view like a Polaroid — same loading mechanism, but smoother and more premium.
+The `@keyframes nav-menu-item-enter` is defined in `tailwind.config.ts` under `theme.extend.keyframes`, but it is **NOT registered in `theme.extend.animation`**. Tailwind's JIT only emits `@keyframes` rules into the compiled CSS when they are referenced by a generated `animate-*` utility class. Since no utility uses it, the keyframe rule never reaches the browser → the animation can't run → the item stays at `opacity: 0` forever.
 
-### Does NOT change
+The same problem affects `nav-menu-enter` (the panel slide-in) and `lang-text-swap` — they're also defined as keyframes-only without animation utilities.
 
-- Image sources, paths, dimensions, layout
-- Loading strategy (still `loading="lazy"`, `decoding="async"`)
-- `IntersectionObserver` preload margins (already mobile-tuned)
-- Component logic, props, or any data flow
-- Skeleton appearance (just smoother fade-out)
+### Fix (single file change)
 
-### Risk: very low
-Pure CSS animation tweak inside an existing component. All changes respect `prefers-reduced-motion`. Fallback: if animation looks off, revert to current values in one edit.
+Register the missing keyframes in `tailwind.config.ts` under `theme.extend.animation` so Tailwind ships their `@keyframes` rules:
+
+```ts
+animation: {
+  // ...existing entries...
+  "nav-menu-enter": "nav-menu-enter 0.22s ease-out forwards",
+  "nav-menu-item-enter": "nav-menu-item-enter 0.2s ease-out forwards",
+  "lang-text-swap": "lang-text-swap 0.35s ease-in-out",
+  "hero-carousel-scroll": "hero-carousel-scroll 30s linear infinite",
+  "blob-fade-in": "blob-fade-in 0.6s ease-out forwards",
+  "mobile-hero-pulse": "mobile-hero-pulse 8s ease-in-out infinite",
+  "liquidGlass": "liquidGlass 6s ease-in-out infinite",
+}
+```
+
+This causes Tailwind to emit each `@keyframes` block into the CSS output. The existing `.nav-menu-item` CSS in `deferred.css` (which references these keyframes by name) will then animate correctly, and items will fade in to `opacity: 1`.
+
+### Files modified
+
+- `tailwind.config.ts` — add 7 missing animation registrations (keyframes already exist; just expose them)
+
+### What this does NOT change
+
+- No component logic, props, layout, or routing
+- No new CSS, no design changes
+- The `/team` route + `Team` link in Navbar are already correct — they just need to become visible
+
+### Risk
+
+Trivial. Tailwind config addition only. If anything, this restores intended behavior that was silently broken when these keyframes were moved from a raw CSS file into `tailwind.config.ts`.
+
+### Verification after fix
+
+Open Menu → all 3 columns show their items (Community, Learn, Events, Projects under Ecosystem; Resources, Blog, Education under Explore; **About, Team, Contributor Match, Join under Organization**). Clicking "Team" navigates to `/team`.
+
