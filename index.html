@@ -36,6 +36,32 @@
     
     <!-- Preload critical font for hero LCP element (Montserrat 800, latin subset) -->
     <link rel="preload" href="https://fonts.gstatic.com/s/montserrat/v31/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCvr73w5aXo.woff2" as="font" type="font/woff2" crossorigin>
+
+    <!-- Hero video preload — runs before bundle so the fetch races JS download.
+         Picks the right asset by viewport and skips on Save-Data / 2g. -->
+    <script>
+      (function(){
+        try {
+          var conn = navigator.connection || navigator.webkitConnection || navigator.mozConnection;
+          if (conn) {
+            if (conn.saveData === true) return;
+            var et = conn.effectiveType;
+            if (et === 'slow-2g' || et === '2g') return;
+          }
+          var w = window.innerWidth || document.documentElement.clientWidth;
+          var src = '/videos/hero-cube.mp4';
+          if (w <= 767) src = '/videos/hero-mobile.mp4';
+          else if (w <= 1023) src = '/videos/hero-tablet.mp4';
+          var l = document.createElement('link');
+          l.rel = 'preload';
+          l.as = 'video';
+          l.href = src;
+          l.type = 'video/mp4';
+          l.setAttribute('fetchpriority', 'high');
+          document.head.appendChild(l);
+        } catch(e) {}
+      })();
+    </script>
     
     <!-- Non-render-blocking font loading using media trick -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
