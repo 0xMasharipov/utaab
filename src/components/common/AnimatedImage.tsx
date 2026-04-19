@@ -15,6 +15,10 @@ const AnimatedImage = forwardRef<HTMLImageElement, AnimatedImageProps>(
     useEffect(() => {
       const el = containerRef.current;
       if (!el) return;
+      // Mobile gets a tighter margin to save cellular bandwidth — scroll
+      // velocity per-pixel is lower so a smaller lookahead still feels smooth.
+      const isMobileVp = typeof window !== 'undefined'
+        && window.matchMedia('(max-width: 767px)').matches;
       const observer = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
@@ -24,7 +28,7 @@ const AnimatedImage = forwardRef<HTMLImageElement, AnimatedImageProps>(
         },
         // Larger rootMargin starts loading earlier so images are decoded before
         // they enter the viewport — eliminates the "static pop-in" effect.
-        { rootMargin: '300px' }
+        { rootMargin: isMobileVp ? '150px' : '300px' }
       );
       observer.observe(el);
       return () => observer.disconnect();

@@ -64,16 +64,17 @@ export const Hero = () => {
         }}
       />
 
-      {/* Background Video */}
+      {/* Background Video — on mobile use lighter preload to save cellular bandwidth.
+          The crossfade gradient layer above masks the slightly later video paint. */}
       <video
         key={deviceType}
         autoPlay
         muted
         loop
         playsInline
-        preload="auto"
+        preload={isMobile ? 'metadata' : 'auto'}
         // @ts-ignore — fetchpriority is valid HTML, not yet in React types
-        fetchpriority="high"
+        fetchpriority={isMobile ? 'low' : 'high'}
         controls={false}
         onCanPlay={handleVideoReady}
         controlsList="nodownload nofullscreen noremoteplayback"
