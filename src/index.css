@@ -315,7 +315,10 @@
   transition: opacity 0.2s ease-out, transform 0.2s ease-out, filter 0.2s ease-out;
 }
 .lang-transitioning {
-  animation: lang-text-swap 0.35s ease-in-out;
+  opacity: 1;
+  transform: none;
+  filter: none;
+  animation: lang-text-swap 0.35s ease-in-out both;
 }
 @media (prefers-reduced-motion: reduce) {
   .lang-transition { transition: none; }
