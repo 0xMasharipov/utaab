@@ -189,7 +189,7 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
             {...backdropAnimationProps}
             animate={{ opacity: 1 }}
             transition={{ duration: prefersReducedMotion ? 0 : 0.2 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-md z-[9998]"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[9998]"
             onClick={handleReject}
             aria-hidden="true"
           />
