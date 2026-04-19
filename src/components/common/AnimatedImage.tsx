@@ -7,10 +7,20 @@ interface AnimatedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
 }
 
 const AnimatedImage = forwardRef<HTMLImageElement, AnimatedImageProps>(
-  ({ placeholderClassName, containerClassName, className, onLoad, loading, decoding, ...props }, ref) => {
+  ({ placeholderClassName, containerClassName, className, onLoad, loading, decoding, style, ...props }, ref) => {
     const [loaded, setLoaded] = useState(false);
     const [inView, setInView] = useState(false);
+    const [reducedMotion, setReducedMotion] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      // Respect user accessibility preference — skip blur/scale/translate for reduced-motion users.
+      const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
+      setReducedMotion(mql.matches);
+      const onChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+      mql.addEventListener('change', onChange);
+      return () => mql.removeEventListener('change', onChange);
+    }, []);
 
     useEffect(() => {
       const el = containerRef.current;
@@ -36,11 +46,24 @@ const AnimatedImage = forwardRef<HTMLImageElement, AnimatedImageProps>(
 
     const visible = loaded && inView;
 
+    // "Blur-up" technique — image develops into view like a Polaroid.
+    // Premium ease-out-expo curve for a graceful settle.
+    const imgStyle: React.CSSProperties = {
+      transitionProperty: reducedMotion ? 'opacity' : 'opacity, filter, transform',
+      transitionDuration: reducedMotion ? '300ms' : '600ms',
+      transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+      opacity: visible ? 1 : 0,
+      filter: visible || reducedMotion ? 'blur(0px)' : 'blur(8px)',
+      transform: visible || reducedMotion ? 'scale(1)' : 'scale(0.97)',
+      willChange: visible ? 'auto' : 'opacity, filter, transform',
+      ...style,
+    };
+
     return (
       <div ref={containerRef} className={cn('relative overflow-hidden', containerClassName)}>
         <div
           className={cn(
-            'absolute inset-0 bg-muted/40 animate-pulse rounded-md pointer-events-none transition-opacity duration-300',
+            'absolute inset-0 bg-muted/40 animate-pulse rounded-md pointer-events-none transition-opacity duration-[400ms] ease-out',
             visible ? 'opacity-0' : 'opacity-100',
             placeholderClassName
           )}
@@ -54,11 +77,8 @@ const AnimatedImage = forwardRef<HTMLImageElement, AnimatedImageProps>(
             setLoaded(true);
             onLoad?.(e);
           }}
-          className={cn(
-            'transition-all duration-[250ms] ease-out',
-            visible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-[0.99] translate-y-0.5',
-            className
-          )}
+          style={imgStyle}
+          className={className}
         />
       </div>
     );
