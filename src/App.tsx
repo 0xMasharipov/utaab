@@ -52,6 +52,10 @@ const EducationalGuides = lazy(() => import("./pages/learn/EducationalGuides"));
 const Workshops = lazy(() => import("./pages/learn/Workshops"));
 const About = lazy(() => import("./pages/About"));
 const Unsubscribe = lazy(() => import("./pages/Unsubscribe"));
+const LearnHub = lazy(() => import("./pages/LearnHub"));
+const ResourcesPage = lazy(() => import("./pages/ResourcesPage"));
+const Whitepaper = lazy(() => import("./pages/Whitepaper"));
+const FAQ = lazy(() => import("./pages/FAQ"));
 
 const queryClient = new QueryClient();
 
@@ -81,8 +85,12 @@ function App() {
             <Route path="/team" element={<TeamPage />} />
             <Route path="/about" element={<About />} />
             <Route path="/contributor-match" element={<ContributorMatch />} />
+            <Route path="/learn" element={<LearnHub />} />
             <Route path="/learn/guides" element={<EducationalGuides />} />
             <Route path="/learn/workshops" element={<Workshops />} />
+            <Route path="/resources" element={<ResourcesPage />} />
+            <Route path="/whitepaper" element={<Whitepaper />} />
+            <Route path="/faq" element={<FAQ />} />
             
             {/* Authentication */}
             <Route path={ADMIN_ROUTES.LOGIN} element={<AdminLogin />} />
