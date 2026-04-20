@@ -464,7 +464,14 @@
     "rights": "All rights reserved.",
     "home": "Home",
     "blogLink": "Blog",
-    "teamLink": "Team"
+    "teamLink": "Team",
+    "aboutLink": "About Us",
+    "learn": "Learn",
+    "learnHub": "Learning Hub",
+    "guides": "Guides",
+    "resources": "Resources",
+    "whitepaper": "Whitepaper",
+    "faq": "FAQ"
   },
   "language": {
     "en": "English",
