@@ -60,7 +60,7 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
       />
 
       <div className="relative z-10 section-container">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12 mb-8 sm:mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-10 md:gap-12 mb-8 sm:mb-12">
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3 mb-3 sm:mb-4">
@@ -108,7 +108,19 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
             </ul>
           </div>
 
-          {/* Social */}
+          {/* Learn */}
+          <div>
+            <h4 className={getTransitionClasses("text-lg font-semibold text-foreground mb-4")}>
+              {t('footer.learn', 'Learn')}
+            </h4>
+            <ul className="space-y-2">
+              <li><Link to="/learn" className="text-muted-foreground hover:text-accent transition-colors">{t('footer.learnHub', 'Learning Hub')}</Link></li>
+              <li><Link to="/learn/guides" className="text-muted-foreground hover:text-accent transition-colors">{t('footer.guides', 'Guides')}</Link></li>
+              <li><Link to="/resources" className="text-muted-foreground hover:text-accent transition-colors">{t('footer.resources', 'Resources')}</Link></li>
+              <li><Link to="/whitepaper" className="text-muted-foreground hover:text-accent transition-colors">{t('footer.whitepaper', 'Whitepaper')}</Link></li>
+              <li><Link to="/faq" className="text-muted-foreground hover:text-accent transition-colors">{t('footer.faq', 'FAQ')}</Link></li>
+            </ul>
+          </div>
           <div>
             <h4 className={getTransitionClasses("text-lg font-semibold text-foreground mb-4")}>
               {t('footer.social')}
