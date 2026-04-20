@@ -132,8 +132,11 @@ export const Resources = () => {
                   <ul className="space-y-2 sm:space-y-3">
                     {resource.items.map((item, itemIndex) => (
                       <li key={itemIndex}>
-                        <button className="text-sm sm:text-base text-muted-foreground hover:text-accent transition-colors text-left w-full py-1">
-                          • {t(item)}
+                        <button
+                          onClick={() => goTo(item.href)}
+                          className="text-sm sm:text-base text-muted-foreground hover:text-accent transition-colors text-left w-full py-1"
+                        >
+                          • {t(item.key)}
                         </button>
                       </li>
                     ))}
