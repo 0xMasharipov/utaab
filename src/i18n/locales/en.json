@@ -1386,5 +1386,152 @@
       "joinButton": "Join Community",
       "exploreButton": "Explore Projects"
     }
+  },
+  "learnHub": {
+    "hero": {
+      "badge": "Learning Hub",
+      "title": "Learn Web3 the clear way.",
+      "subtitle": "A free, beginner-friendly path into blockchain — built by UTAAB students, mentors, and developers. Start with the basics, finish building something real.",
+      "primary": "Start Learning",
+      "secondary": "Read the Whitepaper"
+    },
+    "about": {
+      "title": "What is UTAAB?",
+      "p1": "UTAAB (Unified Turkic Academic Alliance for Blockchain) is a student-led ecosystem focused on Web3 education, real projects, and cross-border collaboration. We exist to lower the entry barrier to blockchain — so anyone curious can understand it, build with it, and contribute to it.",
+      "p2": "Our content is free, our community is open, and our goal is simple: turn beginners into capable Web3 builders through clear lessons and hands-on projects."
+    },
+    "paths": {
+      "title": "Three ways to learn",
+      "subtitle": "Pick the path that fits how you like to learn. You can switch between them anytime.",
+      "guides": {
+        "title": "Guides",
+        "description": "Self-paced articles that explain blockchain, wallets, and Web3 in plain language. Perfect if you are starting from zero.",
+        "cta": "Read the guides",
+        "level": "Beginner → Advanced"
+      },
+      "courses": {
+        "title": "Structured Courses",
+        "description": "Full video courses with quizzes, certificates, and a clear curriculum — including the official MIT \"Blockchain and Money\" course.",
+        "cta": "Browse courses",
+        "level": "Beginner → Advanced"
+      },
+      "workshops": {
+        "title": "Workshops",
+        "description": "Live and recorded hands-on sessions. Build wallets, deploy your first smart contract, and ship a tiny dApp with the community.",
+        "cta": "See workshops",
+        "level": "Hands-on"
+      }
+    },
+    "principles": {
+      "title": "How we teach",
+      "clarity": { "title": "Clarity over jargon", "description": "We define every technical word the moment we use it. No assumed knowledge." },
+      "examples": { "title": "Real-world examples", "description": "Every concept is paired with an analogy or a small example so it actually sticks." },
+      "community": { "title": "Learn with others", "description": "A growing community of students, builders, and mentors who answer questions and ship projects together." }
+    },
+    "cta": {
+      "title": "Ready to start?",
+      "subtitle": "Open the first guide and you'll understand what a blockchain actually is in under 5 minutes.",
+      "button": "Open Guides"
+    }
+  },
+  "resourcesPage": {
+    "hero": {
+      "badge": "Knowledge Hub",
+      "title": "Everything you need, in one place.",
+      "subtitle": "Documentation, guides, the whitepaper, FAQs, and developer resources — all curated and free to read."
+    },
+    "comingSoon": "Coming soon",
+    "items": {
+      "whitepaper": { "title": "Whitepaper", "description": "A visual summary of UTAAB's vision, the technology behind our work, and the roadmap that guides what we build next.", "cta": "Read whitepaper" },
+      "guides": { "title": "Documentation & Guides", "description": "Beginner-friendly articles covering blockchain basics, wallets, smart contracts, and more — written by our team.", "cta": "Open guides" },
+      "tokenomics": { "title": "Tokenomics", "description": "A detailed token model is in active design. We'll publish the full breakdown here as soon as it's reviewed and finalized.", "cta": "Coming soon" },
+      "blog": { "title": "Blog & Updates", "description": "Latest announcements, project updates, event recaps, and educational deep-dives from the UTAAB community.", "cta": "Read the blog" },
+      "faq": { "title": "Frequently Asked Questions", "description": "Honest answers to the most common questions about UTAAB, our community, and getting started in Web3.", "cta": "See FAQs" },
+      "developers": { "title": "Developer Resources", "description": "Open-source code, contribution guides, and technical references for developers building on or with UTAAB.", "cta": "Visit GitHub" }
+    },
+    "cta": {
+      "title": "Can't find what you need?",
+      "subtitle": "Join the community — our team and members answer questions and share resources every day.",
+      "button": "Join the Community"
+    }
+  },
+  "whitepaper": {
+    "hero": {
+      "badge": "Whitepaper",
+      "title": "UTAAB Whitepaper",
+      "subtitle": "A clear, honest summary of what UTAAB is, why it exists, and where it's going next.",
+      "download": "Download PDF (coming soon)",
+      "downloadHint": "PDF coming soon"
+    },
+    "vision": {
+      "title": "Vision",
+      "intro": "UTAAB exists to make blockchain understandable, useful, and open to everyone. We believe Web3 should not be locked behind jargon, paywalls, or insider networks.",
+      "p1": "Make Web3 education accessible to anyone, regardless of background or budget.",
+      "p2": "Bridge the gap between learning and shipping by giving members real projects to build on.",
+      "p3": "Create a borderless community where students, developers, and mentors collaborate as equals."
+    },
+    "tech": {
+      "title": "Technology",
+      "intro": "Our approach is intentionally pragmatic. We use technology that is open, well-understood, and battle-tested — and we explain everything we use.",
+      "t1": { "title": "Open ecosystem", "description": "We rely on open standards and public blockchains rather than locked-down platforms. Anything we publish, you can inspect." },
+      "t2": { "title": "Education-first stack", "description": "Our learning platform combines structured courses, hands-on workshops, and an AI tutor so members can learn at their own pace." },
+      "t3": { "title": "Project pipeline", "description": "Members move from learning to building through guided projects, mentorship, and contributor matching." }
+    },
+    "roadmap": {
+      "title": "Roadmap",
+      "intro": "Three phases. We move on once the previous one is real, not just announced.",
+      "phase1": {
+        "phase": "Phase 1 — Foundation",
+        "status": "In progress",
+        "p1": "Launch core education platform with multilingual support (EN, TR, RU, AR).",
+        "p2": "Publish beginner-to-advanced learning guides and the official MIT \"Blockchain and Money\" course.",
+        "p3": "Grow the global community across student chapters and online channels."
+      },
+      "phase2": {
+        "phase": "Phase 2 — Builder Ecosystem",
+        "status": "Next",
+        "p1": "Open contributor program with mentorship, paid bounties, and project tracks.",
+        "p2": "Ship the first cohort of UTAAB-supported open-source Web3 projects.",
+        "p3": "Launch a transparent governance model for community decisions."
+      },
+      "phase3": {
+        "phase": "Phase 3 — Global Network",
+        "status": "Planned",
+        "p1": "Hackathons, partnerships, and cross-border collaborations at scale.",
+        "p2": "On-chain credentials and verifiable certificates for completed programs.",
+        "p3": "Long-term sustainability model funded by partners, grants, and ecosystem contributions."
+      }
+    },
+    "disclaimer": "This page is a living summary of our direction and may evolve as the ecosystem grows. Nothing here is financial advice or a token sale offering.",
+    "cta": {
+      "title": "Want the practical side?",
+      "subtitle": "Skip ahead to the guides and start learning Web3 right away.",
+      "button": "Open Guides"
+    }
+  },
+  "faqPage": {
+    "hero": {
+      "badge": "FAQ",
+      "title": "Frequently Asked Questions",
+      "subtitle": "Honest, plain-language answers to the questions we hear most often."
+    },
+    "items": {
+      "q1": { "q": "What is UTAAB?", "a": "UTAAB is a student-led Web3 ecosystem focused on blockchain education, real projects, and cross-border collaboration. We give beginners a clear path into Web3 — from first guide to first shipped project." },
+      "q2": { "q": "Is UTAAB free to join?", "a": "Yes. The community, the guides, and most courses are free. Some advanced or partner programs may have a fee, but it will always be clearly labeled." },
+      "q3": { "q": "I have zero blockchain experience. Where do I start?", "a": "Start with our Guides at /learn/guides. The \"Beginner\" section explains what blockchain is, how wallets work, and the basic vocabulary — in plain language with real examples." },
+      "q4": { "q": "Do I need to buy crypto to participate?", "a": "No. You can learn everything and join most activities without owning any crypto. When projects do require an on-chain action, we use free testnets so nothing is at risk." },
+      "q5": { "q": "What is a wallet, and is it safe to use one?", "a": "A wallet is software that stores the keys giving you access to your blockchain accounts. Used correctly — strong backups, never share your secret phrase — it is safe. Our wallets guide walks through best practices step by step." },
+      "q6": { "q": "Does UTAAB have a token?", "a": "A token model is in design. We will publish full details — supply, utility, distribution — only when finalized and reviewed. Anyone offering you a \"UTAAB token\" before the official announcement is not legitimate." },
+      "q7": { "q": "How can I contribute to UTAAB?", "a": "Visit /contributor-match. Tell us your skills and interests, and we'll match you with a project, task, or mentor. Designers, writers, developers, and community builders are all welcome." },
+      "q8": { "q": "Where can I follow updates?", "a": "Read the blog at /blog for major updates and follow us on LinkedIn, Telegram, Instagram, X, and GitHub — links are in the footer." },
+      "q9": { "q": "Do I get a certificate after completing a course?", "a": "Yes. UTAAB EDU courses issue completion certificates that you can share on LinkedIn or download as a PDF." },
+      "q10": { "q": "How do you handle my personal data?", "a": "We follow KVKK and GDPR principles. You can read the full Privacy Policy or open the Privacy Center from the footer at any time to manage your preferences." }
+    },
+    "cta": {
+      "title": "Still have questions?",
+      "subtitle": "Reach out at contact@utaab.org or join the community — we read every message.",
+      "button": "Join the Community",
+      "email": "Email Us"
+    }
   }
 }
