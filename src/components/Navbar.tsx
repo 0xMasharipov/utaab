@@ -298,19 +298,19 @@ export const Navbar = () => {
                   </span>
                   <div className="flex flex-col gap-1">
                     {[
-                      { key: 'resources', type: 'scroll', id: 'resources' },
+                      { key: 'resources', type: 'page', path: '/resources' },
                       { key: 'blog', type: 'page', path: '/blog' },
                       { key: 'education', type: 'page', path: '/education', label: 'education.title' },
                     ].map((item, i) => (
-                      <button
+                  <button
                         key={item.key}
-                        onClick={() => item.type === 'scroll' ? scrollToSection(item.id!) : handleNavigate(item.path!)}
+                        onClick={() => (item as any).type === 'scroll' ? scrollToSection((item as any).id!) : handleNavigate((item as any).path!)}
                         className={getTransitionClasses(
                           "text-left text-lg font-semibold tracking-wide text-white/90 hover:text-white hover:bg-white/[0.08] transition-all duration-200 px-4 py-2.5 rounded-xl nav-menu-item"
                         )}
                         style={{ animationDelay: `${0.03 * (i + 4)}s` }}
                       >
-                        {t(item.label || `nav.${item.key}`)}
+                        {t((item as any).label || `nav.${item.key}`)}
                       </button>
                     ))}
                   </div>

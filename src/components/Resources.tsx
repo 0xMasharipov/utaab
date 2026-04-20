@@ -2,11 +2,13 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import GlassCard from '@/components/glass/GlassCard';
 import AnimatedImage from '@/components/common/AnimatedImage';
 
 export const Resources = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
@@ -14,34 +16,50 @@ export const Resources = () => {
     {
       image: '/images/resources/UTAAB_Documentation.webp',
       title: t('resources.documentationTitle'),
+      cardHref: '/learn/guides',
       items: [
-        'resources.docs.gettingStarted',
-        'resources.docs.blockchainBasics',
-        'resources.docs.smartContractTutorial',
-        'resources.docs.securityBestPractices',
+        { key: 'resources.docs.gettingStarted', href: '/learn' },
+        { key: 'resources.docs.blockchainBasics', href: '/learn/guides#start-here' },
+        { key: 'resources.docs.smartContractTutorial', href: '/learn/guides#ethereum' },
+        { key: 'resources.docs.securityBestPractices', href: '/learn/guides#build' },
       ],
     },
     {
       image: '/images/resources/UTAAB_Dev_Tools.webp',
       title: t('resources.toolsTitle'),
+      cardHref: '/resources#developers',
       items: [
-        'resources.toolsItems.devEnvironment',
-        'resources.toolsItems.testingFrameworks',
-        'resources.toolsItems.deploymentTools',
-        'resources.toolsItems.codeTemplates',
+        { key: 'resources.toolsItems.devEnvironment', href: '/resources#developers' },
+        { key: 'resources.toolsItems.testingFrameworks', href: '/resources#developers' },
+        { key: 'resources.toolsItems.deploymentTools', href: '/resources#developers' },
+        { key: 'resources.toolsItems.codeTemplates', href: '/resources#developers' },
       ],
     },
     {
       image: '/images/resources/UTAAB_Research_Papers.webp',
       title: t('resources.researchTitle'),
+      cardHref: '/whitepaper',
       items: [
-        'resources.researchItems.layer2Scaling',
-        'resources.researchItems.consensusMechanisms',
-        'resources.researchItems.defiProtocols',
-        'resources.researchItems.zkProofs',
+        { key: 'resources.researchItems.layer2Scaling', href: '/whitepaper' },
+        { key: 'resources.researchItems.consensusMechanisms', href: '/whitepaper' },
+        { key: 'resources.researchItems.defiProtocols', href: '/whitepaper' },
+        { key: 'resources.researchItems.zkProofs', href: '/whitepaper' },
       ],
     },
   ];
+
+  const goTo = (href: string) => {
+    if (href.startsWith('/') && href.includes('#')) {
+      const [path, hash] = href.split('#');
+      navigate(path);
+      setTimeout(() => {
+        const el = document.getElementById(hash);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 250);
+    } else {
+      navigate(href);
+    }
+  };
 
   return (
     <section id="resources" className="py-20 md:py-32 relative cv-auto" ref={ref}>
@@ -114,8 +132,11 @@ export const Resources = () => {
                   <ul className="space-y-2 sm:space-y-3">
                     {resource.items.map((item, itemIndex) => (
                       <li key={itemIndex}>
-                        <button className="text-sm sm:text-base text-muted-foreground hover:text-accent transition-colors text-left w-full py-1">
-                          • {t(item)}
+                        <button
+                          onClick={() => goTo(item.href)}
+                          className="text-sm sm:text-base text-muted-foreground hover:text-accent transition-colors text-left w-full py-1"
+                        >
+                          • {t(item.key)}
                         </button>
                       </li>
                     ))}
