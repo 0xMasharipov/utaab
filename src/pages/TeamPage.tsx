@@ -23,9 +23,11 @@ import shuaybImg from '@/assets/team/shuayb.png';
 import ibrahimImg from '@/assets/team/ibrahim.png';
 import burakImg from '@/assets/team/burak.png';
 import anarImg from '@/assets/team/anar.png';
+import mehmetBarukImg from '@/assets/team/mehmet-baruk.png';
 
 const teamMembers: TeamMember[] = [
   { key: 'zinurbek', image: zinurbekImg, tag: 'Founder', linkedin: 'https://linkedin.com/in/masharipov' },
+  { key: 'mehmetBaruk', image: mehmetBarukImg, tag: 'Advisory' },
   { key: 'yunus', image: yunusImg, tag: 'Leadership', linkedin: 'https://linkedin.com/in/yunus-emre-e-80921034b' },
   { key: 'abdulla', image: abdullaImg, tag: 'Engineering', linkedin: 'https://linkedin.com/in/abdulla-hamzali-59b5a5229' },
   { key: 'abdulbaki', image: abdulbakiImg, tag: 'Operations' },
