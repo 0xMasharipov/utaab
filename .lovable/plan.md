@@ -1,31 +1,45 @@
 
 
-## Verify Lovable badge is hidden
+## Verify Lovable badge stays hidden across all navbar destinations
 
-### Current state
-The CSS rule was added to `src/index.css`:
+### Scope
+Navigate to every destination reachable from the main navbar menu and confirm `#lovable-badge` is either absent from the DOM or has computed `display: none`.
 
-```css
-#lovable-badge {
-  display: none !important;
-}
-```
+### Routes to check
+From `Navbar.tsx`, the menu links resolve to:
 
-This is a global, top-level selector with `!important`, so it applies on every route regardless of when the badge is injected into the DOM.
+**Page routes (navigate)**
+1. `/` (home — baseline)
+2. `/resources`
+3. `/blog`
+4. `/education`
+5. `/about`
+6. `/team`
+7. `/contributor-match`
 
-### Verification approach
+**Same-page scroll targets** (all on `/`, badge state can't change between scrolls — covered by route 1)
+- `#community`, `#learn`, `#events`, `#projects`, `#join`
 
-Use the browser tool to:
-1. `navigate_to_sandbox` → load `/` (homepage)
-2. `extract` to query `document.getElementById('lovable-badge')` and check its computed `display` style
-3. Navigate to a couple of representative routes (`/team`, `/about`) and repeat the same DOM check
+### Verification per route
+For each page route:
+1. `browser--navigate_to_sandbox` with the path
+2. `browser--extract` running:
+   ```js
+   const el = document.getElementById('lovable-badge');
+   return {
+     present: !!el,
+     display: el ? getComputedStyle(el).display : null,
+     visibility: el ? getComputedStyle(el).visibility : null,
+     opacity: el ? getComputedStyle(el).opacity : null,
+   };
+   ```
 
 ### Pass criteria
-- Either `#lovable-badge` is absent from the DOM, or
-- It exists but `getComputedStyle(el).display === 'none'`
+For every route: `present === false` OR `display === 'none'`.
 
-If both conditions fail on any route, report it and propose a fallback (e.g., higher-specificity selector or attribute-based hide).
+### On failure
+If any route shows the badge visible, report the route and propose a stronger rule (e.g., add `visibility: hidden !important; opacity: 0 !important; pointer-events: none !important;` and/or an attribute selector fallback).
 
 ### Note
-This switches to default mode only to run browser checks — no code edits planned unless verification fails.
+Switches to default mode only to run the browser checks. No code edits planned unless verification fails.
 
