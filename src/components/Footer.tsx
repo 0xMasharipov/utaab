@@ -2,6 +2,21 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Linkedin, Instagram, Twitter, SendDiagonal, Mail, Github } from 'iconoir-react';
+
+const TikTokIcon = ({ className, strokeWidth = 1.5 }: { className?: string; strokeWidth?: number }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={strokeWidth}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M21 8.5a8.5 8.5 0 0 1-5-1.6V16a6 6 0 1 1-6-6c.34 0 .67.03 1 .09v3.09a3 3 0 1 0 2 2.82V2h3a5.5 5.5 0 0 0 5 5.5z" />
+  </svg>
+);
 import logo from '@/assets/logo-new.webp';
 import footerGeoDesktop from '@/assets/footer-geo-desktop.png';
 import footerGeoMobile from '@/assets/footer-geo-mobile.png';
@@ -30,6 +45,7 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
     { name: 'LinkedIn', icon: Linkedin, url: 'https://www.linkedin.com/company/utaa-blockchain/', ariaLabel: 'Visit UTAAB on LinkedIn', hoverClass: 'hover:text-[#0A66C2] hover:border-[#0A66C2] hover:shadow-[0_0_20px_rgba(10,102,194,0.3)]' },
     { name: 'Telegram', icon: SendDiagonal, url: 'https://t.me/utaa_blockchain', ariaLabel: 'Visit UTAAB on Telegram', hoverClass: 'hover:text-[#26A5E4] hover:border-[#26A5E4] hover:shadow-[0_0_20px_rgba(38,165,228,0.3)]' },
     { name: 'Instagram', icon: Instagram, url: 'https://www.instagram.com/utaa_blockchain', ariaLabel: 'Visit UTAAB on Instagram', hoverClass: 'hover:text-[#E4405F] hover:border-[#E4405F] hover:shadow-[0_0_20px_rgba(228,64,95,0.3)]' },
+    { name: 'TikTok', icon: TikTokIcon, url: 'https://www.tiktok.com/@utaa_blockchain', ariaLabel: 'Visit UTAAB on TikTok', hoverClass: 'hover:text-white hover:border-white/40 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]' },
     { name: 'X', icon: Twitter, url: 'https://x.com/utaa_blockchain?s=11', ariaLabel: 'Visit UTAAB on X', hoverClass: 'hover:text-white hover:border-white/40 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]' },
     { name: 'GitHub', icon: Github, url: 'https://github.com/UTAA-Blockchain', ariaLabel: 'Visit UTAAB on GitHub', hoverClass: 'hover:text-white hover:border-white/40 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]' },
   ];
