@@ -15,9 +15,11 @@ import shuaybImg from '@/assets/team/shuayb.png';
 import ibrahimImg from '@/assets/team/ibrahim.png';
 import burakImg from '@/assets/team/burak.png';
 import anarImg from '@/assets/team/anar.png';
+import mehmetBarukImg from '@/assets/team/mehmet-baruk.png';
 
 const teamMembers = [
   { key: 'zinurbek', image: zinurbekImg },
+  { key: 'mehmetBaruk', image: mehmetBarukImg },
   { key: 'yunus', image: yunusImg },
   { key: 'abdulla', image: abdullaImg },
   { key: 'abdulbaki', image: abdulbakiImg },
