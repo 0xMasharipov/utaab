@@ -1,22 +1,24 @@
 
 
-## Add LinkedIn link to Mehmet BARUK
+## Hide Lovable badge globally via CSS
 
 ### Change
-In `src/pages/TeamPage.tsx`, update Mehmet's entry in the `teamMembers` array to include a LinkedIn URL:
+Append a global rule to `src/index.css` to hide any element with `id="lovable-badge"`:
 
-```ts
-{ key: 'mehmetBaruk', image: mehmetBarukImg, tag: 'Advisory', linkedin: 'https://linkedin.com/in/mehmet-baruk' }
+```css
+#lovable-badge {
+  display: none !important;
+}
 ```
 
-The `TeamOverlapCard`, `TeamProfileModal`, and `TeamProfileDrawer` components already conditionally render the LinkedIn button when `member.linkedin` is set — no component changes needed.
+Placed at the end of the file (after the existing `@layer` blocks and keyframes) so it has top-level specificity and isn't scoped to a Tailwind layer.
 
 ### Files touched
-- **Modified:** `src/pages/TeamPage.tsx` (one line)
+- **Modified:** `src/index.css` (4-line addition at end of file)
 
 ### Untouched
-`src/components/Team.tsx` (homepage section doesn't render LinkedIn), i18n, asset, ordering, styles.
+Everything else — no component changes, no config changes.
 
 ### Risk: trivial
-Single property addition.
+Single CSS rule, scoped to a specific ID that doesn't exist elsewhere in the codebase.
 
