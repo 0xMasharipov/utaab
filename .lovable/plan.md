@@ -1,9 +1,9 @@
 
 
-## Hide Lovable badge globally via CSS
+## Verify Lovable badge is hidden
 
-### Change
-Append a global rule to `src/index.css` to hide any element with `id="lovable-badge"`:
+### Current state
+The CSS rule was added to `src/index.css`:
 
 ```css
 #lovable-badge {
@@ -11,14 +11,21 @@ Append a global rule to `src/index.css` to hide any element with `id="lovable-ba
 }
 ```
 
-Placed at the end of the file (after the existing `@layer` blocks and keyframes) so it has top-level specificity and isn't scoped to a Tailwind layer.
+This is a global, top-level selector with `!important`, so it applies on every route regardless of when the badge is injected into the DOM.
 
-### Files touched
-- **Modified:** `src/index.css` (4-line addition at end of file)
+### Verification approach
 
-### Untouched
-Everything else — no component changes, no config changes.
+Use the browser tool to:
+1. `navigate_to_sandbox` → load `/` (homepage)
+2. `extract` to query `document.getElementById('lovable-badge')` and check its computed `display` style
+3. Navigate to a couple of representative routes (`/team`, `/about`) and repeat the same DOM check
 
-### Risk: trivial
-Single CSS rule, scoped to a specific ID that doesn't exist elsewhere in the codebase.
+### Pass criteria
+- Either `#lovable-badge` is absent from the DOM, or
+- It exists but `getComputedStyle(el).display === 'none'`
+
+If both conditions fail on any route, report it and propose a fallback (e.g., higher-specificity selector or attribute-based hide).
+
+### Note
+This switches to default mode only to run browser checks — no code edits planned unless verification fails.
 
