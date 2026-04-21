@@ -45,6 +45,7 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
     { name: 'LinkedIn', icon: Linkedin, url: 'https://www.linkedin.com/company/utaa-blockchain/', ariaLabel: 'Visit UTAAB on LinkedIn', hoverClass: 'hover:text-[#0A66C2] hover:border-[#0A66C2] hover:shadow-[0_0_20px_rgba(10,102,194,0.3)]' },
     { name: 'Telegram', icon: SendDiagonal, url: 'https://t.me/utaa_blockchain', ariaLabel: 'Visit UTAAB on Telegram', hoverClass: 'hover:text-[#26A5E4] hover:border-[#26A5E4] hover:shadow-[0_0_20px_rgba(38,165,228,0.3)]' },
     { name: 'Instagram', icon: Instagram, url: 'https://www.instagram.com/utaa_blockchain', ariaLabel: 'Visit UTAAB on Instagram', hoverClass: 'hover:text-[#E4405F] hover:border-[#E4405F] hover:shadow-[0_0_20px_rgba(228,64,95,0.3)]' },
+    { name: 'TikTok', icon: TikTokIcon, url: 'https://www.tiktok.com/@utaa_blockchain', ariaLabel: 'Visit UTAAB on TikTok', hoverClass: 'hover:text-white hover:border-white/40 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]' },
     { name: 'X', icon: Twitter, url: 'https://x.com/utaa_blockchain?s=11', ariaLabel: 'Visit UTAAB on X', hoverClass: 'hover:text-white hover:border-white/40 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]' },
     { name: 'GitHub', icon: Github, url: 'https://github.com/UTAA-Blockchain', ariaLabel: 'Visit UTAAB on GitHub', hoverClass: 'hover:text-white hover:border-white/40 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]' },
   ];
