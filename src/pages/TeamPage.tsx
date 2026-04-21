@@ -26,17 +26,17 @@ import anarImg from '@/assets/team/anar.png';
 import mehmetBarukImg from '@/assets/team/mehmet-baruk.png';
 
 const teamMembers: TeamMember[] = [
-  { key: 'zinurbek', image: zinurbekImg, tag: 'Founder', linkedin: 'https://linkedin.com/in/masharipov' },
   { key: 'mehmetBaruk', image: mehmetBarukImg, tag: 'Advisory' },
+  { key: 'zinurbek', image: zinurbekImg, tag: 'Founder', linkedin: 'https://linkedin.com/in/masharipov' },
   { key: 'yunus', image: yunusImg, tag: 'Leadership', linkedin: 'https://linkedin.com/in/yunus-emre-e-80921034b' },
   { key: 'abdulla', image: abdullaImg, tag: 'Engineering', linkedin: 'https://linkedin.com/in/abdulla-hamzali-59b5a5229' },
   { key: 'abdulbaki', image: abdulbakiImg, tag: 'Operations' },
   { key: 'umut', image: umutImg, tag: 'Operations' },
   { key: 'anar', image: anarImg, tag: 'Operations', linkedin: 'https://linkedin.com/in/anar-malikov-0430203b6' },
+  { key: 'burak', image: burakImg, tag: 'Operations', linkedin: 'https://linkedin.com/in/burak-deniz-yaman-63aa263b3' },
   { key: 'yana', image: yanaImg, tag: 'Engineering', linkedin: 'https://linkedin.com/in/yanina-isak-a62191367' },
   { key: 'shuayb', image: shuaybImg, tag: 'Engineering', linkedin: 'https://linkedin.com/in/shuayb-allahverdiyev-933813291' },
   { key: 'ibrahim', image: ibrahimImg, tag: 'Marketing' },
-  { key: 'burak', image: burakImg, tag: 'Operations', linkedin: 'https://linkedin.com/in/burak-deniz-yaman-63aa263b3' },
 ];
 
 const containerVariants = {
