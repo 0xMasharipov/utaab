@@ -1,45 +1,24 @@
 
 
-## Verify Lovable badge stays hidden across all navbar destinations
+## Hide Lovable badge — platform setting + confirm CSS
 
-### Scope
-Navigate to every destination reachable from the main navbar menu and confirm `#lovable-badge` is either absent from the DOM or has computed `display: none`.
+### Current state
+- `src/index.css` already contains `#lovable-badge { display: none !important; }` (global, applies to all routes including `/team`).
+- Browser verification confirmed the badge is absent/hidden on `/`, `/resources`, `/blog`, `/education`, `/about`, `/team`, `/contributor-match`.
 
-### Routes to check
-From `Navbar.tsx`, the menu links resolve to:
+### Additional change
+Use the platform's badge visibility setting to hide the "Edit with Lovable" badge on published deployments at the source:
 
-**Page routes (navigate)**
-1. `/` (home — baseline)
-2. `/resources`
-3. `/blog`
-4. `/education`
-5. `/about`
-6. `/team`
-7. `/contributor-match`
+- Call `publish_settings--set_badge_visibility` with `hide_badge: true`.
 
-**Same-page scroll targets** (all on `/`, badge state can't change between scrolls — covered by route 1)
-- `#community`, `#learn`, `#events`, `#projects`, `#join`
+This removes the badge from published builds entirely, rather than relying solely on CSS to hide it after injection. (Requires Pro plan or higher — if your plan doesn't support it, the CSS fallback already in place keeps it hidden.)
 
-### Verification per route
-For each page route:
-1. `browser--navigate_to_sandbox` with the path
-2. `browser--extract` running:
-   ```js
-   const el = document.getElementById('lovable-badge');
-   return {
-     present: !!el,
-     display: el ? getComputedStyle(el).display : null,
-     visibility: el ? getComputedStyle(el).visibility : null,
-     opacity: el ? getComputedStyle(el).opacity : null,
-   };
-   ```
+### Files touched
+- None. CSS rule already present; this is a platform setting toggle only.
 
-### Pass criteria
-For every route: `present === false` OR `display === 'none'`.
+### Untouched
+All components, routes, styles.
 
-### On failure
-If any route shows the badge visible, report the route and propose a stronger rule (e.g., add `visibility: hidden !important; opacity: 0 !important; pointer-events: none !important;` and/or an attribute selector fallback).
-
-### Note
-Switches to default mode only to run the browser checks. No code edits planned unless verification fails.
+### Risk: none
+Toggle-only change with CSS safety net already in place.
 
