@@ -1,24 +1,25 @@
 
 
-## Hide Lovable badge — platform setting + confirm CSS
+## Add TikTok social link to footer
 
-### Current state
-- `src/index.css` already contains `#lovable-badge { display: none !important; }` (global, applies to all routes including `/team`).
-- Browser verification confirmed the badge is absent/hidden on `/`, `/resources`, `/blog`, `/education`, `/about`, `/team`, `/contributor-match`.
+### Change
+Add a TikTok entry to the `socialLinks` array in `src/components/Footer.tsx` so it renders alongside LinkedIn, Telegram, Instagram, X, and GitHub.
 
-### Additional change
-Use the platform's badge visibility setting to hide the "Edit with Lovable" badge on published deployments at the source:
+- **URL:** `https://www.tiktok.com/@utaa_blockchain`
+- **Icon:** `iconoir-react` doesn't ship a TikTok glyph, so use `MusicNote` from `iconoir-react` as the closest stylistic match — OR add `lucide-react`'s `Music2` icon. Recommended: import the official TikTok SVG inline as a small component to stay on-brand (a 5-point path), since the footer already uses brand-colored hovers.
+- **Hover color:** TikTok brand cyan/magenta — `hover:text-white hover:border-white/40 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]` (matches X/GitHub neutral treatment) to avoid clashing dual-color brand.
+- **aria-label / title:** `Visit UTAAB on TikTok`
+- **Position:** Insert after Instagram, before X (visual flow: LinkedIn → Telegram → Instagram → TikTok → X → GitHub).
 
-- Call `publish_settings--set_badge_visibility` with `hide_badge: true`.
+### Implementation
+1. Add a small inline `TikTokIcon` functional component at the top of `Footer.tsx` that renders the official TikTok SVG path, accepting `className` and `strokeWidth` props to match the existing icon API.
+2. Add the new entry to the `socialLinks` array using `TikTokIcon` as `icon`.
 
-This removes the badge from published builds entirely, rather than relying solely on CSS to hide it after injection. (Requires Pro plan or higher — if your plan doesn't support it, the CSS fallback already in place keeps it hidden.)
+No other files touched. No config, route, or i18n changes needed (aria-label is English-only like the others).
 
-### Files touched
-- None. CSS rule already present; this is a platform setting toggle only.
+### Files
+- **Modified:** `src/components/Footer.tsx`
 
-### Untouched
-All components, routes, styles.
-
-### Risk: none
-Toggle-only change with CSS safety net already in place.
+### Risk: trivial
+Pure additive change to one array + one tiny inline icon component.
 
