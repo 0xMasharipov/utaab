@@ -18,17 +18,17 @@ import anarImg from '@/assets/team/anar.png';
 import mehmetBarukImg from '@/assets/team/mehmet-baruk.png';
 
 const teamMembers = [
-  { key: 'zinurbek', image: zinurbekImg },
   { key: 'mehmetBaruk', image: mehmetBarukImg },
+  { key: 'zinurbek', image: zinurbekImg },
   { key: 'yunus', image: yunusImg },
   { key: 'abdulla', image: abdullaImg },
   { key: 'abdulbaki', image: abdulbakiImg },
   { key: 'umut', image: umutImg },
   { key: 'anar', image: anarImg },
+  { key: 'burak', image: burakImg },
   { key: 'yana', image: yanaImg },
   { key: 'shuayb', image: shuaybImg },
   { key: 'ibrahim', image: ibrahimImg },
-  { key: 'burak', image: burakImg },
 ];
 
 const containerVariants = {
