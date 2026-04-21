@@ -334,3 +334,8 @@
 .navbar-text-truncate {
   @apply truncate max-w-[100px] md:max-w-[120px] lg:max-w-none;
 }
+
+/* Hide Lovable badge globally */
+#lovable-badge {
+  display: none !important;
+}
