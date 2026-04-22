@@ -92,36 +92,7 @@
 
   <body>
     <div id="root"></div>
-    <div class="lcp-placeholder" aria-hidden="true">
-      <div class="lcp-skeleton">
-        <div class="lcp-bar tiny"></div>
-        <div class="lcp-bar"></div>
-        <div class="lcp-bar short"></div>
-        <div class="lcp-buttons"><div class="lcp-btn"></div><div class="lcp-btn"></div></div>
-      </div>
-    </div>
     <script type="module" src="/src/main.tsx"></script>
-    <script>
-      // Wait until the actual hero section paints, then fade the skeleton out smoothly.
-      (function(){
-        var root = document.getElementById('root');
-        if (!root) return;
-        var removed = false;
-        var fade = function(){
-          if (removed) return;
-          var ph = document.querySelector('.lcp-placeholder');
-          if (!ph) return;
-          removed = true;
-          ph.classList.add('fade-out');
-          setTimeout(function(){ ph && ph.parentNode && ph.parentNode.removeChild(ph); }, 320);
-        };
-        var obs = new MutationObserver(function(){
-          if (document.getElementById('hero')) { obs.disconnect(); fade(); }
-        });
-        obs.observe(root, { childList: true, subtree: true });
-        // Safety net in case hero id changes
-        setTimeout(function(){ obs.disconnect(); fade(); }, 5000);
-      })();
-    </script>
   </body>
+
 </html>
