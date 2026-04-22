@@ -1,10 +1,9 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
-import { Search, SlidersHorizontal, X } from 'lucide-react';
+import { Search, Filter, X, Compass, Star, SearchX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -20,12 +19,15 @@ import { CutiiAIPanel } from '@/components/education/CutiiAIPanel';
 import { ExternalCourseCard } from '@/components/education/ExternalCourseCard';
 import { externalCourses } from '@/data/externalCourses';
 import AnimatedImage from '@/components/common/AnimatedImage';
+import GlassCard from '@/components/glass/GlassCard';
+import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
+import BottomGradientOverlay from '@/components/BottomGradientOverlay';
 
 export const CourseCatalog = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  
+
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'all');
   const [selectedLevel, setSelectedLevel] = useState('all');
@@ -54,7 +56,6 @@ export const CourseCatalog = () => {
         .select('*, instructors(*), categories(*)')
         .eq('is_published', true);
 
-      // Apply filters
       if (selectedCategory !== 'all') {
         const category = categories?.find(c => c.slug === selectedCategory);
         if (category) {
@@ -76,7 +77,6 @@ export const CourseCatalog = () => {
         query = query.eq('is_free', false);
       }
 
-      // Apply sorting
       if (sortBy === 'popular') {
         query = query.order('total_enrollments', { ascending: false });
       } else if (sortBy === 'newest') {
@@ -88,7 +88,6 @@ export const CourseCatalog = () => {
       const { data, error } = await query;
       if (error) throw error;
 
-      // Apply search filter client-side for multilingual support
       if (searchQuery.trim()) {
         const locale = i18n.language;
         return data.filter((course) => {
@@ -138,25 +137,19 @@ export const CourseCatalog = () => {
     searchQuery.trim() !== '',
   ].filter(Boolean).length;
 
-  // Merge database courses with external courses
   const allCourses = useMemo(() => {
     const dbCourses = courses || [];
-    
-    // Filter external courses based on current filters
     let filteredExternal = externalCourses;
-    
+
     if (selectedLevel !== 'all') {
       filteredExternal = filteredExternal.filter(c => c.level === selectedLevel);
     }
-    
     if (selectedLanguage !== 'all') {
       filteredExternal = filteredExternal.filter(c => c.language === selectedLanguage);
     }
-    
     if (selectedPrice === 'paid') {
-      filteredExternal = []; // External courses are free
+      filteredExternal = [];
     }
-    
     if (searchQuery.trim()) {
       const locale = i18n.language as 'en' | 'tr' | 'ru' | 'ar';
       const searchLower = searchQuery.toLowerCase();
@@ -170,21 +163,28 @@ export const CourseCatalog = () => {
         );
       });
     }
-    
+
     return { db: dbCourses, external: filteredExternal };
   }, [courses, selectedLevel, selectedLanguage, selectedPrice, searchQuery, i18n.language]);
 
   const totalCoursesCount = allCourses.db.length + allCourses.external.length;
 
   return (
-    <div className="min-h-screen bg-background pt-24 pb-20 px-6">
+    <div className="min-h-screen bg-background text-foreground relative pt-24 pb-20 px-6">
+      <AnimatedBlobBackground />
       <EducationNavbar />
       <CutiiAIPanel />
-      <div className="max-w-7xl mx-auto">
+
+      <div className="section-container relative z-10">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-4">{t('education.catalog.title')}</h1>
-          
+          <div className="flex items-center gap-3 mb-6">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/15 border border-accent/20 text-accent">
+              <Compass className="h-5 w-5" />
+            </div>
+            <h1 className="text-3xl md:text-4xl font-bold">{t('education.catalog.title')}</h1>
+          </div>
+
           {/* Search and Filter Toggle */}
           <div className="flex gap-2 mb-6">
             <div className="flex-1 relative">
@@ -194,18 +194,18 @@ export const CourseCatalog = () => {
                 placeholder={t('education.home.search_placeholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="glass pl-10"
+                className="glass pl-10 h-11"
               />
             </div>
             <Button
               variant="outline"
-              className="glass"
+              className="glass border-white/15 h-11"
               onClick={() => setShowFilters(!showFilters)}
             >
-              <SlidersHorizontal className="h-5 w-5 mr-2" />
+              <Filter className="h-4 w-4 mr-2" />
               {t('education.catalog.filters')}
               {activeFiltersCount > 0 && (
-                <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-primary text-primary-foreground">
+                <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-accent/20 border border-accent/30 text-accent">
                   {activeFiltersCount}
                 </span>
               )}
@@ -214,72 +214,66 @@ export const CourseCatalog = () => {
 
           {/* Filters Panel */}
           {showFilters && (
-            <Card className="glass mb-6">
-              <CardContent className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                  {/* Category Filter */}
-                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                    <SelectTrigger className="glass">
-                      <SelectValue placeholder={t('education.catalog.all_courses')} />
-                    </SelectTrigger>
-                    <SelectContent className="glass-strong">
-                      <SelectItem value="all">{t('education.catalog.all_courses')}</SelectItem>
-                      {categories?.map((cat) => (
-                        <SelectItem key={cat.id} value={cat.slug}>
-                          {getCategoryName(cat)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+            <GlassCard className="p-6 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="glass">
+                    <SelectValue placeholder={t('education.catalog.all_courses')} />
+                  </SelectTrigger>
+                  <SelectContent className="glass-strong">
+                    <SelectItem value="all">{t('education.catalog.all_courses')}</SelectItem>
+                    {categories?.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.slug}>
+                        {getCategoryName(cat)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-                  {/* Level Filter */}
-                  <Select value={selectedLevel} onValueChange={setSelectedLevel}>
-                    <SelectTrigger className="glass">
-                      <SelectValue placeholder={t('education.catalog.level')} />
-                    </SelectTrigger>
-                    <SelectContent className="glass-strong">
-                      <SelectItem value="all">{t('education.catalog.all_levels')}</SelectItem>
-                      <SelectItem value="beginner">{t('education.levels.beginner')}</SelectItem>
-                      <SelectItem value="intermediate">{t('education.levels.intermediate')}</SelectItem>
-                      <SelectItem value="advanced">{t('education.levels.advanced')}</SelectItem>
-                    </SelectContent>
-                  </Select>
+                <Select value={selectedLevel} onValueChange={setSelectedLevel}>
+                  <SelectTrigger className="glass">
+                    <SelectValue placeholder={t('education.catalog.level')} />
+                  </SelectTrigger>
+                  <SelectContent className="glass-strong">
+                    <SelectItem value="all">{t('education.catalog.all_levels')}</SelectItem>
+                    <SelectItem value="beginner">{t('education.levels.beginner')}</SelectItem>
+                    <SelectItem value="intermediate">{t('education.levels.intermediate')}</SelectItem>
+                    <SelectItem value="advanced">{t('education.levels.advanced')}</SelectItem>
+                  </SelectContent>
+                </Select>
 
-                  {/* Language Filter */}
-                  <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
-                    <SelectTrigger className="glass">
-                      <SelectValue placeholder={t('education.catalog.language')} />
-                    </SelectTrigger>
-                    <SelectContent className="glass-strong">
-                      <SelectItem value="all">{t('education.catalog.all_languages')}</SelectItem>
-                      <SelectItem value="en">English</SelectItem>
-                      <SelectItem value="tr">Türkçe</SelectItem>
-                      <SelectItem value="ru">Русский</SelectItem>
-                      <SelectItem value="ar">العربية</SelectItem>
-                    </SelectContent>
-                  </Select>
+                <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
+                  <SelectTrigger className="glass">
+                    <SelectValue placeholder={t('education.catalog.language')} />
+                  </SelectTrigger>
+                  <SelectContent className="glass-strong">
+                    <SelectItem value="all">{t('education.catalog.all_languages')}</SelectItem>
+                    <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="tr">Türkçe</SelectItem>
+                    <SelectItem value="ru">Русский</SelectItem>
+                    <SelectItem value="ar">العربية</SelectItem>
+                  </SelectContent>
+                </Select>
 
-                  {/* Price Filter */}
-                  <Select value={selectedPrice} onValueChange={setSelectedPrice}>
-                    <SelectTrigger className="glass">
-                      <SelectValue placeholder={t('education.catalog.price')} />
-                    </SelectTrigger>
-                    <SelectContent className="glass-strong">
-                      <SelectItem value="all">{t('education.catalog.all_courses')}</SelectItem>
-                      <SelectItem value="free">{t('education.catalog.free')}</SelectItem>
-                      <SelectItem value="paid">{t('education.catalog.paid')}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <Select value={selectedPrice} onValueChange={setSelectedPrice}>
+                  <SelectTrigger className="glass">
+                    <SelectValue placeholder={t('education.catalog.price')} />
+                  </SelectTrigger>
+                  <SelectContent className="glass-strong">
+                    <SelectItem value="all">{t('education.catalog.all_courses')}</SelectItem>
+                    <SelectItem value="free">{t('education.catalog.free')}</SelectItem>
+                    <SelectItem value="paid">{t('education.catalog.paid')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-                {activeFiltersCount > 0 && (
-                  <Button variant="ghost" onClick={clearFilters} className="w-full">
-                    <X className="h-4 w-4 mr-2" />
-                    {t('education.catalog.clear_filters')}
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
+              {activeFiltersCount > 0 && (
+                <Button variant="ghost" onClick={clearFilters} className="w-full">
+                  <X className="h-4 w-4 mr-2" />
+                  {t('education.catalog.clear_filters')}
+                </Button>
+              )}
+            </GlassCard>
           )}
 
           {/* Sort and Results Count */}
@@ -287,7 +281,7 @@ export const CourseCatalog = () => {
             <p className="text-muted-foreground">
               {totalCoursesCount} {totalCoursesCount === 1 ? t('education.catalog.course') : t('education.catalog.courses')}
               {allCourses.external.length > 0 && (
-                <span className="text-xs ml-2 text-primary">
+                <span className="text-xs ml-2 text-accent">
                   ({allCourses.external.length} {t('education.catalog.external')})
                 </span>
               )}
@@ -308,11 +302,17 @@ export const CourseCatalog = () => {
         {/* Course Grid */}
         {isLoading ? (
           <div className="text-center py-20">
-            <div className="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full mx-auto" />
+            <div
+              className="w-10 h-10 mx-auto rounded-full animate-spin"
+              style={{
+                background: 'conic-gradient(from 0deg, transparent, hsl(var(--accent)))',
+                mask: 'radial-gradient(closest-side, transparent calc(100% - 3px), black calc(100% - 3px))',
+                WebkitMask: 'radial-gradient(closest-side, transparent calc(100% - 3px), black calc(100% - 3px))',
+              }}
+            />
           </div>
         ) : totalCoursesCount > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* External Courses First */}
             {allCourses.external.map((course) => (
               <ExternalCourseCard
                 key={course.id}
@@ -320,12 +320,12 @@ export const CourseCatalog = () => {
                 onClick={() => navigate(course.externalUrl)}
               />
             ))}
-            
-            {/* Database Courses */}
+
             {allCourses.db.map((course) => (
-              <Card
+              <GlassCard
                 key={course.id}
-                className="glass cursor-pointer transition-all hover:scale-105 hover:shadow-lg overflow-hidden"
+                hover
+                className="cursor-pointer overflow-hidden p-0"
                 onClick={() => navigate(`/education/course/${course.slug}`)}
               >
                 {course.hero_image && (
@@ -338,14 +338,14 @@ export const CourseCatalog = () => {
                     />
                   </div>
                 )}
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-2 mb-2">
+                <div className="p-6">
+                  <div className="flex items-center gap-2 mb-3">
                     {course.categories && (
-                      <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">
+                      <span className="text-xs px-2 py-1 rounded-full bg-primary/15 border border-accent/20 text-accent">
                         {getCategoryName(course.categories)}
                       </span>
                     )}
-                    <span className="text-xs px-2 py-1 rounded-full bg-muted">
+                    <span className="text-xs uppercase tracking-wider text-muted-foreground">
                       {t(`education.levels.${course.level}`)}
                     </span>
                   </div>
@@ -354,14 +354,14 @@ export const CourseCatalog = () => {
                     {getCourseSubtitle(course)}
                   </p>
                   {course.instructors && (
-                    <div 
-                      className="flex items-center gap-2 text-sm mb-4 cursor-pointer hover:text-primary transition-colors"
+                    <div
+                      className="flex items-center gap-2 text-sm mb-4 cursor-pointer hover:text-accent transition-colors"
                       onClick={(e) => {
                         e.stopPropagation();
                         navigate(`/education/instructor/${course.instructors.id}`);
                       }}
                     >
-                      <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full bg-primary/15 border border-accent/20 text-accent flex items-center justify-center font-semibold">
                         {course.instructors.name.charAt(0)}
                       </div>
                       <span className="text-muted-foreground hover:text-foreground">{course.instructors.name}</span>
@@ -370,32 +370,37 @@ export const CourseCatalog = () => {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
                       <div className="flex items-center gap-1">
-                        <span className="text-yellow-500">★</span>
+                        <Star className="h-4 w-4 fill-accent text-accent" />
                         <span>{course.rating.toFixed(1)}</span>
                       </div>
                       {course.duration_hours && (
                         <span>{course.duration_hours} {t('education.catalog.hours')}</span>
                       )}
                     </div>
-                    <span className="text-lg font-bold text-primary">
+                    <span className="text-lg font-bold text-accent">
                       {course.is_free ? t('education.course.price_free') : `$${course.price}`}
                     </span>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </GlassCard>
             ))}
           </div>
         ) : (
-          <div className="text-center py-20">
-            <p className="text-xl text-muted-foreground">{t('education.catalog.no_results')}</p>
+          <GlassCard className="max-w-md mx-auto p-10 text-center">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/15 border border-accent/20 text-accent mb-4">
+              <SearchX className="h-6 w-6" />
+            </div>
+            <p className="text-xl mb-4">{t('education.catalog.no_results')}</p>
             {activeFiltersCount > 0 && (
-              <Button onClick={clearFilters} className="mt-4" variant="outline">
+              <Button onClick={clearFilters} variant="outline" className="glass border-white/15">
                 {t('education.catalog.clear_filters')}
               </Button>
             )}
-          </div>
+          </GlassCard>
         )}
       </div>
+
+      <BottomGradientOverlay />
     </div>
   );
 };
