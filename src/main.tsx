@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
+import UTAABLoader from "./components/UTAABLoader.tsx";
 import "./index.css";
 import "./i18n/config";
 
@@ -16,8 +17,18 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
+function Boot() {
+  const [loading, setLoading] = useState(true);
+  return (
+    <>
+      <App />
+      {loading && <UTAABLoader onComplete={() => setLoading(false)} />}
+    </>
+  );
+}
+
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
+    <Boot />
   </React.StrictMode>
 );
