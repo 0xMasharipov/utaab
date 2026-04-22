@@ -238,7 +238,7 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
         className="fixed bottom-6 right-6 z-50 rounded-full w-14 h-14 shadow-lg glass-strong border border-white/30 hover:bg-white/10 transition-all"
         size="icon"
       >
-        <Bot className="h-6 w-6 text-white" />
+        <Bot className="h-6 w-6 text-accent" />
       </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -249,9 +249,9 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
               : 'max-w-none'
           }`}
           style={
-            isMobile || isMaximized
+          isMobile || isMaximized
               ? {
-                  background: 'radial-gradient(ellipse at 20% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, rgba(147, 51, 234, 0.06) 0%, transparent 50%), rgba(15, 23, 42, 0.95)',
+                  background: 'radial-gradient(ellipse at 20% 30%, rgba(59, 130, 246, 0.10) 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, rgba(99, 179, 237, 0.06) 0%, transparent 50%), rgba(8, 13, 26, 0.95)',
                   backdropFilter: 'blur(32px) saturate(180%)',
                   WebkitBackdropFilter: 'blur(32px) saturate(180%)',
                   animation: 'liquidGlass 10s ease-in-out infinite',
@@ -262,7 +262,7 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
                   left: `${position.x}px`,
                   top: `${position.y}px`,
                   transform: 'none',
-                  background: 'radial-gradient(ellipse at 20% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, rgba(147, 51, 234, 0.06) 0%, transparent 50%), rgba(15, 23, 42, 0.95)',
+                  background: 'radial-gradient(ellipse at 20% 30%, rgba(59, 130, 246, 0.10) 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, rgba(99, 179, 237, 0.06) 0%, transparent 50%), rgba(8, 13, 26, 0.95)',
                   backdropFilter: 'blur(32px) saturate(180%)',
                   WebkitBackdropFilter: 'blur(32px) saturate(180%)',
                   position: 'fixed',
@@ -280,7 +280,7 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
             onMouseDown={handleMouseDown}
           >
             <div className="flex items-center gap-2">
-              <Bot className="h-5 w-5 text-primary" />
+              <Bot className="h-5 w-5 text-accent" />
               <h3 className="text-lg font-semibold">CUTII AI Assistant</h3>
             </div>
             <div className="flex items-center gap-1">
