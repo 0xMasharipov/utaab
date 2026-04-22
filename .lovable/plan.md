@@ -1,52 +1,92 @@
 
 
-## Add UTAABLoader full-screen boot loader
+## Refine UTAAB Edu — match main site aesthetic & icon system
 
-### What you'll see
-A full-screen dark navy boot screen with the rotated 2×2 UTAAB outline logo at center, animated particles, scan lines, perspective grid, scrolling hash strips, corner brackets, and a stepped progress bar. Fades out smoothly and unmounts when loading completes, revealing the home page beneath.
+### Goals
+1. Bring the Edu pages into visual parity with the main site (AnimatedBlobBackground + BottomGradientOverlay, glass cards, dark navy gradient, accent-blue highlights — no purple, no raw green/yellow).
+2. Replace mixed emoji icons (🟢🟡🔴, 📚, ★) with consistent `lucide-react` icons styled in the brand accent.
+3. Tighten typography, spacing, and card hierarchy so cards feel like one cohesive system.
 
-### Files
+### Scope (pages affected)
+- `src/pages/education/EducationHome.tsx` — hero, sections, category cards, featured course cards
+- `src/pages/education/CourseCatalog.tsx` — header, filter card, course cards, empty state
+- `src/components/education/ExternalCourseCard.tsx` — badges, level indicator, footer
+- `src/components/education/CutiiAIPanel.tsx` — replace purple radial-gradient with navy/accent-blue identity
 
-**New: `src/hooks/useBreakpoint.ts`**
-- Returns `"mobile" | "tablet" | "desktop"` based on `window.innerWidth` (<640 / <1024 / ≥1024)
-- Listens to `resize` with a 100ms debounce
-- SSR-safe initial value (defaults to `"desktop"` if `window` undefined, then corrects on mount)
+Out of scope: routing, auth, data, i18n keys, EducationNavbar (already on-brand).
 
-**New: `src/components/UTAABLoader.tsx`**
-- Props: `{ onComplete?: () => void }`
-- Fixed full-viewport overlay, `z-[9999]`, background `#080d1a`, `touch-action: none`, `user-select: none`, `-webkit-tap-highlight-color: transparent`
-- Uses `useBreakpoint()` to drive sizes per the responsive map (logo 100/130/160, fonts, progress bar widths, particle count 16/28/40, etc.)
-- Background layers (all `pointer-events-none`):
-  1. Nebula radial-gradient with `bgBreath` 7s
-  2. Perspective grid (52px desktop/tablet, 36px mobile) with opacity pulse 6s
-  3. Particles array generated once outside the component (40 entries; sliced based on breakpoint), each animated with `particleRise`
-  4. Two horizontal scan lines (top 38% and 62%) with `scanH` sweep; opacity ×0.6 on mobile
-  5. Two vertical accent lines (hidden on mobile) with `vertLinePulse`
-  6. Four corner brackets (sized/inset per breakpoint) with staggered `bracketPulse`
-  7. Two scrolling hash strips (top scrolls left 12s, bottom right 18s) using duplicated content + `hashScroll`
-- Center column: `flex flex-col items-center`, `max-w-[100vw]`, padding 0 16/24/0px, fade-in opacity 0→1 over 0.8s
-  - EPOCH label "EPOCH · 2025 · MAINNET"
-  - 2×2 logo grid rotated 45deg with 4 tile variants (`tilePulseA/B/C/D`), behind it a radial glow (`outerGlow`), spring entrance via cubic-bezier
-  - Subtitle "Build Your Future in Blockchain" (letter-spacing reduced to 0.25em on mobile, `nowrap` on tablet/desktop, `normal` on mobile)
-  - Progress bar with stepped fills `[12, 28, 41, 57, 69, 78, 88, 94, 99, 100]%` advanced via chained `setTimeout` (600–1000ms gaps), gradient fill with `progressGlow`, hex/percent labels below
-- On reaching 100%: set `visible=false` to trigger 0.9s opacity fade, then call `onComplete?.()` via `transitionend` (with a safety timeout fallback)
-- Single `<style>` JSX block at the bottom containing all keyframes (`scanH`, `vertLinePulse`, `bracketPulse`, `particleRise`, `bgBreath`, `progressGlow`, `hashScroll`, `subtitleFade`, `tilePulseA/B/C/D`, `outerGlow`) and a Google Fonts `@import` for DM Mono (300/400/500) and Syne (700/800)
-- Cleanup: clears all timers on unmount
+### Visual changes
 
-**Modified: `src/main.tsx`**
-- Wrap `<App />` in a small `<Boot>` component that holds `loading` state and renders `<UTAABLoader onComplete={() => setLoading(false)} />` while loading, alongside `<App />` underneath. The loader sits on top via `z-[9999]` and fades away — `App` mounts immediately so the page is ready when the overlay clears.
+**Shared backdrop on every Edu page**
+- Add `<AnimatedBlobBackground />` and `<BottomGradientOverlay />` (same as main site) inside a wrapper `<div className="min-h-screen bg-background text-foreground relative">`.
+- Replace local `bg-gradient-to-b from-primary/5 to-transparent` hero overlays with the global blob system.
 
-### Untouched
-All routes, components, styles, and the existing copy-protection listeners in `main.tsx`. No new dependencies. No changes to Tailwind config (everything is inline styles + utility classes already available).
+**EducationHome hero**
+- Match main `Hero` rhythm: badge pill ("UTAAB EDU · Learn Web3"), large headline (`text-4xl sm:text-5xl md:text-6xl`), muted subtitle, glass search input with a `Search` icon button using `btn-primary`. Add a secondary "Browse Catalog" `outline` button next to the primary CTA — same rounded-full treatment as `LearnHub`.
+- Wrap section in `section-container` for consistent padding.
 
-### Responsive guarantees baked in
-- Logo always centered, capped by `max-w-[100vw]` on the column
-- Progress bar `min(…, 80–60vw)` with hard `90vw` cap
-- Vertical accent lines hidden on mobile to avoid clipping
-- Corner brackets use percentage insets so they stay in viewport
-- Particle count and travel distance reduced on mobile
-- Subtitle letter-spacing reduced + `white-space: normal` on mobile to prevent overflow on 320px screens
+**Section: Open Educational Resources**
+- Replace ad-hoc layout with a centered header (`text-3xl md:text-4xl font-bold` + muted subtitle + small `BookMarked` accent icon above the title).
+- "MIT Partnership" badge restyled to glass pill with `GraduationCap` icon, accent text.
+
+**Section: Categories**
+- Drop `bg-muted/30` background (it creates a horizontal color break — violates the seamless flow rule).
+- Replace category emoji icons with a curated `lucide-react` icon resolved from the category slug:
+  - `blockchain → Boxes`, `defi → Coins`, `nft → ImageIcon`, `web3 → Globe`, `smart-contracts → FileCode2`, `security → ShieldCheck`, `trading → TrendingUp`, fallback → `BookOpen`.
+- Card style: `GlassCard` with `hover` prop, `w-12 h-12` icon tile (`bg-primary/15 border border-accent/20 text-accent`) above title — matches the `LearnHub` "Three paths" pattern exactly.
+
+**Section: Featured courses**
+- Replace yellow `★` text with `Star` from lucide (filled, `text-accent`).
+- Replace category/level pill colors with the `LearnHub` style: small uppercase `text-xs tracking-wider text-muted-foreground` for level and an accent-tinted pill for category.
+- Instructor avatar gets `border border-accent/20 bg-primary/15 text-accent` instead of plain `bg-primary/20`.
+- Price: keep accent color but use `text-accent` (not `text-primary`) to match brand accent.
+
+**ExternalCourseCard refinements**
+- Remove emoji-based level (`🟢 Beginner` → `<Signal />` icon + label, color via `text-accent` regardless of level to keep palette neutral; hue differentiation via subtle border accent only).
+- Replace `bg-blue-500/90` and `bg-green-500/90` raw badges with brand-consistent glass badges:
+  - "MIT OCW" → `glass border-accent/30 text-accent` with `GraduationCap` icon.
+  - "FREE" → `glass border-accent/30 text-accent` (no green).
+- Footer keeps `Info` icon but switches to `text-muted-foreground` on `border-white/10` separator (no `bg-muted/20`).
+- Hover scale tightened from `1.05` → `1.02` to match GlassCard's hover physics; image inner zoom kept.
+
+**CourseCatalog**
+- Wrap in same blob/gradient backdrop, drop raw `bg-background`.
+- Header: add icon+title combo (`Compass` icon in accent tile + heading), keep search.
+- Filter button: `Filter` icon (lucide) instead of `SlidersHorizontal` — consistency with main site's filter usage.
+- Filters card → `GlassCard` (not raw `Card glass`) for visual consistency.
+- Loading spinner restyled to use the blue→accent gradient ring used on main site, sized `w-10 h-10`.
+- Empty state: add `SearchX` icon above the message, restyle as a centered `GlassCard` panel.
+
+**CutiiAIPanel identity fix**
+- Remove the purple radial-gradient layer (`rgba(147, 51, 234, ...)` violates "no purple" rule).
+- New backdrop: `radial-gradient(ellipse at 20% 30%, rgba(59, 130, 246, 0.10) 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, rgba(99, 179, 237, 0.06) 0%, transparent 50%), rgba(8, 13, 26, 0.95)` — matches UTAABLoader navy + accent-blue palette.
+- Floating button stays glass-strong but icon updated to use `text-accent` for the `Bot` glyph.
+- Header `Bot` icon → `text-accent`. User message bubble keeps `bg-primary` (navy) — already on-brand.
+
+### Icon system summary (lucide-react)
+| Use | Old | New |
+|---|---|---|
+| Category fallback | `📚` emoji | `BookOpen` |
+| Category per-slug | mixed emoji | `Boxes / Coins / ImageIcon / Globe / FileCode2 / ShieldCheck / TrendingUp / BookOpen` |
+| Course rating | `★` text | `Star` (filled, accent) |
+| Course level | `🟢🟡🔴` | `Signal` icon + label, accent tint |
+| MIT partnership badge | text-only | `GraduationCap` |
+| External link badge | `ExternalLink` (kept) | `ExternalLink` (kept, restyled) |
+| Catalog filter | `SlidersHorizontal` | `Filter` |
+| Catalog header | none | `Compass` in accent tile |
+| Empty state | none | `SearchX` |
+| Open resources header | none | `BookMarked` |
+
+All icons sized `h-4 w-4` for badges, `h-5 w-5` for headers, `h-6 w-6` for the category tile, all colored `text-accent` or `text-muted-foreground` — no raw Tailwind color classes (`text-blue-500`, `text-green-500`, `text-yellow-500` removed).
+
+### Files modified
+1. `src/pages/education/EducationHome.tsx`
+2. `src/pages/education/CourseCatalog.tsx`
+3. `src/components/education/ExternalCourseCard.tsx`
+4. `src/components/education/CutiiAIPanel.tsx`
+
+No new files. No new dependencies (`lucide-react` and `GlassCard` already in use). No translation key additions (icons replace decorative emoji only).
 
 ### Risk: low
-Pure additive: one new hook, one new component, one tiny wrapper in `main.tsx`. No styling/system changes. Entirely self-contained CSS via scoped `<style>` block.
+Pure visual refinement — same DOM structure, same data flow, same routes. All changes are class/style/icon swaps. Reversible at the component level.
 
