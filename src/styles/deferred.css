@@ -1,30 +1,12 @@
 /* Deferred CSS — loaded asynchronously for below-fold / lazy components.
-   Keyframes (hero-carousel-scroll, nav-menu-enter, nav-menu-item-enter,
-   lang-text-swap, float, glow, blob-fade-in, mobile-hero-pulse) live in
-   tailwind.config.ts so the JIT compiler ships only what's referenced.
-   The utility classes below reference those keyframes by name and bundle
-   reduced-motion handling that Tailwind utilities can't express. */
+   Keyframes (nav-menu-enter, nav-menu-item-enter, lang-text-swap, float,
+   glow, blob-fade-in, mobile-hero-pulse) live in tailwind.config.ts so the
+   JIT compiler ships only what's referenced. The utility classes below
+   reference those keyframes by name and bundle reduced-motion handling
+   that Tailwind utilities can't express.
+   Note: .hero-carousel-track / .hero-carousel-item are above-fold critical
+   and live in src/index.css so the marquee animates on first paint. */
 
-/* Infinite carousel */
-.hero-carousel-track {
-  display: flex;
-  width: max-content;
-  animation: hero-carousel-scroll 30s linear infinite;
-}
-.hero-carousel-track:hover {
-  animation-play-state: paused;
-}
-
-.hero-carousel-item {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.25em;
-  font-size: clamp(1rem, 2.5vw, 1.5rem);
-  color: rgba(255, 255, 255, 0.8);
-  text-shadow: 0 0 20px rgba(0, 150, 255, 0.3);
-  white-space: nowrap;
-}
 
 /* Premium technical grid */
 .bg-technical-grid {
