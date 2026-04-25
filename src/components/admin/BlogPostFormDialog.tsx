@@ -206,8 +206,46 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
               <Textarea value={form.excerpt_en} onChange={e => update('excerpt_en', e.target.value)} rows={2} />
             </div>
             <div>
-              <Label>Content (JSON blocks)</Label>
-              <Textarea value={form.content} onChange={e => update('content', e.target.value)} rows={8} className="font-mono text-xs" />
+              <div className="flex items-center justify-between mb-1">
+                <Label>Content (JSON blocks)</Label>
+                <span className="text-xs text-muted-foreground">EN required · TR/RU/AR optional (falls back to EN)</span>
+              </div>
+              <Tabs defaultValue="en" className="w-full">
+                <TabsList className="grid grid-cols-4 w-full">
+                  {(['en', 'tr', 'ru', 'ar'] as const).map(l => {
+                    const raw = (form as any)[`content_${l}`] as string;
+                    let valid = true;
+                    try { JSON.parse(raw); } catch { valid = false; }
+                    return (
+                      <TabsTrigger key={l} value={l} className="text-xs uppercase">
+                        {l}
+                        {!valid && <span className="ml-1 text-destructive">!</span>}
+                      </TabsTrigger>
+                    );
+                  })}
+                </TabsList>
+                {(['en', 'tr', 'ru', 'ar'] as const).map(l => (
+                  <TabsContent key={l} value={l} className="mt-2 space-y-2">
+                    <Textarea
+                      value={(form as any)[`content_${l}`]}
+                      onChange={e => update(`content_${l}`, e.target.value)}
+                      rows={8}
+                      className={`font-mono text-xs ${l === 'ar' ? 'text-right' : ''}`}
+                      dir={l === 'ar' ? 'rtl' : 'ltr'}
+                    />
+                    {l !== 'en' && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => update(`content_${l}`, form.content_en)}
+                      >
+                        Copy from EN
+                      </Button>
+                    )}
+                  </TabsContent>
+                ))}
+              </Tabs>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
