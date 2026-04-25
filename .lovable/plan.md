@@ -1,31 +1,58 @@
-## Fix admin login logo (`/j3r7x1w9`)
+## Goal
 
-### What's actually wrong
-The current image `src/assets/utaab-logo-diamond.png` is already PNG with a transparent background — but it's a **1920×1080 canvas** containing:
-- The blue diamond glyph in the left third
-- A stray uppercase **"B"** floating on the right side
-- A huge empty area in the middle
+Allow admins to write the **Content (JSON blocks)** body in all four supported languages (EN, TR, RU, AR), not just English. The public blog reader already understands the per-language shape — we only need to upgrade the admin editor and the save logic.
 
-Because of the wide empty canvas, when the badge renders the image with `object-contain`, the diamond shrinks to a tiny dot in the middle of the rounded badge and the stray "B" is visible. That's the "background" the user wants gone.
+## How it will look in the editor
 
-### Fix
-Generate a clean, **square**, **tightly-cropped**, transparent-background version of just the diamond glyph and use that in the admin login.
+In the **New / Edit Post** dialog → **Content** tab, the single "Content (JSON blocks)" textarea will be replaced with a **language-tabbed editor**:
 
-### Implementation steps
+```text
+Content (JSON blocks)
+┌──────────────────────────────────────────┐
+│ [EN]  [TR]  [RU]  [AR]                   │
+├──────────────────────────────────────────┤
+│  [ JSON blocks textarea for active lang ]│
+│                                          │
+│  Copy from EN ▸                          │
+└──────────────────────────────────────────┘
+```
 
-1. **Crop & re-export the logo**
-   - Use Python/Pillow (already available) to:
-     - Open `src/assets/utaab-logo-diamond.png`
-     - Crop to the diamond's bounding box (roughly the left ~30% of the canvas)
-     - Erase any non-diamond pixels (the stray "B") by cropping it out
-     - Pad to a square with full transparency
-     - Save as `src/assets/utaab-logo-diamond.png` (overwrite)
-   - Result: a square, transparent PNG containing only the 4-tile blue diamond.
+- Each tab holds its own JSON blocks array.
+- EN remains required; TR/RU/AR are optional. If a language is empty, the public site falls back to EN automatically (already implemented in `BlogPost.tsx`).
+- A small **"Copy from EN"** button on the TR/RU/AR tabs pre-fills the textarea with the English JSON so the admin only translates the `content` strings inside the blocks.
+- Per-tab JSON validation indicator (same pattern used in `TranslationEditor.tsx`) so invalid JSON is caught before saving.
 
-2. **No code changes needed** in `AdminLogin.tsx` — the existing markup at lines 410–416 already uses `object-contain` inside a square `w-20 h-20` rounded badge, which will now render the diamond at full badge size.
+The **Translations** tab keeps its current role for Title and Excerpt translations (no change there).
 
-### Files changed
-- `src/assets/utaab-logo-diamond.png` (overwritten with cropped square version)
+## Storage shape
 
-### Risk
-Very low — single asset replacement, no code or layout changes. Easy to revert.
+Posts will be saved to `blog_posts.content` as:
+
+```json
+{
+  "en": [ { "type": "paragraph", "content": "..." }, ... ],
+  "tr": [ ... ],
+  "ru": [ ... ],
+  "ar": [ ... ]
+}
+```
+
+This matches the shape `BlogPost.tsx` already reads (lines 112–114). Existing posts stored as a plain array stay fully compatible — the reader already handles both shapes, and the editor will auto-migrate a legacy array into `{ en: [...] }` on first open.
+
+## Technical changes
+
+**`src/components/admin/BlogPostFormDialog.tsx`**
+- Replace the single `content: string` field with `content_en / content_tr / content_ru / content_ar` strings (each holding stringified JSON).
+- On open: if `post.content` is an array → load it into `content_en`; if it's already `{en,tr,ru,ar}` → load each into its tab.
+- Render a nested `<Tabs>` (EN/TR/RU/AR) inside the Content section with one `<Textarea>` per language, plus a JSON-validity badge per tab.
+- Add a "Copy from EN" button visible on non-EN tabs.
+- On save: parse each tab's JSON (fallback to `[]` on parse error for empty langs), then build `payload.content = { en, tr, ru, ar }`. Drop empty arrays so the JSON stays clean (only include languages with at least one block).
+- Keep the `title_en` requirement; do not block save when only EN content is filled.
+
+**No other files need to change** — `BlogPost.tsx`, `BlogCard.tsx`, the database schema, and the blog listing query already work with the localized shape.
+
+## Out of scope
+
+- No database migration (the `content` column is already `jsonb`).
+- No changes to the Title/Excerpt translation tab.
+- No automatic machine translation — admins write each language manually (or copy from EN as a starting point).

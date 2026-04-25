@@ -25,7 +25,7 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
   const [form, setForm] = useState({
     title_en: '', title_tr: '', title_ru: '', title_ar: '',
     excerpt_en: '', excerpt_tr: '', excerpt_ru: '', excerpt_ar: '',
-    content: '[]',
+    content_en: '[]', content_tr: '[]', content_ru: '[]', content_ar: '[]',
     slug: '',
     cover_image: '',
     gallery: [] as string[],
@@ -53,7 +53,22 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
         excerpt_tr: post.excerpt_tr || '',
         excerpt_ru: post.excerpt_ru || '',
         excerpt_ar: post.excerpt_ar || '',
-        content: JSON.stringify(post.content || [], null, 2),
+        ...(() => {
+          const c = post.content;
+          const stringify = (v: any) => JSON.stringify(Array.isArray(v) ? v : [], null, 2);
+          if (Array.isArray(c)) {
+            return { content_en: stringify(c), content_tr: '[]', content_ru: '[]', content_ar: '[]' };
+          }
+          if (c && typeof c === 'object') {
+            return {
+              content_en: stringify(c.en),
+              content_tr: stringify(c.tr),
+              content_ru: stringify(c.ru),
+              content_ar: stringify(c.ar),
+            };
+          }
+          return { content_en: '[]', content_tr: '[]', content_ru: '[]', content_ar: '[]' };
+        })(),
         slug: post.slug || '',
         cover_image: post.cover_image || '',
         gallery: Array.isArray(post.gallery) ? post.gallery.filter((g: any) => typeof g === 'string') : [],
@@ -73,7 +88,8 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
       setForm({
         title_en: '', title_tr: '', title_ru: '', title_ar: '',
         excerpt_en: '', excerpt_tr: '', excerpt_ru: '', excerpt_ar: '',
-        content: '[]', slug: '', cover_image: '', gallery: [], video_type: '', video_url: '',
+        content_en: '[]', content_tr: '[]', content_ru: '[]', content_ar: '[]',
+        slug: '', cover_image: '', gallery: [], video_type: '', video_url: '',
         tags: '', author_name: '', status: 'draft', featured: false,
         publish_date: '', scheduled_at: '', meta_title: '', meta_description: '', og_image: '',
       });
@@ -98,8 +114,25 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
       return;
     }
     setSaving(true);
-    let contentJson;
-    try { contentJson = JSON.parse(form.content); } catch { contentJson = []; }
+    const parseLang = (raw: string): any[] => {
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    };
+    const contentByLang: Record<string, any[]> = {
+      en: parseLang(form.content_en),
+      tr: parseLang(form.content_tr),
+      ru: parseLang(form.content_ru),
+      ar: parseLang(form.content_ar),
+    };
+    // Drop empty languages so the JSON stays clean (en is always kept)
+    const contentJson: Record<string, any[]> = { en: contentByLang.en };
+    (['tr', 'ru', 'ar'] as const).forEach(l => {
+      if (contentByLang[l].length > 0) contentJson[l] = contentByLang[l];
+    });
 
     // Auto-set publish_date when publishing without a date
     const effectivePublishDate = form.status === 'published' && !form.publish_date
@@ -173,8 +206,46 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
               <Textarea value={form.excerpt_en} onChange={e => update('excerpt_en', e.target.value)} rows={2} />
             </div>
             <div>
-              <Label>Content (JSON blocks)</Label>
-              <Textarea value={form.content} onChange={e => update('content', e.target.value)} rows={8} className="font-mono text-xs" />
+              <div className="flex items-center justify-between mb-1">
+                <Label>Content (JSON blocks)</Label>
+                <span className="text-xs text-muted-foreground">EN required · TR/RU/AR optional (falls back to EN)</span>
+              </div>
+              <Tabs defaultValue="en" className="w-full">
+                <TabsList className="grid grid-cols-4 w-full">
+                  {(['en', 'tr', 'ru', 'ar'] as const).map(l => {
+                    const raw = (form as any)[`content_${l}`] as string;
+                    let valid = true;
+                    try { JSON.parse(raw); } catch { valid = false; }
+                    return (
+                      <TabsTrigger key={l} value={l} className="text-xs uppercase">
+                        {l}
+                        {!valid && <span className="ml-1 text-destructive">!</span>}
+                      </TabsTrigger>
+                    );
+                  })}
+                </TabsList>
+                {(['en', 'tr', 'ru', 'ar'] as const).map(l => (
+                  <TabsContent key={l} value={l} className="mt-2 space-y-2">
+                    <Textarea
+                      value={(form as any)[`content_${l}`]}
+                      onChange={e => update(`content_${l}`, e.target.value)}
+                      rows={8}
+                      className={`font-mono text-xs ${l === 'ar' ? 'text-right' : ''}`}
+                      dir={l === 'ar' ? 'rtl' : 'ltr'}
+                    />
+                    {l !== 'en' && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => update(`content_${l}`, form.content_en)}
+                      >
+                        Copy from EN
+                      </Button>
+                    )}
+                  </TabsContent>
+                ))}
+              </Tabs>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
