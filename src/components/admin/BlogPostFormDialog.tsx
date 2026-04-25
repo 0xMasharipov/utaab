@@ -53,7 +53,22 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
         excerpt_tr: post.excerpt_tr || '',
         excerpt_ru: post.excerpt_ru || '',
         excerpt_ar: post.excerpt_ar || '',
-        content: JSON.stringify(post.content || [], null, 2),
+        ...(() => {
+          const c = post.content;
+          const stringify = (v: any) => JSON.stringify(Array.isArray(v) ? v : [], null, 2);
+          if (Array.isArray(c)) {
+            return { content_en: stringify(c), content_tr: '[]', content_ru: '[]', content_ar: '[]' };
+          }
+          if (c && typeof c === 'object') {
+            return {
+              content_en: stringify(c.en),
+              content_tr: stringify(c.tr),
+              content_ru: stringify(c.ru),
+              content_ar: stringify(c.ar),
+            };
+          }
+          return { content_en: '[]', content_tr: '[]', content_ru: '[]', content_ar: '[]' };
+        })(),
         slug: post.slug || '',
         cover_image: post.cover_image || '',
         gallery: Array.isArray(post.gallery) ? post.gallery.filter((g: any) => typeof g === 'string') : [],
