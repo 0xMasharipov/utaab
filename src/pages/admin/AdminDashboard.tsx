@@ -422,7 +422,8 @@ export default function AdminDashboard() {
     return <DashboardSkeleton />;
   }
 
-  const { systemHealth, contentMetrics, engagement, security, announcements, communities } = stats;
+  const { systemHealth, contentMetrics, engagement, security, announcements, communities, traffic } = stats;
+  const topCountryMax = traffic?.topCountries?.[0]?.visits || 1;
 
   return (
     <div className="space-y-6">
