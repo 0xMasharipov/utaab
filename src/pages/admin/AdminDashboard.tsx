@@ -354,7 +354,35 @@ export default function AdminDashboard() {
             setLastUpdated(new Date());
           }
         )
-        // Communities
+        // Site visits (live traffic)
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'site_visits' },
+          (payload) => {
+            const row = payload.new as any;
+            if (row?.is_bot) return;
+            setStats(prev => {
+              const t = prev.traffic || {
+                totalVisits: 0,
+                visitsToday: 0,
+                visitsLast24h: 0,
+                uniqueVisitors24h: 0,
+                topCountries: [],
+                dailyVisits: [],
+              };
+              return {
+                ...prev,
+                traffic: {
+                  ...t,
+                  totalVisits: t.totalVisits + 1,
+                  visitsToday: t.visitsToday + 1,
+                  visitsLast24h: t.visitsLast24h + 1,
+                },
+              };
+            });
+            setLastUpdated(new Date());
+          }
+        )
         .on(
           'postgres_changes',
           { event: 'INSERT', schema: 'public', table: 'communities' },
