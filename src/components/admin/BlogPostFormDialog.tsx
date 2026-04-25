@@ -114,8 +114,25 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
       return;
     }
     setSaving(true);
-    let contentJson;
-    try { contentJson = JSON.parse(form.content); } catch { contentJson = []; }
+    const parseLang = (raw: string): any[] => {
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    };
+    const contentByLang: Record<string, any[]> = {
+      en: parseLang(form.content_en),
+      tr: parseLang(form.content_tr),
+      ru: parseLang(form.content_ru),
+      ar: parseLang(form.content_ar),
+    };
+    // Drop empty languages so the JSON stays clean (en is always kept)
+    const contentJson: Record<string, any[]> = { en: contentByLang.en };
+    (['tr', 'ru', 'ar'] as const).forEach(l => {
+      if (contentByLang[l].length > 0) contentJson[l] = contentByLang[l];
+    });
 
     // Auto-set publish_date when publishing without a date
     const effectivePublishDate = form.status === 'published' && !form.publish_date
