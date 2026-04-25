@@ -513,7 +513,144 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Content Metrics */}
+      {/* Site Traffic */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold">Site Traffic</h2>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            </span>
+            <span>Live</span>
+          </div>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Card className="glass-panel p-6">
+            <div className="flex items-center gap-3">
+              <Globe className="h-8 w-8 text-primary" />
+              <div>
+                <AnimatedStat value={traffic?.totalVisits || 0} />
+                <p className="text-sm text-muted-foreground">Total Visits</p>
+                <p className="text-xs text-muted-foreground">All time</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="glass-panel p-6">
+            <div className="flex items-center gap-3">
+              <Eye className="h-8 w-8 text-primary" />
+              <div>
+                <AnimatedStat value={traffic?.visitsToday || 0} />
+                <p className="text-sm text-muted-foreground">Visits Today</p>
+                <p className="text-xs text-muted-foreground">Since 00:00 UTC</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="glass-panel p-6">
+            <div className="flex items-center gap-3">
+              <Activity className="h-8 w-8 text-primary" />
+              <div>
+                <AnimatedStat value={traffic?.visitsLast24h || 0} />
+                <p className="text-sm text-muted-foreground">Last 24h</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="glass-panel p-6">
+            <div className="flex items-center gap-3">
+              <Users className="h-8 w-8 text-primary" />
+              <div>
+                <AnimatedStat value={traffic?.uniqueVisitors24h || 0} />
+                <p className="text-sm text-muted-foreground">Unique Visitors</p>
+                <p className="text-xs text-muted-foreground">Last 24h</p>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Countries + Daily chart */}
+        <div className="grid gap-4 md:grid-cols-5 mt-4">
+          {/* Top Countries */}
+          <Card className="glass-panel p-6 md:col-span-2">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold">Top Countries</h3>
+              <span className="text-xs text-muted-foreground">Last 30 days</span>
+            </div>
+            {traffic?.topCountries && traffic.topCountries.length > 0 ? (
+              <div className="space-y-3">
+                {traffic.topCountries.map((c) => (
+                  <div key={c.country_code} className="space-y-1">
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="text-lg leading-none">{flagEmoji(c.country_code)}</span>
+                        <span className="truncate">{c.country_name || c.country_code}</span>
+                      </div>
+                      <span className="text-muted-foreground tabular-nums">{c.visits.toLocaleString()}</span>
+                    </div>
+                    <div className="h-1 w-full rounded-full bg-muted overflow-hidden">
+                      <div
+                        className="h-full bg-primary transition-all duration-500"
+                        style={{ width: `${Math.max(4, (c.visits / topCountryMax) * 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">No country data yet — visits will appear here as they come in.</p>
+            )}
+          </Card>
+
+          {/* Daily Visits chart */}
+          <Card className="glass-panel p-6 md:col-span-3">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold">Visits (Last 7 Days)</h3>
+            </div>
+            {traffic?.dailyVisits && traffic.dailyVisits.length > 0 ? (
+              <ResponsiveContainer width="100%" height={240}>
+                <AreaChart data={traffic.dailyVisits}>
+                  <defs>
+                    <linearGradient id="colorVisits" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.4} />
+                      <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="colorUniques" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="hsl(var(--accent))" stopOpacity={0.4} />
+                      <stop offset="95%" stopColor="hsl(var(--accent))" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis
+                    dataKey="date"
+                    stroke="hsl(var(--muted-foreground))"
+                    fontSize={12}
+                    tickFormatter={(val) => new Date(val + 'T00:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                  />
+                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} allowDecimals={false} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'hsl(var(--card))',
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '8px',
+                      color: 'hsl(var(--foreground))',
+                    }}
+                    labelFormatter={(val) => new Date(val + 'T00:00:00').toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}
+                  />
+                  <Legend />
+                  <Area type="monotone" dataKey="visits" name="Visits" stroke="hsl(var(--primary))" fill="url(#colorVisits)" strokeWidth={2} />
+                  <Area type="monotone" dataKey="unique_visitors" name="Unique" stroke="hsl(var(--accent))" fill="url(#colorUniques)" strokeWidth={2} />
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : (
+              <p className="text-sm text-muted-foreground">No visit data yet.</p>
+            )}
+          </Card>
+        </div>
+      </div>
+
+
       <div>
         <h2 className="text-xl font-semibold mb-4">Content Metrics</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
