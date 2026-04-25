@@ -9,10 +9,11 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { useToast } from "@/hooks/use-toast";
-import { Shield, Eye, EyeOff, Mail, RefreshCw } from "lucide-react";
+import { Eye, EyeOff, Mail, RefreshCw } from "lucide-react";
 import { useSecurity } from "@/hooks/useSecurity";
 import { Separator } from "@/components/ui/separator";
 import { UtaabCaptcha, UtaabCaptchaRef } from "@/components/security/UtaabCaptcha";
+import utaabLogo from "@/assets/utaab-logo-diamond.png";
 
 const logAdminLogin = async (params: {
   event_type: string;
@@ -406,8 +407,12 @@ export default function AdminLogin() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 p-4">
       <Card className="w-full max-w-md glass-card">
         <CardHeader className="space-y-4 text-center">
-          <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-            <Shield className="w-8 h-8 text-primary" />
+          <div className="mx-auto w-20 h-20 rounded-2xl bg-primary/5 ring-1 ring-primary/20 flex items-center justify-center p-2 shadow-lg shadow-primary/10">
+            <img
+              src={utaabLogo}
+              alt="UTAAB"
+              className="w-full h-full object-contain drop-shadow-[0_0_12px_hsl(var(--primary)/0.4)]"
+            />
           </div>
           <CardTitle className="text-2xl font-bold">Sign In</CardTitle>
           <CardDescription>
