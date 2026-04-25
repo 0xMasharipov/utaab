@@ -25,7 +25,7 @@ export const BlogPostFormDialog = ({ open, onOpenChange, post, onSuccess }: Blog
   const [form, setForm] = useState({
     title_en: '', title_tr: '', title_ru: '', title_ar: '',
     excerpt_en: '', excerpt_tr: '', excerpt_ru: '', excerpt_ar: '',
-    content: '[]',
+    content_en: '[]', content_tr: '[]', content_ru: '[]', content_ar: '[]',
     slug: '',
     cover_image: '',
     gallery: [] as string[],
