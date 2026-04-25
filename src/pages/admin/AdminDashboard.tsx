@@ -17,9 +17,19 @@ import {
   AlertCircle,
   Megaphone,
   Users as UsersIcon,
-  RefreshCw
+  RefreshCw,
+  Globe,
+  Eye
 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+
+// Convert ISO 2-letter country code to flag emoji
+function flagEmoji(code?: string): string {
+  if (!code || code.length !== 2) return '🌐';
+  const cc = code.toUpperCase();
+  const A = 0x1f1e6;
+  return String.fromCodePoint(A + (cc.charCodeAt(0) - 65), A + (cc.charCodeAt(1) - 65));
+}
 
 interface Stats {
   systemHealth?: any;
@@ -29,6 +39,14 @@ interface Stats {
   announcements?: any;
   communities?: any;
   dailyMetrics?: { date: string; registrations: number; enrollments: number }[];
+  traffic?: {
+    totalVisits: number;
+    visitsToday: number;
+    visitsLast24h: number;
+    uniqueVisitors24h: number;
+    topCountries: { country_code: string; country_name: string; visits: number }[];
+    dailyVisits: { date: string; visits: number; unique_visitors: number }[];
+  };
 }
 
 // Animated stat component that flashes when value changes
