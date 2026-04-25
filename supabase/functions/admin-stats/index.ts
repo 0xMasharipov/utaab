@@ -276,6 +276,15 @@ serve(async (req) => {
       },
       // Daily Metrics (last 7 days)
       dailyMetrics,
+      // Site Traffic
+      traffic: {
+        totalVisits: totalVisitsRes.count || 0,
+        visitsToday: visitsTodayRes.count || 0,
+        visitsLast24h: visitsLast24hRes.count || 0,
+        uniqueVisitors24h,
+        topCountries,
+        dailyVisits,
+      },
     };
 
     return new Response(
