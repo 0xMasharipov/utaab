@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { LanguageTransitionProvider } from "@/contexts/LanguageTransitionContext";
 import { ADMIN_ROUTES } from "@/config/routes";
+import { usePageViewTracker } from "@/hooks/usePageViewTracker";
 
 // Lazy load all route components for better code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -59,6 +60,11 @@ const FAQ = lazy(() => import("./pages/FAQ"));
 
 const queryClient = new QueryClient();
 
+function RouterTracker() {
+  usePageViewTracker();
+  return null;
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -67,6 +73,7 @@ function App() {
           <Toaster />
           <Sonner />
           <BrowserRouter>
+          <RouterTracker />
           <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>}>
             <Routes>
             <Route path="/" element={<Index />} />
