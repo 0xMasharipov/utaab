@@ -114,6 +114,72 @@ serve(async (req) => {
       supabaseAdmin.from('communities').select('id', { count: 'exact', head: true }),
     ]);
 
+    // ===== Traffic / Site Visits =====
+    const now = new Date();
+    const todayStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())).toISOString();
+    const last24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    const last30d = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+    const last7dStart = new Date();
+    last7dStart.setUTCDate(last7dStart.getUTCDate() - 6);
+    last7dStart.setUTCHours(0, 0, 0, 0);
+
+    const [
+      totalVisitsRes,
+      visitsTodayRes,
+      visitsLast24hRes,
+      uniqueVisitorsRes,
+      countriesRes,
+      visitsForChartRes,
+    ] = await Promise.all([
+      supabaseAdmin.from('site_visits').select('id', { count: 'exact', head: true }).eq('is_bot', false),
+      supabaseAdmin.from('site_visits').select('id', { count: 'exact', head: true }).eq('is_bot', false).gte('created_at', todayStart),
+      supabaseAdmin.from('site_visits').select('id', { count: 'exact', head: true }).eq('is_bot', false).gte('created_at', last24h),
+      supabaseAdmin.from('site_visits').select('visitor_hash').eq('is_bot', false).gte('created_at', last24h).limit(50000),
+      supabaseAdmin.from('site_visits').select('country_code,country_name').eq('is_bot', false).gte('created_at', last30d).not('country_code', 'is', null).limit(50000),
+      supabaseAdmin.from('site_visits').select('created_at,visitor_hash').eq('is_bot', false).gte('created_at', last7dStart.toISOString()).limit(50000),
+    ]);
+
+    // Unique visitors 24h
+    const uniqueSet = new Set<string>();
+    (uniqueVisitorsRes.data || []).forEach((r: any) => r.visitor_hash && uniqueSet.add(r.visitor_hash));
+    const uniqueVisitors24h = uniqueSet.size;
+
+    // Top countries (last 30d)
+    const countryCounts = new Map<string, { code: string; name: string; visits: number }>();
+    (countriesRes.data || []).forEach((r: any) => {
+      const code = (r.country_code || '').toUpperCase();
+      if (!code) return;
+      const cur = countryCounts.get(code);
+      if (cur) cur.visits++;
+      else countryCounts.set(code, { code, name: r.country_name || code, visits: 1 });
+    });
+    const topCountries = Array.from(countryCounts.values())
+      .sort((a, b) => b.visits - a.visits)
+      .slice(0, 10)
+      .map((c) => ({ country_code: c.code, country_name: c.name, visits: c.visits }));
+
+    // Daily visits (last 7 days) — bucket client-side from one query
+    const dailyVisitsMap = new Map<string, { visits: number; uniques: Set<string> }>();
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setUTCDate(d.getUTCDate() - i);
+      const key = d.toISOString().slice(0, 10);
+      dailyVisitsMap.set(key, { visits: 0, uniques: new Set() });
+    }
+    (visitsForChartRes.data || []).forEach((r: any) => {
+      const key = String(r.created_at).slice(0, 10);
+      const bucket = dailyVisitsMap.get(key);
+      if (bucket) {
+        bucket.visits++;
+        if (r.visitor_hash) bucket.uniques.add(r.visitor_hash);
+      }
+    });
+    const dailyVisits = Array.from(dailyVisitsMap.entries()).map(([date, v]) => ({
+      date,
+      visits: v.visits,
+      unique_visitors: v.uniques.size,
+    }));
+
     // Calculate storage usage
     const totalStorage = mediaResult.data?.reduce((acc, item) => acc + (item.file_size || 0), 0) || 0;
     const storageGB = (totalStorage / (1024 * 1024 * 1024)).toFixed(2);
