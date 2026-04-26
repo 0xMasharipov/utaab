@@ -73,7 +73,7 @@ export const CourseReviews = ({ courseId, isEnrolled }: CourseReviewsProps) => {
   const submitReview = useMutation({
     mutationFn: async () => {
       if (!user) throw new Error('Not authenticated');
-      if (rating === 0) throw new Error('Please select a rating');
+      if (rating === 0) throw new Error(t('education.reviews.select_rating'));
 
       const reviewData = {
         user_id: user.id,
@@ -102,13 +102,13 @@ export const CourseReviews = ({ courseId, isEnrolled }: CourseReviewsProps) => {
       setShowReviewForm(false);
       setComment('');
       toast({
-        title: "Success!",
-        description: userReview ? "Review updated" : "Review submitted",
+        title: t('education.reviews.success'),
+        description: userReview ? t('education.reviews.review_updated') : t('education.reviews.review_submitted'),
       });
     },
     onError: (error: any) => {
       toast({
-        title: "Error",
+        title: t('education.reviews.error'),
         description: error.message,
         variant: "destructive",
       });
@@ -118,24 +118,24 @@ export const CourseReviews = ({ courseId, isEnrolled }: CourseReviewsProps) => {
   const handleSubmit = () => {
     if (!user) {
       toast({
-        title: "Sign in required",
-        description: "Please sign in to leave a review",
+        title: t('education.reviews.sign_in_required_title'),
+        description: t('education.reviews.sign_in_required_description'),
         variant: "destructive",
       });
       return;
     }
     if (!isEnrolled) {
       toast({
-        title: "Enrollment required",
-        description: "You must be enrolled to review this course",
+        title: t('education.reviews.enrollment_required_title'),
+        description: t('education.reviews.enrollment_required_description'),
         variant: "destructive",
       });
       return;
     }
     if (!utaabToken) {
       toast({
-        title: "Verification required",
-        description: "Please complete the verification",
+        title: t('education.reviews.verification_required_title'),
+        description: t('education.reviews.verification_required_description'),
         variant: "destructive",
       });
       return;
@@ -188,7 +188,7 @@ export const CourseReviews = ({ courseId, isEnrolled }: CourseReviewsProps) => {
               variant="outline"
               size="sm"
             >
-              {userReview ? 'Edit Review' : 'Write a Review'}
+              {userReview ? t('education.reviews.edit_review') : t('education.reviews.write_review')}
             </Button>
           )}
         </div>
@@ -198,15 +198,15 @@ export const CourseReviews = ({ courseId, isEnrolled }: CourseReviewsProps) => {
         {showReviewForm && (
           <div className="space-y-4 p-4 glass rounded-lg">
             <div>
-              <label className="text-sm font-medium mb-2 block">Your Rating</label>
+              <label className="text-sm font-medium mb-2 block">{t('education.reviews.your_rating')}</label>
               {renderStars(rating, true)}
             </div>
             <div>
-              <label className="text-sm font-medium mb-2 block">Your Review (Optional)</label>
+              <label className="text-sm font-medium mb-2 block">{t('education.reviews.your_review_optional')}</label>
               <Textarea
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                placeholder="Share your experience with this course..."
+                placeholder={t('education.reviews.review_placeholder')}
                 className="glass min-h-[100px]"
               />
             </div>
@@ -216,8 +216,8 @@ export const CourseReviews = ({ courseId, isEnrolled }: CourseReviewsProps) => {
               ref={utaabRef}
               onVerify={(token) => setUtaabToken(token)}
               onError={() => toast({
-                title: "Verification failed",
-                description: "Please try again",
+                title: t('education.reviews.verification_failed_title'),
+                description: t('education.reviews.verification_failed_description'),
                 variant: "destructive",
               })}
               mode="invisible"
@@ -230,7 +230,7 @@ export const CourseReviews = ({ courseId, isEnrolled }: CourseReviewsProps) => {
                 disabled={submitReview.isPending || rating === 0 || !utaabToken}
                 className="btn-primary"
               >
-                {submitReview.isPending ? 'Submitting...' : (userReview ? 'Update Review' : 'Submit Review')}
+                {submitReview.isPending ? t('education.reviews.submitting') : (userReview ? t('education.reviews.update_review') : t('education.reviews.submit_review'))}
               </Button>
               <Button
                 onClick={() => {
@@ -242,7 +242,7 @@ export const CourseReviews = ({ courseId, isEnrolled }: CourseReviewsProps) => {
                 }}
                 variant="outline"
               >
-                Cancel
+                {t('education.reviews.cancel')}
               </Button>
             </div>
           </div>
@@ -271,7 +271,7 @@ export const CourseReviews = ({ courseId, isEnrolled }: CourseReviewsProps) => {
                         {renderStars(review.rating)}
                         <p className="text-xs text-muted-foreground mt-1">
                           {new Date(review.created_at).toLocaleDateString()}
-                          {isOwnReview && <span className="ml-2 text-accent">(Your review)</span>}
+                          {isOwnReview && <span className="ml-2 text-accent">{t('education.reviews.your_review_label')}</span>}
                         </p>
                       </div>
                     </div>
@@ -290,7 +290,7 @@ export const CourseReviews = ({ courseId, isEnrolled }: CourseReviewsProps) => {
           </div>
         ) : (
           <div className="text-center py-8 text-muted-foreground">
-            <p>No reviews yet. Be the first to review this course!</p>
+            <p>{t('education.reviews.no_reviews')}</p>
           </div>
         )}
       </CardContent>
