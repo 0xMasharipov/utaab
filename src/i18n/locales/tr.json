@@ -123,29 +123,92 @@
       "journeyTitle": "Öğrenme Yolculuğunuz",
       "journeySubtitle": "Başlangıçtan geliştiriciye bu önerilen yolu takip edin.",
       "cards": {
-        "whatIsBlockchain": { "title": "Blockchain Nedir?", "description": "Merkeziyetsiz sistemlerin arkasındaki temel teknolojiyi ve internetin geleceği için neden önemli olduğunu anlayın." },
-        "howBlockchainWorks": { "title": "Blockchain Nasıl Çalışır?", "description": "Blokların, düğümlerin ve konsensüs mekanizmalarının nasıl bir araya gelerek değiştirilemez, şeffaf bir defter oluşturduğunu öğrenin." },
-        "whatIsWeb3": { "title": "Web3 Nedir?", "description": "İnternetin bir sonraki evrimini keşfedin — sahiplik, merkeziyetsizlik ve kullanıcı kontrollü veriler." },
-        "walletsTokens": { "title": "Cüzdanlar, Tokenler ve İşlemler", "description": "Kripto cüzdanlarının ne olduğunu, tokenlerin nasıl çalıştığını ve işlemlerin bir blockchain ağında nasıl aktığını öğrenin." },
-        "publicPrivateKeys": { "title": "Açık ve Özel Anahtarlar", "description": "Blockchain ağlarında kimliğinizi ve varlıklarınızı güvence altına alan kriptografik anahtar çiftlerini anlayın." },
-        "commonTerms": { "title": "Bilmeniz Gereken Terimler", "description": "Gas ücretlerinden akıllı sözleşmelere, konsensüse kadar temel blockchain terminolojisi sözlüğü." },
-        "whatIsEthereum": { "title": "Ethereum Nedir?", "description": "Dünyanın önde gelen akıllı sözleşme platformunu ve merkeziyetsiz finans ile uygulamaların omurgası olarak neden hizmet ettiğini keşfedin." },
-        "ethereumVsBitcoin": { "title": "Ethereum Bitcoin'den Nasıl Farklıdır?", "description": "İki büyük blockchain ağını karşılaştırın — amaç ve mimariden konsensüs mekanizmalarına kadar." },
-        "smartContracts": { "title": "Akıllı Sözleşmeler", "description": "Blockchain üzerindeki kendi kendini yürüten sözleşmeleri anlayın — nasıl çalışırlar, neden önemlidirler ve nerelerde kullanılırlar." },
-        "gasFees": { "title": "Gas Ücretleri ve İşlemler", "description": "Ethereum'da işlem maliyetlerinin nasıl hesaplandığını ve gas kullanımını optimize etme stratejilerini öğrenin." },
-        "ethereumAccounts": { "title": "Ethereum Hesapları ve Cüzdan Etkileşimi", "description": "EOA'lar ve sözleşme hesapları arasındaki farkları ve cüzdanların ağ ile nasıl etkileşime girdiğini keşfedin." },
-        "introEthDev": { "title": "Ethereum Geliştirmeye Giriş", "description": "Merkeziyetsiz uygulamalar oluşturmak için kullanılan Ethereum geliştirme araçları, dilleri ve çerçevelerine başlayın." },
-        "introDapps": { "title": "dApp'lere Giriş", "description": "Merkeziyetsiz uygulamaların ne olduğunu, geleneksel uygulamalardan nasıl farklı olduklarını ve gerçek dünya kullanım alanlarını anlayın." },
-        "whatAreDaos": { "title": "DAO'lar Nedir?", "description": "Akıllı sözleşmelerle desteklenen, topluluk tarafından yönetilen kuruluşlar olan Merkeziyetsiz Otonom Organizasyonlar hakkında bilgi edinin." },
-        "web2VsWeb3": { "title": "Web2 ve Web3", "description": "Altyapı, kimlik ve sahiplik genelinde merkezileştirilmiş ve merkeziyetsiz paradigmaların net bir karşılaştırması." },
-        "testnets": { "title": "Blockchain Ağları ve Test Ağları", "description": "Mainnet ve testnet ortamlarını keşfedin ve geliştiricilerin dağıtımdan önce nasıl güvenle deneyler yaptığını öğrenin." },
-        "devTooling": { "title": "Geliştirici Araçlarına Giriş", "description": "Blockchain geliştirme iş akışlarını güçlendiren temel araçlara genel bakış — Hardhat, Foundry, Remix, Alchemy." },
-        "securityBasics": { "title": "Yeni Geliştiriciler İçin Güvenlik Temelleri", "description": "Her Web3 geliştiricisinin bilmesi gereken yaygın güvenlik açıklarını, en iyi uygulamaları ve güvenlik kalıplarını öğrenin." }
+        "whatIsBlockchain": {
+          "title": "Blockchain Nedir?",
+          "description": "Merkeziyetsiz sistemlerin arkasındaki temel teknolojiyi ve internetin geleceği için neden önemli olduğunu anlayın."
+        },
+        "howBlockchainWorks": {
+          "title": "Blockchain Nasıl Çalışır?",
+          "description": "Blokların, düğümlerin ve konsensüs mekanizmalarının nasıl bir araya gelerek değiştirilemez, şeffaf bir defter oluşturduğunu öğrenin."
+        },
+        "whatIsWeb3": {
+          "title": "Web3 Nedir?",
+          "description": "İnternetin bir sonraki evrimini keşfedin — sahiplik, merkeziyetsizlik ve kullanıcı kontrollü veriler."
+        },
+        "walletsTokens": {
+          "title": "Cüzdanlar, Tokenler ve İşlemler",
+          "description": "Kripto cüzdanlarının ne olduğunu, tokenlerin nasıl çalıştığını ve işlemlerin bir blockchain ağında nasıl aktığını öğrenin."
+        },
+        "publicPrivateKeys": {
+          "title": "Açık ve Özel Anahtarlar",
+          "description": "Blockchain ağlarında kimliğinizi ve varlıklarınızı güvence altına alan kriptografik anahtar çiftlerini anlayın."
+        },
+        "commonTerms": {
+          "title": "Bilmeniz Gereken Terimler",
+          "description": "Gas ücretlerinden akıllı sözleşmelere, konsensüse kadar temel blockchain terminolojisi sözlüğü."
+        },
+        "whatIsEthereum": {
+          "title": "Ethereum Nedir?",
+          "description": "Dünyanın önde gelen akıllı sözleşme platformunu ve merkeziyetsiz finans ile uygulamaların omurgası olarak neden hizmet ettiğini keşfedin."
+        },
+        "ethereumVsBitcoin": {
+          "title": "Ethereum Bitcoin'den Nasıl Farklıdır?",
+          "description": "İki büyük blockchain ağını karşılaştırın — amaç ve mimariden konsensüs mekanizmalarına kadar."
+        },
+        "smartContracts": {
+          "title": "Akıllı Sözleşmeler",
+          "description": "Blockchain üzerindeki kendi kendini yürüten sözleşmeleri anlayın — nasıl çalışırlar, neden önemlidirler ve nerelerde kullanılırlar."
+        },
+        "gasFees": {
+          "title": "Gas Ücretleri ve İşlemler",
+          "description": "Ethereum'da işlem maliyetlerinin nasıl hesaplandığını ve gas kullanımını optimize etme stratejilerini öğrenin."
+        },
+        "ethereumAccounts": {
+          "title": "Ethereum Hesapları ve Cüzdan Etkileşimi",
+          "description": "EOA'lar ve sözleşme hesapları arasındaki farkları ve cüzdanların ağ ile nasıl etkileşime girdiğini keşfedin."
+        },
+        "introEthDev": {
+          "title": "Ethereum Geliştirmeye Giriş",
+          "description": "Merkeziyetsiz uygulamalar oluşturmak için kullanılan Ethereum geliştirme araçları, dilleri ve çerçeveleriyle başlayın."
+        },
+        "introDapps": {
+          "title": "dApp'lere Giriş",
+          "description": "Merkeziyetsiz uygulamaların ne olduğunu, geleneksel uygulamalardan nasıl farklı olduklarını ve gerçek dünya kullanım alanlarını anlayın."
+        },
+        "whatAreDaos": {
+          "title": "DAO'lar Nedir?",
+          "description": "Akıllı sözleşmelerle desteklenen, topluluk tarafından yönetilen kuruluşlar olan Merkeziyetsiz Otonom Organizasyonlar hakkında bilgi edinin."
+        },
+        "web2VsWeb3": {
+          "title": "Web2 ve Web3",
+          "description": "Altyapı, kimlik ve sahiplik genelinde merkezileştirilmiş ve merkeziyetsiz paradigmaların net bir karşılaştırması."
+        },
+        "testnets": {
+          "title": "Blockchain Ağları ve Test Ağları",
+          "description": "Mainnet ve testnet ortamlarını keşfedin ve geliştiricilerin dağıtımdan önce nasıl güvenle deneyler yaptığını öğrenin."
+        },
+        "devTooling": {
+          "title": "Geliştirici Araçlarına Giriş",
+          "description": "Blockchain geliştirme iş akışlarını güçlendiren temel araçlara genel bakış — Hardhat, Foundry, Remix, Alchemy."
+        },
+        "securityBasics": {
+          "title": "Yeni Geliştiriciler İçin Güvenlik Temelleri",
+          "description": "Her Web3 geliştiricisinin bilmesi gereken yaygın güvenlik açıklarını, en iyi uygulamaları ve güvenlik kalıplarını öğrenin."
+        }
       },
       "ecosystem": {
-        "ethereum": { "name": "Ethereum", "description": "Blockchain, akıllı sözleşmeler, cüzdanlar ve geliştirme hakkında temel eğitim kaynakları — doğrudan Ethereum ekosisteminden." },
-        "binance": { "name": "Binance Academy", "description": "Blockchain, kripto, Web3 kavramları ve ticaret temellerini kapsayan erişilebilir eğitim makaleleri, sözlükler ve başlangıç dostu içerikler." },
-        "solana": { "name": "Solana", "description": "Ekosistem keşfi, Solana üzerinde geliştirme ve yüksek performanslı blockchain'leri anlama için kodsuz öğrenme yolları ve geliştirici odaklı kaynaklar." }
+        "ethereum": {
+          "name": "Ethereum",
+          "description": "Blockchain, akıllı sözleşmeler, cüzdanlar ve geliştirme hakkında temel eğitim kaynakları — doğrudan Ethereum ekosisteminden."
+        },
+        "binance": {
+          "name": "Binance Academy",
+          "description": "Blockchain, kripto, Web3 kavramları ve ticaret temellerini kapsayan erişilebilir eğitim makaleleri, sözlükler ve başlangıç dostu içerikler."
+        },
+        "solana": {
+          "name": "Solana",
+          "description": "Ekosistem keşfi, Solana üzerinde geliştirme ve yüksek performanslı blockchain'leri anlama için kodsuz öğrenme yolları ve geliştirici odaklı kaynaklar."
+        }
       },
       "journey": {
         "step1": "Blockchain temellerini öğrenin",
@@ -209,11 +272,11 @@
       "description": "Üniversiteyle ilgili ödeme süreçlerini kolaylaştırmak ve kurumsal verimliliği artırmak için tasarlanmış güvenli bir uzlaşma katmanı."
     },
     "dvs": {
-      "title": "DVS — Merkezi Olmayan Doğrulama Sistemi",
+      "title": "DVS — Merkeziyetsiz Doğrulama Sistemi",
       "description": "Akademik ve idari sistemlerde güven ve otomasyonu geliştirmeyi amaçlayan dağıtık bir doğrulama çerçevesi."
     },
     "did": {
-      "title": "DID — Merkezi Olmayan Kimlik Sistemi",
+      "title": "DID — Merkeziyetsiz Kimlik Sistemi",
       "description": "Güvenli akademik kimlik doğrulama ve doğrulama süreçlerini desteklemek için oluşturulmuş gizlilik odaklı bir kimlik çözümü."
     },
     "dao": {
@@ -464,7 +527,14 @@
     "rights": "Tüm hakları saklıdır.",
     "home": "Ana Sayfa",
     "blogLink": "Blog",
-    "teamLink": "Ekip"
+    "teamLink": "Ekip",
+    "aboutLink": "Hakkımızda",
+    "learn": "Öğren",
+    "learnHub": "Öğrenme Merkezi",
+    "guides": "Rehberler",
+    "resources": "Kaynaklar",
+    "whitepaper": "Whitepaper",
+    "faq": "SSS"
   },
   "language": {
     "en": "English",
@@ -509,9 +579,9 @@
       "noAccount": "Hesabınız yok mu?",
       "signIn": "Giriş Yap",
       "signingIn": "Giriş yapılıyor...",
-      "welcomeBack": "Tekrar Hoşgeldiniz!",
+      "welcomeBack": "Tekrar Hoş Geldiniz!",
       "signInSuccess": "Başarıyla giriş yapıldı",
-      "welcomeTitle": "Platforma Hoşgeldiniz!",
+      "welcomeTitle": "Platforma Hoş Geldiniz!",
       "welcomeMessage": "Hesabınız hazır. Kursları keşfetmeye ve öğrenme yolculuğunuza başlamaya başlayın.",
       "gotoDashboard": "Panele Git",
       "validation": {
@@ -535,7 +605,7 @@
       "categories": "Kategoriye Göre Gözat",
       "cta": "Kursları Keşfet",
       "open_resources": "Açık Eğitim Kaynakları",
-      "open_resources_subtitle": "Önde gelen kurumlardan dünya standartında kurslar",
+      "open_resources_subtitle": "Önde gelen kurumlardan dünya standardında kurslar",
       "mit_partnership": "Ücretsiz • MIT Ortaklığı"
     },
     "video": {
@@ -1115,7 +1185,7 @@
     "mobileMenu": "Mobil menü",
     "studentSignIn": "Öğrenci Girişi",
     "backToEducation": "Eğitime Dön",
-    "welcomeBack": "Tekrar hoşgeldiniz! Öğrenme yolculuğunuza devam etmek için giriş yapın"
+    "welcomeBack": "Tekrar hoş geldiniz! Öğrenme yolculuğunuza devam etmek için giriş yapın"
   },
   "profile": {
     "backToEducation": "Eğitime Dön",
@@ -1288,7 +1358,7 @@
       },
       "yana": {
         "name": "Yanina Isak",
-        "position": "Ön Uç Geliştirici",
+        "position": "Frontend Geliştirici",
         "description": "UTAAB platformlarında arayüz kalitesi, duyarlılık ve kullanılabilirliğe odaklanarak kusursuz ve görsel olarak rafine dijital deneyimler oluşturuyor."
       },
       "shuayb": {
@@ -1318,10 +1388,22 @@
     "blurb": "Sadece öğretmiyoruz — inşa ediyor, başlatıyor ve gerçek etki yaratıyoruz.",
     "learnMore": "UTAAB Hakkında Daha Fazla",
     "cards": {
-      "education": { "title": "Eğitim", "description": "Web3 geliştirme için atölyeler, mentorluk ve yapılandırılmış öğrenme." },
-      "projects": { "title": "Gerçek Projeler", "description": "Gerçek dünya uygulamalarıyla blockchain tabanlı çözümler geliştirme." },
-      "ecosystem": { "title": "Ekosistem", "description": "Öğrencileri, geliştiricileri ve yenilikçileri aktif bir ağda birleştirme." },
-      "support": { "title": "Destek", "description": "Finansal, zihinsel ve profesyonel büyümeyi mümkün kılma." }
+      "education": {
+        "title": "Eğitim",
+        "description": "Web3 geliştirme için atölyeler, mentorluk ve yapılandırılmış öğrenme."
+      },
+      "projects": {
+        "title": "Gerçek Projeler",
+        "description": "Gerçek dünya uygulamalarıyla blockchain tabanlı çözümler geliştirme."
+      },
+      "ecosystem": {
+        "title": "Ekosistem",
+        "description": "Öğrencileri, geliştiricileri ve yenilikçileri aktif bir ağda birleştirme."
+      },
+      "support": {
+        "title": "Destek",
+        "description": "Finansal, zihinsel ve profesyonel büyümeyi mümkün kılma."
+      }
     }
   },
   "aboutPage": {
@@ -1383,6 +1465,225 @@
       "title": "İnşa Ettiğimiz Geleceğin Parçası Olun",
       "joinButton": "Topluluğa Katıl",
       "exploreButton": "Projeleri Keşfet"
+    }
+  },
+  "learnHub": {
+    "hero": {
+      "badge": "Öğrenme Merkezi",
+      "title": "Web3'ü en anlaşılır şekilde öğrenin.",
+      "subtitle": "UTAAB öğrencileri, mentorları ve geliştiricileri tarafından oluşturulan, blokzincirine ücretsiz ve başlangıç dostu bir giriş yolu. Temellerle başlayın, gerçek bir ürün geliştirerek bitirin.",
+      "primary": "Öğrenmeye Başla",
+      "secondary": "Whitepaper'ı Okuyun"
+    },
+    "about": {
+      "title": "UTAAB nedir?",
+      "p1": "UTAAB (Unified Turkic Academic Alliance for Blockchain), Web3 eğitimi, gerçek projeler ve sınır ötesi işbirliğine odaklanmış, öğrenci liderliğinde bir ekosistemdir. Blokzincirine giriş engelini düşürmek için varız — böylece merak eden herkes onu anlayabilir, onunla projeler geliştirebilir ve ona katkıda bulunabilir.",
+      "p2": "İçeriklerimiz ücretsiz, topluluğumuz herkese açık ve hedefimiz basit: başlangıç seviyesindekileri, anlaşılır dersler ve uygulamalı projelerle yetkin Web3 geliştiricilerine dönüştürmek."
+    },
+    "paths": {
+      "title": "Üç öğrenme yolu",
+      "subtitle": "Öğrenme tarzınıza en uygun yolu seçin. Yollar arasında istediğiniz zaman geçiş yapabilirsiniz.",
+      "guides": {
+        "title": "Rehberler",
+        "description": "Blokzinciri, cüzdanları ve Web3'ü sade bir dille açıklayan, kendi hızınızda ilerleyebileceğiniz makaleler. Sıfırdan başlıyorsanız mükemmel bir seçim.",
+        "cta": "Rehberleri oku",
+        "level": "Başlangıç → İleri Düzey"
+      },
+      "courses": {
+        "title": "Yapılandırılmış Kurslar",
+        "description": "Resmi MIT \"Blockchain and Money\" kursu da dahil olmak üzere sınavlar, sertifikalar ve net bir müfredat içeren tam video kursları.",
+        "cta": "Kurslara göz atın",
+        "level": "Başlangıç → İleri Düzey"
+      },
+      "workshops": {
+        "title": "Atölyeler",
+        "description": "Canlı ve kayıtlı uygulamalı oturumlar. Toplulukla birlikte cüzdanlar oluşturun, ilk akıllı sözleşmenizi yayınlayın ve küçük bir dApp geliştirin.",
+        "cta": "Atölyeleri görün",
+        "level": "Uygulamalı"
+      }
+    },
+    "principles": {
+      "title": "Nasıl öğretiyoruz",
+      "clarity": {
+        "title": "Jargon yerine anlaşılırlık",
+        "description": "Kullandığımız her teknik kelimeyi anında tanımlıyoruz. Ön bilgi varsaymıyoruz."
+      },
+      "examples": {
+        "title": "Gerçek dünya örnekleri",
+        "description": "Her kavram, akılda kalıcı olması için bir benzetme veya küçük bir örnekle eşleştirilir."
+      },
+      "community": {
+        "title": "Başkalarıyla birlikte öğrenin",
+        "description": "Soruları yanıtlayan ve birlikte projeler geliştiren, büyüyen bir öğrenci, geliştirici ve mentor topluluğu."
+      }
+    },
+    "cta": {
+      "title": "Başlamaya hazır mısınız?",
+      "subtitle": "İlk rehberi açın ve bir blokzincirin gerçekte ne olduğunu 5 dakikadan kısa sürede anlayın.",
+      "button": "Rehberleri Aç"
+    }
+  },
+  "resourcesPage": {
+    "hero": {
+      "badge": "Bilgi Merkezi",
+      "title": "İhtiyacınız olan her şey tek bir yerde.",
+      "subtitle": "Dokümantasyon, rehberler, whitepaper, SSS ve geliştirici kaynakları — hepsi özenle hazırlanmış ve ücretsiz."
+    },
+    "comingSoon": "Yakında",
+    "items": {
+      "whitepaper": {
+        "title": "Whitepaper",
+        "description": "UTAAB'ın vizyonunun, çalışmalarımızın arkasındaki teknolojinin ve bir sonraki adımda ne inşa edeceğimize yön veren yol haritasının görsel bir özeti.",
+        "cta": "Whitepaper'ı okuyun"
+      },
+      "guides": {
+        "title": "Dokümantasyon ve Rehberler",
+        "description": "Ekibimiz tarafından yazılan, blokzincir temelleri, cüzdanlar, akıllı sözleşmeler ve daha fazlasını kapsayan başlangıç dostu makaleler.",
+        "cta": "Rehberleri aç"
+      },
+      "tokenomics": {
+        "title": "Tokenomi",
+        "description": "Ayrıntılı bir token modeli aktif olarak tasarlanmaktadır. Gözden geçirilip nihai hale getirildiğinde tüm ayrıntıları burada yayınlayacağız.",
+        "cta": "Yakında"
+      },
+      "blog": {
+        "title": "Blog ve Güncellemeler",
+        "description": "UTAAB topluluğundan en son duyurular, proje güncellemeleri, etkinlik özetleri ve eğitici derinlemesine incelemeler.",
+        "cta": "Blogu okuyun"
+      },
+      "faq": {
+        "title": "Sıkça Sorulan Sorular",
+        "description": "UTAAB, topluluğumuz ve Web3'e başlama hakkında en sık sorulan sorulara dürüst yanıtlar.",
+        "cta": "SSS'leri görün"
+      },
+      "developers": {
+        "title": "Geliştirici Kaynakları",
+        "description": "UTAAB üzerinde veya UTAAB ile geliştirme yapan geliştiriciler için açık kaynaklı kod, katkı rehberleri ve teknik referanslar.",
+        "cta": "GitHub'ı ziyaret edin"
+      }
+    },
+    "cta": {
+      "title": "Aradığınızı bulamadınız mı?",
+      "subtitle": "Topluluğa katılın — ekibimiz ve üyelerimiz her gün soruları yanıtlıyor ve kaynak paylaşıyor.",
+      "button": "Topluluğa Katıl"
+    }
+  },
+  "whitepaper": {
+    "hero": {
+      "badge": "Whitepaper",
+      "title": "UTAAB Whitepaper",
+      "subtitle": "UTAAB'ın ne olduğunun, neden var olduğunun ve bir sonraki adımda nereye gideceğinin açık ve dürüst bir özeti.",
+      "download": "PDF İndir (yakında)",
+      "downloadHint": "PDF yakında"
+    },
+    "vision": {
+      "title": "Vizyon",
+      "intro": "UTAAB, blokzinciri anlaşılır, kullanışlı ve herkese açık hale getirmek için var. Web3'ün jargon, ödeme duvarları veya kapalı ağların arkasına kilitlenmemesi gerektiğine inanıyoruz.",
+      "p1": "Geçmiş veya bütçe fark etmeksizin Web3 eğitimini herkes için erişilebilir kılmak.",
+      "p2": "Üyelere üzerinde çalışabilecekleri gerçek projeler vererek öğrenme ve ürün geliştirme arasındaki boşluğu kapatmak.",
+      "p3": "Öğrencilerin, geliştiricilerin ve mentorların eşit olarak işbirliği yaptığı sınırsız bir topluluk oluşturmak."
+    },
+    "tech": {
+      "title": "Teknoloji",
+      "intro": "Yaklaşımımız bilinçli olarak pragmatiktir. Açık, iyi anlaşılmış ve sahada kendini kanıtlamış teknolojiler kullanır ve kullandığımız her şeyi açıklarız.",
+      "t1": {
+        "title": "Açık ekosistem",
+        "description": "Kapalı platformlar yerine açık standartlara ve halka açık blokzincirlere güveniyoruz. Yayınladığımız her şeyi inceleyebilirsiniz."
+      },
+      "t2": {
+        "title": "Eğitim öncelikli teknoloji yığını",
+        "description": "Öğrenme platformumuz, üyelerin kendi hızlarında öğrenebilmeleri için yapılandırılmış kursları, uygulamalı atölyeleri ve bir yapay zeka eğitmenini birleştirir."
+      },
+      "t3": {
+        "title": "Proje hattı",
+        "description": "Üyeler, rehberli projeler, mentorluk ve katılımcı eşleştirme yoluyla öğrenmekten proje geliştirmeye geçerler."
+      }
+    },
+    "roadmap": {
+      "title": "Yol Haritası",
+      "intro": "Üç aşama. Bir önceki aşama sadece duyurulmakla kalmayıp gerçeğe dönüştüğünde bir sonrakine geçiyoruz.",
+      "phase1": {
+        "phase": "Aşama 1 — Temel",
+        "status": "Devam ediyor",
+        "p1": "Çok dilli destekle (EN, TR, RU, AR) temel eğitim platformunu başlatmak.",
+        "p2": "Başlangıçtan ileri seviyeye öğrenme rehberlerini ve resmi MIT \"Blockchain and Money\" kursunu yayınlamak.",
+        "p3": "Öğrenci toplulukları ve çevrimiçi kanallar aracılığıyla küresel topluluğu büyütmek."
+      },
+      "phase2": {
+        "phase": "Aşama 2 — Geliştirici Ekosistemi",
+        "status": "Sıradaki",
+        "p1": "Mentorluk, ücretli ödüller ve proje yolları ile katılımcı programını açmak.",
+        "p2": "UTAAB destekli ilk açık kaynaklı Web3 projeleri grubunu hayata geçirmek.",
+        "p3": "Topluluk kararları için şeffaf bir yönetişim modeli başlatmak."
+      },
+      "phase3": {
+        "phase": "Aşama 3 — Küresel Ağ",
+        "status": "Planlandı",
+        "p1": "Geniş ölçekte hackathon'lar, ortaklıklar ve sınır ötesi işbirlikleri.",
+        "p2": "Tamamlanan programlar için zincir üstü kimlik bilgileri ve doğrulanabilir sertifikalar.",
+        "p3": "Ortaklar, hibeler ve ekosistem katkılarıyla finanse edilen uzun vadeli sürdürülebilirlik modeli."
+      }
+    },
+    "disclaimer": "Bu sayfa, yönümüzün yaşayan bir özetidir ve ekosistem büyüdükçe gelişebilir. Buradaki hiçbir şey finansal tavsiye veya bir token satışı teklifi değildir.",
+    "cta": {
+      "title": "İşin pratik tarafını mı istiyorsunuz?",
+      "subtitle": "Doğrudan rehberlere geçin ve Web3'ü hemen öğrenmeye başlayın.",
+      "button": "Rehberleri Aç"
+    }
+  },
+  "faqPage": {
+    "hero": {
+      "badge": "SSS",
+      "title": "Sıkça Sorulan Sorular",
+      "subtitle": "En sık duyduğumuz sorulara dürüst, sade dilde yanıtlar."
+    },
+    "items": {
+      "q1": {
+        "q": "UTAAB nedir?",
+        "a": "UTAAB, blokzincir eğitimi, gerçek projeler ve sınır ötesi işbirliğine odaklanmış, öğrenci liderliğinde bir Web3 ekosistemidir. Yeni başlayanlara Web3'e giden net bir yol sunuyoruz — ilk rehberden ilk geliştirilen projeye kadar."
+      },
+      "q2": {
+        "q": "UTAAB'ye katılmak ücretsiz mi?",
+        "a": "Evet. Topluluk, rehberler ve çoğu kurs ücretsizdir. Bazı ileri düzey veya ortak programların bir ücreti olabilir, ancak bu her zaman açıkça belirtilecektir."
+      },
+      "q3": {
+        "q": "Hiç blokzincir deneyimim yok. Nereden başlamalıyım?",
+        "a": "/learn/guides adresindeki Rehberlerimizle başlayın. \"Başlangıç\" bölümü, blokzincirin ne olduğunu, cüzdanların nasıl çalıştığını ve temel kelime dağarcığını — sade bir dille ve gerçek örneklerle açıklar."
+      },
+      "q4": {
+        "q": "Katılmak için kripto para satın almam gerekiyor mu?",
+        "a": "Hayır. Hiçbir kripto paraya sahip olmadan her şeyi öğrenebilir ve çoğu etkinliğe katılabilirsiniz. Projeler zincir üstü bir eylem gerektirdiğinde, hiçbir şeyin risk altında olmaması için ücretsiz test ağları kullanırız."
+      },
+      "q5": {
+        "q": "Cüzdan nedir ve kullanmak güvenli midir?",
+        "a": "Cüzdan, blokzincir hesaplarınıza erişim sağlayan anahtarları saklayan bir yazılımdır. Doğru kullanıldığında — güçlü yedeklemeler, gizli ifadenizi asla paylaşmamak — güvenlidir. Cüzdan rehberimiz en iyi uygulamaları adım adım anlatır."
+      },
+      "q6": {
+        "q": "UTAAB'nin bir token'ı var mı?",
+        "a": "Bir token modeli tasarım aşamasındadır. Arz, kullanım alanı, dağıtım gibi tüm ayrıntıları yalnızca kesinleşip incelendikten sonra yayınlayacağız. Resmi duyurudan önce size \"UTAAB token'ı\" teklif eden hiç kimse meşru değildir."
+      },
+      "q7": {
+        "q": "UTAAB'ye nasıl katkıda bulunabilirim?",
+        "a": "/contributor-match adresini ziyaret edin. Bize yeteneklerinizi ve ilgi alanlarınızı anlatın, biz de sizi bir proje, görev veya mentor ile eşleştirelim. Tasarımcılar, yazarlar, geliştiriciler ve topluluk yöneticileri herkes davetlidir."
+      },
+      "q8": {
+        "q": "Güncellemeleri nereden takip edebilirim?",
+        "a": "Büyük güncellemeler için /blog adresindeki blogu okuyun ve bizi LinkedIn, Telegram, Instagram, X ve GitHub'da takip edin — bağlantılar altbilgidedir."
+      },
+      "q9": {
+        "q": "Bir kursu tamamladıktan sonra sertifika alıyor muyum?",
+        "a": "Evet. UTAAB EDU kursları, LinkedIn'de paylaşabileceğiniz veya PDF olarak indirebileceğiniz tamamlama sertifikaları verir."
+      },
+      "q10": {
+        "q": "Kişisel verilerimi nasıl işliyorsunuz?",
+        "a": "KVKK ve GDPR ilkelerine uyuyoruz. Tam Gizlilik Politikası'nı okuyabilir veya tercihlerinizi yönetmek için istediğiniz zaman alt bilgiden Gizlilik Merkezi'ni açabilirsiniz."
+      }
+    },
+    "cta": {
+      "title": "Hâlâ sorularınız mı var?",
+      "subtitle": "contact@utaab.org adresinden bize ulaşın veya topluluğa katılın — her mesajı okuyoruz.",
+      "button": "Topluluğa Katıl",
+      "email": "Bize E-posta Gönderin"
     }
   }
 }
