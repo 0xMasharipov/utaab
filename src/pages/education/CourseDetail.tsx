@@ -69,8 +69,8 @@ export const CourseDetail = () => {
   const handleEnroll = async () => {
     if (!user) {
       toast({
-        title: "Authentication required",
-        description: "Please sign in to enroll in courses",
+        title: t('education.course.auth_required_title'),
+        description: t('education.course.auth_required_description'),
         variant: "destructive",
       });
       navigate('/education/register');
@@ -91,12 +91,12 @@ export const CourseDetail = () => {
 
       setIsEnrolled(true);
       toast({
-        title: "Success!",
-        description: "You've been enrolled in the course",
+        title: t('education.course.enroll_success_title'),
+        description: t('education.course.enroll_success_description'),
       });
     } catch (error: any) {
       toast({
-        title: "Error",
+        title: t('education.course.error'),
         description: error.message,
         variant: "destructive",
       });
@@ -145,9 +145,9 @@ export const CourseDetail = () => {
     return (
       <div className="min-h-screen bg-background pt-24 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Course not found</h1>
+          <h1 className="text-2xl font-bold mb-4">{t('education.course.not_found')}</h1>
           <Button onClick={() => navigate('/education/courses')}>
-            Browse Courses
+            {t('education.course.browse_courses')}
           </Button>
         </div>
       </div>
@@ -311,7 +311,7 @@ export const CourseDetail = () => {
             {getCourseDescription(course) && (
               <Card className="glass">
                 <CardHeader>
-                  <CardTitle>About this course</CardTitle>
+                  <CardTitle>{t('education.course.about_course')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <SafeContent 
@@ -361,7 +361,7 @@ export const CourseDetail = () => {
                       className="p-0 h-auto mt-2"
                       onClick={() => navigate(`/education/instructor/${course.instructors.id}`)}
                     >
-                      View Profile →
+                      {t('education.course.view_profile')} →
                     </Button>
                   </div>
                   </div>
@@ -381,7 +381,7 @@ export const CourseDetail = () => {
             {course.tags && course.tags.length > 0 && (
               <Card className="glass mb-6">
                 <CardHeader>
-                  <CardTitle className="text-lg">Topics</CardTitle>
+                  <CardTitle className="text-lg">{t('education.course.topics')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
