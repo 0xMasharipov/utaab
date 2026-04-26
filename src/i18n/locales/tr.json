@@ -169,7 +169,7 @@
         },
         "introEthDev": {
           "title": "Ethereum Geliştirmeye Giriş",
-          "description": "Merkeziyetsiz uygulamalar oluşturmak için kullanılan Ethereum geliştirme araçları, dilleri ve çerçevelerine başlayın."
+          "description": "Merkeziyetsiz uygulamalar oluşturmak için kullanılan Ethereum geliştirme araçları, dilleri ve çerçeveleriyle başlayın."
         },
         "introDapps": {
           "title": "dApp'lere Giriş",
@@ -272,11 +272,11 @@
       "description": "Üniversiteyle ilgili ödeme süreçlerini kolaylaştırmak ve kurumsal verimliliği artırmak için tasarlanmış güvenli bir uzlaşma katmanı."
     },
     "dvs": {
-      "title": "DVS — Merkezi Olmayan Doğrulama Sistemi",
+      "title": "DVS — Merkeziyetsiz Doğrulama Sistemi",
       "description": "Akademik ve idari sistemlerde güven ve otomasyonu geliştirmeyi amaçlayan dağıtık bir doğrulama çerçevesi."
     },
     "did": {
-      "title": "DID — Merkezi Olmayan Kimlik Sistemi",
+      "title": "DID — Merkeziyetsiz Kimlik Sistemi",
       "description": "Güvenli akademik kimlik doğrulama ve doğrulama süreçlerini desteklemek için oluşturulmuş gizlilik odaklı bir kimlik çözümü."
     },
     "dao": {
@@ -579,9 +579,9 @@
       "noAccount": "Hesabınız yok mu?",
       "signIn": "Giriş Yap",
       "signingIn": "Giriş yapılıyor...",
-      "welcomeBack": "Tekrar Hoşgeldiniz!",
+      "welcomeBack": "Tekrar Hoş Geldiniz!",
       "signInSuccess": "Başarıyla giriş yapıldı",
-      "welcomeTitle": "Platforma Hoşgeldiniz!",
+      "welcomeTitle": "Platforma Hoş Geldiniz!",
       "welcomeMessage": "Hesabınız hazır. Kursları keşfetmeye ve öğrenme yolculuğunuza başlamaya başlayın.",
       "gotoDashboard": "Panele Git",
       "validation": {
@@ -605,7 +605,7 @@
       "categories": "Kategoriye Göre Gözat",
       "cta": "Kursları Keşfet",
       "open_resources": "Açık Eğitim Kaynakları",
-      "open_resources_subtitle": "Önde gelen kurumlardan dünya standartında kurslar",
+      "open_resources_subtitle": "Önde gelen kurumlardan dünya standardında kurslar",
       "mit_partnership": "Ücretsiz • MIT Ortaklığı"
     },
     "video": {
@@ -1185,7 +1185,7 @@
     "mobileMenu": "Mobil menü",
     "studentSignIn": "Öğrenci Girişi",
     "backToEducation": "Eğitime Dön",
-    "welcomeBack": "Tekrar hoşgeldiniz! Öğrenme yolculuğunuza devam etmek için giriş yapın"
+    "welcomeBack": "Tekrar hoş geldiniz! Öğrenme yolculuğunuza devam etmek için giriş yapın"
   },
   "profile": {
     "backToEducation": "Eğitime Dön",
@@ -1358,7 +1358,7 @@
       },
       "yana": {
         "name": "Yanina Isak",
-        "position": "Ön Uç Geliştirici",
+        "position": "Frontend Geliştirici",
         "description": "UTAAB platformlarında arayüz kalitesi, duyarlılık ve kullanılabilirliğe odaklanarak kusursuz ve görsel olarak rafine dijital deneyimler oluşturuyor."
       },
       "shuayb": {
@@ -1471,13 +1471,13 @@
     "hero": {
       "badge": "Öğrenme Merkezi",
       "title": "Web3'ü en anlaşılır şekilde öğrenin.",
-      "subtitle": "UTAAB öğrencileri, mentorları ve geliştiricileri tarafından oluşturulan, blokzincire ücretsiz ve başlangıç dostu bir giriş yolu. Temellerle başlayın, gerçek bir ürün geliştirerek bitirin.",
+      "subtitle": "UTAAB öğrencileri, mentorları ve geliştiricileri tarafından oluşturulan, blokzincirine ücretsiz ve başlangıç dostu bir giriş yolu. Temellerle başlayın, gerçek bir ürün geliştirerek bitirin.",
       "primary": "Öğrenmeye Başla",
       "secondary": "Whitepaper'ı Okuyun"
     },
     "about": {
       "title": "UTAAB nedir?",
-      "p1": "UTAAB (Unified Turkic Academic Alliance for Blockchain), Web3 eğitimi, gerçek projeler ve sınır ötesi işbirliğine odaklanmış, öğrenci liderliğinde bir ekosistemdir. Blokzincire giriş engelini düşürmek için varız — böylece merak eden herkes onu anlayabilir, onunla projeler geliştirebilir ve ona katkıda bulunabilir.",
+      "p1": "UTAAB (Unified Turkic Academic Alliance for Blockchain), Web3 eğitimi, gerçek projeler ve sınır ötesi işbirliğine odaklanmış, öğrenci liderliğinde bir ekosistemdir. Blokzincirine giriş engelini düşürmek için varız — böylece merak eden herkes onu anlayabilir, onunla projeler geliştirebilir ve ona katkıda bulunabilir.",
       "p2": "İçeriklerimiz ücretsiz, topluluğumuz herkese açık ve hedefimiz basit: başlangıç seviyesindekileri, anlaşılır dersler ve uygulamalı projelerle yetkin Web3 geliştiricilerine dönüştürmek."
     },
     "paths": {
@@ -1592,7 +1592,7 @@
       },
       "t2": {
         "title": "Eğitim öncelikli teknoloji yığını",
-        "description": "Öğrenme platformumuz, üyelerin kendi hızlarında öğrenebilmeleri માટે yapılandırılmış kursları, uygulamalı atölyeleri ve bir yapay zeka eğitmenini birleştirir."
+        "description": "Öğrenme platformumuz, üyelerin kendi hızlarında öğrenebilmeleri için yapılandırılmış kursları, uygulamalı atölyeleri ve bir yapay zeka eğitmenini birleştirir."
       },
       "t3": {
         "title": "Proje hattı",
@@ -1668,7 +1668,7 @@
       },
       "q8": {
         "q": "Güncellemeleri nereden takip edebilirim?",
-        "a": "Büyük güncellemeler için /blog adresindeki blogu okuyun ve bizi LinkedIn, Telegram, Instagram, X ve GitHub'da takip edin — bağlantılar alt bilgidedir."
+        "a": "Büyük güncellemeler için /blog adresindeki blogu okuyun ve bizi LinkedIn, Telegram, Instagram, X ve GitHub'da takip edin — bağlantılar altbilgidedir."
       },
       "q9": {
         "q": "Bir kursu tamamladıktan sonra sertifika alıyor muyum?",
