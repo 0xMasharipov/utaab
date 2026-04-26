@@ -1,58 +1,55 @@
 ## Goal
 
-Allow admins to write the **Content (JSON blocks)** body in all four supported languages (EN, TR, RU, AR), not just English. The public blog reader already understands the per-language shape — we only need to upgrade the admin editor and the save logic.
+Bring TR, RU, and AR locales to full parity with EN (currently 130 keys missing each), then run a grammar/quality pass on all four languages so every public page is fully and correctly localized.
 
-## How it will look in the editor
+## Scope of missing translations
 
-In the **New / Edit Post** dialog → **Content** tab, the single "Content (JSON blocks)" textarea will be replaced with a **language-tabbed editor**:
+The English locale has **1,225 keys**; TR/RU/AR each have **~1,094**. Each is missing the same **130 keys** spanning recently added public pages:
 
-```text
-Content (JSON blocks)
-┌──────────────────────────────────────────┐
-│ [EN]  [TR]  [RU]  [AR]                   │
-├──────────────────────────────────────────┤
-│  [ JSON blocks textarea for active lang ]│
-│                                          │
-│  Copy from EN ▸                          │
-└──────────────────────────────────────────┘
-```
+- `faqPage.*` — FAQ hero, 10 Q&A pairs, CTA (27 keys)
+- `learnHub.*` — Learn Hub hero, 3 paths (Courses/Guides/Workshops), 3 principles, About, CTA (32 keys)
+- `whitepaper.*` — Whitepaper hero, vision, tech (3 items), roadmap (3 phases), CTA, disclaimer (35 keys)
+- `resourcesPage.*` — Resources hero, 6 items (Whitepaper/Guides/Blog/FAQ/Tokenomics/Developers), CTA (24 keys)
+- `footer.*` — `aboutLink`, `faq`, `guides`, `learn`, `learnHub`, `resources`, `whitepaper` (7 keys)
+- Misc strays (workshops page subtitle/description, etc.)
 
-- Each tab holds its own JSON blocks array.
-- EN remains required; TR/RU/AR are optional. If a language is empty, the public site falls back to EN automatically (already implemented in `BlogPost.tsx`).
-- A small **"Copy from EN"** button on the TR/RU/AR tabs pre-fills the textarea with the English JSON so the admin only translates the `content` strings inside the blocks.
-- Per-tab JSON validation indicator (same pattern used in `TranslationEditor.tsx`) so invalid JSON is caught before saving.
+User-facing pages without `useTranslation` are confirmed to be only structural/UI primitives (background blobs, three.js scenes, shadcn `ui/*`, BlogPostFormDialog admin tabs) — no public copy gap.
 
-The **Translations** tab keeps its current role for Title and Excerpt translations (no change there).
+## Approach
 
-## Storage shape
+1. **Generate translations with the AI gateway** (`google/gemini-2.5-pro`).
+   - Feed the model the full English source for each missing key plus existing TR/RU/AR samples from the same locale (so tone, formality, and brand vocabulary stay consistent — e.g., founder name "Zinurbek Masharipov", "UTAAB EDU", "Lovable Cloud" → keep "backend"-style terminology).
+   - Request strict JSON output with the exact 130-key tree, one call per language.
+   - For Arabic, ensure RTL-friendly punctuation (Arabic comma `،`, question mark `؟`).
 
-Posts will be saved to `blog_posts.content` as:
+2. **Merge into locale files** preserving existing key order and nested structure (deep-merge, never overwrite existing translations).
 
-```json
-{
-  "en": [ { "type": "paragraph", "content": "..." }, ... ],
-  "tr": [ ... ],
-  "ru": [ ... ],
-  "ar": [ ... ]
-}
-```
+3. **Grammar & consistency QA pass** on all four locales:
+   - Run a second AI pass per language that reads the full locale file and returns only **flagged corrections** (typos, agreement errors, awkward phrasing, English bleed-through) as a diff list.
+   - Apply only safe corrections (typos, punctuation, capitalization); leave any semantic rewrites for the user to confirm via a short follow-up summary.
 
-This matches the shape `BlogPost.tsx` already reads (lines 112–114). Existing posts stored as a plain array stay fully compatible — the reader already handles both shapes, and the editor will auto-migrate a legacy array into `{ en: [...] }` on first open.
+4. **Verification**:
+   - Re-run the key-diff script — target: 0 missing keys in TR/RU/AR.
+   - JSON-validate all four files.
+   - Spot-check the `dir="rtl"` Arabic rendering on `/faq`, `/learn`, `/whitepaper`, `/resources` via the browser tool to confirm no layout breaks.
 
-## Technical changes
+## Out of scope (kept as-is)
 
-**`src/components/admin/BlogPostFormDialog.tsx`**
-- Replace the single `content: string` field with `content_en / content_tr / content_ru / content_ar` strings (each holding stringified JSON).
-- On open: if `post.content` is an array → load it into `content_en`; if it's already `{en,tr,ru,ar}` → load each into its tab.
-- Render a nested `<Tabs>` (EN/TR/RU/AR) inside the Content section with one `<Textarea>` per language, plus a JSON-validity badge per tab.
-- Add a "Copy from EN" button visible on non-EN tabs.
-- On save: parse each tab's JSON (fallback to `[]` on parse error for empty langs), then build `payload.content = { en, tr, ru, ar }`. Drop empty arrays so the JSON stays clean (only include languages with at least one block).
-- Keep the `title_en` requirement; do not block save when only EN content is filled.
+- Admin panel form labels (`BlogPostFormDialog`, `AnnouncementFormDialog`, `CourseFormDialog`, etc.) — admin UI is intentionally English-only per existing convention.
+- Shadcn `ui/*` primitives (pagination "Previous/Next") — internal labels not surfaced to end users in current flows.
+- Three.js / background / loader components — no copy.
 
-**No other files need to change** — `BlogPost.tsx`, `BlogCard.tsx`, the database schema, and the blog listing query already work with the localized shape.
+If you'd like the admin panel localized as well, say so and I'll add it as a follow-up.
 
-## Out of scope
+## Technical notes
 
-- No database migration (the `content` column is already `jsonb`).
-- No changes to the Title/Excerpt translation tab.
-- No automatic machine translation — admins write each language manually (or copy from EN as a starting point).
+- Translation generation uses the `lovable_ai` skill (`google/gemini-2.5-pro`, `--schema` for structured JSON), one call per target language → 3 calls total for the gap-fill, plus 4 calls for the QA pass.
+- Merging is done in Python with `json.load` → recursive dict merge → `json.dump(..., ensure_ascii=False, indent=2)` to preserve non-ASCII characters and existing formatting.
+- No code changes to `src/` are required — this is a content-only update to `src/i18n/locales/{tr,ru,ar}.json` (and minor corrections to `en.json` if grammar QA finds typos).
+
+## Files to be modified
+
+- `src/i18n/locales/tr.json`
+- `src/i18n/locales/ru.json`
+- `src/i18n/locales/ar.json`
+- `src/i18n/locales/en.json` (only if QA surfaces typos)
