@@ -95,7 +95,7 @@ export const EducationHome = () => {
         <div className="section-container relative z-10">
           <div className="text-center max-w-4xl mx-auto mb-12">
             <Badge variant="outline" className="glass border-accent/30 text-accent mb-6 px-4 py-1.5 text-xs tracking-wider uppercase">
-              UTAAB EDU · Learn Web3
+              {t('education.home.hero_badge')}
             </Badge>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 animate-fade-in">
               {t('education.home.hero_title')}
@@ -130,7 +130,7 @@ export const EducationHome = () => {
                 variant="outline"
                 className="glass border-white/15 rounded-full"
               >
-                Browse Catalog
+                {t('education.home.browse_catalog')}
               </Button>
             </div>
           </div>

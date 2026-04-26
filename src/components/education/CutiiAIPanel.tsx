@@ -38,7 +38,7 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: t('Hi! I\'m CUTII, your AI learning assistant. Ask me anything about blockchain, smart contracts, or this course!'),
+      content: t('education.cutii.greeting'),
       timestamp: new Date(),
     }
   ]);
@@ -145,8 +145,8 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
 
     if (!user) {
       toast({
-        title: "Sign in required",
-        description: "Please sign in to use the AI assistant",
+        title: t('education.cutii.sign_in_required_title'),
+        description: t('education.cutii.sign_in_required_description'),
         variant: "destructive",
       });
       return;
@@ -207,15 +207,15 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
 
     } catch (error: any) {
       // Error details are not logged to prevent information leakage
-      let errorMessage = 'Sorry, I encountered an error. Please try again.';
+      let errorMessage = t('education.cutii.generic_error');
       if (error.message?.includes('rate limit') || error.message?.includes('429')) {
-        errorMessage = 'I\'m receiving too many requests right now. Please wait a moment and try again.';
+        errorMessage = t('education.cutii.rate_limit_error');
       } else if (error.message?.includes('credits') || error.message?.includes('402')) {
-        errorMessage = 'AI service is temporarily unavailable. Please try again later.';
+        errorMessage = t('education.cutii.credits_error');
       }
 
       toast({
-        title: "Error",
+        title: t('education.cutii.error'),
         description: errorMessage,
         variant: "destructive",
       });
@@ -281,7 +281,7 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
           >
             <div className="flex items-center gap-2">
               <Bot className="h-5 w-5 text-accent" />
-              <h3 className="text-lg font-semibold">CUTII AI Assistant</h3>
+              <h3 className="text-lg font-semibold">{t('education.cutii.title')}</h3>
             </div>
             <div className="flex items-center gap-1">
               {!isMobile && (
@@ -353,7 +353,7 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Ask me anything..."
+                placeholder={t('education.cutii.input_placeholder')}
                 className="glass flex-1"
                 disabled={isLoading}
                 autoFocus
@@ -368,7 +368,7 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
               </Button>
             </div>
             <p className="text-xs text-muted-foreground mt-2 text-center">
-              Educational use only • Not financial advice
+              {t('education.cutii.footer_disclaimer')}
             </p>
           </div>
 

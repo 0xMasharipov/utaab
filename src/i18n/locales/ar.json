@@ -606,7 +606,9 @@
       "cta": "استكشف الدورات",
       "open_resources": "موارد تعليمية مفتوحة",
       "open_resources_subtitle": "دورات عالمية المستوى من مؤسسات رائدة",
-      "mit_partnership": "مجاني • شراكة MIT"
+      "mit_partnership": "مجاني • شراكة MIT",
+      "hero_badge": "UTAAB EDU · تعلم Web3",
+      "browse_catalog": "تصفح الكتالوج"
     },
     "video": {
       "captions": "التسميات التوضيحية",
@@ -684,7 +686,17 @@
       "save": "حفظ",
       "price_free": "مجاني",
       "modules": "وحدات",
-      "lessons": "دروس"
+      "lessons": "دروس",
+      "auth_required_title": "تسجيل الدخول مطلوب",
+      "auth_required_description": "يرجى تسجيل الدخول للتسجيل في الدورات",
+      "enroll_success_title": "نجاح!",
+      "enroll_success_description": "لقد تم تسجيلك في الدورة بنجاح",
+      "error": "خطأ",
+      "not_found": "الدورة غير موجودة",
+      "browse_courses": "تصفح الدورات",
+      "about_course": "عن هذه الدورة",
+      "view_profile": "عرض الملف الشخصي",
+      "topics": "المواضيع"
     },
     "levels": {
       "beginner": "مبتدئ",
@@ -713,6 +725,151 @@
       "analytics": "التحليلات",
       "applications": "طلبات المجتمع",
       "kvkkRequests": "طلبات KVKK"
+    },
+    "reviews": {
+      "edit_review": "تعديل المراجعة",
+      "write_review": "كتابة مراجعة",
+      "your_rating": "تقييمك",
+      "your_review_optional": "مراجعتك (اختياري)",
+      "review_placeholder": "شارك تجربتك مع هذه الدورة...",
+      "submitting": "جاري الإرسال...",
+      "submit_review": "إرسال المراجعة",
+      "update_review": "تحديث المراجعة",
+      "cancel": "إلغاء",
+      "your_review_label": "(مراجعتك)",
+      "no_reviews": "لا توجد مراجعات بعد. كن أول من يراجع هذه الدورة!",
+      "select_rating": "يرجى تحديد تقييم",
+      "success": "نجاح!",
+      "review_submitted": "تم إرسال المراجعة",
+      "review_updated": "تم تحديث المراجعة",
+      "error": "خطأ",
+      "sign_in_required_title": "تسجيل الدخول مطلوب",
+      "sign_in_required_description": "يرجى تسجيل الدخول لترك مراجعة",
+      "enrollment_required_title": "التسجيل مطلوب",
+      "enrollment_required_description": "يجب أن تكون مسجلاً لمراجعة هذه الدورة",
+      "verification_required_title": "التحقق مطلوب",
+      "verification_required_description": "يرجى إكمال عملية التحقق",
+      "verification_failed_title": "فشل التحقق",
+      "verification_failed_description": "يرجى المحاولة مرة أخرى"
+    },
+    "cutii": {
+      "greeting": "مرحباً! أنا CUTII، مساعدك التعليمي بالذكاء الاصطناعي. اسألني أي شيء عن Blockchain أو العقود الذكية أو هذه الدورة!",
+      "title": "مساعد CUTII AI",
+      "input_placeholder": "اسألني أي شيء...",
+      "footer_disclaimer": "للاستخدام التعليمي فقط • ليست نصيحة مالية",
+      "sign_in_required_title": "تسجيل الدخول مطلوب",
+      "sign_in_required_description": "يرجى تسجيل الدخول لاستخدام مساعد الذكاء الاصطناعي",
+      "error": "خطأ",
+      "generic_error": "عذراً، حدث خطأ. يرجى المحاولة مرة أخرى.",
+      "rate_limit_error": "أتلقى عدداً كبيراً من الطلبات الآن. يرجى الانتظار لحظة والمحاولة مرة أخرى.",
+      "credits_error": "خدمة الذكاء الاصطناعي غير متاحة مؤقتاً. يرجى المحاولة مرة أخرى لاحقاً."
+    },
+    "external_card": {
+      "free": "مجاني",
+      "provided_by": "مقدمة من {{source}}"
+    },
+    "profile": {
+      "loading": "جاري تحميل الملف الشخصي...",
+      "untitled_course": "دورة بدون عنوان",
+      "courses_label": "الدورات",
+      "certificates_label": "الشهادات",
+      "joined_prefix": "انضم",
+      "admin_badge": "مسؤول",
+      "management_button": "الإدارة",
+      "tabs": {
+        "overview": "نظرة عامة",
+        "my_courses": "دوراتي",
+        "certificates": "الشهادات",
+        "saved": "المحفوظات",
+        "notifications": "الإشعارات",
+        "settings": "الإعدادات",
+        "privacy": "الخصوصية"
+      },
+      "overview": {
+        "active_courses": "الدورات النشطة",
+        "average_progress": "{{percent}}% متوسط التقدم",
+        "completed": "مكتملة",
+        "courses_finished": "دورات منتهية",
+        "earned_certificates": "الشهادات المكتسبة",
+        "recent_courses": "الدورات الأخيرة",
+        "recent_courses_subtitle": "واصل رحلتك التعليمية",
+        "complete_label": "{{percent}}% مكتمل",
+        "no_enrolled": "لم يتم التسجيل في أي دورة بعد",
+        "browse_courses": "تصفح الدورات"
+      },
+      "courses": {
+        "progress": "التقدم",
+        "review": "مراجعة",
+        "continue_learning": "متابعة التعلم",
+        "course_details": "تفاصيل الدورة",
+        "completed_badge": "مكتملة",
+        "no_courses_title": "لا توجد دورات بعد",
+        "no_courses_subtitle": "ابدأ رحلتك التعليمية بالتسجيل في دورة"
+      },
+      "certificates": {
+        "number_label": "شهادة رقم {{number}}",
+        "download": "تنزيل الشهادة",
+        "no_certificates_title": "لا توجد شهادات بعد",
+        "no_certificates_subtitle": "أكمل الدورات للحصول على شهادات"
+      },
+      "saved": {
+        "title": "العناصر المحفوظة",
+        "subtitle": "دوراتك ومواردك المحفوظة",
+        "saved_on": "تم الحفظ بتاريخ {{date}}",
+        "remove": "إزالة",
+        "no_saved": "لا توجد عناصر محفوظة بعد",
+        "removed_title": "تمت الإزالة",
+        "removed_description": "تمت إزالة العنصر من قائمة المحفوظات"
+      },
+      "notifications": {
+        "title": "الإشعارات",
+        "subtitle": "ابق على اطلاع بنشاطك التعليمي",
+        "no_notifications": "لا توجد إشعارات بعد"
+      },
+      "settings": {
+        "email_preferences": "تفضيلات البريد الإلكتروني",
+        "email_preferences_subtitle": "إدارة تفضيلات إشعارات البريد الإلكتروني",
+        "course_updates": "تحديثات الدورة",
+        "course_updates_subtitle": "تلقي إشعارات حول الدروس الجديدة وتحديثات الدورة",
+        "newsletters": "النشرات الإخبارية",
+        "newsletters_subtitle": "تلقي نشرتنا الإخبارية الأسبوعية التي تحتوي على محتوى تعليمي",
+        "marketing": "التسويق",
+        "marketing_subtitle": "تلقي تحديثات حول الميزات الجديدة والعروض الترويجية",
+        "account_information": "معلومات الحساب",
+        "account_information_subtitle": "عرض تفاصيل حسابك",
+        "email_label": "البريد الإلكتروني",
+        "full_name_label": "الاسم الكامل",
+        "department_label": "القسم",
+        "role_label": "الدور",
+        "security": "الأمان",
+        "security_subtitle": "إدارة أمان حسابك",
+        "change_password": "تغيير كلمة المرور",
+        "update_error_title": "خطأ",
+        "update_error_description": "فشل تحديث تفضيلات الإشعارات",
+        "update_success_title": "نجاح",
+        "update_success_description": "تم تحديث تفضيلات الإشعارات"
+      },
+      "privacy": {
+        "title": "KVKK والخصوصية",
+        "subtitle": "إدارة بياناتك وإعدادات الخصوصية",
+        "kvkk_consent": "موافقة KVKK",
+        "version_label": "الإصدار: {{version}}",
+        "consent_given": "تم منح الموافقة: {{date}}",
+        "data_categories": "فئات البيانات",
+        "essential_data": "البيانات الأساسية",
+        "required_badge": "مطلوب",
+        "analytics": "التحليلات",
+        "active_badge": "نشط",
+        "performance": "الأداء",
+        "your_rights": "حقوقك",
+        "rights_description": "بموجب قانون KVKK (القانون رقم 6698)، لديك الحق في الوصول إلى بياناتك أو تصحيحها أو حذفها أو نقلها.",
+        "make_data_request": "تقديم طلب بيانات",
+        "privacy_policy": "سياسة الخصوصية",
+        "cookie_policy": "سياسة ملفات تعريف الارتباط",
+        "danger_zone": "منطقة الخطر",
+        "danger_zone_subtitle": "إجراءات لا يمكن التراجع عنها",
+        "request_deletion": "طلب حذف الحساب"
+      }
     }
   },
   "kvkk": {

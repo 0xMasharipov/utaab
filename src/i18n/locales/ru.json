@@ -606,7 +606,9 @@
       "cta": "Исследовать курсы",
       "open_resources": "Открытые образовательные ресурсы",
       "open_resources_subtitle": "Курсы мирового класса от ведущих учреждений",
-      "mit_partnership": "Бесплатно • Партнерство с MIT"
+      "mit_partnership": "Бесплатно • Партнерство с MIT",
+      "hero_badge": "UTAAB EDU · Изучайте Web3",
+      "browse_catalog": "Смотреть каталог"
     },
     "video": {
       "captions": "Субтитры",
@@ -684,7 +686,17 @@
       "save": "Сохранить",
       "price_free": "Бесплатно",
       "modules": "модулей",
-      "lessons": "уроков"
+      "lessons": "уроков",
+      "auth_required_title": "Требуется аутентификация",
+      "auth_required_description": "Пожалуйста, войдите, чтобы записаться на курсы",
+      "enroll_success_title": "Успешно!",
+      "enroll_success_description": "Вы записаны на курс",
+      "error": "Ошибка",
+      "not_found": "Курс не найден",
+      "browse_courses": "Смотреть курсы",
+      "about_course": "Об этом курсе",
+      "view_profile": "Посмотреть профиль",
+      "topics": "Темы"
     },
     "levels": {
       "beginner": "Начальный",
@@ -713,6 +725,151 @@
       "analytics": "Аналитика",
       "applications": "Заявки в сообщество",
       "kvkkRequests": "Запросы KVKK"
+    },
+    "reviews": {
+      "edit_review": "Редактировать отзыв",
+      "write_review": "Написать отзыв",
+      "your_rating": "Ваша оценка",
+      "your_review_optional": "Ваш отзыв (необязательно)",
+      "review_placeholder": "Поделитесь своим опытом прохождения этого курса...",
+      "submitting": "Отправка...",
+      "submit_review": "Отправить отзыв",
+      "update_review": "Обновить отзыв",
+      "cancel": "Отмена",
+      "your_review_label": "(Ваш отзыв)",
+      "no_reviews": "Отзывов пока нет. Станьте первым, кто оставит отзыв об этом курсе!",
+      "select_rating": "Пожалуйста, выберите оценку",
+      "success": "Успешно!",
+      "review_submitted": "Отзыв отправлен",
+      "review_updated": "Отзыв обновлен",
+      "error": "Ошибка",
+      "sign_in_required_title": "Требуется вход",
+      "sign_in_required_description": "Пожалуйста, войдите, чтобы оставить отзыв",
+      "enrollment_required_title": "Требуется запись на курс",
+      "enrollment_required_description": "Вы должны быть записаны на курс, чтобы оставить отзыв",
+      "verification_required_title": "Требуется верификация",
+      "verification_required_description": "Пожалуйста, пройдите верификацию",
+      "verification_failed_title": "Верификация не удалась",
+      "verification_failed_description": "Пожалуйста, попробуйте снова"
+    },
+    "cutii": {
+      "greeting": "Привет! Я CUTII, ваш AI-помощник в обучении. Спрашивайте меня о чём угодно, что касается blockchain, смарт-контрактов или этого курса!",
+      "title": "AI-ассистент CUTII",
+      "input_placeholder": "Спросите меня о чем-нибудь...",
+      "footer_disclaimer": "Только для образовательных целей • Не является финансовой консультацией",
+      "sign_in_required_title": "Требуется вход",
+      "sign_in_required_description": "Пожалуйста, войдите, чтобы использовать AI-ассистента",
+      "error": "Ошибка",
+      "generic_error": "Извините, произошла ошибка. Пожалуйста, попробуйте снова.",
+      "rate_limit_error": "Я получаю слишком много запросов прямо сейчас. Пожалуйста, подождите немного и попробуйте снова.",
+      "credits_error": "Сервис AI временно недоступен. Пожалуйста, попробуйте позже."
+    },
+    "external_card": {
+      "free": "БЕСПЛАТНО",
+      "provided_by": "Предоставлено {{source}}"
+    },
+    "profile": {
+      "loading": "Загрузка профиля...",
+      "untitled_course": "Курс без названия",
+      "courses_label": "Курсы",
+      "certificates_label": "Сертификаты",
+      "joined_prefix": "Присоединился",
+      "admin_badge": "Админ",
+      "management_button": "Управление",
+      "tabs": {
+        "overview": "Обзор",
+        "my_courses": "Мои курсы",
+        "certificates": "Сертификаты",
+        "saved": "Сохраненное",
+        "notifications": "Уведомления",
+        "settings": "Настройки",
+        "privacy": "Конфиденциальность"
+      },
+      "overview": {
+        "active_courses": "Активные курсы",
+        "average_progress": "Средний прогресс {{percent}}%",
+        "completed": "Завершено",
+        "courses_finished": "Курсов завершено",
+        "earned_certificates": "Получено сертификатов",
+        "recent_courses": "Недавние курсы",
+        "recent_courses_subtitle": "Продолжайте ваше обучение",
+        "complete_label": "Завершено на {{percent}}%",
+        "no_enrolled": "Вы еще не записаны ни на один курс",
+        "browse_courses": "Смотреть курсы"
+      },
+      "courses": {
+        "progress": "Прогресс",
+        "review": "Отзыв",
+        "continue_learning": "Продолжить обучение",
+        "course_details": "Детали курса",
+        "completed_badge": "Завершено",
+        "no_courses_title": "Пока нет курсов",
+        "no_courses_subtitle": "Начните свое обучение, записавшись на курс"
+      },
+      "certificates": {
+        "number_label": "Сертификат №{{number}}",
+        "download": "Скачать сертификат",
+        "no_certificates_title": "Пока нет сертификатов",
+        "no_certificates_subtitle": "Завершайте курсы, чтобы получать сертификаты"
+      },
+      "saved": {
+        "title": "Сохраненные материалы",
+        "subtitle": "Ваши курсы и ресурсы в закладках",
+        "saved_on": "Сохранено {{date}}",
+        "remove": "Удалить",
+        "no_saved": "Пока нет сохраненных материалов",
+        "removed_title": "Удалено",
+        "removed_description": "Материал удален из списка сохраненного"
+      },
+      "notifications": {
+        "title": "Уведомления",
+        "subtitle": "Будьте в курсе вашей учебной активности",
+        "no_notifications": "Уведомлений пока нет"
+      },
+      "settings": {
+        "email_preferences": "Настройки email-рассылок",
+        "email_preferences_subtitle": "Управляйте настройками email-уведомлений",
+        "course_updates": "Обновления курсов",
+        "course_updates_subtitle": "Получать уведомления о новых уроках и обновлениях курсов",
+        "newsletters": "Информационные рассылки",
+        "newsletters_subtitle": "Получать нашу еженедельную рассылку с образовательным контентом",
+        "marketing": "Маркетинг",
+        "marketing_subtitle": "Получать обновления о новых функциях и акциях",
+        "account_information": "Информация об аккаунте",
+        "account_information_subtitle": "Просмотр данных вашего аккаунта",
+        "email_label": "Email",
+        "full_name_label": "Полное имя",
+        "department_label": "Отдел",
+        "role_label": "Должность",
+        "security": "Безопасность",
+        "security_subtitle": "Управляйте безопасностью вашего аккаунта",
+        "change_password": "Сменить пароль",
+        "update_error_title": "Ошибка",
+        "update_error_description": "Не удалось обновить настройки уведомлений",
+        "update_success_title": "Успешно",
+        "update_success_description": "Настройки уведомлений обновлены"
+      },
+      "privacy": {
+        "title": "KVKK и конфиденциальность",
+        "subtitle": "Управляйте своими данными и настройками конфиденциальности",
+        "kvkk_consent": "Согласие KVKK",
+        "version_label": "Версия: {{version}}",
+        "consent_given": "Согласие дано: {{date}}",
+        "data_categories": "Категории данных",
+        "essential_data": "Основные данные",
+        "required_badge": "Обязательно",
+        "analytics": "Аналитика",
+        "active_badge": "Активно",
+        "performance": "Производительность",
+        "your_rights": "Ваши права",
+        "rights_description": "Согласно KVKK (Закон № 6698), вы имеете право на доступ, исправление, удаление или перенос ваших данных.",
+        "make_data_request": "Сделать запрос данных",
+        "privacy_policy": "Политика конфиденциальности",
+        "cookie_policy": "Политика использования файлов cookie",
+        "danger_zone": "Опасная зона",
+        "danger_zone_subtitle": "Необратимые действия",
+        "request_deletion": "Запросить удаление аккаунта"
+      }
     }
   },
   "kvkk": {

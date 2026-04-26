@@ -123,29 +123,92 @@
       "journeyTitle": "Your Learning Journey",
       "journeySubtitle": "Follow this suggested path from beginner to builder.",
       "cards": {
-        "whatIsBlockchain": { "title": "What Is Blockchain?", "description": "Understand the foundational technology behind decentralized systems and why it matters for the future of the internet." },
-        "howBlockchainWorks": { "title": "How Does a Blockchain Work?", "description": "Learn how blocks, nodes, and consensus mechanisms come together to create an immutable, transparent ledger." },
-        "whatIsWeb3": { "title": "What Is Web3?", "description": "Discover the next evolution of the internet — ownership, decentralization, and user-controlled data." },
-        "walletsTokens": { "title": "Wallets, Tokens, and Transactions", "description": "Learn what crypto wallets are, how tokens work, and how transactions flow through a blockchain network." },
-        "publicPrivateKeys": { "title": "Public vs Private Keys", "description": "Understand the cryptographic key pairs that secure your identity and assets on blockchain networks." },
-        "commonTerms": { "title": "Common Terms You Should Know", "description": "A glossary of essential blockchain terminology — from gas fees to smart contracts to consensus." },
-        "whatIsEthereum": { "title": "What Is Ethereum?", "description": "Explore the world's leading smart contract platform and why it serves as the backbone of decentralized finance and applications." },
-        "ethereumVsBitcoin": { "title": "How Ethereum Differs from Bitcoin", "description": "Compare the two largest blockchain networks — from purpose and architecture to consensus mechanisms." },
-        "smartContracts": { "title": "Smart Contracts Explained", "description": "Understand self-executing contracts on the blockchain — how they work, why they matter, and where they're used." },
-        "gasFees": { "title": "Gas Fees and Transactions", "description": "Learn how transaction costs are calculated on Ethereum and strategies to optimize gas usage." },
-        "ethereumAccounts": { "title": "Ethereum Accounts and Wallet Interaction", "description": "Discover the differences between EOAs and contract accounts, and how wallets interact with the network." },
-        "introEthDev": { "title": "Intro to Ethereum Development", "description": "Get started with Ethereum development tools, languages, and frameworks used to build decentralized applications." },
-        "introDapps": { "title": "Intro to dApps", "description": "Understand what decentralized applications are, how they differ from traditional apps, and real-world use cases." },
-        "whatAreDaos": { "title": "What Are DAOs?", "description": "Learn about Decentralized Autonomous Organizations — community-governed entities powered by smart contracts." },
-        "web2VsWeb3": { "title": "Web2 vs Web3", "description": "A clear comparison of centralized and decentralized paradigms across infrastructure, identity, and ownership." },
-        "testnets": { "title": "Blockchain Networks and Testnets", "description": "Explore mainnet vs testnet environments and learn how developers safely experiment before deployment." },
-        "devTooling": { "title": "Intro to Developer Tooling", "description": "An overview of essential tools — Hardhat, Foundry, Remix, Alchemy — that power blockchain development workflows." },
-        "securityBasics": { "title": "Security Basics for New Builders", "description": "Learn common vulnerabilities, best practices, and security patterns every Web3 developer should know." }
+        "whatIsBlockchain": {
+          "title": "What Is Blockchain?",
+          "description": "Understand the foundational technology behind decentralized systems and why it matters for the future of the internet."
+        },
+        "howBlockchainWorks": {
+          "title": "How Does a Blockchain Work?",
+          "description": "Learn how blocks, nodes, and consensus mechanisms come together to create an immutable, transparent ledger."
+        },
+        "whatIsWeb3": {
+          "title": "What Is Web3?",
+          "description": "Discover the next evolution of the internet — ownership, decentralization, and user-controlled data."
+        },
+        "walletsTokens": {
+          "title": "Wallets, Tokens, and Transactions",
+          "description": "Learn what crypto wallets are, how tokens work, and how transactions flow through a blockchain network."
+        },
+        "publicPrivateKeys": {
+          "title": "Public vs Private Keys",
+          "description": "Understand the cryptographic key pairs that secure your identity and assets on blockchain networks."
+        },
+        "commonTerms": {
+          "title": "Common Terms You Should Know",
+          "description": "A glossary of essential blockchain terminology — from gas fees to smart contracts to consensus."
+        },
+        "whatIsEthereum": {
+          "title": "What Is Ethereum?",
+          "description": "Explore the world's leading smart contract platform and why it serves as the backbone of decentralized finance and applications."
+        },
+        "ethereumVsBitcoin": {
+          "title": "How Ethereum Differs from Bitcoin",
+          "description": "Compare the two largest blockchain networks — from purpose and architecture to consensus mechanisms."
+        },
+        "smartContracts": {
+          "title": "Smart Contracts Explained",
+          "description": "Understand self-executing contracts on the blockchain — how they work, why they matter, and where they're used."
+        },
+        "gasFees": {
+          "title": "Gas Fees and Transactions",
+          "description": "Learn how transaction costs are calculated on Ethereum and strategies to optimize gas usage."
+        },
+        "ethereumAccounts": {
+          "title": "Ethereum Accounts and Wallet Interaction",
+          "description": "Discover the differences between EOAs and contract accounts, and how wallets interact with the network."
+        },
+        "introEthDev": {
+          "title": "Intro to Ethereum Development",
+          "description": "Get started with Ethereum development tools, languages, and frameworks used to build decentralized applications."
+        },
+        "introDapps": {
+          "title": "Intro to dApps",
+          "description": "Understand what decentralized applications are, how they differ from traditional apps, and real-world use cases."
+        },
+        "whatAreDaos": {
+          "title": "What Are DAOs?",
+          "description": "Learn about Decentralized Autonomous Organizations — community-governed entities powered by smart contracts."
+        },
+        "web2VsWeb3": {
+          "title": "Web2 vs Web3",
+          "description": "A clear comparison of centralized and decentralized paradigms across infrastructure, identity, and ownership."
+        },
+        "testnets": {
+          "title": "Blockchain Networks and Testnets",
+          "description": "Explore mainnet vs testnet environments and learn how developers safely experiment before deployment."
+        },
+        "devTooling": {
+          "title": "Intro to Developer Tooling",
+          "description": "An overview of essential tools — Hardhat, Foundry, Remix, Alchemy — that power blockchain development workflows."
+        },
+        "securityBasics": {
+          "title": "Security Basics for New Builders",
+          "description": "Learn common vulnerabilities, best practices, and security patterns every Web3 developer should know."
+        }
       },
       "ecosystem": {
-        "ethereum": { "name": "Ethereum", "description": "Foundational educational resources for understanding blockchain, smart contracts, wallets, and development — directly from the Ethereum ecosystem." },
-        "binance": { "name": "Binance Academy", "description": "Accessible educational articles, glossaries, and beginner-friendly content covering blockchain, crypto, Web3 concepts, and trading fundamentals." },
-        "solana": { "name": "Solana", "description": "Both no-code learning paths and developer-oriented resources for ecosystem exploration, building on Solana, and understanding high-performance blockchains." }
+        "ethereum": {
+          "name": "Ethereum",
+          "description": "Foundational educational resources for understanding blockchain, smart contracts, wallets, and development — directly from the Ethereum ecosystem."
+        },
+        "binance": {
+          "name": "Binance Academy",
+          "description": "Accessible educational articles, glossaries, and beginner-friendly content covering blockchain, crypto, Web3 concepts, and trading fundamentals."
+        },
+        "solana": {
+          "name": "Solana",
+          "description": "Both no-code learning paths and developer-oriented resources for ecosystem exploration, building on Solana, and understanding high-performance blockchains."
+        }
       },
       "journey": {
         "step1": "Learn blockchain basics",
@@ -543,7 +606,9 @@
       "cta": "Explore Courses",
       "open_resources": "Open Educational Resources",
       "open_resources_subtitle": "World-class courses from leading institutions",
-      "mit_partnership": "Free • MIT Partnership"
+      "mit_partnership": "Free • MIT Partnership",
+      "hero_badge": "UTAAB EDU · Learn Web3",
+      "browse_catalog": "Browse Catalog"
     },
     "video": {
       "captions": "Captions",
@@ -621,7 +686,17 @@
       "save": "Save",
       "price_free": "Free",
       "modules": "modules",
-      "lessons": "lessons"
+      "lessons": "lessons",
+      "auth_required_title": "Authentication required",
+      "auth_required_description": "Please sign in to enroll in courses",
+      "enroll_success_title": "Success!",
+      "enroll_success_description": "You've been enrolled in the course",
+      "error": "Error",
+      "not_found": "Course not found",
+      "browse_courses": "Browse Courses",
+      "about_course": "About this course",
+      "view_profile": "View Profile",
+      "topics": "Topics"
     },
     "levels": {
       "beginner": "Beginner",
@@ -650,6 +725,151 @@
       "analytics": "Analytics",
       "applications": "Community Applications",
       "kvkkRequests": "KVKK Requests"
+    },
+    "reviews": {
+      "edit_review": "Edit Review",
+      "write_review": "Write a Review",
+      "your_rating": "Your Rating",
+      "your_review_optional": "Your Review (Optional)",
+      "review_placeholder": "Share your experience with this course...",
+      "submitting": "Submitting...",
+      "submit_review": "Submit Review",
+      "update_review": "Update Review",
+      "cancel": "Cancel",
+      "your_review_label": "(Your review)",
+      "no_reviews": "No reviews yet. Be the first to review this course!",
+      "select_rating": "Please select a rating",
+      "success": "Success!",
+      "review_submitted": "Review submitted",
+      "review_updated": "Review updated",
+      "error": "Error",
+      "sign_in_required_title": "Sign in required",
+      "sign_in_required_description": "Please sign in to leave a review",
+      "enrollment_required_title": "Enrollment required",
+      "enrollment_required_description": "You must be enrolled to review this course",
+      "verification_required_title": "Verification required",
+      "verification_required_description": "Please complete the verification",
+      "verification_failed_title": "Verification failed",
+      "verification_failed_description": "Please try again"
+    },
+    "cutii": {
+      "greeting": "Hi! I'm CUTII, your AI learning assistant. Ask me anything about blockchain, smart contracts, or this course!",
+      "title": "CUTII AI Assistant",
+      "input_placeholder": "Ask me anything...",
+      "footer_disclaimer": "Educational use only • Not financial advice",
+      "sign_in_required_title": "Sign in required",
+      "sign_in_required_description": "Please sign in to use the AI assistant",
+      "error": "Error",
+      "generic_error": "Sorry, I encountered an error. Please try again.",
+      "rate_limit_error": "I'm receiving too many requests right now. Please wait a moment and try again.",
+      "credits_error": "AI service is temporarily unavailable. Please try again later."
+    },
+    "external_card": {
+      "free": "FREE",
+      "provided_by": "Provided by {{source}}"
+    },
+    "profile": {
+      "loading": "Loading profile...",
+      "untitled_course": "Untitled Course",
+      "courses_label": "Courses",
+      "certificates_label": "Certificates",
+      "joined_prefix": "Joined",
+      "admin_badge": "Admin",
+      "management_button": "Management",
+      "tabs": {
+        "overview": "Overview",
+        "my_courses": "My Courses",
+        "certificates": "Certificates",
+        "saved": "Saved",
+        "notifications": "Notifications",
+        "settings": "Settings",
+        "privacy": "Privacy"
+      },
+      "overview": {
+        "active_courses": "Active Courses",
+        "average_progress": "{{percent}}% Average Progress",
+        "completed": "Completed",
+        "courses_finished": "Courses Finished",
+        "earned_certificates": "Earned Certificates",
+        "recent_courses": "Recent Courses",
+        "recent_courses_subtitle": "Continue your learning journey",
+        "complete_label": "{{percent}}% Complete",
+        "no_enrolled": "No courses enrolled yet",
+        "browse_courses": "Browse Courses"
+      },
+      "courses": {
+        "progress": "Progress",
+        "review": "Review",
+        "continue_learning": "Continue Learning",
+        "course_details": "Course Details",
+        "completed_badge": "Completed",
+        "no_courses_title": "No Courses Yet",
+        "no_courses_subtitle": "Start your learning journey by enrolling in a course"
+      },
+      "certificates": {
+        "number_label": "Certificate #{{number}}",
+        "download": "Download Certificate",
+        "no_certificates_title": "No Certificates Yet",
+        "no_certificates_subtitle": "Complete courses to earn certificates"
+      },
+      "saved": {
+        "title": "Saved Items",
+        "subtitle": "Your bookmarked courses and resources",
+        "saved_on": "Saved {{date}}",
+        "remove": "Remove",
+        "no_saved": "No saved items yet",
+        "removed_title": "Removed",
+        "removed_description": "Item removed from saved list"
+      },
+      "notifications": {
+        "title": "Notifications",
+        "subtitle": "Stay updated with your learning activity",
+        "no_notifications": "No notifications yet"
+      },
+      "settings": {
+        "email_preferences": "Email Preferences",
+        "email_preferences_subtitle": "Manage your email notification preferences",
+        "course_updates": "Course Updates",
+        "course_updates_subtitle": "Receive notifications about new lessons and course updates",
+        "newsletters": "Newsletters",
+        "newsletters_subtitle": "Receive our weekly newsletter with educational content",
+        "marketing": "Marketing",
+        "marketing_subtitle": "Receive updates about new features and promotions",
+        "account_information": "Account Information",
+        "account_information_subtitle": "View your account details",
+        "email_label": "Email",
+        "full_name_label": "Full Name",
+        "department_label": "Department",
+        "role_label": "Role",
+        "security": "Security",
+        "security_subtitle": "Manage your account security",
+        "change_password": "Change Password",
+        "update_error_title": "Error",
+        "update_error_description": "Failed to update notification preferences",
+        "update_success_title": "Success",
+        "update_success_description": "Notification preferences updated"
+      },
+      "privacy": {
+        "title": "KVKK & Privacy",
+        "subtitle": "Manage your data and privacy settings",
+        "kvkk_consent": "KVKK Consent",
+        "version_label": "Version: {{version}}",
+        "consent_given": "Consent given: {{date}}",
+        "data_categories": "Data Categories",
+        "essential_data": "Essential Data",
+        "required_badge": "Required",
+        "analytics": "Analytics",
+        "active_badge": "Active",
+        "performance": "Performance",
+        "your_rights": "Your Rights",
+        "rights_description": "Under KVKK (Law No. 6698), you have the right to access, correct, delete, or port your data.",
+        "make_data_request": "Make Data Request",
+        "privacy_policy": "Privacy Policy",
+        "cookie_policy": "Cookie Policy",
+        "danger_zone": "Danger Zone",
+        "danger_zone_subtitle": "Irreversible actions",
+        "request_deletion": "Request Account Deletion"
+      }
     }
   },
   "kvkk": {
@@ -1325,10 +1545,22 @@
     "blurb": "We don't just teach — we build, launch, and create real impact.",
     "learnMore": "Learn More About UTAAB",
     "cards": {
-      "education": { "title": "Education", "description": "Workshops, mentorship, and structured learning for Web3 development." },
-      "projects": { "title": "Real Projects", "description": "Building blockchain-based solutions with real-world applications." },
-      "ecosystem": { "title": "Ecosystem", "description": "Connecting students, developers, and innovators into an active network." },
-      "support": { "title": "Support", "description": "Enabling financial, mental, and professional growth." }
+      "education": {
+        "title": "Education",
+        "description": "Workshops, mentorship, and structured learning for Web3 development."
+      },
+      "projects": {
+        "title": "Real Projects",
+        "description": "Building blockchain-based solutions with real-world applications."
+      },
+      "ecosystem": {
+        "title": "Ecosystem",
+        "description": "Connecting students, developers, and innovators into an active network."
+      },
+      "support": {
+        "title": "Support",
+        "description": "Enabling financial, mental, and professional growth."
+      }
     }
   },
   "aboutPage": {
@@ -1429,9 +1661,18 @@
     },
     "principles": {
       "title": "How we teach",
-      "clarity": { "title": "Clarity over jargon", "description": "We define every technical word the moment we use it. No assumed knowledge." },
-      "examples": { "title": "Real-world examples", "description": "Every concept is paired with an analogy or a small example so it actually sticks." },
-      "community": { "title": "Learn with others", "description": "A growing community of students, builders, and mentors who answer questions and ship projects together." }
+      "clarity": {
+        "title": "Clarity over jargon",
+        "description": "We define every technical word the moment we use it. No assumed knowledge."
+      },
+      "examples": {
+        "title": "Real-world examples",
+        "description": "Every concept is paired with an analogy or a small example so it actually sticks."
+      },
+      "community": {
+        "title": "Learn with others",
+        "description": "A growing community of students, builders, and mentors who answer questions and ship projects together."
+      }
     },
     "cta": {
       "title": "Ready to start?",
@@ -1447,12 +1688,36 @@
     },
     "comingSoon": "Coming soon",
     "items": {
-      "whitepaper": { "title": "Whitepaper", "description": "A visual summary of UTAAB's vision, the technology behind our work, and the roadmap that guides what we build next.", "cta": "Read whitepaper" },
-      "guides": { "title": "Documentation & Guides", "description": "Beginner-friendly articles covering blockchain basics, wallets, smart contracts, and more — written by our team.", "cta": "Open guides" },
-      "tokenomics": { "title": "Tokenomics", "description": "A detailed token model is in active design. We'll publish the full breakdown here as soon as it's reviewed and finalized.", "cta": "Coming soon" },
-      "blog": { "title": "Blog & Updates", "description": "Latest announcements, project updates, event recaps, and educational deep-dives from the UTAAB community.", "cta": "Read the blog" },
-      "faq": { "title": "Frequently Asked Questions", "description": "Honest answers to the most common questions about UTAAB, our community, and getting started in Web3.", "cta": "See FAQs" },
-      "developers": { "title": "Developer Resources", "description": "Open-source code, contribution guides, and technical references for developers building on or with UTAAB.", "cta": "Visit GitHub" }
+      "whitepaper": {
+        "title": "Whitepaper",
+        "description": "A visual summary of UTAAB's vision, the technology behind our work, and the roadmap that guides what we build next.",
+        "cta": "Read whitepaper"
+      },
+      "guides": {
+        "title": "Documentation & Guides",
+        "description": "Beginner-friendly articles covering blockchain basics, wallets, smart contracts, and more — written by our team.",
+        "cta": "Open guides"
+      },
+      "tokenomics": {
+        "title": "Tokenomics",
+        "description": "A detailed token model is in active design. We'll publish the full breakdown here as soon as it's reviewed and finalized.",
+        "cta": "Coming soon"
+      },
+      "blog": {
+        "title": "Blog & Updates",
+        "description": "Latest announcements, project updates, event recaps, and educational deep-dives from the UTAAB community.",
+        "cta": "Read the blog"
+      },
+      "faq": {
+        "title": "Frequently Asked Questions",
+        "description": "Honest answers to the most common questions about UTAAB, our community, and getting started in Web3.",
+        "cta": "See FAQs"
+      },
+      "developers": {
+        "title": "Developer Resources",
+        "description": "Open-source code, contribution guides, and technical references for developers building on or with UTAAB.",
+        "cta": "Visit GitHub"
+      }
     },
     "cta": {
       "title": "Can't find what you need?",
@@ -1478,9 +1743,18 @@
     "tech": {
       "title": "Technology",
       "intro": "Our approach is intentionally pragmatic. We use technology that is open, well-understood, and battle-tested — and we explain everything we use.",
-      "t1": { "title": "Open ecosystem", "description": "We rely on open standards and public blockchains rather than locked-down platforms. Anything we publish, you can inspect." },
-      "t2": { "title": "Education-first stack", "description": "Our learning platform combines structured courses, hands-on workshops, and an AI tutor so members can learn at their own pace." },
-      "t3": { "title": "Project pipeline", "description": "Members move from learning to building through guided projects, mentorship, and contributor matching." }
+      "t1": {
+        "title": "Open ecosystem",
+        "description": "We rely on open standards and public blockchains rather than locked-down platforms. Anything we publish, you can inspect."
+      },
+      "t2": {
+        "title": "Education-first stack",
+        "description": "Our learning platform combines structured courses, hands-on workshops, and an AI tutor so members can learn at their own pace."
+      },
+      "t3": {
+        "title": "Project pipeline",
+        "description": "Members move from learning to building through guided projects, mentorship, and contributor matching."
+      }
     },
     "roadmap": {
       "title": "Roadmap",
@@ -1521,16 +1795,46 @@
       "subtitle": "Honest, plain-language answers to the questions we hear most often."
     },
     "items": {
-      "q1": { "q": "What is UTAAB?", "a": "UTAAB is a student-led Web3 ecosystem focused on blockchain education, real projects, and cross-border collaboration. We give beginners a clear path into Web3 — from first guide to first shipped project." },
-      "q2": { "q": "Is UTAAB free to join?", "a": "Yes. The community, the guides, and most courses are free. Some advanced or partner programs may have a fee, but it will always be clearly labeled." },
-      "q3": { "q": "I have zero blockchain experience. Where do I start?", "a": "Start with our Guides at /learn/guides. The \"Beginner\" section explains what blockchain is, how wallets work, and the basic vocabulary — in plain language with real examples." },
-      "q4": { "q": "Do I need to buy crypto to participate?", "a": "No. You can learn everything and join most activities without owning any crypto. When projects do require an on-chain action, we use free testnets so nothing is at risk." },
-      "q5": { "q": "What is a wallet, and is it safe to use one?", "a": "A wallet is software that stores the keys giving you access to your blockchain accounts. Used correctly — strong backups, never share your secret phrase — it is safe. Our wallets guide walks through best practices step by step." },
-      "q6": { "q": "Does UTAAB have a token?", "a": "A token model is in design. We will publish full details — supply, utility, distribution — only when finalized and reviewed. Anyone offering you a \"UTAAB token\" before the official announcement is not legitimate." },
-      "q7": { "q": "How can I contribute to UTAAB?", "a": "Visit /contributor-match. Tell us your skills and interests, and we'll match you with a project, task, or mentor. Designers, writers, developers, and community builders are all welcome." },
-      "q8": { "q": "Where can I follow updates?", "a": "Read the blog at /blog for major updates and follow us on LinkedIn, Telegram, Instagram, X, and GitHub — links are in the footer." },
-      "q9": { "q": "Do I get a certificate after completing a course?", "a": "Yes. UTAAB EDU courses issue completion certificates that you can share on LinkedIn or download as a PDF." },
-      "q10": { "q": "How do you handle my personal data?", "a": "We follow KVKK and GDPR principles. You can read the full Privacy Policy or open the Privacy Center from the footer at any time to manage your preferences." }
+      "q1": {
+        "q": "What is UTAAB?",
+        "a": "UTAAB is a student-led Web3 ecosystem focused on blockchain education, real projects, and cross-border collaboration. We give beginners a clear path into Web3 — from first guide to first shipped project."
+      },
+      "q2": {
+        "q": "Is UTAAB free to join?",
+        "a": "Yes. The community, the guides, and most courses are free. Some advanced or partner programs may have a fee, but it will always be clearly labeled."
+      },
+      "q3": {
+        "q": "I have zero blockchain experience. Where do I start?",
+        "a": "Start with our Guides at /learn/guides. The \"Beginner\" section explains what blockchain is, how wallets work, and the basic vocabulary — in plain language with real examples."
+      },
+      "q4": {
+        "q": "Do I need to buy crypto to participate?",
+        "a": "No. You can learn everything and join most activities without owning any crypto. When projects do require an on-chain action, we use free testnets so nothing is at risk."
+      },
+      "q5": {
+        "q": "What is a wallet, and is it safe to use one?",
+        "a": "A wallet is software that stores the keys giving you access to your blockchain accounts. Used correctly — strong backups, never share your secret phrase — it is safe. Our wallets guide walks through best practices step by step."
+      },
+      "q6": {
+        "q": "Does UTAAB have a token?",
+        "a": "A token model is in design. We will publish full details — supply, utility, distribution — only when finalized and reviewed. Anyone offering you a \"UTAAB token\" before the official announcement is not legitimate."
+      },
+      "q7": {
+        "q": "How can I contribute to UTAAB?",
+        "a": "Visit /contributor-match. Tell us your skills and interests, and we'll match you with a project, task, or mentor. Designers, writers, developers, and community builders are all welcome."
+      },
+      "q8": {
+        "q": "Where can I follow updates?",
+        "a": "Read the blog at /blog for major updates and follow us on LinkedIn, Telegram, Instagram, X, and GitHub — links are in the footer."
+      },
+      "q9": {
+        "q": "Do I get a certificate after completing a course?",
+        "a": "Yes. UTAAB EDU courses issue completion certificates that you can share on LinkedIn or download as a PDF."
+      },
+      "q10": {
+        "q": "How do you handle my personal data?",
+        "a": "We follow KVKK and GDPR principles. You can read the full Privacy Policy or open the Privacy Center from the footer at any time to manage your preferences."
+      }
     },
     "cta": {
       "title": "Still have questions?",
