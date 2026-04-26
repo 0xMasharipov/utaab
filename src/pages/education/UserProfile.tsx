@@ -202,14 +202,14 @@ export const UserProfile = () => {
 
     if (error) {
       toast({
-        title: 'Error',
-        description: 'Failed to update notification preferences',
+        title: t('education.profile.settings.update_error_title'),
+        description: t('education.profile.settings.update_error_description'),
         variant: 'destructive',
       });
     } else {
       toast({
-        title: 'Success',
-        description: 'Notification preferences updated',
+        title: t('education.profile.settings.update_success_title'),
+        description: t('education.profile.settings.update_success_description'),
       });
     }
   };
@@ -229,8 +229,8 @@ export const UserProfile = () => {
       .delete()
       .eq('id', itemId);
     toast({
-      title: 'Removed',
-      description: 'Item removed from saved list',
+      title: t('education.profile.saved.removed_title'),
+      description: t('education.profile.saved.removed_description'),
     });
   };
 
@@ -245,7 +245,7 @@ export const UserProfile = () => {
 
   const getCourseTitle = (course: any) => {
     const locale = i18n.language;
-    return course?.[`title_${locale}`] || course?.title_en || 'Untitled Course';
+    return course?.[`title_${locale}`] || course?.title_en || t('education.profile.untitled_course');
   };
 
   const avgProgress = enrollments?.length
@@ -259,7 +259,7 @@ export const UserProfile = () => {
         <div className="flex items-center justify-center h-[80vh]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Loading profile...</p>
+            <p className="text-muted-foreground">{t('education.profile.loading')}</p>
           </div>
         </div>
       </div>
@@ -297,7 +297,7 @@ export const UserProfile = () => {
                 {isAdmin && (
                   <Badge className="bg-primary">
                     <Shield className="h-3 w-3 mr-1" />
-                    Admin
+                    {t('education.profile.admin_badge')}
                   </Badge>
                 )}
               </div>
@@ -306,19 +306,19 @@ export const UserProfile = () => {
                 <div className="flex items-center gap-2">
                   <BookOpen className="h-4 w-4 text-accent" />
                   <span className="text-foreground">
-                    {enrollments?.length || 0} {t('common.courses') || 'Courses'}
+                    {enrollments?.length || 0} {t('education.profile.courses_label')}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Award className="h-4 w-4 text-accent" />
                   <span className="text-foreground">
-                    {certificates?.length || 0} Certificates
+                    {certificates?.length || 0} {t('education.profile.certificates_label')}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4 text-accent" />
                   <span className="text-foreground">
-                    Joined {new Date(profile.created_at).toLocaleDateString()}
+                    {t('education.profile.joined_prefix')} {new Date(profile.created_at).toLocaleDateString()}
                   </span>
                 </div>
               </div>
@@ -330,7 +330,7 @@ export const UserProfile = () => {
                 className="bg-primary hover:bg-primary/90"
               >
                 <LayoutDashboard className="h-4 w-4 mr-2" />
-                Management
+                {t('education.profile.management_button')}
               </Button>
             )}
           </div>
@@ -341,31 +341,31 @@ export const UserProfile = () => {
           <TabsList className="glass-strong p-1.5 rounded-2xl w-full overflow-x-auto flex-nowrap justify-start">
             <TabsTrigger value="overview" className="rounded-xl flex-shrink-0 snap-start">
               <Eye className="h-4 w-4 mr-2" />
-              Overview
+              {t('education.profile.tabs.overview')}
             </TabsTrigger>
             <TabsTrigger value="courses" className="rounded-xl flex-shrink-0 snap-start">
               <BookOpen className="h-4 w-4 mr-2" />
-              My Courses
+              {t('education.profile.tabs.my_courses')}
             </TabsTrigger>
             <TabsTrigger value="certificates" className="rounded-xl flex-shrink-0 snap-start">
               <Award className="h-4 w-4 mr-2" />
-              Certificates
+              {t('education.profile.tabs.certificates')}
             </TabsTrigger>
             <TabsTrigger value="saved" className="rounded-xl flex-shrink-0 snap-start">
               <Bookmark className="h-4 w-4 mr-2" />
-              Saved
+              {t('education.profile.tabs.saved')}
             </TabsTrigger>
             <TabsTrigger value="notifications" className="rounded-xl flex-shrink-0 snap-start">
               <Bell className="h-4 w-4 mr-2" />
-              Notifications
+              {t('education.profile.tabs.notifications')}
             </TabsTrigger>
             <TabsTrigger value="settings" className="rounded-xl flex-shrink-0 snap-start">
               <Settings className="h-4 w-4 mr-2" />
-              Settings
+              {t('education.profile.tabs.settings')}
             </TabsTrigger>
             <TabsTrigger value="privacy" className="rounded-xl flex-shrink-0 snap-start">
               <Shield className="h-4 w-4 mr-2" />
-              Privacy
+              {t('education.profile.tabs.privacy')}
             </TabsTrigger>
           </TabsList>
 
@@ -376,7 +376,7 @@ export const UserProfile = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-foreground">
                     <BookOpen className="h-5 w-5 text-accent" />
-                    Active Courses
+                    {t('education.profile.overview.active_courses')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -385,7 +385,7 @@ export const UserProfile = () => {
                   </div>
                   <Progress value={avgProgress} className="h-2" />
                   <p className="text-sm text-muted-foreground mt-2">
-                    {Math.round(avgProgress)}% Average Progress
+                    {t('education.profile.overview.average_progress', { percent: Math.round(avgProgress) })}
                   </p>
                 </CardContent>
               </Card>
@@ -394,7 +394,7 @@ export const UserProfile = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-foreground">
                     <Award className="h-5 w-5 text-accent" />
-                    Completed
+                    {t('education.profile.overview.completed')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -402,7 +402,7 @@ export const UserProfile = () => {
                     {enrollments?.filter(e => e.completed).length || 0}
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Courses Finished
+                    {t('education.profile.overview.courses_finished')}
                   </p>
                 </CardContent>
               </Card>
@@ -411,7 +411,7 @@ export const UserProfile = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-foreground">
                     <GraduationCap className="h-5 w-5 text-accent" />
-                    Certificates
+                    {t('education.profile.tabs.certificates')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -419,7 +419,7 @@ export const UserProfile = () => {
                     {certificates?.length || 0}
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Earned Certificates
+                    {t('education.profile.overview.earned_certificates')}
                   </p>
                 </CardContent>
               </Card>
@@ -428,8 +428,8 @@ export const UserProfile = () => {
             {/* Recent Activity */}
             <Card className="glass-strong border-white/20">
               <CardHeader>
-                <CardTitle className="text-foreground">Recent Courses</CardTitle>
-                <CardDescription>Continue your learning journey</CardDescription>
+                <CardTitle className="text-foreground">{t('education.profile.overview.recent_courses')}</CardTitle>
+                <CardDescription>{t('education.profile.overview.recent_courses_subtitle')}</CardDescription>
               </CardHeader>
               <CardContent>
                 {enrollments && enrollments.length > 0 ? (
@@ -447,7 +447,7 @@ export const UserProfile = () => {
                             </h4>
                             <Progress value={Number(enrollment.progress) || 0} className="h-2 mb-2" />
                             <p className="text-sm text-muted-foreground">
-                              {Math.round(Number(enrollment.progress) || 0)}% Complete
+                              {t('education.profile.overview.complete_label', { percent: Math.round(Number(enrollment.progress) || 0) })}
                             </p>
                           </div>
                           <ChevronRight className="h-5 w-5 text-muted-foreground" />
@@ -458,9 +458,9 @@ export const UserProfile = () => {
                 ) : (
                   <div className="text-center py-8">
                     <BookOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground mb-4">No courses enrolled yet</p>
+                    <p className="text-muted-foreground mb-4">{t('education.profile.overview.no_enrolled')}</p>
                     <Button onClick={() => navigate('/education/courses')}>
-                      Browse Courses
+                      {t('education.profile.overview.browse_courses')}
                     </Button>
                   </div>
                 )}
@@ -481,7 +481,7 @@ export const UserProfile = () => {
                         </h3>
                         <div className="space-y-2 mb-4">
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-muted-foreground">Progress</span>
+                            <span className="text-muted-foreground">{t('education.profile.courses.progress')}</span>
                             <span className="text-foreground font-medium">
                               {Math.round(Number(enrollment.progress) || 0)}%
                             </span>
@@ -493,19 +493,19 @@ export const UserProfile = () => {
                             onClick={() => navigate(`/education/learn/${enrollment.courses.slug}`)}
                             className="bg-primary hover:bg-primary/90"
                           >
-                            {enrollment.completed ? 'Review' : 'Continue Learning'}
+                            {enrollment.completed ? t('education.profile.courses.review') : t('education.profile.courses.continue_learning')}
                           </Button>
                           <Button
                             variant="outline"
                             onClick={() => navigate(`/education/course/${enrollment.courses.slug}`)}
                             className="glass"
                           >
-                            Course Details
+                            {t('education.profile.courses.course_details')}
                           </Button>
                         </div>
                       </div>
                       {enrollment.completed && (
-                        <Badge className="bg-green-600">Completed</Badge>
+                        <Badge className="bg-green-600">{t('education.profile.courses.completed_badge')}</Badge>
                       )}
                     </div>
                   </CardContent>
@@ -516,13 +516,13 @@ export const UserProfile = () => {
                 <CardContent className="p-12 text-center">
                   <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-foreground mb-2">
-                    No Courses Yet
+                    {t('education.profile.courses.no_courses_title')}
                   </h3>
                   <p className="text-muted-foreground mb-6">
-                    Start your learning journey by enrolling in a course
+                    {t('education.profile.courses.no_courses_subtitle')}
                   </p>
                   <Button onClick={() => navigate('/education/courses')} className="bg-primary">
-                    Browse Courses
+                    {t('education.profile.overview.browse_courses')}
                   </Button>
                 </CardContent>
               </Card>
@@ -548,11 +548,11 @@ export const UserProfile = () => {
                         {getCourseTitle(cert.courses)}
                       </h3>
                       <p className="text-sm text-muted-foreground mb-4">
-                        Certificate #{cert.certificate_number}
+                        {t('education.profile.certificates.number_label', { number: cert.certificate_number })}
                       </p>
                       <Button variant="outline" className="w-full glass">
                         <Download className="h-4 w-4 mr-2" />
-                        Download Certificate
+                        {t('education.profile.certificates.download')}
                       </Button>
                     </CardContent>
                   </Card>
@@ -563,10 +563,10 @@ export const UserProfile = () => {
                 <CardContent className="p-12 text-center">
                   <Award className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-foreground mb-2">
-                    No Certificates Yet
+                    {t('education.profile.certificates.no_certificates_title')}
                   </h3>
                   <p className="text-muted-foreground mb-6">
-                    Complete courses to earn certificates
+                    {t('education.profile.certificates.no_certificates_subtitle')}
                   </p>
                 </CardContent>
               </Card>
@@ -577,8 +577,8 @@ export const UserProfile = () => {
           <TabsContent value="saved" className="space-y-4">
             <Card className="glass-strong border-white/20">
               <CardHeader>
-                <CardTitle className="text-foreground">Saved Items</CardTitle>
-                <CardDescription>Your bookmarked courses and resources</CardDescription>
+                <CardTitle className="text-foreground">{t('education.profile.saved.title')}</CardTitle>
+                <CardDescription>{t('education.profile.saved.subtitle')}</CardDescription>
               </CardHeader>
               <CardContent>
                 {savedItems && savedItems.length > 0 ? (
@@ -593,7 +593,7 @@ export const UserProfile = () => {
                           <div>
                             <p className="text-foreground font-medium capitalize">{item.item_type}</p>
                             <p className="text-sm text-muted-foreground">
-                              Saved {new Date(item.created_at).toLocaleDateString()}
+                              {t('education.profile.saved.saved_on', { date: new Date(item.created_at).toLocaleDateString() })}
                             </p>
                           </div>
                         </div>
@@ -602,7 +602,7 @@ export const UserProfile = () => {
                           size="sm"
                           onClick={() => removeSavedItem(item.id)}
                         >
-                          Remove
+                          {t('education.profile.saved.remove')}
                         </Button>
                       </div>
                     ))}
@@ -610,7 +610,7 @@ export const UserProfile = () => {
                 ) : (
                   <div className="text-center py-8">
                     <Bookmark className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground">No saved items yet</p>
+                    <p className="text-muted-foreground">{t('education.profile.saved.no_saved')}</p>
                   </div>
                 )}
               </CardContent>
@@ -621,8 +621,8 @@ export const UserProfile = () => {
           <TabsContent value="notifications" className="space-y-4">
             <Card className="glass-strong border-white/20">
               <CardHeader>
-                <CardTitle className="text-foreground">Notifications</CardTitle>
-                <CardDescription>Stay updated with your learning activity</CardDescription>
+                <CardTitle className="text-foreground">{t('education.profile.notifications.title')}</CardTitle>
+                <CardDescription>{t('education.profile.notifications.subtitle')}</CardDescription>
               </CardHeader>
               <CardContent>
                 {notificationsList && notificationsList.length > 0 ? (
@@ -654,7 +654,7 @@ export const UserProfile = () => {
                 ) : (
                   <div className="text-center py-8">
                     <Bell className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground">No notifications yet</p>
+                    <p className="text-muted-foreground">{t('education.profile.notifications.no_notifications')}</p>
                   </div>
                 )}
               </CardContent>
@@ -665,15 +665,15 @@ export const UserProfile = () => {
           <TabsContent value="settings" className="space-y-6">
             <Card className="glass-strong border-white/20">
               <CardHeader>
-                <CardTitle className="text-foreground">Email Preferences</CardTitle>
-                <CardDescription>Manage your email notification preferences</CardDescription>
+                <CardTitle className="text-foreground">{t('education.profile.settings.email_preferences')}</CardTitle>
+                <CardDescription>{t('education.profile.settings.email_preferences_subtitle')}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label className="text-foreground">Course Updates</Label>
+                    <Label className="text-foreground">{t('education.profile.settings.course_updates')}</Label>
                     <p className="text-sm text-muted-foreground">
-                      Receive notifications about new lessons and course updates
+                      {t('education.profile.settings.course_updates_subtitle')}
                     </p>
                   </div>
                   <Switch
@@ -684,9 +684,9 @@ export const UserProfile = () => {
                 <Separator />
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label className="text-foreground">Newsletters</Label>
+                    <Label className="text-foreground">{t('education.profile.settings.newsletters')}</Label>
                     <p className="text-sm text-muted-foreground">
-                      Receive our weekly newsletter with educational content
+                      {t('education.profile.settings.newsletters_subtitle')}
                     </p>
                   </div>
                   <Switch
@@ -697,9 +697,9 @@ export const UserProfile = () => {
                 <Separator />
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label className="text-foreground">Marketing</Label>
+                    <Label className="text-foreground">{t('education.profile.settings.marketing')}</Label>
                     <p className="text-sm text-muted-foreground">
-                      Receive updates about new features and promotions
+                      {t('education.profile.settings.marketing_subtitle')}
                     </p>
                   </div>
                   <Switch
@@ -712,24 +712,24 @@ export const UserProfile = () => {
 
             <Card className="glass-strong border-white/20">
               <CardHeader>
-                <CardTitle className="text-foreground">Account Information</CardTitle>
-                <CardDescription>View your account details</CardDescription>
+                <CardTitle className="text-foreground">{t('education.profile.settings.account_information')}</CardTitle>
+                <CardDescription>{t('education.profile.settings.account_information_subtitle')}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label className="text-foreground">Email</Label>
+                  <Label className="text-foreground">{t('education.profile.settings.email_label')}</Label>
                   <Input value={user.email} disabled className="glass mt-1.5" />
                 </div>
                 <div>
-                  <Label className="text-foreground">Full Name</Label>
+                  <Label className="text-foreground">{t('education.profile.settings.full_name_label')}</Label>
                   <Input value={profile.full_name} disabled className="glass mt-1.5" />
                 </div>
                 <div>
-                  <Label className="text-foreground">Department</Label>
+                  <Label className="text-foreground">{t('education.profile.settings.department_label')}</Label>
                   <Input value={profile.department} disabled className="glass mt-1.5" />
                 </div>
                 <div>
-                  <Label className="text-foreground">Role</Label>
+                  <Label className="text-foreground">{t('education.profile.settings.role_label')}</Label>
                   <Input value={profile.role} disabled className="glass mt-1.5" />
                 </div>
               </CardContent>
@@ -739,13 +739,13 @@ export const UserProfile = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-foreground">
                   <Lock className="h-5 w-5 text-accent" />
-                  Security
+                  {t('education.profile.settings.security')}
                 </CardTitle>
-                <CardDescription>Manage your account security</CardDescription>
+                <CardDescription>{t('education.profile.settings.security_subtitle')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <Button variant="outline" className="glass">
-                  Change Password
+                  {t('education.profile.settings.change_password')}
                 </Button>
               </CardContent>
             </Card>
@@ -757,37 +757,37 @@ export const UserProfile = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-foreground">
                   <Shield className="h-5 w-5 text-accent" />
-                  KVKK & Privacy
+                  {t('education.profile.privacy.title')}
                 </CardTitle>
-                <CardDescription>Manage your data and privacy settings</CardDescription>
+                <CardDescription>{t('education.profile.privacy.subtitle')}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div>
-                  <h4 className="font-medium text-foreground mb-2">KVKK Consent</h4>
+                  <h4 className="font-medium text-foreground mb-2">{t('education.profile.privacy.kvkk_consent')}</h4>
                   <p className="text-sm text-muted-foreground mb-2">
-                    Version: {profile.kvkk_consent_version}
+                    {t('education.profile.privacy.version_label', { version: profile.kvkk_consent_version })}
                   </p>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Consent given: {new Date(profile.kvkk_consent_timestamp).toLocaleDateString()}
+                    {t('education.profile.privacy.consent_given', { date: new Date(profile.kvkk_consent_timestamp).toLocaleDateString() })}
                   </p>
                 </div>
 
                 <Separator />
 
                 <div className="space-y-3">
-                  <h4 className="font-medium text-foreground">Data Categories</h4>
+                  <h4 className="font-medium text-foreground">{t('education.profile.privacy.data_categories')}</h4>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between glass rounded-xl p-3">
-                      <span className="text-sm text-foreground">Essential Data</span>
-                      <Badge variant="outline">Required</Badge>
+                      <span className="text-sm text-foreground">{t('education.profile.privacy.essential_data')}</span>
+                      <Badge variant="outline">{t('education.profile.privacy.required_badge')}</Badge>
                     </div>
                     <div className="flex items-center justify-between glass rounded-xl p-3">
-                      <span className="text-sm text-foreground">Analytics</span>
-                      <Badge variant="outline">Active</Badge>
+                      <span className="text-sm text-foreground">{t('education.profile.privacy.analytics')}</span>
+                      <Badge variant="outline">{t('education.profile.privacy.active_badge')}</Badge>
                     </div>
                     <div className="flex items-center justify-between glass rounded-xl p-3">
-                      <span className="text-sm text-foreground">Performance</span>
-                      <Badge variant="outline">Active</Badge>
+                      <span className="text-sm text-foreground">{t('education.profile.privacy.performance')}</span>
+                      <Badge variant="outline">{t('education.profile.privacy.active_badge')}</Badge>
                     </div>
                   </div>
                 </div>
@@ -795,9 +795,9 @@ export const UserProfile = () => {
                 <Separator />
 
                 <div className="space-y-3">
-                  <h4 className="font-medium text-foreground">Your Rights</h4>
+                  <h4 className="font-medium text-foreground">{t('education.profile.privacy.your_rights')}</h4>
                   <p className="text-sm text-muted-foreground">
-                    Under KVKK (Law No. 6698), you have the right to access, correct, delete, or port your data.
+                    {t('education.profile.privacy.rights_description')}
                   </p>
                   <div className="flex flex-wrap gap-2">
                     <Button
@@ -807,7 +807,7 @@ export const UserProfile = () => {
                       onClick={() => navigate('/kvkk-request')}
                     >
                       <FileText className="h-4 w-4 mr-2" />
-                      Make Data Request
+                      {t('education.profile.privacy.make_data_request')}
                     </Button>
                     <Button
                       variant="outline"
@@ -816,7 +816,7 @@ export const UserProfile = () => {
                       onClick={() => window.open('/privacy', '_blank')}
                     >
                       <ExternalLink className="h-4 w-4 mr-2" />
-                      Privacy Policy
+                      {t('education.profile.privacy.privacy_policy')}
                     </Button>
                     <Button
                       variant="outline"
@@ -825,7 +825,7 @@ export const UserProfile = () => {
                       onClick={() => window.open('/cookie-policy', '_blank')}
                     >
                       <ExternalLink className="h-4 w-4 mr-2" />
-                      Cookie Policy
+                      {t('education.profile.privacy.cookie_policy')}
                     </Button>
                   </div>
                 </div>
@@ -836,13 +836,13 @@ export const UserProfile = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-destructive">
                   <AlertCircle className="h-5 w-5" />
-                  Danger Zone
+                  {t('education.profile.privacy.danger_zone')}
                 </CardTitle>
-                <CardDescription>Irreversible actions</CardDescription>
+                <CardDescription>{t('education.profile.privacy.danger_zone_subtitle')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <Button variant="destructive" size="sm">
-                  Request Account Deletion
+                  {t('education.profile.privacy.request_deletion')}
                 </Button>
               </CardContent>
             </Card>
