@@ -606,7 +606,9 @@
       "cta": "Kursları Keşfet",
       "open_resources": "Açık Eğitim Kaynakları",
       "open_resources_subtitle": "Önde gelen kurumlardan dünya standardında kurslar",
-      "mit_partnership": "Ücretsiz • MIT Ortaklığı"
+      "mit_partnership": "Ücretsiz • MIT Ortaklığı",
+      "hero_badge": "UTAAB EDU · Web3 Öğren",
+      "browse_catalog": "Kataloğa Göz At"
     },
     "video": {
       "captions": "Altyazılar",
@@ -684,7 +686,17 @@
       "save": "Kaydet",
       "price_free": "Ücretsiz",
       "modules": "modül",
-      "lessons": "ders"
+      "lessons": "ders",
+      "auth_required_title": "Giriş Yapılması Gerekiyor",
+      "auth_required_description": "Kurslara kaydolmak için lütfen giriş yapın",
+      "enroll_success_title": "Başarılı!",
+      "enroll_success_description": "Kursa kaydoldunuz",
+      "error": "Hata",
+      "not_found": "Kurs bulunamadı",
+      "browse_courses": "Kurslara Göz At",
+      "about_course": "Bu kurs hakkında",
+      "view_profile": "Profili Görüntüle",
+      "topics": "Konular"
     },
     "levels": {
       "beginner": "Başlangıç",
@@ -713,6 +725,151 @@
       "analytics": "Analitik",
       "applications": "Topluluk Başvuruları",
       "kvkkRequests": "KVKK Talepleri"
+    },
+    "reviews": {
+      "edit_review": "Değerlendirmeyi Düzenle",
+      "write_review": "Değerlendirme Yaz",
+      "your_rating": "Puanınız",
+      "your_review_optional": "Değerlendirmeniz (İsteğe bağlı)",
+      "review_placeholder": "Bu kursla ilgili deneyimlerinizi paylaşın...",
+      "submitting": "Gönderiliyor...",
+      "submit_review": "Değerlendirmeyi Gönder",
+      "update_review": "Değerlendirmeyi Güncelle",
+      "cancel": "İptal",
+      "your_review_label": "(Sizin değerlendirmeniz)",
+      "no_reviews": "Henüz değerlendirme yapılmamış. Bu kursu ilk değerlendiren siz olun!",
+      "select_rating": "Lütfen bir puan seçin",
+      "success": "Başarılı!",
+      "review_submitted": "Değerlendirme gönderildi",
+      "review_updated": "Değerlendirme güncellendi",
+      "error": "Hata",
+      "sign_in_required_title": "Giriş Yapılması Gerekiyor",
+      "sign_in_required_description": "Değerlendirme bırakmak için lütfen giriş yapın",
+      "enrollment_required_title": "Kayıt Olmak Gerekiyor",
+      "enrollment_required_description": "Bu kursu değerlendirmek için kayıtlı olmalısınız",
+      "verification_required_title": "Doğrulama Gerekiyor",
+      "verification_required_description": "Lütfen doğrulamayı tamamlayın",
+      "verification_failed_title": "Doğrulama Başarısız",
+      "verification_failed_description": "Lütfen tekrar deneyin"
+    },
+    "cutii": {
+      "greeting": "Merhaba! Ben CUTII, senin AI öğrenme asistanın. Bana blockchain, akıllı sözleşmeler veya bu kurs hakkında her şeyi sorabilirsin!",
+      "title": "CUTII AI Asistanı",
+      "input_placeholder": "Bana her şeyi sor...",
+      "footer_disclaimer": "Yalnızca eğitim amaçlıdır • Finansal tavsiye değildir",
+      "sign_in_required_title": "Giriş Yapılması Gerekiyor",
+      "sign_in_required_description": "AI asistanını kullanmak için lütfen giriş yapın",
+      "error": "Hata",
+      "generic_error": "Üzgünüm, bir hatayla karşılaştım. Lütfen tekrar deneyin.",
+      "rate_limit_error": "Şu anda çok fazla istek alıyorum. Lütfen bir an bekleyip tekrar deneyin.",
+      "credits_error": "AI hizmeti geçici olarak kullanılamıyor. Lütfen daha sonra tekrar deneyin."
+    },
+    "external_card": {
+      "free": "ÜCRETSİZ",
+      "provided_by": "{{source}} tarafından sağlanmıştır"
+    },
+    "profile": {
+      "loading": "Profil yükleniyor...",
+      "untitled_course": "Adsız Kurs",
+      "courses_label": "Kurslar",
+      "certificates_label": "Sertifikalar",
+      "joined_prefix": "Katıldı",
+      "admin_badge": "Yönetici",
+      "management_button": "Yönetim",
+      "tabs": {
+        "overview": "Genel Bakış",
+        "my_courses": "Kurslarım",
+        "certificates": "Sertifikalar",
+        "saved": "Kaydedilenler",
+        "notifications": "Bildirimler",
+        "settings": "Ayarlar",
+        "privacy": "Gizlilik"
+      },
+      "overview": {
+        "active_courses": "Aktif Kurslar",
+        "average_progress": "%{{percent}} Ortalama İlerleme",
+        "completed": "Tamamlandı",
+        "courses_finished": "Bitirilen Kurslar",
+        "earned_certificates": "Kazanılan Sertifikalar",
+        "recent_courses": "Son Kurslar",
+        "recent_courses_subtitle": "Öğrenme yolculuğuna devam et",
+        "complete_label": "%{{percent}} Tamamlandı",
+        "no_enrolled": "Henüz kayıtlı kurs yok",
+        "browse_courses": "Kurslara Göz At"
+      },
+      "courses": {
+        "progress": "İlerleme",
+        "review": "Değerlendir",
+        "continue_learning": "Öğrenmeye Devam Et",
+        "course_details": "Kurs Detayları",
+        "completed_badge": "Tamamlandı",
+        "no_courses_title": "Henüz Kurs Yok",
+        "no_courses_subtitle": "Bir kursa kaydolarak öğrenme yolculuğuna başla"
+      },
+      "certificates": {
+        "number_label": "Sertifika #{{number}}",
+        "download": "Sertifikayı İndir",
+        "no_certificates_title": "Henüz Sertifika Yok",
+        "no_certificates_subtitle": "Sertifika kazanmak için kursları tamamla"
+      },
+      "saved": {
+        "title": "Kaydedilenler",
+        "subtitle": "İşaretlediğiniz kurslar ve kaynaklar",
+        "saved_on": "{{date}} tarihinde kaydedildi",
+        "remove": "Kaldır",
+        "no_saved": "Henüz kaydedilmiş öğe yok",
+        "removed_title": "Kaldırıldı",
+        "removed_description": "Öğe kaydedilenler listesinden kaldırıldı"
+      },
+      "notifications": {
+        "title": "Bildirimler",
+        "subtitle": "Öğrenim etkinliğiniz hakkında güncel kalın",
+        "no_notifications": "Henüz bildirim yok"
+      },
+      "settings": {
+        "email_preferences": "E-posta Tercihleri",
+        "email_preferences_subtitle": "E-posta bildirim tercihlerinizi yönetin",
+        "course_updates": "Kurs Güncellemeleri",
+        "course_updates_subtitle": "Yeni dersler ve kurs güncellemeleri hakkında bildirimler alın",
+        "newsletters": "Bültenler",
+        "newsletters_subtitle": "Eğitici içeriklerle haftalık bültenimizi alın",
+        "marketing": "Pazarlama",
+        "marketing_subtitle": "Yeni özellikler ve promosyonlar hakkında güncellemeler alın",
+        "account_information": "Hesap Bilgileri",
+        "account_information_subtitle": "Hesap detaylarınızı görüntüleyin",
+        "email_label": "E-posta",
+        "full_name_label": "Tam Ad",
+        "department_label": "Departman",
+        "role_label": "Rol",
+        "security": "Güvenlik",
+        "security_subtitle": "Hesap güvenliğinizi yönetin",
+        "change_password": "Şifre Değiştir",
+        "update_error_title": "Hata",
+        "update_error_description": "Bildirim tercihleri güncellenemedi",
+        "update_success_title": "Başarılı",
+        "update_success_description": "Bildirim tercihleri güncellendi"
+      },
+      "privacy": {
+        "title": "KVKK & Gizlilik",
+        "subtitle": "Verilerinizi ve gizlilik ayarlarınızı yönetin",
+        "kvkk_consent": "KVKK Onayı",
+        "version_label": "Sürüm: {{version}}",
+        "consent_given": "Onay verildi: {{date}}",
+        "data_categories": "Veri Kategorileri",
+        "essential_data": "Temel Veriler",
+        "required_badge": "Gerekli",
+        "analytics": "Analitik",
+        "active_badge": "Aktif",
+        "performance": "Performans",
+        "your_rights": "Haklarınız",
+        "rights_description": "KVKK (6698 Sayılı Kanun) kapsamında verilerinize erişme, onları düzeltme, silme veya taşıma hakkına sahipsiniz.",
+        "make_data_request": "Veri Talebi Oluştur",
+        "privacy_policy": "Gizlilik Politikası",
+        "cookie_policy": "Çerez Politikası",
+        "danger_zone": "Tehlikeli Bölge",
+        "danger_zone_subtitle": "Geri alınamaz eylemler",
+        "request_deletion": "Hesap Silme Talebinde Bulun"
+      }
     }
   },
   "kvkk": {
