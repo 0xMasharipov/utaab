@@ -353,7 +353,7 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Ask me anything..."
+                placeholder={t('education.cutii.input_placeholder')}
                 className="glass flex-1"
                 disabled={isLoading}
                 autoFocus
@@ -368,7 +368,7 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
               </Button>
             </div>
             <p className="text-xs text-muted-foreground mt-2 text-center">
-              Educational use only • Not financial advice
+              {t('education.cutii.footer_disclaimer')}
             </p>
           </div>
 
