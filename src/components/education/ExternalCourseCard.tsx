@@ -11,7 +11,7 @@ interface ExternalCourseCardProps {
 }
 
 export const ExternalCourseCard = ({ course, onClick }: ExternalCourseCardProps) => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const locale = i18n.language as 'en' | 'tr' | 'ru' | 'ar';
 
   const getLocalizedText = (field: 'title' | 'subtitle' | 'description' | 'category') => {
@@ -22,12 +22,9 @@ export const ExternalCourseCard = ({ course, onClick }: ExternalCourseCardProps)
   };
 
   const getCourseLevel = (level: string) => {
-    const labels: Record<string, string> = {
-      beginner: "Beginner",
-      intermediate: "Intermediate",
-      advanced: "Advanced",
-    };
-    return labels[level] || level;
+    const key = `education.levels.${level}`;
+    const translated = t(key);
+    return translated === key ? level : translated;
   };
 
   return (
@@ -50,7 +47,7 @@ export const ExternalCourseCard = ({ course, onClick }: ExternalCourseCardProps)
           </Badge>
           {course.is_free && (
             <Badge variant="outline" className="glass border-accent/30 text-accent backdrop-blur-sm">
-              FREE
+              {t('education.external_card.free')}
             </Badge>
           )}
         </div>
@@ -101,7 +98,7 @@ export const ExternalCourseCard = ({ course, onClick }: ExternalCourseCardProps)
       <div className="px-6 py-4 border-t border-white/10">
         <div className="flex items-center gap-2 text-xs text-muted-foreground w-full">
           <Info className="h-3 w-3 flex-shrink-0" />
-          <span className="line-clamp-1">Provided by {course.source}</span>
+          <span className="line-clamp-1">{t('education.external_card.provided_by', { source: course.source })}</span>
         </div>
       </div>
     </GlassCard>
