@@ -313,6 +313,10 @@
   text-shadow: 0 0 20px rgba(0, 150, 255, 0.3);
   white-space: nowrap;
 }
+@keyframes hero-carousel-scroll {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
 @media (prefers-reduced-motion: reduce) {
   .hero-carousel-track { animation: none; }
 }
