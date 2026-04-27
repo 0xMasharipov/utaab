@@ -345,15 +345,17 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
           setFailedAttempts(prev => prev + 1);
           await logSecurityEvent('student_login_failed', 'low', { email: formData.email });
           
-          // If email not confirmed, show OTP input
+          // If email not confirmed, show confirmation screen (link-based)
           if (error.message?.includes('Email not confirmed')) {
             setOtpEmail(formData.email.trim().toLowerCase());
-            setOtpType('email');
+            setOtpType('signup');
+            setConfirmationMode('link');
             setAwaitingOtp(true);
+            // Use a long cooldown to respect the backend 60s safety window
             setResendCooldown(60);
             toast({
               title: 'Email not verified',
-              description: 'Please enter the verification code sent to your email.',
+              description: 'Please check your inbox and click the confirmation link we sent you.',
             });
             setIsSubmitting(false);
             return;
