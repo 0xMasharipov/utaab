@@ -97,13 +97,17 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // OTP state
+  // Email confirmation / OTP state
   const [awaitingOtp, setAwaitingOtp] = useState(false);
   const [otpCode, setOtpCode] = useState('');
   const [otpEmail, setOtpEmail] = useState('');
   const [otpType, setOtpType] = useState<'signup' | 'email'>('signup');
   const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
+  const [isResending, setIsResending] = useState(false);
+  // For sign-up, Supabase sends a link-based confirmation by default,
+  // not a 6-digit OTP. We show a "check your email" screen in that case.
+  const [confirmationMode, setConfirmationMode] = useState<'link' | 'code'>('link');
 
   // Resend cooldown timer
   useEffect(() => {
@@ -259,7 +263,7 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
   };
 
   const handleResendOtp = async () => {
-    if (resendCooldown > 0) return;
+    if (resendCooldown > 0 || isResending) return;
 
     // Rate limit OTP resend
     const rateLimitCheck = await checkRateLimit(otpEmail, 'otp_resend', 3);
@@ -272,16 +276,24 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
       return;
     }
 
+    setIsResending(true);
+    // Set cooldown immediately to block double-clicks even if request is slow
+    setResendCooldown(60);
     try {
       if (otpType === 'signup') {
-        await supabase.auth.resend({ type: 'signup', email: otpEmail });
+        const { error } = await supabase.auth.resend({
+          type: 'signup',
+          email: otpEmail,
+          options: { emailRedirectTo: `${window.location.origin}/education` },
+        });
+        if (error) throw error;
       } else {
-        await supabase.auth.resend({ type: 'email_change', email: otpEmail });
+        const { error } = await supabase.auth.resend({ type: 'email_change', email: otpEmail });
+        if (error) throw error;
       }
-      setResendCooldown(60);
       toast({
-        title: 'Code resent',
-        description: `A new verification code has been sent to ${otpEmail}`,
+        title: 'Email sent',
+        description: `We sent a new confirmation email to ${otpEmail}.`,
       });
     } catch (error: any) {
       toast({
@@ -289,6 +301,8 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
         description: mapError(error),
         variant: 'destructive',
       });
+    } finally {
+      setIsResending(false);
     }
   };
 
@@ -341,15 +355,17 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
           setFailedAttempts(prev => prev + 1);
           await logSecurityEvent('student_login_failed', 'low', { email: formData.email });
           
-          // If email not confirmed, show OTP input
+          // If email not confirmed, show confirmation screen (link-based)
           if (error.message?.includes('Email not confirmed')) {
             setOtpEmail(formData.email.trim().toLowerCase());
-            setOtpType('email');
+            setOtpType('signup');
+            setConfirmationMode('link');
             setAwaitingOtp(true);
+            // Use a long cooldown to respect the backend 60s safety window
             setResendCooldown(60);
             toast({
               title: 'Email not verified',
-              description: 'Please enter the verification code sent to your email.',
+              description: 'Please check your inbox and click the confirmation link we sent you.',
             });
             setIsSubmitting(false);
             return;
@@ -499,15 +515,16 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
 
       await logSecurityEvent('student_register_success', 'low', { email: validatedData.email });
 
-      // Show OTP verification step
+      // Show "check your email" confirmation screen (link-based confirmation)
       setOtpEmail(validatedData.email.trim().toLowerCase());
       setOtpType('signup');
+      setConfirmationMode('link');
       setAwaitingOtp(true);
       setResendCooldown(60);
-      
+
       toast({
-        title: 'Verification code sent',
-        description: `Please check ${validatedData.email} for your verification code.`,
+        title: 'Check your email',
+        description: `We sent a confirmation link to ${validatedData.email}. Click it to activate your account.`,
       });
     } catch (error: any) {
       toast({
@@ -528,8 +545,9 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
     }));
   };
 
-  // OTP Verification Screen
+  // Email confirmation screen (link-based for sign-up, code-based for OTP login)
   if (awaitingOtp) {
+    const isLink = confirmationMode === 'link';
     return (
       <div className="glass rounded-3xl p-8 md:p-12 text-center">
         <motion.div
@@ -540,48 +558,73 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
           <Mail className="h-16 w-16 text-accent mx-auto mb-6" />
         </motion.div>
         <h3 className="text-2xl font-bold mb-2 text-foreground">
-          Verify Your Email
+          {isLink ? 'Check Your Email' : 'Verify Your Email'}
         </h3>
         <p className="text-muted-foreground mb-8">
-          We sent a 6-digit code to <strong className="text-foreground">{otpEmail}</strong>
+          {isLink ? (
+            <>
+              We sent a confirmation link to{' '}
+              <strong className="text-foreground">{otpEmail}</strong>. Click it to
+              activate your account.
+            </>
+          ) : (
+            <>
+              We sent a 6-digit code to{' '}
+              <strong className="text-foreground">{otpEmail}</strong>
+            </>
+          )}
         </p>
 
-        <div className="flex justify-center mb-6">
-          <InputOTP
-            maxLength={6}
-            value={otpCode}
-            onChange={setOtpCode}
-          >
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
-            </InputOTPGroup>
-          </InputOTP>
-        </div>
+        {!isLink && (
+          <>
+            <div className="flex justify-center mb-6">
+              <InputOTP maxLength={6} value={otpCode} onChange={setOtpCode}>
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
+            </div>
 
-        <Button
-          onClick={handleVerifyOtp}
-          className="btn-primary w-full max-w-xs mx-auto mb-4"
-          disabled={otpCode.length !== 6 || isVerifyingOtp}
-        >
-          {isVerifyingOtp ? 'Verifying...' : 'Verify Code'}
-        </Button>
+            <Button
+              onClick={handleVerifyOtp}
+              className="btn-primary w-full max-w-xs mx-auto mb-4"
+              disabled={otpCode.length !== 6 || isVerifyingOtp}
+            >
+              {isVerifyingOtp ? 'Verifying...' : 'Verify Code'}
+            </Button>
+          </>
+        )}
 
         <div className="flex items-center justify-center gap-2 text-sm">
-          <span className="text-muted-foreground">Didn't receive the code?</span>
+          <span className="text-muted-foreground">
+            {isLink ? "Didn't receive the email?" : "Didn't receive the code?"}
+          </span>
           <button
             onClick={handleResendOtp}
-            disabled={resendCooldown > 0}
+            disabled={resendCooldown > 0 || isResending}
             className="text-accent hover:underline font-medium disabled:opacity-50 disabled:no-underline flex items-center gap-1"
           >
-            <RefreshCw className="h-3 w-3" />
-            {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend'}
+            <RefreshCw className={`h-3 w-3 ${isResending ? 'animate-spin' : ''}`} />
+            {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : isResending ? 'Sending…' : 'Resend'}
           </button>
         </div>
+
+        {isLink && (
+          <button
+            onClick={() => {
+              setAwaitingOtp(false);
+              setMode('signin');
+            }}
+            className="mt-6 text-sm text-muted-foreground hover:text-foreground underline"
+          >
+            Back to sign in
+          </button>
+        )}
       </div>
     );
   }
