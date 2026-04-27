@@ -2,26 +2,7 @@ import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
-
-// Allowed origins for CORS
-const allowedOrigins = [
-  'https://nxbjgqdehvxszqjoxumx.lovableproject.com',
-  'https://id.preview.lovableproject.com',
-  Deno.env.get('SITE_URL') || '',
-].filter(Boolean);
-
-function getCorsHeaders(req: Request) {
-  const origin = req.headers.get('origin') || '';
-  const isAllowed = allowedOrigins.some(allowed => 
-    origin === allowed || origin.endsWith('.lovableproject.com') || origin.includes('localhost')
-  );
-  
-  return {
-    'Access-Control-Allow-Origin': isAllowed ? origin : allowedOrigins[0],
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-    'Access-Control-Allow-Credentials': 'true',
-  };
-}
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 // Persistent rate limiter using database - 20 requests per minute per user
 async function checkRateLimit(
