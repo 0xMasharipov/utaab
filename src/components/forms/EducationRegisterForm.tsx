@@ -505,15 +505,16 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
 
       await logSecurityEvent('student_register_success', 'low', { email: validatedData.email });
 
-      // Show OTP verification step
+      // Show "check your email" confirmation screen (link-based confirmation)
       setOtpEmail(validatedData.email.trim().toLowerCase());
       setOtpType('signup');
+      setConfirmationMode('link');
       setAwaitingOtp(true);
       setResendCooldown(60);
-      
+
       toast({
-        title: 'Verification code sent',
-        description: `Please check ${validatedData.email} for your verification code.`,
+        title: 'Check your email',
+        description: `We sent a confirmation link to ${validatedData.email}. Click it to activate your account.`,
       });
     } catch (error: any) {
       toast({
