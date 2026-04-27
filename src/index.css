@@ -317,8 +317,11 @@
   from { transform: translate3d(0, 0, 0); }
   to   { transform: translate3d(-50%, 0, 0); }
 }
-@media (prefers-reduced-motion: reduce) {
-  .hero-carousel-track { animation: none; }
+/* Decorative brand marquee — intentionally exempt from prefers-reduced-motion
+   (no parallax/zoom/flashing). Slow it down a touch on small viewports so
+   text doesn't blur past on narrow screens. */
+@media (max-width: 640px) {
+  .hero-carousel-track { animation-duration: 45s; }
 }
 
 /* Navbar-critical animations — must be available immediately on every route
