@@ -144,7 +144,7 @@ export default function AdminLogin() {
     }
 
     try {
-      await supabase.auth.signInWithOtp({ email: otpEmail });
+      await supabase.auth.signInWithOtp({ email: otpEmail, options: { shouldCreateUser: false } });
       setResendCooldown(60);
       toast({
         title: "Code resent",
@@ -230,6 +230,7 @@ export default function AdminLogin() {
       await supabase.auth.signOut();
       const { error: otpError } = await supabase.auth.signInWithOtp({
         email: email.trim().toLowerCase(),
+        options: { shouldCreateUser: false },
       });
       if (otpError) throw otpError;
 
@@ -311,6 +312,7 @@ export default function AdminLogin() {
             await supabase.auth.signOut();
             const { error: otpError } = await supabase.auth.signInWithOtp({
               email: googleEmail,
+              options: { shouldCreateUser: false },
             });
             if (otpError) throw otpError;
 

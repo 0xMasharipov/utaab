@@ -147,7 +147,9 @@ serve(async (req) => {
         retry_after: retryAfter,
       }),
       {
-        status: allowed ? 200 : 429,
+        // Always return 200 so client SDKs don't treat planned throttling as
+        // a function failure. Throttling decisions are conveyed via `allowed`.
+        status: 200,
         headers: {
           ...corsHeaders,
           'Content-Type': 'application/json',

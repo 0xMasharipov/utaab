@@ -461,70 +461,60 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
       const schema = createSchema(t);
       const validatedData = schema.parse(formData);
 
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: validatedData.email.trim().toLowerCase(),
-        password: validatedData.password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/education`,
-          data: {
-            full_name: validatedData.full_name,
-          },
-        },
-      });
+      const normalizedEmail = validatedData.email.trim().toLowerCase();
 
-      if (authError) {
-        await logSecurityEvent('student_register_failed', 'medium', { email: validatedData.email });
-        
-        let errorMessage = mapError(authError);
-        if (authError.message?.includes('already registered')) {
-          errorMessage = t('auth.emailTaken');
-        } else if (authError.message?.includes('Password')) {
-          errorMessage = t('auth.weakPassword');
+      const { data: signupResp, error: signupError } = await supabase.functions.invoke(
+        'education-signup',
+        {
+          body: {
+            email: normalizedEmail,
+            password: validatedData.password,
+            full_name: validatedData.full_name,
+            preferred_language: validatedData.preferred_language,
+            department: validatedData.department,
+            role: validatedData.role,
+            focus_areas: validatedData.focus_areas,
+            kvkk_consent: true,
+            email_course_updates: validatedData.email_course_updates,
+            email_newsletters: validatedData.email_newsletters,
+            email_marketing: validatedData.email_marketing,
+            locale: i18n.language,
+            email_redirect_to: `${window.location.origin}/education`,
+          },
         }
-        
+      );
+
+      if (signupError || !signupResp?.success) {
+        await logSecurityEvent('student_register_failed', 'medium', {
+          email: validatedData.email,
+        });
         toast({
           title: 'Error',
-          description: errorMessage,
+          description: mapError(signupError ?? new Error('Signup failed')),
           variant: 'destructive',
         });
         setIsSubmitting(false);
         return;
       }
 
-      if (!authData.user) throw new Error('No user returned from signup');
-
-      // Create education profile
-      const { error: profileError } = await supabase.from('education_profiles').insert([
-        {
-          user_id: authData.user.id,
-          full_name: validatedData.full_name,
-          preferred_language: validatedData.preferred_language,
-          department: validatedData.department,
-          role: validatedData.role,
-          focus_areas: validatedData.focus_areas,
-          kvkk_consent: validatedData.kvkk_consent,
-          kvkk_consent_version: '1.0',
-          email_course_updates: validatedData.email_course_updates,
-          email_newsletters: validatedData.email_newsletters,
-          email_marketing: validatedData.email_marketing,
-          locale: i18n.language,
-        },
-      ]);
-
-      if (profileError) throw profileError;
-
-      await logSecurityEvent('student_register_success', 'low', { email: validatedData.email });
+      await logSecurityEvent('student_register_success', 'low', {
+        email: validatedData.email,
+      });
 
       // Show "check your email" confirmation screen (link-based confirmation)
-      setOtpEmail(validatedData.email.trim().toLowerCase());
+      setOtpEmail(normalizedEmail);
       setOtpType('signup');
       setConfirmationMode('link');
       setAwaitingOtp(true);
       setResendCooldown(60);
 
+      const description = signupResp.already_existed
+        ? `An account for ${validatedData.email} already exists. We've re-sent the confirmation link — please check your inbox.`
+        : `We sent a confirmation link to ${validatedData.email}. Click it to activate your account.`;
+
       toast({
-        title: 'Check your email',
-        description: `We sent a confirmation link to ${validatedData.email}. Click it to activate your account.`,
+        title: signupResp.already_existed ? 'Account already exists' : 'Check your email',
+        description,
       });
     } catch (error: any) {
       toast({
