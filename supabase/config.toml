@@ -37,3 +37,5 @@ project_id = "nxbjgqdehvxszqjoxumx"
     verify_jwt = false
   [functions.track-visit]
     verify_jwt = false
+  [functions.education-signup]
+    verify_jwt = false
