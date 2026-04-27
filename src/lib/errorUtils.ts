@@ -49,7 +49,15 @@ export const mapError = (error: any): string => {
     return 'Session expired. Please refresh the page.';
   }
   
-  if (error.message?.includes('rate limit')) {
+  if (
+    error.code === 'over_email_send_rate_limit' ||
+    error.message?.includes('email rate limit') ||
+    error.message?.includes('over_email_send_rate_limit')
+  ) {
+    return 'Too many email requests right now. Please wait about a minute and try again.';
+  }
+
+  if (error.status === 429 || error.message?.includes('rate limit')) {
     return 'Too many requests. Please wait a moment and try again.';
   }
   
