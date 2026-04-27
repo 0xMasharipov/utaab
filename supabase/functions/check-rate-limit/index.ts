@@ -1,25 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1';
-
-// Allowed origins for CORS
-const allowedOrigins = [
-  'https://nxbjgqdehvxszqjoxumx.lovableproject.com',
-  'https://id.preview.lovableproject.com',
-  Deno.env.get('SITE_URL') || '',
-].filter(Boolean);
-
-function getCorsHeaders(req: Request) {
-  const origin = req.headers.get('origin') || '';
-  const isAllowed = allowedOrigins.some(allowed => 
-    origin === allowed || origin.endsWith('.lovableproject.com') || origin.includes('localhost')
-  );
-  
-  return {
-    'Access-Control-Allow-Origin': isAllowed ? origin : allowedOrigins[0],
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
-    'Access-Control-Allow-Credentials': 'true',
-  };
-}
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 function getClientIP(req: Request): string {
   const forwarded = req.headers.get('x-forwarded-for');
