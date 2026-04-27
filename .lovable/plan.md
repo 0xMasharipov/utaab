@@ -1,67 +1,39 @@
-# Fix CORS Blocking on utaab.org (Signup/Login Failure)
+I found two separate issues in the auth flow:
 
-## Problem
+1. The email queue is working: recent signup emails were enqueued and sent successfully.
+2. The remaining 429 is from the authentication service’s built-in safety cooldown when the same user/email requests signup/verification too quickly.
+3. The likely 401 is from the app showing a 6-digit OTP screen even though the current signup email template is a link-based confirmation email. Users then try to enter/verify a code that was never sent for that signup path.
 
-The signup/login error you're seeing is **not** a 429 rate limit anymore — it's a browser **CORS block**. The console shows:
+Plan to fix:
 
-> Access to fetch at `.../check-rate-limit` from origin `https://utaab.org` has been blocked by CORS policy: Response to preflight request ... `Access-Control-Allow-Origin` header has a value `https://nxbjgqdehvxszqjoxumx.lovableproject.com` that is not equal to the supplied origin.
+1. Update education signup UX
+   - After signup, do not immediately show the 6-digit OTP input.
+   - Show a clear “check your email” confirmation screen with a button/link-style instruction matching the actual verification email.
+   - Keep the WhatsApp/community next step after successful verification/access.
 
-The `check-rate-limit` edge function's allowed-origins list never included `https://utaab.org`. When a request arrives from the production domain, the function falls back to returning the Lovable preview origin, which the browser rejects. The frontend then can't even reach the backend, so signup and login both fail.
+2. Make resend safe and prevent 429 loops
+   - Keep the cooldown, but make it stricter and aligned with the backend safety window.
+   - Disable repeated signup/resend attempts while a request is pending.
+   - Improve the 429 message to say exactly what to do: wait a few seconds/minute before trying again.
+   - Avoid calling resend automatically or repeatedly from unconfirmed-login handling.
 
-The earlier `utaab-verify` function (which works correctly) already has the right allowlist. We just need to apply that same pattern everywhere a browser calls an edge function.
+3. Fix OTP verification type handling
+   - For education login, only show OTP input for real email OTP login flows.
+   - For signup confirmation, use link/email confirmation messaging instead of `verifyOtp(type: signup)` unless the system is explicitly sending OTP codes.
+   - Keep admin 2FA OTP flow intact because admin login intentionally uses email OTP.
 
-## What Will Change
+4. Improve error handling for 401 and 429
+   - Map auth 401/invalid-token verification failures to a friendly “verification expired or invalid, request a new email” message.
+   - Preserve secure generic backend errors and avoid leaking raw technical details.
 
-### 1. Create one shared CORS helper
+5. Verify after implementation
+   - Test normal signup path: submit once, email sent, no OTP mismatch screen.
+   - Test repeated signup/resend: UI blocks rapid repeats and shows friendly cooldown text.
+   - Test existing admin 2FA: OTP still works and remains protected.
+   - Check recent auth logs and email queue logs to confirm emails continue sending.
 
-New file `supabase/functions/_shared/cors.ts` exporting a single `getCorsHeaders(req)` function that:
-- Allows `https://utaab.org`, `https://www.utaab.org`
-- Allows all `*.lovableproject.com`, `*.preview.lovableproject.com`, `id-*.lovable.app` previews
-- Allows `http://localhost:*` for dev
-- Echoes back the actual matching origin (required when credentials are used)
-- Includes the full `Access-Control-Allow-Headers` list already used today
-- Adds `Vary: Origin` so caches don't poison responses
+Technical notes:
 
-This replaces 12 different copy-pasted CORS blocks with one canonical implementation.
-
-### 2. Update browser-callable edge functions to use the shared helper
-
-Functions to update (all are missing `utaab.org` today):
-
-- `check-rate-limit` ← directly causing the current failure
-- `verify-turnstile`
-- `cutii-chat`
-- `generate-subtitles`
-- `submit-community-application`
-- `submit-kvkk-request`
-- `lookup-user-by-email`
-- `sanitize-content`
-- `handle-email-unsubscribe`
-- `terminate-admin-session`
-- `preview-transactional-email`
-- `get-admin-users`
-
-For each, swap the local `getCorsHeaders` / `corsHeaders` definition for an import from `_shared/cors.ts`. No business logic changes.
-
-### 3. Re-deploy the updated functions
-
-After editing, deploy all changed functions so the new CORS headers go live. No SQL or auth-config changes needed.
-
-## What Will NOT Change
-
-- No frontend changes. The signup form, captcha, and rate-limit hook keep working as-is.
-- No changes to the auth-email-hook fix from the previous step (that stays in place).
-- Functions that are only called server-to-server (like `process-email-queue`) are not touched.
-
-## Verification
-
-After deploy, from `https://utaab.org`:
-1. Open the signup page, fill in details, submit.
-2. Confirm `check-rate-limit` returns 200 with `Access-Control-Allow-Origin: https://utaab.org`.
-3. Confirm signup proceeds and the branded confirmation email arrives.
-4. Repeat for login.
-
-## Files Touched
-
-- **New:** `supabase/functions/_shared/cors.ts`
-- **Edited:** the 12 edge functions listed above (CORS block only)
+- The email queue (`auth-email-hook` → `auth_emails` → `process-email-queue`) is already active and recent logs show `pending` then `sent` rows.
+- No database schema change is needed.
+- The main code changes will be in the education auth form and shared error mapping; backend deployment is only needed if we adjust auth email templates or any backend function code.

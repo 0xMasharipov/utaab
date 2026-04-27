@@ -44,17 +44,29 @@ export const mapError = (error: any): string => {
     return 'Password must be at least 8 characters long.';
   }
   
+  // OTP / verification token errors (401-style)
+  if (
+    error.code === 'otp_expired' ||
+    error.message?.includes('Token has expired') ||
+    error.message?.includes('Invalid token') ||
+    error.message?.includes('invalid token') ||
+    error.message?.includes('Token has expired or is invalid')
+  ) {
+    return 'This verification link or code has expired. Please request a new one.';
+  }
+
   // Generic authentication errors
   if (error.message?.includes('JWT') || error.message?.includes('token')) {
     return 'Session expired. Please refresh the page.';
   }
-  
+
   if (
     error.code === 'over_email_send_rate_limit' ||
     error.message?.includes('email rate limit') ||
-    error.message?.includes('over_email_send_rate_limit')
+    error.message?.includes('over_email_send_rate_limit') ||
+    error.message?.includes('For security purposes, you can only request this after')
   ) {
-    return 'Too many email requests right now. Please wait about a minute and try again.';
+    return 'Too many email requests right now. Please wait a minute before trying again.';
   }
 
   if (error.status === 429 || error.message?.includes('rate limit')) {
