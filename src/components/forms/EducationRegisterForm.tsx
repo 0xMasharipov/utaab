@@ -263,7 +263,7 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
   };
 
   const handleResendOtp = async () => {
-    if (resendCooldown > 0) return;
+    if (resendCooldown > 0 || isResending) return;
 
     // Rate limit OTP resend
     const rateLimitCheck = await checkRateLimit(otpEmail, 'otp_resend', 3);
@@ -276,16 +276,24 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
       return;
     }
 
+    setIsResending(true);
+    // Set cooldown immediately to block double-clicks even if request is slow
+    setResendCooldown(60);
     try {
       if (otpType === 'signup') {
-        await supabase.auth.resend({ type: 'signup', email: otpEmail });
+        const { error } = await supabase.auth.resend({
+          type: 'signup',
+          email: otpEmail,
+          options: { emailRedirectTo: `${window.location.origin}/education` },
+        });
+        if (error) throw error;
       } else {
-        await supabase.auth.resend({ type: 'email_change', email: otpEmail });
+        const { error } = await supabase.auth.resend({ type: 'email_change', email: otpEmail });
+        if (error) throw error;
       }
-      setResendCooldown(60);
       toast({
-        title: 'Code resent',
-        description: `A new verification code has been sent to ${otpEmail}`,
+        title: 'Email sent',
+        description: `We sent a new confirmation email to ${otpEmail}.`,
       });
     } catch (error: any) {
       toast({
@@ -293,6 +301,8 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
         description: mapError(error),
         variant: 'destructive',
       });
+    } finally {
+      setIsResending(false);
     }
   };
 
