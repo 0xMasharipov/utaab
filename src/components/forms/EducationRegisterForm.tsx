@@ -97,13 +97,17 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // OTP state
+  // Email confirmation / OTP state
   const [awaitingOtp, setAwaitingOtp] = useState(false);
   const [otpCode, setOtpCode] = useState('');
   const [otpEmail, setOtpEmail] = useState('');
   const [otpType, setOtpType] = useState<'signup' | 'email'>('signup');
   const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
+  const [isResending, setIsResending] = useState(false);
+  // For sign-up, Supabase sends a link-based confirmation by default,
+  // not a 6-digit OTP. We show a "check your email" screen in that case.
+  const [confirmationMode, setConfirmationMode] = useState<'link' | 'code'>('link');
 
   // Resend cooldown timer
   useEffect(() => {
