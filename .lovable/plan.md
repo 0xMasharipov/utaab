@@ -1,54 +1,67 @@
-# Fix 429 "email rate limit exceeded" on Sign Up / Sign In
+# Fix CORS Blocking on utaab.org (Signup/Login Failure)
 
-## The Problem
+## Problem
 
-Auth logs show every signup attempt failing with:
-```
-429: email rate limit exceeded
-error_code: over_email_send_rate_limit
-path: /signup
-```
+The signup/login error you're seeing is **not** a 429 rate limit anymore — it's a browser **CORS block**. The console shows:
 
-This is **Supabase's default email rate limit** (only 2–4 confirmation emails per hour, shared globally across the project). Once it's hit, **no user can sign up or recover their password** until the cooldown expires.
+> Access to fetch at `.../check-rate-limit` from origin `https://utaab.org` has been blocked by CORS policy: Response to preflight request ... `Access-Control-Allow-Origin` header has a value `https://nxbjgqdehvxszqjoxumx.lovableproject.com` that is not equal to the supplied origin.
 
-Login is also blocked indirectly, because new users can never confirm their email.
+The `check-rate-limit` edge function's allowed-origins list never included `https://utaab.org`. When a request arrives from the production domain, the function falls back to returning the Lovable preview origin, which the browser rejects. The frontend then can't even reach the backend, so signup and login both fail.
 
-## Root Cause
+The earlier `utaab-verify` function (which works correctly) already has the right allowlist. We just need to apply that same pattern everywhere a browser calls an edge function.
 
-The project already has a custom branded auth email handler at `supabase/functions/auth-email-hook` wired to Resend via `notify.utaab.org`, **but the Auth Email Hook is not currently registered with Lovable Cloud Auth**. So all confirmation/recovery emails fall back to the built-in default SMTP, which is rate limited.
+## What Will Change
 
-## Fix
+### 1. Create one shared CORS helper
 
-Two complementary changes:
+New file `supabase/functions/_shared/cors.ts` exporting a single `getCorsHeaders(req)` function that:
+- Allows `https://utaab.org`, `https://www.utaab.org`
+- Allows all `*.lovableproject.com`, `*.preview.lovableproject.com`, `id-*.lovable.app` previews
+- Allows `http://localhost:*` for dev
+- Echoes back the actual matching origin (required when credentials are used)
+- Includes the full `Access-Control-Allow-Headers` list already used today
+- Adds `Vary: Origin` so caches don't poison responses
 
-### 1. Register the Auth Email Hook (primary fix)
+This replaces 12 different copy-pasted CORS blocks with one canonical implementation.
 
-Use `configure_auth` to point Lovable Cloud Auth at the existing `auth-email-hook` edge function. Once registered, all signup / magic-link / recovery / email-change emails will be sent through our own Resend infrastructure on `notify.utaab.org`, which has production-grade limits — eliminating the 429.
+### 2. Update browser-callable edge functions to use the shared helper
 
-### 2. Resilient signup UX (secondary)
+Functions to update (all are missing `utaab.org` today):
 
-Update `EducationRegisterForm` (and any other signup entry points) so that if a 429 / `over_email_send_rate_limit` is ever returned again, the user sees a clear, branded message in their language ("Too many requests right now, please try again in a minute") instead of the raw Supabase error. Today the generic error mapper does not catch this specific code, so users just see a confusing message and retry-spam, which makes it worse.
+- `check-rate-limit` ← directly causing the current failure
+- `verify-turnstile`
+- `cutii-chat`
+- `generate-subtitles`
+- `submit-community-application`
+- `submit-kvkk-request`
+- `lookup-user-by-email`
+- `sanitize-content`
+- `handle-email-unsubscribe`
+- `terminate-admin-session`
+- `preview-transactional-email`
+- `get-admin-users`
 
-### 3. Verify after deploy
+For each, swap the local `getCorsHeaders` / `corsHeaders` definition for an import from `_shared/cors.ts`. No business logic changes.
 
-- Trigger a real signup with a fresh email
-- Check `auth_logs` for `status: 200` on `/signup`
-- Confirm the branded email arrives from `notify.utaab.org`
+### 3. Re-deploy the updated functions
+
+After editing, deploy all changed functions so the new CORS headers go live. No SQL or auth-config changes needed.
+
+## What Will NOT Change
+
+- No frontend changes. The signup form, captcha, and rate-limit hook keep working as-is.
+- No changes to the auth-email-hook fix from the previous step (that stays in place).
+- Functions that are only called server-to-server (like `process-email-queue`) are not touched.
+
+## Verification
+
+After deploy, from `https://utaab.org`:
+1. Open the signup page, fill in details, submit.
+2. Confirm `check-rate-limit` returns 200 with `Access-Control-Allow-Origin: https://utaab.org`.
+3. Confirm signup proceeds and the branded confirmation email arrives.
+4. Repeat for login.
 
 ## Files Touched
 
-- **Auth config** (via `configure_auth` tool) — register email hook URL
-- `src/components/forms/EducationRegisterForm.tsx` — friendlier 429 handling
-- `src/lib/errorUtils.ts` — add `over_email_send_rate_limit` mapping
-
-## What Stays the Same
-
-- All existing branded templates in `supabase/functions/_shared/email-templates/`
-- `notify.utaab.org` BIMI / DNS setup
-- OTP flow, 2FA, UTAAB captcha — untouched
-
-## Out of Scope
-
-- No new SMTP provider
-- No changes to admin login flow
-- No backend rate limiting added to our own functions
+- **New:** `supabase/functions/_shared/cors.ts`
+- **Edited:** the 12 edge functions listed above (CORS block only)
