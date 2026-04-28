@@ -49,6 +49,17 @@ export const Navbar = () => {
     setTimeout(() => hamburgerRef.current?.focus(), 150);
   }, []);
 
+  // Keep panel mounted during exit animation for smooth close
+  useEffect(() => {
+    if (isMenuOpen) {
+      setIsMenuMounted(true);
+      return;
+    }
+    if (!isMenuMounted) return;
+    const timer = setTimeout(() => setIsMenuMounted(false), prefersReducedMotion ? 0 : 240);
+    return () => clearTimeout(timer);
+  }, [isMenuOpen, isMenuMounted, prefersReducedMotion]);
+
   // Click outside to close
   useEffect(() => {
     if (!isMenuOpen) return;
