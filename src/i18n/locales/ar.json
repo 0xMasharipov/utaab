@@ -34,6 +34,8 @@
     "rememberMe": "تذكرني",
     "forgotPassword": "نسيت كلمة المرور؟",
     "continueWithGoogle": "المتابعة مع Google",
+    "googleTempUnavailableTitle": "تسجيل الدخول عبر Google غير متاح مؤقتًا",
+    "googleTempUnavailableMessage": "نواجه مشكلات تقنية في تسجيل الدخول عبر Google. سيتم حلها قريبًا. يُرجى المتابعة بالبريد الإلكتروني وكلمة المرور.",
     "signIn": "تسجيل الدخول",
     "register": "إنشاء حساب",
     "haveAccount": "هل لديك حساب بالفعل؟",

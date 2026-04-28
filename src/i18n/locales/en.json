@@ -34,6 +34,8 @@
     "rememberMe": "Remember me",
     "forgotPassword": "Forgot password?",
     "continueWithGoogle": "Continue with Google",
+    "googleTempUnavailableTitle": "Google sign-in temporarily unavailable",
+    "googleTempUnavailableMessage": "We're experiencing technical issues with Google sign-in. It will be resolved soon. Please continue with email & password.",
     "signIn": "Sign In",
     "register": "Create Account",
     "haveAccount": "Already have an account?",
