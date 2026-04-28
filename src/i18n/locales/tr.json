@@ -34,6 +34,8 @@
     "rememberMe": "Beni hatırla",
     "forgotPassword": "Şifremi unuttum?",
     "continueWithGoogle": "Google ile Devam Et",
+    "googleTempUnavailableTitle": "Google ile giriş geçici olarak kullanılamıyor",
+    "googleTempUnavailableMessage": "Google ile girişte teknik bir sorun yaşıyoruz. Yakında çözülecek. Lütfen şimdilik e-posta ve şifre ile devam edin.",
     "signIn": "Giriş Yap",
     "register": "Hesap Oluştur",
     "haveAccount": "Zaten hesabınız var mı?",
