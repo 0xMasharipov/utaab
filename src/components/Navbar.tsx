@@ -27,6 +27,7 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const isScrolled = false;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuMounted, setIsMenuMounted] = useState(false);
   const [logoLoaded, setLogoLoaded] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
@@ -47,6 +48,17 @@ export const Navbar = () => {
     setIsMenuOpen(false);
     setTimeout(() => hamburgerRef.current?.focus(), 150);
   }, []);
+
+  // Keep panel mounted during exit animation for smooth close
+  useEffect(() => {
+    if (isMenuOpen) {
+      setIsMenuMounted(true);
+      return;
+    }
+    if (!isMenuMounted) return;
+    const timer = setTimeout(() => setIsMenuMounted(false), prefersReducedMotion ? 0 : 240);
+    return () => clearTimeout(timer);
+  }, [isMenuOpen, isMenuMounted, prefersReducedMotion]);
 
   // Click outside to close
   useEffect(() => {
@@ -233,14 +245,15 @@ export const Navbar = () => {
       </nav>
 
       {/* Premium frosted glass mega menu panel */}
-      {isMenuOpen && (
+      {isMenuMounted && (
           <div
             id="nav-overlay"
             ref={menuRef}
             role="dialog"
             aria-modal="true"
             aria-label={t('nav.menu')}
-            className="fixed z-[80] overflow-y-auto nav-menu-enter"
+            data-state={isMenuOpen ? 'open' : 'closed'}
+            className="fixed z-[80] overflow-y-auto nav-menu-panel"
             style={{
               top: `${panelTop}px`,
               left: `${pillRect.left}px`,

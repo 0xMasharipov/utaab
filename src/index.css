@@ -326,19 +326,50 @@
 
 /* Navbar-critical animations — must be available immediately on every route
    (not deferred) so dropdown items don't render with opacity:0. */
+@keyframes nav-menu-panel-open {
+  0%   { opacity: 0; transform: translateY(-12px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes nav-menu-panel-close {
+  0%   { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-8px) scale(0.98); }
+}
+@keyframes nav-menu-item-enter-kf {
+  0%   { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.nav-menu-panel {
+  transform-origin: top center;
+  will-change: transform, opacity;
+}
+.nav-menu-panel[data-state="open"] {
+  animation: nav-menu-panel-open 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.nav-menu-panel[data-state="closed"] {
+  animation: nav-menu-panel-close 220ms cubic-bezier(0.4, 0, 1, 1) both;
+  pointer-events: none;
+}
+
+/* Backwards-compatible: keep .nav-menu-enter as an alias */
 .nav-menu-enter {
-  opacity: 1;
-  transform: translateY(0);
-  animation: nav-menu-enter 0.22s ease-out both;
+  animation: nav-menu-panel-open 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .nav-menu-item {
-  opacity: 1;
-  transform: translateY(0);
-  animation: nav-menu-item-enter 0.2s ease-out both;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: nav-menu-item-enter-kf 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 @media (prefers-reduced-motion: reduce) {
-  .nav-menu-enter { animation: none; }
-  .nav-menu-item { animation: none; }
+  .nav-menu-panel,
+  .nav-menu-panel[data-state="open"],
+  .nav-menu-panel[data-state="closed"],
+  .nav-menu-enter,
+  .nav-menu-item {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* Language transition utilities — used by site-wide Navbar */
@@ -375,12 +406,12 @@
    Dropdown Menu Animations (laptop/tablet/mobile)
    ============================================ */
 @keyframes dropdown-open {
-  0%   { opacity: 0; transform: scale(0.92) translateY(-6px); }
+  0%   { opacity: 0; transform: scale(0.96) translateY(-4px); }
   100% { opacity: 1; transform: scale(1)    translateY(0); }
 }
 @keyframes dropdown-close {
   0%   { opacity: 1; transform: scale(1)    translateY(0); }
-  100% { opacity: 0; transform: scale(0.96) translateY(-4px); }
+  100% { opacity: 0; transform: scale(0.97) translateY(-3px); }
 }
 
 .dropdown-animated {
@@ -389,16 +420,16 @@
   will-change: transform, opacity;
 }
 .dropdown-animated[data-state="open"] {
-  animation: dropdown-open 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: dropdown-open 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .dropdown-animated[data-state="closed"] {
-  animation: dropdown-close 160ms cubic-bezier(0.4, 0, 1, 1) both;
+  animation: dropdown-close 180ms cubic-bezier(0.32, 0, 0.67, 0) both;
 }
 
 /* Tablet/mobile: a touch longer for clarity on touch */
 @media (max-width: 1023px) {
   .dropdown-animated[data-state="open"] {
-    animation-duration: 260ms;
+    animation-duration: 280ms;
   }
 }
 
