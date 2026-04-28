@@ -1047,8 +1047,11 @@
   },
   "notFound": {
     "title": "404",
-    "message": "Hay aksi! Sayfa bulunamadı",
-    "backHome": "Ana Sayfaya Dön"
+    "heading": "Zincirde kayboldu",
+    "message": "Aradığınız sayfa mevcut değil ya da taşınmış olabilir.",
+    "backHome": "Ana Sayfaya Dön",
+    "exploreEducation": "Eğitim'i Keşfet",
+    "tagline": "BAĞLAN · ÖĞREN · İNŞA ET"
   },
   "contributor": {
     "hero": {
