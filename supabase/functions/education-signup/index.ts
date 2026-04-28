@@ -1,7 +1,15 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import * as React from 'npm:react@18.3.1';
+import { renderAsync } from 'npm:@react-email/components@0.0.22';
 import { z } from 'https://esm.sh/zod@3.23.8';
 import { getCorsHeaders } from '../_shared/cors.ts';
+import { SignupEmail } from '../_shared/email-templates/signup.tsx';
+
+const SITE_NAME = 'utaab';
+const SITE_URL = 'https://utaab.org';
+const SENDER_DOMAIN = 'notify.utaab.org';
+const FROM_DOMAIN = 'utaab.org';
 
 const FocusArea = z.string().min(1).max(80);
 
@@ -26,6 +34,91 @@ function jsonResponse(req: Request, body: unknown, status = 200): Response {
     status,
     headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
   });
+}
+
+async function generateConfirmationLink(
+  admin: ReturnType<typeof createClient>,
+  email: string,
+  password: string,
+  redirectTo: string,
+): Promise<string | null> {
+  const { data: signupLink, error: signupLinkErr } = await admin.auth.admin.generateLink({
+    type: 'signup',
+    email,
+    password,
+    options: { redirectTo },
+  });
+
+  const actionLink = signupLink?.properties?.action_link;
+  if (actionLink) return actionLink;
+
+  console.error('generateLink signup failed', signupLinkErr);
+
+  const { data: magicLink, error: magicLinkErr } = await admin.auth.admin.generateLink({
+    type: 'magiclink',
+    email,
+    options: { redirectTo },
+  });
+
+  const fallbackLink = magicLink?.properties?.action_link;
+  if (fallbackLink) return fallbackLink;
+
+  console.error('generateLink fallback failed', magicLinkErr);
+  return null;
+}
+
+async function enqueueSignupEmail(
+  admin: ReturnType<typeof createClient>,
+  email: string,
+  confirmationUrl: string,
+): Promise<boolean> {
+  const templateProps = {
+    siteName: SITE_NAME,
+    siteUrl: SITE_URL,
+    recipient: email,
+    confirmationUrl,
+  };
+
+  const html = await renderAsync(React.createElement(SignupEmail, templateProps));
+  const text = await renderAsync(React.createElement(SignupEmail, templateProps), {
+    plainText: true,
+  });
+  const messageId = crypto.randomUUID();
+
+  const { error: logErr } = await admin.from('email_send_log').insert({
+    message_id: messageId,
+    template_name: 'signup',
+    recipient_email: email,
+    status: 'pending',
+  });
+
+  if (logErr) {
+    console.error('signup email log failed', logErr);
+    return false;
+  }
+
+  const { error: enqueueErr } = await admin.rpc('enqueue_email', {
+    queue_name: 'auth_emails',
+    payload: {
+      message_id: messageId,
+      to: email,
+      from: `${SITE_NAME} <noreply@${FROM_DOMAIN}>`,
+      sender_domain: SENDER_DOMAIN,
+      subject: 'Confirm your email',
+      html,
+      text,
+      purpose: 'transactional',
+      label: 'signup',
+      queued_at: new Date().toISOString(),
+    },
+  });
+
+  if (enqueueErr) {
+    console.error('signup email enqueue failed', enqueueErr);
+    return false;
+  }
+
+  return true;
 }
 
 serve(async (req) => {
@@ -81,6 +174,7 @@ serve(async (req) => {
     let userId: string;
     let alreadyExisted = false;
     let needsEmailConfirmation = true;
+    let emailSent = false;
 
     if (existingUser) {
       alreadyExisted = true;
@@ -98,18 +192,12 @@ serve(async (req) => {
         return jsonResponse(req, { error: 'Signup failed' }, 500);
       }
       userId = created.user.id;
+    }
 
-      // Trigger the standard signup confirmation email via the auth-email-hook
-      // by generating a signup link (does not auto-confirm the user).
-      const { error: linkErr } = await admin.auth.admin.generateLink({
-        type: 'signup',
-        email,
-        password: data.password,
-        options: { redirectTo },
-      });
-      if (linkErr) {
-        // Non-fatal: user can use resend from the UI.
-        console.error('generateLink signup failed', linkErr);
+    if (needsEmailConfirmation) {
+      const confirmationUrl = await generateConfirmationLink(admin, email, data.password, redirectTo);
+      if (confirmationUrl) {
+        emailSent = await enqueueSignupEmail(admin, email, confirmationUrl);
       }
     }
 
@@ -145,6 +233,7 @@ serve(async (req) => {
       success: true,
       already_existed: alreadyExisted,
       needs_email_confirmation: needsEmailConfirmation,
+      email_sent: emailSent,
     });
   } catch (err) {
     console.error('education-signup error', err);
