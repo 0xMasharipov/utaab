@@ -1,41 +1,71 @@
-## Problem
+# Plan: Branded Animated 404 + lovable.app Link Audit
 
-Auth confirmation emails contain the line:
+## 1. Audit: lovable.app references
 
-> Or paste this link into your browser:
-> https://utaab.lovable.app
+Searched the entire codebase. Findings:
 
-It should point to the primary domain `https://utaab.org`.
+**User-facing links/buttons:** None. No button, anchor, or navigation in the app routes users to `lovable.app`.
 
-## Root cause
+**Remaining references (server-side only, must stay):**
+- `supabase/functions/_shared/cors.ts` — CORS allowlist
+- `supabase/functions/track-visit/index.ts` — CORS allowlist
+- `supabase/functions/contributor-match/index.ts` — CORS allowlist
 
-`supabase/functions/auth-email-hook/index.ts` defines:
+These are required so the Lovable preview environment (`*.lovable.app`) can still call edge functions during development. They are not links the user sees or clicks. **No change needed.**
 
-```ts
-const SAMPLE_PROJECT_URL = "https://utaab.lovable.app"
-```
+**Internal note:** `.lovable/plan.md` mentions the old URL as historical context; it's not shipped.
 
-This constant is used as the `siteUrl` / `confirmationUrl` placeholder injected into all six email templates (signup, magiclink, recovery, invite, email_change, reauthentication). It serves both as the preview-mode sample and as the fallback URL baked into the rendered template that the Supabase Auth backend find-and-replaces with the real recipient URL at send time. When the find-and-replace doesn't substitute (e.g. plain-text fallback rendering, or templates rendered before substitution), users see the `lovable.app` URL.
+Conclusion: no user-facing `lovable.app` link exists. All navigation already targets `utaab.org` or relative routes.
 
-## Fix
+## 2. New branded animated 404 page
 
-Update the constant to use the primary custom domain so every fallback/preview link resolves to the canonical site.
+Replace the current minimal `src/pages/NotFound.tsx` (gray background, plain text) with a fully branded UTAAB experience.
 
-### Change (1 line, 1 file)
+### Design
 
-`supabase/functions/auth-email-hook/index.ts` line 49:
+- **Background:** Dark navy (`#061224` / `bg-background`) matching the site's Web3 atmosphere, with the existing `BackgroundGrid` overlay and a soft animated radial glow.
+- **Centerpiece:**
+  - UTAAB logo (`@/assets/logo-new.webp`) with a slow floating animation (`animate-pulse` + custom float keyframe).
+  - Large "404" headline using Montserrat 800, gradient text (white → accent blue), with a subtle glitch/shimmer animation.
+  - Localized tagline: "This page drifted off the chain." (i18n keys for EN/TR/RU/AR).
+  - Short descriptive line explaining the page wasn't found.
+- **Actions (two buttons, brand-styled):**
+  - Primary: "Return Home" → `/`
+  - Secondary (ghost): "Explore Education" → `/education`
+- **Footer micro-line:** small "UTAAB · CONNECT · LEARN · BUILD" tagline at the bottom.
+- **Animations:**
+  - Fade-in + scale-in entrance for the card.
+  - Floating logo (3s ease-in-out infinite).
+  - Animated gradient sweep across the "404" text.
+  - Soft pulsing radial glow behind the logo.
+  - Reduced-motion respected via `motion-reduce:` Tailwind variants.
 
-```diff
-- const SAMPLE_PROJECT_URL = "https://utaab.lovable.app"
-+ const SAMPLE_PROJECT_URL = "https://utaab.org"
-```
+### Technical changes
 
-No template changes are needed — all six templates already render whatever `siteUrl` / `confirmationUrl` is passed in.
+1. **`src/pages/NotFound.tsx`** — full rewrite:
+   - Use `BackgroundGrid`, `BottomGradientOverlay` for visual continuity.
+   - Import logo from `@/assets/logo-new.webp`.
+   - Use `useTranslation` with new keys under `notFound.*`.
+   - Use shadcn `Button` components with `Link` from `react-router-dom` (no `lovable.app`, no external URLs).
+   - Add `<Helmet>`-free `document.title` update in `useEffect` for "404 — UTAAB".
+2. **`src/index.css`** — add two small keyframes if not already present:
+   - `@keyframes float-slow` (translateY 0 → -8px → 0)
+   - `@keyframes gradient-sweep` (background-position shift)
+   - Plus utility classes `.animate-float-slow` and `.animate-gradient-sweep`.
+3. **`src/i18n/locales/{en,tr,ru,ar}.json`** — add:
+   - `notFound.title` ("404")
+   - `notFound.heading` ("Lost in the chain")
+   - `notFound.message` ("The page you're looking for doesn't exist or has been moved.")
+   - `notFound.backHome` ("Return Home")
+   - `notFound.exploreEducation` ("Explore Education")
+   - `notFound.tagline` ("CONNECT · LEARN · BUILD")
 
-## Deployment
+### Files touched
+- `src/pages/NotFound.tsx` (rewrite)
+- `src/index.css` (append keyframes/utilities)
+- `src/i18n/locales/en.json`, `tr.json`, `ru.json`, `ar.json` (add keys)
 
-Redeploy the `auth-email-hook` edge function so the new constant takes effect for all subsequent auth emails (signup confirmation, magic link, password reset, invite, email change, reauthentication).
-
-## Verification
-
-After deploy, trigger a fresh signup and confirm the "Or paste this link into your browser" line shows `https://utaab.org/...` instead of `https://utaab.lovable.app/...`.
+### Out of scope
+- No edge function changes (CORS allowlists stay).
+- No router changes (`*` route already maps to `NotFound`).
+- No new dependencies.
