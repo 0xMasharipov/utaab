@@ -109,6 +109,7 @@ async function enqueueSignupEmail(
       text,
       purpose: 'transactional',
       label: 'signup',
+      idempotency_key: `education-signup-${messageId}`,
       queued_at: new Date().toISOString(),
     },
   });
