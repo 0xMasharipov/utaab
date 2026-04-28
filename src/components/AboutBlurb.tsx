@@ -78,7 +78,7 @@ export const AboutBlurb = () => {
                   alt=""
                   aria-hidden="true"
                   containerClassName="absolute bottom-0 right-0 w-[65%] h-auto z-10 translate-x-[5%] translate-y-[5%]"
-                  className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-full object-contain transition-[filter,transform] duration-500 group-hover:scale-105 drop-shadow-[0_8px_24px_rgba(59,130,246,0.18)] group-hover:drop-shadow-[0_12px_36px_rgba(59,130,246,0.32)]"
                   loading="lazy"
                   placeholderClassName="opacity-0"
                 />
