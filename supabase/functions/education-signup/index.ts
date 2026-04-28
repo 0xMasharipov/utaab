@@ -36,6 +36,59 @@ function jsonResponse(req: Request, body: unknown, status = 200): Response {
   });
 }
 
+function generateToken(): string {
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes)
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+async function getOrCreateUnsubscribeToken(
+  admin: ReturnType<typeof createClient>,
+  email: string,
+): Promise<string | null> {
+  const normalizedEmail = email.toLowerCase();
+  const { data: existingToken, error: lookupErr } = await admin
+    .from('email_unsubscribe_tokens')
+    .select('token, used_at')
+    .eq('email', normalizedEmail)
+    .maybeSingle();
+
+  if (lookupErr) {
+    console.error('unsubscribe token lookup failed', lookupErr);
+    return null;
+  }
+
+  if (existingToken && !existingToken.used_at) return existingToken.token;
+
+  const token = generateToken();
+  const { error: insertErr } = await admin
+    .from('email_unsubscribe_tokens')
+    .upsert(
+      { token, email: normalizedEmail },
+      { onConflict: 'email', ignoreDuplicates: true },
+    );
+
+  if (insertErr) {
+    console.error('unsubscribe token insert failed', insertErr);
+    return null;
+  }
+
+  const { data: storedToken, error: rereadErr } = await admin
+    .from('email_unsubscribe_tokens')
+    .select('token')
+    .eq('email', normalizedEmail)
+    .maybeSingle();
+
+  if (rereadErr || !storedToken?.token) {
+    console.error('unsubscribe token reread failed', rereadErr);
+    return null;
+  }
+
+  return storedToken.token;
+}
+
 async function generateConfirmationLink(
   admin: ReturnType<typeof createClient>,
   email: string,
@@ -84,6 +137,9 @@ async function enqueueSignupEmail(
     plainText: true,
   });
   const messageId = crypto.randomUUID();
+  const unsubscribeToken = await getOrCreateUnsubscribeToken(admin, email);
+
+  if (!unsubscribeToken) return false;
 
   const { error: logErr } = await admin.from('email_send_log').insert({
     message_id: messageId,
@@ -110,6 +166,7 @@ async function enqueueSignupEmail(
       purpose: 'transactional',
       label: 'signup',
       idempotency_key: `education-signup-${messageId}`,
+      unsubscribe_token: unsubscribeToken,
       queued_at: new Date().toISOString(),
     },
   });
