@@ -1,71 +1,34 @@
-# Plan: Branded Animated 404 + lovable.app Link Audit
+## Goal
 
-## 1. Audit: lovable.app references
+When a user clicks **Continue with Google** on `https://utaab.org/education/register` (and the matching sign-in tab), do not initiate the OAuth flow. Instead, show a branded, friendly notice:
 
-Searched the entire codebase. Findings:
+> "Google sign-in is temporarily unavailable due to technical issues. It will be resolved soon — please use email & password for now."
 
-**User-facing links/buttons:** None. No button, anchor, or navigation in the app routes users to `lovable.app`.
+This is a temporary client-side gate. The underlying OAuth code stays intact so it can be re-enabled by flipping a single flag.
 
-**Remaining references (server-side only, must stay):**
-- `supabase/functions/_shared/cors.ts` — CORS allowlist
-- `supabase/functions/track-visit/index.ts` — CORS allowlist
-- `supabase/functions/contributor-match/index.ts` — CORS allowlist
+## Changes
 
-These are required so the Lovable preview environment (`*.lovable.app`) can still call edge functions during development. They are not links the user sees or clicks. **No change needed.**
+### 1. `src/components/forms/EducationRegisterForm.tsx`
+- Replace the body of `handleGoogleSignIn` with a toast notice (no OAuth call). Use the existing `useToast` hook with a non-destructive variant and i18n strings. Keep the original `lovable.auth.signInWithOAuth(...)` call commented behind a `GOOGLE_OAUTH_ENABLED = false` constant at the top of the file so re-enabling is one line.
+- Both Google buttons (signup view ~line 737 and signin view ~line 1108) already call `handleGoogleSignIn`, so a single change covers both.
 
-**Internal note:** `.lovable/plan.md` mentions the old URL as historical context; it's not shipped.
+### 2. i18n strings — add to `auth` namespace in all four locales
+`src/i18n/locales/{en,tr,ru,ar}.json`:
+- `googleTempUnavailableTitle`
+- `googleTempUnavailableMessage`
 
-Conclusion: no user-facing `lovable.app` link exists. All navigation already targets `utaab.org` or relative routes.
+Sample (EN):
+- Title: "Google sign-in temporarily unavailable"
+- Message: "We're experiencing technical issues with Google sign-in. It will be resolved soon. Please continue with email & password."
 
-## 2. New branded animated 404 page
+Translated equivalents for TR, RU, AR.
 
-Replace the current minimal `src/pages/NotFound.tsx` (gray background, plain text) with a fully branded UTAAB experience.
+### 3. (Optional, same change) `src/pages/admin/AdminLogin.tsx`
+The user only mentioned the education register page, so admin login is **left untouched** unless requested.
 
-### Design
+## Technical notes
 
-- **Background:** Dark navy (`#061224` / `bg-background`) matching the site's Web3 atmosphere, with the existing `BackgroundGrid` overlay and a soft animated radial glow.
-- **Centerpiece:**
-  - UTAAB logo (`@/assets/logo-new.webp`) with a slow floating animation (`animate-pulse` + custom float keyframe).
-  - Large "404" headline using Montserrat 800, gradient text (white → accent blue), with a subtle glitch/shimmer animation.
-  - Localized tagline: "This page drifted off the chain." (i18n keys for EN/TR/RU/AR).
-  - Short descriptive line explaining the page wasn't found.
-- **Actions (two buttons, brand-styled):**
-  - Primary: "Return Home" → `/`
-  - Secondary (ghost): "Explore Education" → `/education`
-- **Footer micro-line:** small "UTAAB · CONNECT · LEARN · BUILD" tagline at the bottom.
-- **Animations:**
-  - Fade-in + scale-in entrance for the card.
-  - Floating logo (3s ease-in-out infinite).
-  - Animated gradient sweep across the "404" text.
-  - Soft pulsing radial glow behind the logo.
-  - Reduced-motion respected via `motion-reduce:` Tailwind variants.
-
-### Technical changes
-
-1. **`src/pages/NotFound.tsx`** — full rewrite:
-   - Use `BackgroundGrid`, `BottomGradientOverlay` for visual continuity.
-   - Import logo from `@/assets/logo-new.webp`.
-   - Use `useTranslation` with new keys under `notFound.*`.
-   - Use shadcn `Button` components with `Link` from `react-router-dom` (no `lovable.app`, no external URLs).
-   - Add `<Helmet>`-free `document.title` update in `useEffect` for "404 — UTAAB".
-2. **`src/index.css`** — add two small keyframes if not already present:
-   - `@keyframes float-slow` (translateY 0 → -8px → 0)
-   - `@keyframes gradient-sweep` (background-position shift)
-   - Plus utility classes `.animate-float-slow` and `.animate-gradient-sweep`.
-3. **`src/i18n/locales/{en,tr,ru,ar}.json`** — add:
-   - `notFound.title` ("404")
-   - `notFound.heading` ("Lost in the chain")
-   - `notFound.message` ("The page you're looking for doesn't exist or has been moved.")
-   - `notFound.backHome` ("Return Home")
-   - `notFound.exploreEducation` ("Explore Education")
-   - `notFound.tagline` ("CONNECT · LEARN · BUILD")
-
-### Files touched
-- `src/pages/NotFound.tsx` (rewrite)
-- `src/index.css` (append keyframes/utilities)
-- `src/i18n/locales/en.json`, `tr.json`, `ru.json`, `ar.json` (add keys)
-
-### Out of scope
-- No edge function changes (CORS allowlists stay).
-- No router changes (`*` route already maps to `NotFound`).
-- No new dependencies.
+- No backend / edge function changes.
+- No changes to `lovable` integration files.
+- The notice uses `toast({ title, description })` (default variant) so it reads as informational, not as an error.
+- Re-enable later by setting `GOOGLE_OAUTH_ENABLED = true`.

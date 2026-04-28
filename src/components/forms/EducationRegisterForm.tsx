@@ -306,7 +306,19 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
     }
   };
 
+  // Temporary: Google OAuth disabled while we resolve technical issues.
+  // Set to true to re-enable the original OAuth flow.
+  const GOOGLE_OAUTH_ENABLED = false;
+
   const handleGoogleSignIn = async () => {
+    if (!GOOGLE_OAUTH_ENABLED) {
+      toast({
+        title: t('auth.googleTempUnavailableTitle'),
+        description: t('auth.googleTempUnavailableMessage'),
+      });
+      return;
+    }
+
     const { error } = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin,
     });
