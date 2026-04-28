@@ -245,14 +245,15 @@ export const Navbar = () => {
       </nav>
 
       {/* Premium frosted glass mega menu panel */}
-      {isMenuOpen && (
+      {isMenuMounted && (
           <div
             id="nav-overlay"
             ref={menuRef}
             role="dialog"
             aria-modal="true"
             aria-label={t('nav.menu')}
-            className="fixed z-[80] overflow-y-auto nav-menu-enter"
+            data-state={isMenuOpen ? 'open' : 'closed'}
+            className="fixed z-[80] overflow-y-auto nav-menu-panel"
             style={{
               top: `${panelTop}px`,
               left: `${pillRect.left}px`,
