@@ -85,7 +85,7 @@ export const Events = () => {
         <AnimatedImage 
           src={event.cover_image} 
           alt={getLocalizedTitle(event)}
-          className="w-full h-40 object-cover rounded-xl mb-4"
+          className="w-full h-40 object-cover rounded-xl mb-4 shadow-[0_8px_24px_rgba(59,130,246,0.15)] group-hover:shadow-[0_12px_32px_rgba(59,130,246,0.28)] transition-shadow duration-500"
           placeholderClassName="rounded-xl"
         />
       )}

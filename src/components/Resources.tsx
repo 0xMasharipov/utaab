@@ -125,7 +125,7 @@ export const Resources = () => {
                     aria-hidden="true"
                     loading="lazy"
                     containerClassName="inline-block"
-                    className="w-12 h-12 sm:w-14 sm:h-14 object-contain mb-4 sm:mb-6 group-hover:scale-105 transition-transform duration-300"
+                    className="w-12 h-12 sm:w-14 sm:h-14 object-contain mb-4 sm:mb-6 group-hover:scale-105 transition-[filter,transform] duration-300 drop-shadow-[0_6px_18px_rgba(59,130,246,0.25)] group-hover:drop-shadow-[0_10px_28px_rgba(59,130,246,0.4)]"
                     placeholderClassName="opacity-0"
                   />
                   <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6">{resource.title}</h3>

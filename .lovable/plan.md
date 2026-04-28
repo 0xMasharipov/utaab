@@ -1,34 +1,25 @@
-## Goal
+## Add subtle blue shadow glow to main page section images
 
-When a user clicks **Continue with Google** on `https://utaab.org/education/register` (and the matching sign-in tab), do not initiate the OAuth flow. Instead, show a branded, friendly notice:
+Add a soft blue drop-shadow glow behind images in the main page sections (What We Build / Projects, About, Learn, Resources, Events) so they feel more premium and lift off the dark navy background — without changing layouts, sizes, or overlays.
 
-> "Google sign-in is temporarily unavailable due to technical issues. It will be resolved soon — please use email & password for now."
+### Approach
 
-This is a temporary client-side gate. The underlying OAuth code stays intact so it can be re-enabled by flipping a single flag.
+Use Tailwind's `drop-shadow-[...]` utility (which compiles to CSS `filter: drop-shadow(...)`). Unlike `box-shadow`, `drop-shadow` follows the alpha shape of transparent PNG/WebP product renders, so the glow hugs the image silhouette instead of forming a rectangle. The glow uses the brand accent (`hsl(213 94% 68%)` ≈ `#3B82F6`) at low opacity, with a stronger glow on hover.
 
-## Changes
+Base glow: `drop-shadow-[0_8px_24px_rgba(59,130,246,0.18)]`
+Hover glow: `group-hover:drop-shadow-[0_12px_36px_rgba(59,130,246,0.32)]`
+Transition: `transition-[filter,transform] duration-500`
 
-### 1. `src/components/forms/EducationRegisterForm.tsx`
-- Replace the body of `handleGoogleSignIn` with a toast notice (no OAuth call). Use the existing `useToast` hook with a non-destructive variant and i18n strings. Keep the original `lovable.auth.signInWithOAuth(...)` call commented behind a `GOOGLE_OAUTH_ENABLED = false` constant at the top of the file so re-enabling is one line.
-- Both Google buttons (signup view ~line 737 and signin view ~line 1108) already call `handleGoogleSignIn`, so a single change covers both.
+### Changes
 
-### 2. i18n strings — add to `auth` namespace in all four locales
-`src/i18n/locales/{en,tr,ru,ar}.json`:
-- `googleTempUnavailableTitle`
-- `googleTempUnavailableMessage`
+1. **`src/components/Projects.tsx`** (line 111) — add glow classes to the 3D project image (the main "What We Build" cards).
+2. **`src/components/AboutBlurb.tsx`** (line 81) — add glow to the About card image.
+3. **`src/components/Learn.tsx`** (line 81) — add glow to the Learn card image.
+4. **`src/components/Resources.tsx`** (line 128) — add glow to the foreground resource icon (skip the blurred bg layer at line 107).
+5. **`src/components/Events.tsx`** (line 88) — add a softer rectangular glow (`shadow-[0_8px_24px_rgba(59,130,246,0.15)]`) to the event cover image since it's a full rectangular cover photo, not a transparent render.
 
-Sample (EN):
-- Title: "Google sign-in temporarily unavailable"
-- Message: "We're experiencing technical issues with Google sign-in. It will be resolved soon. Please continue with email & password."
+### Notes
 
-Translated equivalents for TR, RU, AR.
-
-### 3. (Optional, same change) `src/pages/admin/AdminLogin.tsx`
-The user only mentioned the education register page, so admin login is **left untouched** unless requested.
-
-## Technical notes
-
-- No backend / edge function changes.
-- No changes to `lovable` integration files.
-- The notice uses `toast({ title, description })` (default variant) so it reads as informational, not as an error.
-- Re-enable later by setting `GOOGLE_OAUTH_ENABLED = true`.
+- Hero / HeroCarousel / BlogSection are not touched (Hero uses video; blog cards already have their own treatment).
+- No new CSS keyframes needed — pure Tailwind utility classes.
+- Respects existing `group-hover:scale-105` transforms by adding `filter` to the same transition.

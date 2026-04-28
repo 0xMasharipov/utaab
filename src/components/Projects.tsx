@@ -108,7 +108,7 @@ export const Projects = () => {
                   aria-hidden="true"
                   loading="lazy"
                   containerClassName="absolute bottom-0 right-0 w-[55%] z-10 opacity-[0.85]"
-                  className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105 pointer-events-none select-none"
+                  className="w-full h-full object-contain transition-[filter,transform] duration-500 group-hover:scale-105 pointer-events-none select-none drop-shadow-[0_8px_24px_rgba(59,130,246,0.18)] group-hover:drop-shadow-[0_12px_36px_rgba(59,130,246,0.32)]"
                   placeholderClassName="opacity-0"
                 />
 
