@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Home, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import BackgroundGrid from "@/components/BackgroundGrid";
 import logo from "@/assets/logo-new.webp";
 
 const NotFound = () => {
@@ -21,7 +20,19 @@ const NotFound = () => {
       className="relative min-h-screen overflow-hidden bg-background text-foreground flex items-center justify-center px-6 py-20 font-[Montserrat]"
     >
       {/* Technical grid background */}
-      <BackgroundGrid />
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none bg-technical-grid opacity-60"
+      />
+      {/* Vignette fade */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse at center, transparent 0%, hsl(var(--background) / 0.6) 70%, hsl(var(--background)) 100%)",
+        }}
+      />
 
       {/* Ambient gradient orbs */}
       <div
