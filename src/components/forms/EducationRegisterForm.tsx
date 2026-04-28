@@ -501,6 +501,17 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
         email: validatedData.email,
       });
 
+      if (!signupResp.needs_email_confirmation) {
+        toast({
+          title: 'Account already active',
+          description: `An active account for ${validatedData.email} already exists. Please sign in instead.`,
+        });
+        setMode('signin');
+        setStep(1);
+        setIsSubmitting(false);
+        return;
+      }
+
       // Show "check your email" confirmation screen (link-based confirmation)
       setOtpEmail(normalizedEmail);
       setOtpType('signup');
@@ -508,12 +519,14 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
       setAwaitingOtp(true);
       setResendCooldown(60);
 
-      const description = signupResp.already_existed
+      const description = !signupResp.email_sent
+        ? `We couldn't send a new confirmation email right now. Please wait a minute, then use Resend.`
+        : signupResp.already_existed
         ? `An account for ${validatedData.email} already exists. We've re-sent the confirmation link — please check your inbox.`
         : `We sent a confirmation link to ${validatedData.email}. Click it to activate your account.`;
 
       toast({
-        title: signupResp.already_existed ? 'Account already exists' : 'Check your email',
+        title: signupResp.email_sent ? (signupResp.already_existed ? 'Account already exists' : 'Check your email') : 'Confirmation pending',
         description,
       });
     } catch (error: any) {
