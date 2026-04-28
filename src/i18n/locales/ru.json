@@ -34,6 +34,8 @@
     "rememberMe": "Запомнить меня",
     "forgotPassword": "Забыли пароль?",
     "continueWithGoogle": "Продолжить с Google",
+    "googleTempUnavailableTitle": "Вход через Google временно недоступен",
+    "googleTempUnavailableMessage": "Мы устраняем технические неполадки со входом через Google. Скоро всё заработает. Пока используйте email и пароль.",
     "signIn": "Войти",
     "register": "Создать аккаунт",
     "haveAccount": "Уже есть аккаунт?",
