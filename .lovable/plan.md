@@ -1,25 +1,59 @@
-## Add subtle blue shadow glow to main page section images
+# Add TonRa Project Page + Telegram Beta Link
 
-Add a soft blue drop-shadow glow behind images in the main page sections (What We Build / Projects, About, Learn, Resources, Events) so they feel more premium and lift off the dark navy background — without changing layouts, sizes, or overlays.
+## Goal
+- Make the TonRa card on the home `Projects` section clickable, navigating to a new dedicated page `/projects/tonra`.
+- The new page describes what TonRa does and provides a prominent CTA button linking to the Telegram bot: `https://t.me/TonRa_Robot` ("Try Early Beta") with a note that some features are still under development.
 
-### Approach
+## Scope
 
-Use Tailwind's `drop-shadow-[...]` utility (which compiles to CSS `filter: drop-shadow(...)`). Unlike `box-shadow`, `drop-shadow` follows the alpha shape of transparent PNG/WebP product renders, so the glow hugs the image silhouette instead of forming a rectangle. The glow uses the brand accent (`hsl(213 94% 68%)` ≈ `#3B82F6`) at low opacity, with a stronger glow on hover.
+### 1. New page: `src/pages/projects/TonRaPage.tsx`
+- Reuses site shell: `Navbar`, `Footer`, `BackgroundGrid`, `BottomGradientOverlay` for visual consistency with the rest of the site.
+- Sections (all i18n via `react-i18next`):
+  1. **Hero**: Project name, "Under Development" badge, tagline ("Explore TON with more confidence."), short polished intro, two CTAs:
+     - Primary: "Try Early Beta on Telegram" → opens `https://t.me/TonRa_Robot` in new tab (`rel="noopener noreferrer"`).
+     - Secondary: "Back to Projects" → anchor to `/#projects`.
+     - A small notice: "Some features are still under development."
+  2. **What is TonRa?** — full descriptive copy from the user's brief.
+  3. **What is TonRa used for?** — bullet list (wallet checks, token review, project risk, fake airdrop detection, quick risk overview, safer decisions). Render as a grid of glass cards with lucide icons (`Wallet`, `Coins`, `ShieldAlert`, `Gift`, `Activity`, `CheckCircle2`).
+  4. **Why TonRa matters** — paragraph block in a `GlassCard`.
+  5. **CTA footer**: large "Open TonRa on Telegram" button with the bot URL and the under-development note.
+- Visual style: matches existing dark Web3 palette, Montserrat headings (already global), blue glow on the TonRa hero image (`/images/projects/UTAAB_TonRa.webp`) reusing the same `drop-shadow-[0_8px_24px_rgba(59,130,246,0.18)]` pattern from `Projects.tsx`.
+- Use `framer-motion` entrance animations consistent with home sections.
+- Set document title via a small `useEffect` to "TonRa — Telegram Security Bot for TON | UTAAB".
 
-Base glow: `drop-shadow-[0_8px_24px_rgba(59,130,246,0.18)]`
-Hover glow: `group-hover:drop-shadow-[0_12px_36px_rgba(59,130,246,0.32)]`
-Transition: `transition-[filter,transform] duration-500`
+### 2. Routing — `src/App.tsx`
+- Lazy-import the new page and add a route:
+  ```tsx
+  const TonRaPage = lazy(() => import("./pages/projects/TonRaPage"));
+  // ...
+  <Route path="/projects/tonra" element={<TonRaPage />} />
+  ```
 
-### Changes
+### 3. Make the TonRa card clickable — `src/components/Projects.tsx`
+- Extend the `Project` interface with an optional `href?: string`.
+- Add `href: '/projects/tonra'` to the TonRa entry.
+- Wrap each `GlassCard` whose project has `href` with a React Router `<Link>` (the rest stay as-is). Add `cursor-pointer`, focus ring, and an "Open" hover affordance (small arrow icon top-right of the card) only when `href` is set.
 
-1. **`src/components/Projects.tsx`** (line 111) — add glow classes to the 3D project image (the main "What We Build" cards).
-2. **`src/components/AboutBlurb.tsx`** (line 81) — add glow to the About card image.
-3. **`src/components/Learn.tsx`** (line 81) — add glow to the Learn card image.
-4. **`src/components/Resources.tsx`** (line 128) — add glow to the foreground resource icon (skip the blurred bg layer at line 107).
-5. **`src/components/Events.tsx`** (line 88) — add a softer rectangular glow (`shadow-[0_8px_24px_rgba(59,130,246,0.15)]`) to the event cover image since it's a full rectangular cover photo, not a transparent render.
+### 4. i18n strings (EN, TR, RU, AR)
+- Add a new namespace block under `projects.tonraPage`:
+  - `hero.tagline`, `hero.intro`, `hero.tryBeta`, `hero.backToProjects`, `hero.devNote`
+  - `whatIs.title`, `whatIs.body` (multi-paragraph; rendered by splitting on `\n\n`)
+  - `usedFor.title`, `usedFor.items.wallet|token|project|airdrop|overview|decisions` (each: `title` + `desc`)
+  - `why.title`, `why.body`
+  - `cta.title`, `cta.button`, `cta.note`
+- English copy comes verbatim from the user's brief; TR/RU/AR are translated equivalents.
 
-### Notes
+## Technical notes
+- External link uses `<a href="https://t.me/TonRa_Robot" target="_blank" rel="noopener noreferrer">` — no new dependencies.
+- Telegram icon: use `MessageCircle` from `lucide-react` (already used in the project) to avoid adding the brand SVG. If a Telegram glyph is preferred, an inline `<svg>` can be added without a new package.
+- All content is static — no backend, no Supabase changes, no edge functions.
+- No security memory or RLS changes required.
 
-- Hero / HeroCarousel / BlogSection are not touched (Hero uses video; blog cards already have their own treatment).
-- No new CSS keyframes needed — pure Tailwind utility classes.
-- Respects existing `group-hover:scale-105` transforms by adding `filter` to the same transition.
+## Files touched
+- `src/App.tsx` (add lazy import + route)
+- `src/components/Projects.tsx` (clickable card via `Link` when `href` is set)
+- `src/pages/projects/TonRaPage.tsx` (new)
+- `src/i18n/locales/{en,tr,ru,ar}.json` (new `projects.tonraPage` strings)
+
+## Out of scope
+- No changes to other project cards, Telegram connector setup, or actual bot integration — the page only links out to the existing `@TonRa_Robot` bot.
