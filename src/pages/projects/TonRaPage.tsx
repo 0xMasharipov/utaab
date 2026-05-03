@@ -241,7 +241,7 @@ const TonRaPage = () => {
           </div>
         </section>
 
-        <Footer />
+        <Footer onPrivacyClick={() => {}} />
       </BackgroundGrid>
     </div>
   );
