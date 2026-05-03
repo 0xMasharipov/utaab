@@ -303,6 +303,44 @@
       "layer2": "Katman 2",
       "governance": "Yönetişim",
       "dao": "DAO"
+    },
+    "tonraPage": {
+      "hero": {
+        "tagline": "TON ekosistemini daha güvenle keşfedin.",
+        "intro": "TonRa, TON ekosistemindeki cüzdanları, tokenleri ve projeleri analiz etmenize yardımcı olan, güvenlik odaklı bir Telegram botudur. Şüpheli aktiviteleri, dolandırıcılık örüntülerini, sahte airdrop'ları ve diğer olası riskleri tarayarak; bir cüzdanla etkileşime geçmeden, bir token satın almadan veya yeni bir projeye güvenmeden önce size daha net bir görüntü sunar.",
+        "tryBeta": "Telegram'da Erken Beta'yı Dene",
+        "backToProjects": "Projelere Dön",
+        "devNote": "Bazı özellikler hâlâ geliştirme aşamasındadır."
+      },
+      "whatIs": {
+        "title": "TonRa nedir?",
+        "body": [
+          "TonRa, TON ekosistemi için geliştirilmiş Telegram tabanlı bir güvenlik ve araştırma botudur. Kullanıcıların cüzdanları, tokenleri ve projeleri etkileşime geçmeden önce hızlıca kontrol etmelerine yardımcı olur; olası riskleri, dolandırıcılıkları veya şüpheli aktiviteleri tespit etmeyi kolaylaştırır.",
+          "TON ekosistemi her geçen gün hızla büyüyor; her gün yeni tokenler, topluluklar, airdrop'lar ve projeler ortaya çıkıyor. Bu durum birçok fırsat yaratırken, hangi cüzdanların, tokenlerin veya projelerin güvenilir olduğunu anlamayı da zorlaştırıyor. TonRa bu süreci daha basit, hızlı ve güvenli hale getirmek için tasarlandı.",
+          "TonRa ile kullanıcılar TON ile ilgili bilgileri doğrudan Telegram üzerinden tarayabilir ve inceleyebilir. Bot; şüpheli cüzdan davranışları, riskli token aktiviteleri, sahte airdrop örüntüleri veya ekstra dikkat gerektiren projeler gibi uyarı işaretlerini öne çıkarır.",
+          "TonRa yalnızca bir tarayıcı değildir. TON kullanan herkes için pratik bir güvenlik asistanıdır. İster bir token'ı satın almadan önce kontrol edin, ister bir cüzdanı fon göndermeden önce inceleyin, ister bir airdrop'a katılmadan önce bir projeyi doğrulayın; TonRa daha iyi kararlar almanız için size daha net bilgiler sunar."
+        ]
+      },
+      "usedFor": {
+        "title": "TonRa ne için kullanılır?",
+        "items": {
+          "wallet": { "title": "TON cüzdanlarını kontrol edin", "desc": "Fon göndermeden önce cüzdan davranışını inceleyin." },
+          "token": { "title": "Tokenleri inceleyin", "desc": "Satın almadan veya etkileşime geçmeden önce tokenleri kontrol edin." },
+          "project": { "title": "Riskli projeleri tespit edin", "desc": "Şüpheli veya riskli proje davranışlarını erkenden fark edin." },
+          "airdrop": { "title": "Sahte airdrop'ları tespit edin", "desc": "Olası dolandırıcılık kampanyalarını ve sahte airdrop'ları tanıyın." },
+          "overview": { "title": "Hızlı risk özeti", "desc": "Doğrudan Telegram üzerinden hızlı bir risk özeti alın." },
+          "decisions": { "title": "Daha güvenli kararlar", "desc": "TON'u keşfederken daha bilinçli seçimler yapın." }
+        }
+      },
+      "why": {
+        "title": "TonRa neden önemli?",
+        "body": "Kripto kullanıcıları çoğu zaman hızlı kararlar vermek zorundadır, ancak dolandırıcı projeler ilk bakışta profesyonel ve güvenilir görünebilir. TonRa, kullanıcılara harekete geçmeden önce araştırma yapma imkânı sunarak bu belirsizliği azaltmaya yardımcı olur. Sadece sosyal medya paylaşımlarına, proje iddialarına veya topluluk hype'ına güvenmek yerine, kullanıcılar TonRa'yı ek bir koruma katmanı olarak kullanabilir. Bu, TON ekosistemine daha fazla şeffaflık kazandırır ve hem yeni başlayanlar hem de deneyimli kullanıcılar için daha güvenli katılımı destekler."
+      },
+      "cta": {
+        "title": "TonRa'yı Telegram'da aç",
+        "button": "Erken Beta'yı Dene",
+        "note": "Bazı özellikler hâlâ geliştirme aşamasındadır."
+      }
     }
   },
   "resources": {
