@@ -87,14 +87,9 @@ export const Projects = () => {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {projects.map((project, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.5, delay: 0.15 + index * 0.07 }}
-            >
-              <GlassCard className="relative overflow-hidden min-h-[260px] p-0 group flex flex-col">
+          {projects.map((project, index) => {
+            const cardInner = (
+              <GlassCard className="relative overflow-hidden min-h-[260px] p-0 group flex flex-col h-full">
                 {/* Layer 1: Grid background */}
                 <div
                   className="absolute inset-0 z-0 opacity-[0.05]"
@@ -124,6 +119,12 @@ export const Projects = () => {
                       'linear-gradient(to top, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.45) 40%, rgba(0,0,0,0.25) 70%, transparent 100%)',
                   }}
                 />
+
+                {project.href && (
+                  <div className="absolute top-3 right-3 z-30 w-8 h-8 rounded-full bg-white/[0.08] border border-white/[0.12] flex items-center justify-center opacity-70 group-hover:opacity-100 group-hover:bg-primary/30 group-hover:border-primary/40 transition-all">
+                    <ArrowUpRight className="w-4 h-4 text-foreground" />
+                  </div>
+                )}
 
                 {/* Layer 4: Text content */}
                 <div className="relative z-30 p-5 sm:p-6 flex flex-col h-full">
@@ -159,8 +160,29 @@ export const Projects = () => {
                   </div>
                 </div>
               </GlassCard>
-            </motion.div>
-          ))}
+            );
+
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                transition={{ duration: 0.5, delay: 0.15 + index * 0.07 }}
+              >
+                {project.href ? (
+                  <Link
+                    to={project.href}
+                    className="block h-full rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    aria-label={t(project.titleKey)}
+                  >
+                    {cardInner}
+                  </Link>
+                ) : (
+                  cardInner
+                )}
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
