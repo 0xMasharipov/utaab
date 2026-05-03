@@ -57,6 +57,7 @@ const LearnHub = lazy(() => import("./pages/LearnHub"));
 const ResourcesPage = lazy(() => import("./pages/ResourcesPage"));
 const Whitepaper = lazy(() => import("./pages/Whitepaper"));
 const FAQ = lazy(() => import("./pages/FAQ"));
+const TonRaPage = lazy(() => import("./pages/projects/TonRaPage"));
 
 const queryClient = new QueryClient();
 
@@ -98,6 +99,7 @@ function App() {
             <Route path="/resources" element={<ResourcesPage />} />
             <Route path="/whitepaper" element={<Whitepaper />} />
             <Route path="/faq" element={<FAQ />} />
+            <Route path="/projects/tonra" element={<TonRaPage />} />
             
             {/* Authentication */}
             <Route path={ADMIN_ROUTES.LOGIN} element={<AdminLogin />} />
