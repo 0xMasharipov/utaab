@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowUpRight } from 'lucide-react';
 import GlassCard from '@/components/glass/GlassCard';
 import AnimatedImage from '@/components/common/AnimatedImage';
 
@@ -13,6 +15,7 @@ interface Project {
   tags: string[];
   status: ProjectStatus;
   image: string;
+  href?: string;
 }
 
 export const Projects = () => {
@@ -34,6 +37,7 @@ export const Projects = () => {
       tags: ['projects.tags.ton', 'projects.tags.research', 'projects.tags.academic'],
       status: 'underDevelopment',
       image: '/images/projects/UTAAB_TonRa.webp',
+      href: '/projects/tonra',
     },
     {
       titleKey: 'projects.asn.title',
