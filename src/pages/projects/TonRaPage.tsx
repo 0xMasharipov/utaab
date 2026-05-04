@@ -18,6 +18,7 @@ import { Footer } from '@/components/Footer';
 import BackgroundGrid from '@/components/BackgroundGrid';
 import GlassCard from '@/components/glass/GlassCard';
 import AnimatedImage from '@/components/common/AnimatedImage';
+import tonraLogo from '@/assets/projects/tonra-logo.png';
 
 const TONRA_BOT_URL = 'https://t.me/TonRa_Robot';
 
@@ -115,12 +116,23 @@ const TonRaPage = () => {
                 transition={{ duration: 0.8, delay: 0.1 }}
                 className="relative flex justify-center lg:justify-end"
               >
-                <AnimatedImage
-                  src="/images/projects/UTAAB_TonRa.webp"
-                  alt="TonRa"
-                  containerClassName="w-full max-w-md"
-                  className="w-full h-auto object-contain drop-shadow-[0_12px_36px_rgba(59,130,246,0.32)] hover:drop-shadow-[0_16px_48px_rgba(59,130,246,0.45)] transition-[filter] duration-500"
-                />
+                <div className="relative w-full max-w-md">
+                  {/* Soft white radial glow behind logo */}
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 -m-10 blur-3xl z-0"
+                    style={{
+                      background:
+                        'radial-gradient(circle, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.10) 35%, transparent 70%)',
+                    }}
+                  />
+                  <AnimatedImage
+                    src={tonraLogo}
+                    alt="TonRa logo"
+                    containerClassName="relative z-10 w-full"
+                    className="w-full h-auto object-contain drop-shadow-[0_0_24px_rgba(255,255,255,0.25)] hover:drop-shadow-[0_0_36px_rgba(255,255,255,0.4)] transition-[filter] duration-500"
+                  />
+                </div>
               </motion.div>
             </div>
           </div>
