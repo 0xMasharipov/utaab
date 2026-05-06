@@ -1,31 +1,26 @@
-## Update TonRa logo on the TonRa product page
+## Goal
 
-Replace the hero illustration on `/projects/tonra` with the newly uploaded TonRa brand mark and wrap it in a soft white radial glow so the blue logo pops against the dark background.
+Stop exposing the obfuscated admin login by redirecting `/admin` (and any `/admin/*` path). Instead, render the existing 404 NotFound page so visitors who guess `/admin` see no hint that an admin area exists.
 
-### Steps
+## Current behavior
 
-1. **Add the logo asset**
-   - Copy `user-uploads://TonRa_v1.png` into `src/assets/projects/tonra-logo.png` (kept in `src/assets` for proper bundling/optimization).
+In `src/App.tsx`:
+```tsx
+<Route path="/admin/*" element={<Navigate to={ADMIN_ROUTES.LOGIN} replace />} />
+```
+Visiting `https://utaab.org/admin` redirects to the obfuscated admin login route, leaking its existence.
 
-2. **Update `src/pages/projects/TonRaPage.tsx`**
-   - Import the new logo as an ES6 module: `import tonraLogo from '@/assets/projects/tonra-logo.png'`.
-   - In the hero's right-side image block, replace the current `AnimatedImage` (which points to `/images/projects/UTAAB_TonRa.webp`) with the new logo source.
-   - Wrap the image in a relative container that renders a soft white radial glow behind it:
-     - An absolutely-positioned `div` with `radial-gradient(circle, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.10) 35%, transparent 70%)`, blurred (`blur-3xl`), slightly larger than the logo, behind the image (`z-0`), with `pointer-events-none`.
-     - The logo sits on top (`relative z-10`) keeping its existing blue brand drop-shadow for depth, plus a subtle white drop-shadow for the rim glow: `drop-shadow-[0_0_24px_rgba(255,255,255,0.25)]`.
-   - Keep the existing motion/scale animation and responsive sizing (`max-w-md`, centered on mobile, right-aligned on `lg`).
+## Change
 
-3. **Leave unchanged**
-   - Project card thumbnail in `src/components/Projects.tsx` (still uses `UTAAB_TonRa.webp`) — request only mentioned the description page.
-   - Routing, translations, and CTA buttons remain as-is.
+Replace the redirect with the existing `NotFound` page so `/admin` and any sub-path render the normal 404:
 
-### Technical details
+```tsx
+<Route path="/admin/*" element={<NotFound />} />
+```
 
-- White glow layered behind the logo, not on the section background, so the rest of the page styling is untouched.
-- Glow uses both a blurred radial-gradient halo (soft ambient bloom) and a subtle white `drop-shadow` filter (tight rim light) for a polished, premium look consistent with the site's existing blue glow language.
-- Asset placed under `src/assets/projects/` to match how other React-imported brand images are handled.
+`NotFound` is already imported and used by the catch-all `*` route, so no new imports are needed.
 
-### Files touched
+## Notes
 
-- `src/assets/projects/tonra-logo.png` (new, copied from upload)
-- `src/pages/projects/TonRaPage.tsx` (hero image swap + white glow wrapper)
+- The legitimate admin entrance remains the obfuscated route defined in `src/config/routes.ts` (`ADMIN_ROUTES.LOGIN`). Nothing about the real admin flow changes.
+- The `/education/admin/*` legacy redirect is left as-is unless you want the same treatment — let me know if it should also 404.

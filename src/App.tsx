@@ -125,7 +125,7 @@ function App() {
             </Route>
             
             {/* Legacy redirects */}
-            <Route path="/admin/*" element={<Navigate to={ADMIN_ROUTES.LOGIN} replace />} />
+            <Route path="/admin/*" element={<NotFound />} />
             <Route path="/education/admin/*" element={<Navigate to={ADMIN_ROUTES.DASHBOARD} replace />} />
             
             <Route path="/kvkk-request" element={<KVKKRequest />} />
