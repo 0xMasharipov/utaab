@@ -165,8 +165,8 @@ export default function CertRecords() {
       const blob = new Blob([bytes as any], { type: 'application/pdf' });
       const { error: upErr } = await supabase.storage.from('certificates').upload(path, blob, { upsert: true, contentType: 'application/pdf' });
       if (upErr) throw upErr;
-      const { data: pub } = supabase.storage.from('certificates').getPublicUrl(path);
-      await supabase.from('cert_records').update({ pdf_url: pub.publicUrl }).eq('id', r.id);
+      // Store the storage path; signed URLs are issued on demand from the private bucket.
+      await supabase.from('cert_records').update({ pdf_url: path }).eq('id', r.id);
       toast.success('PDF generated');
       qc.invalidateQueries({ queryKey: ['cert_records'] });
     } catch (e: any) {
