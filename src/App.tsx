@@ -60,6 +60,12 @@ const Whitepaper = lazy(() => import("./pages/Whitepaper"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const TonRaPage = lazy(() => import("./pages/projects/TonRaPage"));
 const VerifyCertificate = lazy(() => import("./pages/VerifyCertificate"));
+const CertDashboard = lazy(() => import("./pages/admin/cert/CertDashboard"));
+const CertEvents = lazy(() => import("./pages/admin/cert/CertEvents"));
+const CertParticipants = lazy(() => import("./pages/admin/cert/CertParticipants"));
+const CertRecords = lazy(() => import("./pages/admin/cert/CertRecords"));
+const CertTemplates = lazy(() => import("./pages/admin/cert/CertTemplates"));
+const CertSettings = lazy(() => import("./pages/admin/cert/CertSettings"));
 
 const queryClient = new QueryClient();
 
