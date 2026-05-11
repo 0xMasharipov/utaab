@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { LanguageTransitionProvider } from "@/contexts/LanguageTransitionContext";
 import { ADMIN_ROUTES } from "@/config/routes";
 import { usePageViewTracker } from "@/hooks/usePageViewTracker";
+import { Web3Providers } from "@/lib/web3/Web3Providers";
 
 // Lazy load all route components for better code splitting
 const Index = lazy(() => import("./pages/Index"));
