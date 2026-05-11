@@ -19,9 +19,14 @@ export const ADMIN_ROUTES = {
   SECURITY: '/v8k2m9x4/z2e',
   SETTINGS: '/v8k2m9x4/y5l',
   AUDIT: '/v8k2m9x4/f8u',
+  CERT_DASHBOARD: '/v8k2m9x4/cd0',
+  CERT_EVENTS: '/v8k2m9x4/c1e',
+  CERT_PARTICIPANTS: '/v8k2m9x4/c2p',
+  CERT_RECORDS: '/v8k2m9x4/c3r',
+  CERT_TEMPLATES: '/v8k2m9x4/c4t',
+  CERT_SETTINGS: '/v8k2m9x4/c5s',
 } as const;
 
-// Relative sub-paths for sidebar navigation inside the layout
 export const ADMIN_SUB_PATHS = {
   DASHBOARD: 'p3',
   USERS: 'q7w',
@@ -37,4 +42,10 @@ export const ADMIN_SUB_PATHS = {
   SECURITY: 'z2e',
   SETTINGS: 'y5l',
   AUDIT: 'f8u',
+  CERT_DASHBOARD: 'cd0',
+  CERT_EVENTS: 'c1e',
+  CERT_PARTICIPANTS: 'c2p',
+  CERT_RECORDS: 'c3r',
+  CERT_TEMPLATES: 'c4t',
+  CERT_SETTINGS: 'c5s',
 } as const;

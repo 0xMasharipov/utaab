@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { LanguageTransitionProvider } from "@/contexts/LanguageTransitionContext";
 import { ADMIN_ROUTES } from "@/config/routes";
 import { usePageViewTracker } from "@/hooks/usePageViewTracker";
+import { Web3Providers } from "@/lib/web3/Web3Providers";
 
 // Lazy load all route components for better code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -59,6 +60,12 @@ const Whitepaper = lazy(() => import("./pages/Whitepaper"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const TonRaPage = lazy(() => import("./pages/projects/TonRaPage"));
 const VerifyCertificate = lazy(() => import("./pages/VerifyCertificate"));
+const CertDashboard = lazy(() => import("./pages/admin/cert/CertDashboard"));
+const CertEvents = lazy(() => import("./pages/admin/cert/CertEvents"));
+const CertParticipants = lazy(() => import("./pages/admin/cert/CertParticipants"));
+const CertRecords = lazy(() => import("./pages/admin/cert/CertRecords"));
+const CertTemplates = lazy(() => import("./pages/admin/cert/CertTemplates"));
+const CertSettings = lazy(() => import("./pages/admin/cert/CertSettings"));
 
 const queryClient = new QueryClient();
 
@@ -70,6 +77,7 @@ function RouterTracker() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <Web3Providers>
       <LanguageTransitionProvider>
         <TooltipProvider>
           <Toaster />
@@ -124,6 +132,12 @@ function App() {
               <Route path="y5l" element={<AdminSettingsNew />} />
               <Route path="f8u" element={<AdminAuditLog />} />
               <Route path="z2e" element={<AdminSecurity />} />
+              <Route path="cd0" element={<CertDashboard />} />
+              <Route path="c1e" element={<CertEvents />} />
+              <Route path="c2p" element={<CertParticipants />} />
+              <Route path="c3r" element={<CertRecords />} />
+              <Route path="c4t" element={<CertTemplates />} />
+              <Route path="c5s" element={<CertSettings />} />
             </Route>
             
             {/* Legacy redirects */}
@@ -140,6 +154,7 @@ function App() {
           </BrowserRouter>
         </TooltipProvider>
       </LanguageTransitionProvider>
+      </Web3Providers>
     </QueryClientProvider>
   );
 }
