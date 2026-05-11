@@ -110,7 +110,7 @@ export default function VerifyCertificate() {
       revocationReason: dbRow?.revocation_reason ?? null,
       txHash: dbRow?.blockchain_tx_hash ?? null,
       contractAddress: dbRow?.contract_address ?? CONTRACT_ADDRESS,
-      pdfUrl: dbRow?.pdf_url ?? null,
+      pdfUrl: signedPdfUrl,
     });
   }
 
