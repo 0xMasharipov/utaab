@@ -22,7 +22,8 @@
     "ecosystem": "Ecosystem",
     "explore": "Explore",
     "organization": "Organization",
-    "about": "About"
+    "about": "About",
+    "verifyCertificate": "Verify Certificate"
   },
   "auth": {
     "studentSignIn": "Student Sign In",
