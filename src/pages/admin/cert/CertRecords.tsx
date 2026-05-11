@@ -85,6 +85,8 @@ export default function CertRecords() {
           address: CONTRACT_ADDRESS,
           abi: certificateRegistryAbi,
           functionName: 'issueBatchCertificates',
+          account: address,
+          chain: sepolia,
           args: [serialHashes, event_hash, issued_by_hash],
         });
         setTxHash(hash);
@@ -121,6 +123,8 @@ export default function CertRecords() {
         address: CONTRACT_ADDRESS,
         abi: certificateRegistryAbi,
         functionName: 'revokeCertificate',
+        account: address,
+        chain: sepolia,
         args: [fromDbHex(revokeRow.serial_hash)],
       });
       setTxHash(hash);
