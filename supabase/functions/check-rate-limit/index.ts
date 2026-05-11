@@ -13,12 +13,24 @@ function getClientIP(req: Request): string {
 interface RateLimitRequest {
   identifier: string; // IP address or user ID
   endpoint: string;
-  limit?: number; // requests per window
-  window?: number; // window in seconds
 }
 
 // Endpoints where the identifier must be derived server-side (IP) to prevent spoofing
 const SERVER_DERIVED_ENDPOINTS = ['admin_login'];
+
+// Server-side hardcoded limits — clients CANNOT override these.
+const ENDPOINT_LIMITS: Record<string, { limit: number; window: number }> = {
+  admin_login: { limit: 5, window: 300 },
+  admin_otp: { limit: 5, window: 300 },
+  signup: { limit: 10, window: 3600 },
+  password_reset: { limit: 5, window: 3600 },
+  community_application: { limit: 5, window: 3600 },
+  kvkk_request: { limit: 3, window: 3600 },
+  contact_form: { limit: 10, window: 3600 },
+  contributor_assessment: { limit: 5, window: 3600 },
+  utaab_verify: { limit: 30, window: 60 },
+  default: { limit: 20, window: 60 },
+};
 
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req);
@@ -28,8 +40,17 @@ serve(async (req) => {
   }
 
   try {
-    const { identifier: clientIdentifier, endpoint, limit = 20, window = 60 } = await req.json() as RateLimitRequest;
-    
+    const { identifier: clientIdentifier, endpoint } = await req.json() as RateLimitRequest;
+
+    if (!endpoint || typeof endpoint !== 'string') {
+      return new Response(
+        JSON.stringify({ allowed: false, error: 'Invalid endpoint' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const { limit, window } = ENDPOINT_LIMITS[endpoint] ?? ENDPOINT_LIMITS.default;
+
     // For sensitive endpoints, always use server-derived IP to prevent identifier spoofing
     let identifier: string;
     if (SERVER_DERIVED_ENDPOINTS.includes(endpoint)) {

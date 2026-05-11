@@ -197,7 +197,24 @@ serve(async (req) => {
 
     const data = parsed.data;
     const email = data.email.trim().toLowerCase();
-    const redirectTo = data.email_redirect_to ?? 'https://utaab.org/education';
+
+    // Open-redirect protection: only allow redirects to known UTAAB origins.
+    const ALLOWED_REDIRECT_ORIGINS = new Set([
+      'https://utaab.org',
+      'https://www.utaab.org',
+      'https://utaab.lovable.app',
+    ]);
+    let redirectTo = 'https://utaab.org/education';
+    if (data.email_redirect_to) {
+      try {
+        const parsedUrl = new URL(data.email_redirect_to);
+        if (ALLOWED_REDIRECT_ORIGINS.has(parsedUrl.origin)) {
+          redirectTo = data.email_redirect_to;
+        }
+      } catch {
+        // fall through to default
+      }
+    }
 
     const admin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
