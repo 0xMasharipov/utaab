@@ -2774,29 +2774,6 @@ export type Database = {
           read_ct: number
         }[]
       }
-      verify_certificate_by_hash: {
-        Args: { _serial_hash: string }
-        Returns: {
-          blockchain_tx_hash: string
-          certificate_title: string
-          chain_id: number
-          contract_address: string
-          event_date: string
-          event_name: string
-          issued_at: string
-          issued_by: string
-          location: string
-          organizer: string
-          participant_name: string
-          partners: string[]
-          pdf_url: string
-          revocation_reason: string
-          revoked_at: string
-          serial_number: string
-          speaker_name: string
-          status: string
-        }[]
-      }
     }
     Enums: {
       app_role:
