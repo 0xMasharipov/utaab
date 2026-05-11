@@ -22,7 +22,8 @@
     "ecosystem": "النظام البيئي",
     "explore": "استكشف",
     "organization": "المنظمة",
-    "about": "من نحن"
+    "about": "من نحن",
+    "verifyCertificate": "التحقق من الشهادة"
   },
   "auth": {
     "studentSignIn": "تسجيل دخول الطالب",

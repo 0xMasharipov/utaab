@@ -22,7 +22,8 @@
     "ecosystem": "Ekosistem",
     "explore": "Keşfet",
     "organization": "Organizasyon",
-    "about": "Hakkımızda"
+    "about": "Hakkımızda",
+    "verifyCertificate": "Sertifika Doğrula"
   },
   "auth": {
     "studentSignIn": "Öğrenci Girişi",
