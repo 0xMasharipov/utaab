@@ -459,12 +459,36 @@ serve(async (req) => {
       riskScore += 25;
     }
 
-    // Verify proof of work if provided
+    // Verify proof of work if provided — enforce server-side minimum difficulty
+    // to prevent client from submitting difficulty=0 (which would trivially pass).
     if (body.pow) {
-      const powValid = await verifyProofOfWork(body.pow.challenge, body.pow.nonce, body.pow.difficulty);
-      if (!powValid) {
+      const MIN_POW_DIFFICULTY = 2;
+      const clientDifficulty = typeof body.pow.difficulty === 'number' ? body.pow.difficulty : 0;
+      // Look up the most recently issued challenge for this session to validate
+      // that the submitted difficulty matches what the server actually issued.
+      const { data: priorVerification } = await supabase
+        .from('utaab_verifications')
+        .select('pow_difficulty')
+        .eq('session_id', body.sessionId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      const serverIssuedDifficulty = (priorVerification?.pow_difficulty as number | null) ?? null;
+      const requiredDifficulty = Math.max(
+        MIN_POW_DIFFICULTY,
+        serverIssuedDifficulty ?? MIN_POW_DIFFICULTY
+      );
+
+      if (clientDifficulty < requiredDifficulty) {
         riskScore += RISK_WEIGHTS.failedPow;
-        console.log(`[UTAAB] PoW verification failed for session ${body.sessionId}`);
+        console.log(`[UTAAB] PoW difficulty too low for session ${body.sessionId}: client=${clientDifficulty}, required=${requiredDifficulty}`);
+      } else {
+        const powValid = await verifyProofOfWork(body.pow.challenge, body.pow.nonce, clientDifficulty);
+        if (!powValid) {
+          riskScore += RISK_WEIGHTS.failedPow;
+          console.log(`[UTAAB] PoW verification failed for session ${body.sessionId}`);
+        }
       }
     }
 
