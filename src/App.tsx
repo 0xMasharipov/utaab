@@ -154,6 +154,7 @@ function App() {
           </BrowserRouter>
         </TooltipProvider>
       </LanguageTransitionProvider>
+      </Web3Providers>
     </QueryClientProvider>
   );
 }
