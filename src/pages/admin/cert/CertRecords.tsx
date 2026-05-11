@@ -174,6 +174,20 @@ export default function CertRecords() {
     }
   };
 
+  const openSignedPdf = async (pathOrUrl: string) => {
+    try {
+      let path = pathOrUrl;
+      const marker = '/certificates/';
+      const idx = path.indexOf(marker);
+      if (idx !== -1) path = path.substring(idx + marker.length);
+      const { data, error } = await supabase.storage.from('certificates').createSignedUrl(path, 600);
+      if (error || !data?.signedUrl) throw error || new Error('No URL');
+      window.open(data.signedUrl, '_blank', 'noopener');
+    } catch (e: any) {
+      toast.error(e.message || 'Could not open PDF');
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
