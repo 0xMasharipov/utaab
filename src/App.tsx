@@ -77,6 +77,7 @@ function RouterTracker() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <Web3Providers>
       <LanguageTransitionProvider>
         <TooltipProvider>
           <Toaster />
