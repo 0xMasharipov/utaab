@@ -1,5 +1,7 @@
-// Public edge function: generates a short-lived signed URL for a certificate PDF
-// only after re-verifying the certificate via the secure RPC.
+// Public edge function: verifies a certificate by serial_hash and returns
+// metadata + (optionally) a short-lived signed URL for the PDF.
+// The verification RPC lives in the private schema and is callable only via
+// service_role from this function — clients can no longer reach it directly.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
@@ -29,10 +31,11 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    // Re-verify via secure RPC (only returns issued/revoked rows)
-    const { data, error } = await supabase.rpc("verify_certificate_by_hash", {
-      _serial_hash: serialHash,
-    });
+    // Call the private-schema verification RPC via service role.
+    const { data, error } = await supabase
+      .schema("private" as any)
+      .rpc("verify_certificate_by_hash", { _serial_hash: serialHash });
+
     if (error) {
       console.error("verify rpc failed");
       return new Response(JSON.stringify({ error: "server error" }), {
@@ -40,34 +43,39 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
     const row = Array.isArray(data) && data.length ? data[0] : null;
-    if (!row?.pdf_url) {
-      return new Response(JSON.stringify({ url: null }), {
+    if (!row) {
+      return new Response(JSON.stringify({ found: false, url: null, record: null }), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // pdf_url may be a public URL (legacy) or a storage path. Extract path after the bucket name.
-    let path = row.pdf_url as string;
-    const marker = "/certificates/";
-    const idx = path.indexOf(marker);
-    if (idx !== -1) path = path.substring(idx + marker.length);
+    // Resolve signed URL if a pdf_url is present
+    let signedUrl: string | null = null;
+    if (row.pdf_url) {
+      let path = row.pdf_url as string;
+      const marker = "/certificates/";
+      const idx = path.indexOf(marker);
+      if (idx !== -1) path = path.substring(idx + marker.length);
 
-    const { data: signed, error: sErr } = await supabase.storage
-      .from("certificates")
-      .createSignedUrl(path, 60 * 10); // 10 minutes
-    if (sErr || !signed?.signedUrl) {
-      return new Response(JSON.stringify({ url: null }), {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      const { data: signed } = await supabase.storage
+        .from("certificates")
+        .createSignedUrl(path, 60 * 10); // 10 minutes
+      signedUrl = signed?.signedUrl ?? null;
     }
 
-    return new Response(JSON.stringify({ url: signed.signedUrl }), {
-      status: 200,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    // Strip raw pdf_url from the response — clients only get the signed URL.
+    const { pdf_url: _omit, ...record } = row;
+
+    return new Response(
+      JSON.stringify({ found: true, url: signedUrl, record }),
+      {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
+    );
   } catch (_e) {
     return new Response(JSON.stringify({ error: "server error" }), {
       status: 500,
