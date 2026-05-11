@@ -32,14 +32,17 @@ export default function VerifyCertificate() {
     const serialHashHex = hashSerial(normalized); // 0x...
     const serialHashDb = toDbHex(serialHashHex);
 
-    // 1) DB metadata via safe RPC
+    // 1) DB metadata + signed PDF URL via secure edge function (private RPC)
     let dbRow: any = null;
+    let signedPdfUrl: string | null = null;
     try {
-      const { data, error } = await supabase.rpc('verify_certificate_by_hash', {
-        _serial_hash: serialHashDb,
+      const { data: resp } = await supabase.functions.invoke('cert-pdf-url', {
+        body: { serial_hash: serialHashHex },
       });
-      if (error) throw error;
-      dbRow = data && data.length ? data[0] : null;
+      if (resp && (resp as any).found) {
+        dbRow = (resp as any).record;
+        signedPdfUrl = (resp as any).url ?? null;
+      }
     } catch {
       // continue — chain is the source of truth
     }
@@ -79,19 +82,6 @@ export default function VerifyCertificate() {
       : dbRow?.status === 'revoked'
       ? 'revoked'
       : 'valid';
-
-    // Resolve a short-lived signed PDF URL via secure edge function (private bucket)
-    let signedPdfUrl: string | null = null;
-    if (dbRow?.pdf_url) {
-      try {
-        const { data: signed } = await supabase.functions.invoke('cert-pdf-url', {
-          body: { serial_hash: serialHashHex },
-        });
-        signedPdfUrl = (signed as any)?.url ?? null;
-      } catch {
-        signedPdfUrl = null;
-      }
-    }
 
     setState({
       kind,
