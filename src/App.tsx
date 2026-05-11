@@ -131,6 +131,12 @@ function App() {
               <Route path="y5l" element={<AdminSettingsNew />} />
               <Route path="f8u" element={<AdminAuditLog />} />
               <Route path="z2e" element={<AdminSecurity />} />
+              <Route path="cd0" element={<CertDashboard />} />
+              <Route path="c1e" element={<CertEvents />} />
+              <Route path="c2p" element={<CertParticipants />} />
+              <Route path="c3r" element={<CertRecords />} />
+              <Route path="c4t" element={<CertTemplates />} />
+              <Route path="c5s" element={<CertSettings />} />
             </Route>
             
             {/* Legacy redirects */}
