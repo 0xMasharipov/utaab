@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Anyone can submit validated assessments" ON public.contributor_assessments;
