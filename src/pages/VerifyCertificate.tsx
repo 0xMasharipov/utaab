@@ -48,7 +48,7 @@ export default function VerifyCertificate() {
     let chain: { issued: boolean; revoked: boolean; valid: boolean } | null = null;
     if (isContractConfigured) {
       try {
-        const result = (await publicClient.readContract({
+        const result = (await (publicClient.readContract as any)({
           address: CONTRACT_ADDRESS as `0x${string}`,
           abi: certificateRegistryAbi,
           functionName: 'verifyCertificate',
@@ -108,14 +108,6 @@ export default function VerifyCertificate() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <Helmet>
-        <title>Verify UTAAB Certificate</title>
-        <meta
-          name="description"
-          content="Check whether a certificate was officially issued by UTAAB and recorded on blockchain."
-        />
-        <link rel="canonical" href="https://utaab.org/verify-certificate" />
-      </Helmet>
       <Navbar />
       <main className="flex-1 pt-28 pb-16">
         <div className="container mx-auto px-4 max-w-3xl">
@@ -169,7 +161,7 @@ export default function VerifyCertificate() {
           </p>
         </div>
       </main>
-      <Footer />
+      <Footer onPrivacyClick={() => {}} />
     </div>
   );
 }
