@@ -401,6 +401,259 @@ export type Database = {
         }
         Relationships: []
       }
+      cert_events: {
+        Row: {
+          certificate_description: string | null
+          certificate_quantity: number | null
+          certificate_title: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          end_time: string | null
+          event_code: string
+          event_date: string | null
+          event_name: string
+          event_slug: string
+          event_type: string | null
+          id: string
+          issued_by: string
+          location: string | null
+          organizer: string | null
+          partners: string[] | null
+          serial_prefix: string | null
+          speaker_name: string | null
+          start_time: string | null
+          status: string
+          template_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          certificate_description?: string | null
+          certificate_quantity?: number | null
+          certificate_title?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          end_time?: string | null
+          event_code: string
+          event_date?: string | null
+          event_name: string
+          event_slug: string
+          event_type?: string | null
+          id?: string
+          issued_by?: string
+          location?: string | null
+          organizer?: string | null
+          partners?: string[] | null
+          serial_prefix?: string | null
+          speaker_name?: string | null
+          start_time?: string | null
+          status?: string
+          template_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          certificate_description?: string | null
+          certificate_quantity?: number | null
+          certificate_title?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          end_time?: string | null
+          event_code?: string
+          event_date?: string | null
+          event_name?: string
+          event_slug?: string
+          event_type?: string | null
+          id?: string
+          issued_by?: string
+          location?: string | null
+          organizer?: string | null
+          partners?: string[] | null
+          serial_prefix?: string | null
+          speaker_name?: string | null
+          start_time?: string | null
+          status?: string
+          template_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cert_events_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "cert_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cert_participants: {
+        Row: {
+          created_at: string
+          email: string | null
+          event_id: string
+          full_name: string
+          id: string
+          notes: string | null
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          event_id: string
+          full_name: string
+          id?: string
+          notes?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          event_id?: string
+          full_name?: string
+          id?: string
+          notes?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cert_participants_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "cert_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cert_records: {
+        Row: {
+          blockchain_tx_hash: string | null
+          chain_id: number | null
+          contract_address: string | null
+          created_at: string
+          event_hash: string
+          event_id: string
+          id: string
+          issued_at: string | null
+          issued_by_hash: string
+          participant_id: string | null
+          pdf_url: string | null
+          qr_url: string | null
+          revocation_reason: string | null
+          revoked_at: string | null
+          serial_hash: string
+          serial_number: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          blockchain_tx_hash?: string | null
+          chain_id?: number | null
+          contract_address?: string | null
+          created_at?: string
+          event_hash: string
+          event_id: string
+          id?: string
+          issued_at?: string | null
+          issued_by_hash: string
+          participant_id?: string | null
+          pdf_url?: string | null
+          qr_url?: string | null
+          revocation_reason?: string | null
+          revoked_at?: string | null
+          serial_hash: string
+          serial_number: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          blockchain_tx_hash?: string | null
+          chain_id?: number | null
+          contract_address?: string | null
+          created_at?: string
+          event_hash?: string
+          event_id?: string
+          id?: string
+          issued_at?: string | null
+          issued_by_hash?: string
+          participant_id?: string | null
+          pdf_url?: string | null
+          qr_url?: string | null
+          revocation_reason?: string | null
+          revoked_at?: string | null
+          serial_hash?: string
+          serial_number?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cert_records_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "cert_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cert_records_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "cert_participants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cert_templates: {
+        Row: {
+          background_color: string | null
+          body_text: string | null
+          created_at: string
+          footer_text: string | null
+          id: string
+          layout_json: Json | null
+          primary_color: string | null
+          secondary_color: string | null
+          show_qr: boolean | null
+          signature_text: string | null
+          template_name: string
+          title_text: string | null
+          updated_at: string
+        }
+        Insert: {
+          background_color?: string | null
+          body_text?: string | null
+          created_at?: string
+          footer_text?: string | null
+          id?: string
+          layout_json?: Json | null
+          primary_color?: string | null
+          secondary_color?: string | null
+          show_qr?: boolean | null
+          signature_text?: string | null
+          template_name: string
+          title_text?: string | null
+          updated_at?: string
+        }
+        Update: {
+          background_color?: string | null
+          body_text?: string | null
+          created_at?: string
+          footer_text?: string | null
+          id?: string
+          layout_json?: Json | null
+          primary_color?: string | null
+          secondary_color?: string | null
+          show_qr?: boolean | null
+          signature_text?: string | null
+          template_name?: string
+          title_text?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       certificates: {
         Row: {
           certificate_number: string
@@ -2352,6 +2605,29 @@ export type Database = {
           message: Json
           msg_id: number
           read_ct: number
+        }[]
+      }
+      verify_certificate_by_hash: {
+        Args: { _serial_hash: string }
+        Returns: {
+          blockchain_tx_hash: string
+          certificate_title: string
+          chain_id: number
+          contract_address: string
+          event_date: string
+          event_name: string
+          issued_at: string
+          issued_by: string
+          location: string
+          organizer: string
+          participant_name: string
+          partners: string[]
+          pdf_url: string
+          revocation_reason: string
+          revoked_at: string
+          serial_number: string
+          speaker_name: string
+          status: string
         }[]
       }
     }

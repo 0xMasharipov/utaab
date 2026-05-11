@@ -58,6 +58,7 @@ const ResourcesPage = lazy(() => import("./pages/ResourcesPage"));
 const Whitepaper = lazy(() => import("./pages/Whitepaper"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const TonRaPage = lazy(() => import("./pages/projects/TonRaPage"));
+const VerifyCertificate = lazy(() => import("./pages/VerifyCertificate"));
 
 const queryClient = new QueryClient();
 
@@ -100,6 +101,7 @@ function App() {
             <Route path="/whitepaper" element={<Whitepaper />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/projects/tonra" element={<TonRaPage />} />
+            <Route path="/verify-certificate" element={<VerifyCertificate />} />
             
             {/* Authentication */}
             <Route path={ADMIN_ROUTES.LOGIN} element={<AdminLogin />} />
