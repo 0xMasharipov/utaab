@@ -39,3 +39,5 @@ project_id = "nxbjgqdehvxszqjoxumx"
     verify_jwt = false
   [functions.education-signup]
     verify_jwt = false
+  [functions.cert-pdf-url]
+    verify_jwt = false
