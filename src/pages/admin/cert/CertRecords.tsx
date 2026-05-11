@@ -165,12 +165,26 @@ export default function CertRecords() {
       const blob = new Blob([bytes as any], { type: 'application/pdf' });
       const { error: upErr } = await supabase.storage.from('certificates').upload(path, blob, { upsert: true, contentType: 'application/pdf' });
       if (upErr) throw upErr;
-      const { data: pub } = supabase.storage.from('certificates').getPublicUrl(path);
-      await supabase.from('cert_records').update({ pdf_url: pub.publicUrl }).eq('id', r.id);
+      // Store the storage path; signed URLs are issued on demand from the private bucket.
+      await supabase.from('cert_records').update({ pdf_url: path }).eq('id', r.id);
       toast.success('PDF generated');
       qc.invalidateQueries({ queryKey: ['cert_records'] });
     } catch (e: any) {
       toast.error(e.message || 'PDF generation failed');
+    }
+  };
+
+  const openSignedPdf = async (pathOrUrl: string) => {
+    try {
+      let path = pathOrUrl;
+      const marker = '/certificates/';
+      const idx = path.indexOf(marker);
+      if (idx !== -1) path = path.substring(idx + marker.length);
+      const { data, error } = await supabase.storage.from('certificates').createSignedUrl(path, 600);
+      if (error || !data?.signedUrl) throw error || new Error('No URL');
+      window.open(data.signedUrl, '_blank', 'noopener');
+    } catch (e: any) {
+      toast.error(e.message || 'Could not open PDF');
     }
   };
 
@@ -239,7 +253,7 @@ export default function CertRecords() {
                     <td>{p?.full_name ?? '—'}</td>
                     <td><CertificateStatusBadge status={r.status} /></td>
                     <td>{r.blockchain_tx_hash ? <BlockchainTxLink hash={r.blockchain_tx_hash} /> : '—'}</td>
-                    <td>{r.pdf_url ? <a href={r.pdf_url} target="_blank" rel="noopener" className="text-primary text-xs underline">Open</a> : '—'}</td>
+                    <td>{r.pdf_url ? <button onClick={() => openSignedPdf(r.pdf_url)} className="text-primary text-xs underline">Open</button> : '—'}</td>
                     <td className="text-right space-x-1">
                       <Button size="sm" variant="ghost" onClick={() => generatePdf(r)} title="Generate PDF">
                         <FileText className="h-4 w-4" />
@@ -250,9 +264,9 @@ export default function CertRecords() {
                         </Button>
                       )}
                       {r.pdf_url && (
-                        <a href={r.pdf_url} download>
-                          <Button size="sm" variant="ghost"><Download className="h-4 w-4" /></Button>
-                        </a>
+                        <Button size="sm" variant="ghost" onClick={() => openSignedPdf(r.pdf_url)} title="Download">
+                          <Download className="h-4 w-4" />
+                        </Button>
                       )}
                     </td>
                   </tr>

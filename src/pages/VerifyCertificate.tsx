@@ -80,6 +80,19 @@ export default function VerifyCertificate() {
       ? 'revoked'
       : 'valid';
 
+    // Resolve a short-lived signed PDF URL via secure edge function (private bucket)
+    let signedPdfUrl: string | null = null;
+    if (dbRow?.pdf_url) {
+      try {
+        const { data: signed } = await supabase.functions.invoke('cert-pdf-url', {
+          body: { serial_hash: serialHashHex },
+        });
+        signedPdfUrl = (signed as any)?.url ?? null;
+      } catch {
+        signedPdfUrl = null;
+      }
+    }
+
     setState({
       kind,
       participantName: dbRow?.participant_name ?? null,
@@ -97,7 +110,7 @@ export default function VerifyCertificate() {
       revocationReason: dbRow?.revocation_reason ?? null,
       txHash: dbRow?.blockchain_tx_hash ?? null,
       contractAddress: dbRow?.contract_address ?? CONTRACT_ADDRESS,
-      pdfUrl: dbRow?.pdf_url ?? null,
+      pdfUrl: signedPdfUrl,
     });
   }
 

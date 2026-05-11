@@ -796,6 +796,13 @@ export type Database = {
             referencedRelation: "communities"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "community_admins_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       community_applications: {
@@ -1813,6 +1820,13 @@ export type Database = {
             referencedRelation: "quizzes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "quiz_attempts_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "safe_quizzes"
+            referencedColumns: ["id"]
+          },
         ]
       }
       quizzes: {
@@ -2440,6 +2454,39 @@ export type Database = {
       }
     }
     Views: {
+      communities_public: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string | null
+          is_active: boolean | null
+          member_count: number | null
+          name: string | null
+          slug: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          member_count?: number | null
+          name?: string | null
+          slug?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          member_count?: number | null
+          name?: string | null
+          slug?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       public_reviews: {
         Row: {
           comment: string | null
@@ -2542,6 +2589,126 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      safe_quizzes: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          lesson_id: string | null
+          passing_score: number | null
+          questions: Json | null
+          title_ar: string | null
+          title_en: string | null
+          title_ru: string | null
+          title_tr: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          lesson_id?: string | null
+          passing_score?: number | null
+          questions?: never
+          title_ar?: string | null
+          title_en?: string | null
+          title_ru?: string | null
+          title_tr?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          lesson_id?: string | null
+          passing_score?: number | null
+          questions?: never
+          title_ar?: string | null
+          title_en?: string | null
+          title_ru?: string | null
+          title_tr?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quizzes_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quizzes_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "safe_lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      team_members_public: {
+        Row: {
+          bio_ar: string | null
+          bio_en: string | null
+          bio_ru: string | null
+          bio_tr: string | null
+          created_at: string | null
+          department: string | null
+          display_order: number | null
+          full_name: string | null
+          id: string | null
+          image_url: string | null
+          instagram_url: string | null
+          is_featured: boolean | null
+          is_published: boolean | null
+          linkedin_url: string | null
+          role_title: string | null
+          telegram_url: string | null
+          twitter_url: string | null
+          updated_at: string | null
+          website_url: string | null
+        }
+        Insert: {
+          bio_ar?: string | null
+          bio_en?: string | null
+          bio_ru?: string | null
+          bio_tr?: string | null
+          created_at?: string | null
+          department?: string | null
+          display_order?: number | null
+          full_name?: string | null
+          id?: string | null
+          image_url?: string | null
+          instagram_url?: string | null
+          is_featured?: boolean | null
+          is_published?: boolean | null
+          linkedin_url?: string | null
+          role_title?: string | null
+          telegram_url?: string | null
+          twitter_url?: string | null
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          bio_ar?: string | null
+          bio_en?: string | null
+          bio_ru?: string | null
+          bio_tr?: string | null
+          created_at?: string | null
+          department?: string | null
+          display_order?: number | null
+          full_name?: string | null
+          id?: string | null
+          image_url?: string | null
+          instagram_url?: string | null
+          is_featured?: boolean | null
+          is_published?: boolean | null
+          linkedin_url?: string | null
+          role_title?: string | null
+          telegram_url?: string | null
+          twitter_url?: string | null
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Relationships: []
       }
     }
     Functions: {
