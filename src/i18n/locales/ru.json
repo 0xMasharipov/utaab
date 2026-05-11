@@ -22,7 +22,8 @@
     "ecosystem": "Экосистема",
     "explore": "Исследовать",
     "organization": "Организация",
-    "about": "О нас"
+    "about": "О нас",
+    "verifyCertificate": "Проверить сертификат"
   },
   "auth": {
     "studentSignIn": "Вход для студентов",
