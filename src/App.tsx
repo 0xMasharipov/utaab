@@ -101,6 +101,7 @@ function App() {
             <Route path="/whitepaper" element={<Whitepaper />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/projects/tonra" element={<TonRaPage />} />
+            <Route path="/verify-certificate" element={<VerifyCertificate />} />
             
             {/* Authentication */}
             <Route path={ADMIN_ROUTES.LOGIN} element={<AdminLogin />} />
