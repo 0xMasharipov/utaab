@@ -19,12 +19,12 @@ export default function CertDashboard() {
       <CertNav />
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-        <StatCard label="Events" value={stats?.events ?? 0} icon={CalendarDays} loading={isLoading} />
-        <StatCard label="Participants" value={stats?.participants ?? 0} icon={Users} loading={isLoading} />
-        <StatCard label="Total Certs" value={stats?.total ?? 0} icon={Award} loading={isLoading} />
-        <StatCard label="Drafts" value={stats?.drafts ?? 0} icon={FileText} loading={isLoading} />
-        <StatCard label="Issued" value={stats?.issued ?? 0} icon={CheckCircle2} loading={isLoading} />
-        <StatCard label="Revoked" value={stats?.revoked ?? 0} icon={XCircle} loading={isLoading} />
+        <StatCard title="Events" value={stats?.events ?? 0} icon={CalendarDays} loading={isLoading} />
+        <StatCard title="Participants" value={stats?.participants ?? 0} icon={Users} loading={isLoading} />
+        <StatCard title="Total Certs" value={stats?.total ?? 0} icon={Award} loading={isLoading} />
+        <StatCard title="Drafts" value={stats?.drafts ?? 0} icon={FileText} loading={isLoading} />
+        <StatCard title="Issued" value={stats?.issued ?? 0} icon={CheckCircle2} loading={isLoading} />
+        <StatCard title="Revoked" value={stats?.revoked ?? 0} icon={XCircle} loading={isLoading} />
       </div>
 
       <Card className="p-6 glass-section border-white/10">
