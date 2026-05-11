@@ -58,6 +58,7 @@ const ResourcesPage = lazy(() => import("./pages/ResourcesPage"));
 const Whitepaper = lazy(() => import("./pages/Whitepaper"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const TonRaPage = lazy(() => import("./pages/projects/TonRaPage"));
+const VerifyCertificate = lazy(() => import("./pages/VerifyCertificate"));
 
 const queryClient = new QueryClient();
 
