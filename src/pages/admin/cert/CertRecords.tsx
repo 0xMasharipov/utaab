@@ -239,7 +239,7 @@ export default function CertRecords() {
                     <td>{p?.full_name ?? '—'}</td>
                     <td><CertificateStatusBadge status={r.status} /></td>
                     <td>{r.blockchain_tx_hash ? <BlockchainTxLink hash={r.blockchain_tx_hash} /> : '—'}</td>
-                    <td>{r.pdf_url ? <a href={r.pdf_url} target="_blank" rel="noopener" className="text-primary text-xs underline">Open</a> : '—'}</td>
+                    <td>{r.pdf_url ? <button onClick={() => openSignedPdf(r.pdf_url)} className="text-primary text-xs underline">Open</button> : '—'}</td>
                     <td className="text-right space-x-1">
                       <Button size="sm" variant="ghost" onClick={() => generatePdf(r)} title="Generate PDF">
                         <FileText className="h-4 w-4" />
@@ -250,9 +250,9 @@ export default function CertRecords() {
                         </Button>
                       )}
                       {r.pdf_url && (
-                        <a href={r.pdf_url} download>
-                          <Button size="sm" variant="ghost"><Download className="h-4 w-4" /></Button>
-                        </a>
+                        <Button size="sm" variant="ghost" onClick={() => openSignedPdf(r.pdf_url)} title="Download">
+                          <Download className="h-4 w-4" />
+                        </Button>
                       )}
                     </td>
                   </tr>
