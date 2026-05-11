@@ -43,6 +43,53 @@ Deno.serve(async (req) => {
   const supabaseUrl = Deno.env.get('SUPABASE_URL')
   const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
 
+  // Authorization: only service_role or admin users may invoke. The
+  // gateway-level verify_jwt only checks JWT validity (anon key passes), so we
+  // enforce role checks here to prevent abuse (phishing/spam via templates).
+  const authHeader = req.headers.get('Authorization') || ''
+  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : ''
+
+  if (!token) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+
+  try {
+    const [, payloadB64] = token.split('.')
+    const padded = payloadB64 + '='.repeat((4 - (payloadB64.length % 4)) % 4)
+    const claims = JSON.parse(
+      atob(padded.replace(/-/g, '+').replace(/_/g, '/'))
+    ) as { role?: string; sub?: string }
+
+    if (claims.role !== 'service_role') {
+      // Allow authenticated admin users
+      if (!claims.sub || !supabaseUrl || !supabaseServiceKey) {
+        return new Response(JSON.stringify({ error: 'Forbidden' }), {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        })
+      }
+      const adminClient = createClient(supabaseUrl, supabaseServiceKey)
+      const { data: isAdmin } = await adminClient.rpc('has_role', {
+        _user_id: claims.sub,
+        _role: 'admin',
+      })
+      if (!isAdmin) {
+        return new Response(JSON.stringify({ error: 'Forbidden' }), {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        })
+      }
+    }
+  } catch {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+
   if (!supabaseUrl || !supabaseServiceKey) {
     console.error('Missing required environment variables')
     return new Response(
