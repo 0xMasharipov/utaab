@@ -30,6 +30,7 @@ const sidebarItems = [
   { icon: Users, label: 'Communities', path: ADMIN_ROUTES.COMMUNITIES },
   { icon: Calendar, label: 'Events', path: ADMIN_ROUTES.EVENTS },
   { icon: BookOpen, label: 'Courses', path: ADMIN_ROUTES.COURSES },
+  { icon: Award, label: 'Certificates', path: ADMIN_ROUTES.CERT_DASHBOARD },
   { icon: FileText, label: 'Blog', path: ADMIN_ROUTES.BLOG },
   { icon: FileText, label: 'Site Content', path: ADMIN_ROUTES.SITE_CONTENT },
   { icon: Megaphone, label: 'Announcements', path: ADMIN_ROUTES.ANNOUNCEMENTS },
