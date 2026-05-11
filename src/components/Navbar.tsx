@@ -314,6 +314,7 @@ export const Navbar = () => {
                       { key: 'resources', type: 'page', path: '/resources' },
                       { key: 'blog', type: 'page', path: '/blog' },
                       { key: 'education', type: 'page', path: '/education', label: 'education.title' },
+                      { key: 'verifyCertificate', type: 'page', path: '/verify-certificate' },
                     ].map((item, i) => (
                   <button
                         key={item.key}
