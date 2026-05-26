@@ -1,0 +1,5 @@
+{
+  "$schema": "Allowlist of SECURITY DEFINER functions in public schema that may keep EXECUTE grants for PUBLIC/anon/authenticated. Format: 'function_name(arg_types)': 'justification'.",
+  "has_role(uuid,app_role)": "Required by dozens of RLS policies; revoking would break the admin model.",
+  "is_ip_blacklisted(inet)": "Called by edge functions for IP filtering; safe to remain callable."
+}
