@@ -1,0 +1,18 @@
+REVOKE EXECUTE ON FUNCTION public.update_updated_at_column() FROM anon, authenticated, PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.update_enrollment_count()  FROM anon, authenticated, PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.update_course_rating()     FROM anon, authenticated, PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.update_subtitle_jobs_updated_at() FROM anon, authenticated, PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.validate_application_status()      FROM anon, authenticated, PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.cleanup_old_rate_limits()          FROM anon, authenticated, PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.cleanup_old_utaab_records()        FROM anon, authenticated, PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.cleanup_old_security_events()      FROM anon, authenticated, PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.cleanup_expired_admin_sessions()   FROM anon, authenticated, PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.ensure_admin_role(text)            FROM anon, authenticated, PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.provision_root_admin()             FROM anon, authenticated, PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.log_security_event(text, text, inet, uuid, text, text, jsonb) FROM anon, authenticated, PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.get_security_metrics(integer)      FROM anon, authenticated, PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.generate_certificate_number()      FROM anon, authenticated, PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.enqueue_email(text, jsonb)          FROM anon, authenticated, PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.delete_email(text, bigint)          FROM anon, authenticated, PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.read_email_batch(text, integer, integer) FROM anon, authenticated, PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.move_to_dlq(text, text, bigint, jsonb) FROM anon, authenticated, PUBLIC;
