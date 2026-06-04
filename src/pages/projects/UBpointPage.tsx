@@ -247,7 +247,7 @@ const FloatingDevice = () => {
         transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
       >
         <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center">
-          <ShieldCheck className="w-4 h-4 text-blue-600" />
+          <GlyphChain width={16} height={16} />
         </div>
         <div className="text-left">
           <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">On-chain</div>
