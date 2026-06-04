@@ -15,9 +15,12 @@ import {
   Rocket,
   Building2,
   ArrowUpRight,
+  Menu,
+  X,
+  Linkedin,
+  Send,
+  Mail,
 } from 'lucide-react';
-import { Navbar } from '@/components/Navbar';
-import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import logoAsset from '@/assets/ubpoint-logo.png.asset.json';
 import coinAsset from '@/assets/ubpoint-coin.png.asset.json';
@@ -25,6 +28,131 @@ import mockupAsset from '@/assets/ubpoint-mockup.png.asset.json';
 
 const WHATSAPP_URL = 'https://chat.whatsapp.com/HnTcuJYiKAiDpLPnG33mEr';
 const SPONSOR_EMAIL = 'mailto:info@utaab.org?subject=UBpoint%20Sponsor%20Inquiry';
+
+/* ---------- Light Navbar (page-local) ---------- */
+const navLinks = [
+  { href: '#features', label: 'Features' },
+  { href: '#showcase', label: 'Inside the app' },
+  { href: '#sponsors', label: 'Sponsors' },
+  { href: '#rewards', label: 'Rewards' },
+];
+
+const LightNavbar = () => {
+  const [open, setOpen] = useState(false);
+  return (
+    <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-blue-100">
+      <div className="max-w-7xl mx-auto px-5 md:px-6 h-16 flex items-center justify-between">
+        <Link to="/" className="flex items-center gap-2.5">
+          <img src={logoAsset.url} alt="UBpoint" className="h-9 w-auto" />
+          <span className="text-base font-extrabold tracking-tight text-slate-900">UBpoint</span>
+        </Link>
+        <nav className="hidden md:flex items-center gap-7">
+          {navLinks.map((l) => (
+            <a key={l.href} href={l.href} className="text-sm font-semibold text-slate-700 hover:text-blue-600 transition-colors">
+              {l.label}
+            </a>
+          ))}
+        </nav>
+        <div className="flex items-center gap-2">
+          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="hidden sm:inline-block">
+            <Button className="h-9 px-4 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white text-sm font-semibold shadow-[0_8px_24px_-10px_rgba(37,99,235,0.6)]">
+              Join UTAAB
+            </Button>
+          </a>
+          <button
+            className="md:hidden p-2 rounded-lg text-slate-700 hover:bg-blue-50"
+            onClick={() => setOpen((v) => !v)}
+            aria-label="Toggle menu"
+          >
+            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
+      </div>
+      {open && (
+        <div className="md:hidden border-t border-blue-100 bg-white/95 backdrop-blur-xl">
+          <div className="px-5 py-3 flex flex-col gap-1">
+            {navLinks.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={() => setOpen(false)}
+                className="px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-700"
+              >
+                {l.label}
+              </a>
+            ))}
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="mt-2">
+              <Button className="w-full h-10 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm font-semibold">
+                Join UTAAB
+              </Button>
+            </a>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+};
+
+/* ---------- Light Footer (page-local) ---------- */
+const LightFooter = () => (
+  <footer className="relative bg-blue-50/60 border-t border-blue-100">
+    <div className="max-w-7xl mx-auto px-6 py-14 grid gap-10 md:grid-cols-4">
+      <div className="md:col-span-2">
+        <div className="flex items-center gap-2.5">
+          <img src={logoAsset.url} alt="UBpoint" className="h-9 w-auto" />
+          <span className="text-lg font-extrabold tracking-tight text-slate-900">UBpoint</span>
+        </div>
+        <p className="mt-4 text-sm text-slate-600 max-w-md leading-relaxed">
+          UTAAB's blockchain-powered student engagement platform. Earn UBP, unlock rewards,
+          and verify every action on-chain.
+        </p>
+        <div className="mt-5 flex items-center gap-2">
+          {[
+            { href: 'https://www.linkedin.com/company/utaa-blockchain/', icon: Linkedin },
+            { href: 'https://t.me/utaa_blockchain', icon: Send },
+            { href: 'https://x.com/utaa_blockchain?s=11', icon: Twitter },
+            { href: 'mailto:info@utaab.org', icon: Mail },
+          ].map((s, i) => (
+            <a
+              key={i}
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-10 h-10 rounded-full bg-white border border-blue-100 flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-colors"
+            >
+              <s.icon className="w-4 h-4" />
+            </a>
+          ))}
+        </div>
+      </div>
+      <div>
+        <div className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Product</div>
+        <ul className="space-y-2 text-sm">
+          {navLinks.map((l) => (
+            <li key={l.href}>
+              <a href={l.href} className="text-slate-700 hover:text-blue-600">{l.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <div className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Community</div>
+        <ul className="space-y-2 text-sm">
+          <li><Link to="/" className="text-slate-700 hover:text-blue-600">UTAAB Home</Link></li>
+          <li><Link to="/projects" className="text-slate-700 hover:text-blue-600">All Projects</Link></li>
+          <li><a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="text-slate-700 hover:text-blue-600">WhatsApp Community</a></li>
+          <li><a href={SPONSOR_EMAIL} className="text-slate-700 hover:text-blue-600">Become a Sponsor</a></li>
+        </ul>
+      </div>
+    </div>
+    <div className="border-t border-blue-100">
+      <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+        <div>© {new Date().getFullYear()} UTAAB · UBpoint. All rights reserved.</div>
+        <div>Built on Sepolia · utaab.org</div>
+      </div>
+    </div>
+  </footer>
+);
 
 /* ---------- Decorative background ---------- */
 const HeroBackground = () => (
@@ -135,8 +263,13 @@ const Hero = () => (
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: 'easeOut' }}
       >
+        <img
+          src={logoAsset.url}
+          alt="UBpoint"
+          className="h-16 md:h-20 w-auto mb-6 drop-shadow-[0_10px_30px_rgba(37,99,235,0.3)]"
+        />
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold mb-6">
-          <img src={logoAsset.url} alt="" className="w-4 h-4 rounded" />
+          <Sparkles className="w-3.5 h-3.5" />
           UTAAB · Blockchain Engagement Platform
         </div>
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.05]">
@@ -386,7 +519,7 @@ const Showcase = () => {
   const x = useTransform(scrollYProgress, [0, 1], ['5%', '-30%']);
 
   return (
-    <section className="relative py-24 md:py-32 bg-gradient-to-b from-white via-blue-50/40 to-white overflow-hidden">
+    <section id="showcase" className="relative py-24 md:py-32 bg-gradient-to-b from-white via-blue-50/40 to-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 mb-14 text-center">
         <div className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-4">
           Inside the app
@@ -433,7 +566,7 @@ const sponsorTasks = [
 ];
 
 const Sponsors = () => (
-  <section className="relative py-24 md:py-32 bg-white overflow-hidden">
+  <section id="sponsors" className="relative py-24 md:py-32 bg-white overflow-hidden">
     <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
       <motion.div
         initial={{ opacity: 0, x: -20 }}
@@ -470,7 +603,7 @@ const Sponsors = () => (
           ))}
         </ul>
         <a href={SPONSOR_EMAIL} className="inline-block mt-8">
-          <Button className="h-12 px-6 bg-slate-900 hover:bg-slate-800 text-white rounded-full">
+          <Button className="h-12 px-6 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white rounded-full shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)]">
             Become a Sponsor
             <ArrowRight className="ml-2 w-4 h-4" />
           </Button>
@@ -657,7 +790,7 @@ const UBpointPage = () => {
 
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans">
-      <Navbar />
+      <LightNavbar />
       <main>
         <Hero />
         <FeatureGrid />
@@ -666,7 +799,7 @@ const UBpointPage = () => {
         <Metrics />
         <FinalCTA />
       </main>
-      <Footer onPrivacyClick={() => {}} />
+      <LightFooter />
     </div>
   );
 };
