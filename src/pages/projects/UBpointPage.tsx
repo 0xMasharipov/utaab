@@ -696,7 +696,7 @@ const CountUp: React.FC<{ to: number; suffix?: string }> = ({ to, suffix = '' })
 const Metrics = () => (
   <section id="rewards" className="relative py-24 md:py-32 bg-gradient-to-b from-white to-blue-50/50 overflow-hidden">
     <motion.img
-      src={coinAsset.url}
+      src={coinTiltAsset.url}
       alt=""
       aria-hidden
       className="hidden md:block absolute -left-10 top-1/2 -translate-y-1/2 w-48 opacity-80 pointer-events-none"
