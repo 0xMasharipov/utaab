@@ -3,17 +3,7 @@ import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
-  Gift,
-  ShieldCheck,
-  Trophy,
-  GraduationCap,
-  Sparkles,
-  Coins,
-  CheckCircle2,
   Twitter,
-  MessageCircle,
-  Rocket,
-  Building2,
   ArrowUpRight,
   Menu,
   X,
@@ -21,6 +11,19 @@ import {
   Send,
   Mail,
 } from 'lucide-react';
+import {
+  GlyphCoin,
+  GlyphGift,
+  GlyphChain,
+  GlyphScroll,
+  GlyphLaurel,
+  GlyphSpark,
+  GlyphX,
+  GlyphChat,
+  GlyphRocket,
+  GlyphCheckMini,
+  GlyphTile,
+} from './ubpoint/glyphs';
 import { Button } from '@/components/ui/button';
 import logoAsset from '@/assets/ubpoint-logo.png.asset.json';
 import coinAsset from '@/assets/ubpoint-coin.png.asset.json';
