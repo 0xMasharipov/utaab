@@ -342,12 +342,12 @@ const Hero = () => (
 
 /* ---------- Feature grid ---------- */
 const features = [
-  { icon: Coins, title: 'Earn UBP', desc: 'Receive points for attending events, contributing to community projects, and participating in hackathons.' },
-  { icon: Gift, title: 'Unlock Rewards', desc: 'Redeem UBP for partner discounts, Steam gift cards, tokenized assets, silver, gold, and future ecosystem rewards.' },
-  { icon: ShieldCheck, title: 'On-Chain Verification', desc: 'Every transaction can be verified on-chain using the Sepolia blockchain network.' },
-  { icon: GraduationCap, title: 'Student Identity', desc: 'Build a verifiable portfolio of participation, contributions, and achievements.' },
-  { icon: Trophy, title: 'Leaderboards', desc: 'Compete with community members and climb the rankings.' },
-  { icon: Sparkles, title: 'Campus Engagement', desc: 'Transform university activities into measurable achievements.' },
+  { icon: GlyphCoin, title: 'Earn UBP', desc: 'Receive points for attending events, contributing to community projects, and participating in hackathons.' },
+  { icon: GlyphGift, title: 'Unlock Rewards', desc: 'Redeem UBP for partner discounts, Steam gift cards, tokenized assets, silver, gold, and future ecosystem rewards.' },
+  { icon: GlyphChain, title: 'On-Chain Verification', desc: 'Every transaction can be verified on-chain using the Sepolia blockchain network.' },
+  { icon: GlyphScroll, title: 'Student Identity', desc: 'Build a verifiable portfolio of participation, contributions, and achievements.' },
+  { icon: GlyphLaurel, title: 'Leaderboards', desc: 'Compete with community members and climb the rankings.' },
+  { icon: GlyphSpark, title: 'Campus Engagement', desc: 'Transform university activities into measurable achievements.' },
 ];
 
 const FeatureGrid = () => (
