@@ -768,6 +768,15 @@ const FinalCTA = () => (
         }}
       />
     </div>
+    <motion.img
+      src={coinStackAsset.url}
+      alt=""
+      aria-hidden
+      className="hidden md:block pointer-events-none select-none absolute -left-16 bottom-0 w-[320px] opacity-30"
+      animate={{ y: [0, -10, 0] }}
+      transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+      loading="lazy"
+    />
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
