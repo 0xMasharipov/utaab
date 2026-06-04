@@ -59,6 +59,7 @@ const ResourcesPage = lazy(() => import("./pages/ResourcesPage"));
 const Whitepaper = lazy(() => import("./pages/Whitepaper"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const TonRaPage = lazy(() => import("./pages/projects/TonRaPage"));
+const UBpointPage = lazy(() => import("./pages/projects/UBpointPage"));
 const VerifyCertificate = lazy(() => import("./pages/VerifyCertificate"));
 const CertDashboard = lazy(() => import("./pages/admin/cert/CertDashboard"));
 const CertEvents = lazy(() => import("./pages/admin/cert/CertEvents"));
@@ -109,6 +110,7 @@ function App() {
             <Route path="/whitepaper" element={<Whitepaper />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/projects/tonra" element={<TonRaPage />} />
+            <Route path="/projects/ubpoint" element={<UBpointPage />} />
             <Route path="/verify-certificate" element={<VerifyCertificate />} />
             
             {/* Authentication */}

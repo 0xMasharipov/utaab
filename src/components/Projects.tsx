@@ -30,6 +30,7 @@ export const Projects = () => {
       tags: ['projects.tags.rewards', 'projects.tags.community', 'projects.tags.engagement'],
       status: 'underDevelopment',
       image: '/images/projects/UTAAB_UBP.webp',
+      href: '/projects/ubpoint',
     },
     {
       titleKey: 'projects.tonra.title',
