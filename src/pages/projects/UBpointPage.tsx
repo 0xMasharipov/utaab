@@ -310,7 +310,7 @@ const Hero = () => (
             Live on Sepolia
           </div>
           <div className="flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-blue-500" />
+            <GlyphChain width={14} height={14} />
             On-chain verified
           </div>
         </div>
