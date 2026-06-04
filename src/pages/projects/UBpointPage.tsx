@@ -790,7 +790,7 @@ const UBpointPage = () => {
 
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans">
-      <Navbar />
+      <LightNavbar />
       <main>
         <Hero />
         <FeatureGrid />
@@ -799,7 +799,7 @@ const UBpointPage = () => {
         <Metrics />
         <FinalCTA />
       </main>
-      <Footer onPrivacyClick={() => {}} />
+      <LightFooter />
     </div>
   );
 };
