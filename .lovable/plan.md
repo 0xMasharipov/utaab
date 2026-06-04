@@ -1,51 +1,38 @@
 ## Goal
 
-Replace the generic "blue-gradient rounded-square + lucide icon" pattern across the UBpoint page with custom **duotone SVG glyph tiles** — a more crafted, editorial visual language that ties into the UBpoint silver/blue identity.
+Make the `/projects/ubpoint` page fully light-themed (currently the imported global `Navbar` and `Footer` are dark and clash with the white aesthetic), feature a prominent UBpoint logo lockup, and lighten the remaining dark buttons.
 
-## Visual language
+Scope: only `src/pages/projects/UBpointPage.tsx` — no changes to global Navbar/Footer (used by every other dark-themed page).
 
-Each glyph is a hand-tuned 2-layer SVG:
-- **Back shape** — soft `fill-blue-200/70` silhouette, slightly offset
-- **Front shape** — `fill-blue-700` (or `stroke-blue-700` 1.5) primary mark
-- No gradient tile background. Instead: frosted square `bg-white/60 backdrop-blur` with a hairline `border-blue-200/70` and a soft inner glow `shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_8px_24px_-12px_rgba(37,99,235,0.35)]`
-- Rounded `rounded-2xl`, size 56×56 in feature cards, 48×48 in sponsor tasks
-- Subtle hover: back-shape drifts 2px, no color change
+## Changes
 
-Six custom glyphs to author (24×24 viewBox, inline SVGs in a new file):
-1. `GlyphCoin` — front coin disc + back coin disc offset (Earn UBP)
-2. `GlyphGift` — wrapped box + ribbon as back shape (Unlock Rewards)
-3. `GlyphChain` — two interlocking chain links, back link lighter (On-Chain Verification)
-4. `GlyphScroll` — diploma scroll + seal (Student Identity)
-5. `GlyphLaurel` — laurel wreath + star center (Leaderboards)
-6. `GlyphSpark` — 4-point sparkle + soft halo back (Campus Engagement)
+### 1. Page-local light Navbar
+- Build a small inline `LightNavbar` component (sticky, `bg-white/80 backdrop-blur-xl border-b border-blue-100`, slate text).
+- Left: UBpoint logo image (`h-9 w-auto`) + wordmark "UBpoint".
+- Right: links (`Features`, `Inside the app`, `Sponsors`, `Rewards`) in `text-slate-700 hover:text-blue-600`, plus a primary blue gradient "Join UTAAB" pill.
+- Mobile: hamburger that toggles a light dropdown sheet (same tokens).
+- Replace `<Navbar />` in `UBpointPage` with `<LightNavbar />`.
 
-Sponsor task glyphs (smaller, same duotone style):
-- `GlyphX` — minimal X mark
-- `GlyphChat` — speech bubble + back bubble
-- `GlyphRocket` — rocket silhouette + flame back
+### 2. Page-local light Footer
+- Build inline `LightFooter` (`bg-blue-50/60 border-t border-blue-100`).
+- Logo lockup + tagline, three small link columns (Product / Resources / Community), social icons in blue, copyright in `text-slate-500`.
+- Replace `<Footer onPrivacyClick={...} />` with `<LightFooter />`.
 
-## Small inline icons
+### 3. UBpoint logo — added & resized
+- Hero: replace the tiny `w-4 h-4` logo inside the badge with a real lockup above the H1 — `<img src={logoAsset.url} className="h-14 md:h-16 w-auto mb-6 drop-shadow-[0_8px_24px_rgba(37,99,235,0.25)]" />`.
+- Keep the small badge below it for the "UTAAB · Blockchain Engagement Platform" chip (no logo inside).
+- Reuse the same logo in the new LightNavbar (`h-9`) and LightFooter (`h-8`).
 
-Replace lucide usage in chips/lists with thinner, custom matching marks:
-- Hero `Sparkles` badge → `GlyphSpark` (12px)
-- `ShieldCheck` chips (hero + verified pill) → `GlyphChain` mini (no tile)
-- `CheckCircle2` (sponsor benefit list) → custom 14px duotone check (light disc back + thin check front)
-- `Building2` pill ("For Brands & Sponsors") → `GlyphScroll` mini
+### 4. Lighten dark buttons
+- Sponsors section "Become a Sponsor" button: swap `bg-slate-900 hover:bg-slate-800 text-white` → `bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)]` to match the hero CTA.
+- PhoneFrame device chassis (`bg-slate-900`) stays dark — that's a realistic phone bezel, not a UI button. Leave as-is.
+- MockScreen header logo dot stays blue (already light).
+- FinalCTA gradient stays deep blue (intentional contrast for the final hero); white button on it is already light.
 
-Footer/nav social icons (Linkedin, Send, Twitter, Mail) — **leave untouched** (universally recognizable brand marks; replacing harms clarity).
-
-## Implementation
-
-1. Create `src/pages/projects/ubpoint/glyphs.tsx` exporting the 9 custom glyph components + a `GlyphTile` wrapper component (frosted square with hover animation).
-2. Edit `src/pages/projects/UBpointPage.tsx`:
-   - Replace `features` array `icon` refs with new Glyph components.
-   - Replace `FeatureGrid` icon tile (lines 390–392) with `<GlyphTile><f.icon /></GlyphTile>`.
-   - Replace `sponsorTasks` icons + their tile (lines 656–658) with smaller `GlyphTile` variant.
-   - Swap inline lucide uses noted above for custom mini-glyphs.
-   - Remove now-unused lucide imports (`Coins, Gift, ShieldCheck, GraduationCap, Trophy, Sparkles, CheckCircle2, Building2, Rocket, MessageCircle, Twitter`) — keep `ArrowRight`, `ArrowUpRight`, `Menu`, `X`, `Linkedin`, `Send`, `Mail`, `Twitter` (footer).
+### 5. Verify
+- Read the edited file back, then load `/projects/ubpoint` in the preview to confirm light navbar/footer, larger logo, and no dark button remnants.
 
 ## Out of scope
-
-- Coin imagery / mockup / layout / typography / copy
-- Navbar, Footer, routing
-- Any page other than `/projects/ubpoint`
+- No changes to the global `Navbar.tsx` / `Footer.tsx` (other pages keep their dark theme).
+- No new routes, assets, translations, or backend changes.
+- No design-system token changes.

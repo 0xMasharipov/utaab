@@ -3,7 +3,17 @@ import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
+  Gift,
+  ShieldCheck,
+  Trophy,
+  GraduationCap,
+  Sparkles,
+  Coins,
+  CheckCircle2,
   Twitter,
+  MessageCircle,
+  Rocket,
+  Building2,
   ArrowUpRight,
   Menu,
   X,
@@ -11,26 +21,9 @@ import {
   Send,
   Mail,
 } from 'lucide-react';
-import {
-  GlyphCoin,
-  GlyphGift,
-  GlyphChain,
-  GlyphScroll,
-  GlyphLaurel,
-  GlyphSpark,
-  GlyphX,
-  GlyphChat,
-  GlyphRocket,
-  GlyphCheckMini,
-  GlyphTile,
-} from './ubpoint/glyphs';
 import { Button } from '@/components/ui/button';
 import logoAsset from '@/assets/ubpoint-logo.png.asset.json';
 import coinAsset from '@/assets/ubpoint-coin.png.asset.json';
-import coinTiltAsset from '@/assets/ubpoint-coin-tilt.png.asset.json';
-import coinFrontAsset from '@/assets/ubpoint-coin-front.png.asset.json';
-import coinEdgeAsset from '@/assets/ubpoint-coin-edge.png.asset.json';
-import coinStackAsset from '@/assets/ubpoint-coin-stack.png.asset.json';
 import mockupAsset from '@/assets/ubpoint-mockup.png.asset.json';
 
 const WHATSAPP_URL = 'https://chat.whatsapp.com/HnTcuJYiKAiDpLPnG33mEr';
@@ -233,7 +226,9 @@ const FloatingDevice = () => {
         animate={{ y: [0, -8, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
       >
-        <img src={coinFrontAsset.url} alt="" aria-hidden className="w-9 h-9 object-contain drop-shadow-md" />
+        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+          <Sparkles className="w-4 h-4 text-white" />
+        </div>
         <div className="text-left">
           <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">Earned</div>
           <div className="text-sm font-bold text-slate-900">+50 UBP</div>
@@ -247,7 +242,7 @@ const FloatingDevice = () => {
         transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
       >
         <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center">
-          <GlyphChain width={16} height={16} />
+          <ShieldCheck className="w-4 h-4 text-blue-600" />
         </div>
         <div className="text-left">
           <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">On-chain</div>
@@ -274,7 +269,7 @@ const Hero = () => (
           className="h-16 md:h-20 w-auto mb-6 drop-shadow-[0_10px_30px_rgba(37,99,235,0.3)]"
         />
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold mb-6">
-          <GlyphSpark width={14} height={14} />
+          <Sparkles className="w-3.5 h-3.5" />
           UTAAB · Blockchain Engagement Platform
         </div>
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.05]">
@@ -310,7 +305,7 @@ const Hero = () => (
             Live on Sepolia
           </div>
           <div className="flex items-center gap-1.5">
-            <GlyphChain width={14} height={14} />
+            <ShieldCheck className="w-3.5 h-3.5 text-blue-500" />
             On-chain verified
           </div>
         </div>
@@ -320,21 +315,8 @@ const Hero = () => (
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.9, delay: 0.2, ease: 'easeOut' }}
-        className="relative"
       >
-        {/* Hero coin cluster behind the phone */}
-        <motion.img
-          src={coinStackAsset.url}
-          alt=""
-          aria-hidden
-          className="pointer-events-none select-none absolute -top-10 -right-6 md:-top-16 md:-right-16 w-[260px] md:w-[420px] opacity-90 drop-shadow-[0_20px_50px_rgba(37,99,235,0.25)] z-0"
-          animate={{ y: [0, -12, 0], rotateZ: [-2, 2, -2] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-          loading="eager"
-        />
-        <div className="relative z-10">
-          <FloatingDevice />
-        </div>
+        <FloatingDevice />
       </motion.div>
     </div>
   </section>
@@ -342,12 +324,12 @@ const Hero = () => (
 
 /* ---------- Feature grid ---------- */
 const features = [
-  { icon: GlyphCoin, title: 'Earn UBP', desc: 'Receive points for attending events, contributing to community projects, and participating in hackathons.' },
-  { icon: GlyphGift, title: 'Unlock Rewards', desc: 'Redeem UBP for partner discounts, Steam gift cards, tokenized assets, silver, gold, and future ecosystem rewards.' },
-  { icon: GlyphChain, title: 'On-Chain Verification', desc: 'Every transaction can be verified on-chain using the Sepolia blockchain network.' },
-  { icon: GlyphScroll, title: 'Student Identity', desc: 'Build a verifiable portfolio of participation, contributions, and achievements.' },
-  { icon: GlyphLaurel, title: 'Leaderboards', desc: 'Compete with community members and climb the rankings.' },
-  { icon: GlyphSpark, title: 'Campus Engagement', desc: 'Transform university activities into measurable achievements.' },
+  { icon: Coins, title: 'Earn UBP', desc: 'Receive points for attending events, contributing to community projects, and participating in hackathons.' },
+  { icon: Gift, title: 'Unlock Rewards', desc: 'Redeem UBP for partner discounts, Steam gift cards, tokenized assets, silver, gold, and future ecosystem rewards.' },
+  { icon: ShieldCheck, title: 'On-Chain Verification', desc: 'Every transaction can be verified on-chain using the Sepolia blockchain network.' },
+  { icon: GraduationCap, title: 'Student Identity', desc: 'Build a verifiable portfolio of participation, contributions, and achievements.' },
+  { icon: Trophy, title: 'Leaderboards', desc: 'Compete with community members and climb the rankings.' },
+  { icon: Sparkles, title: 'Campus Engagement', desc: 'Transform university activities into measurable achievements.' },
 ];
 
 const FeatureGrid = () => (
@@ -360,15 +342,6 @@ const FeatureGrid = () => (
         transition={{ duration: 0.6 }}
         className="text-center max-w-2xl mx-auto mb-16"
       >
-        <motion.img
-          src={coinFrontAsset.url}
-          alt=""
-          aria-hidden
-          className="w-16 h-16 mx-auto mb-5 drop-shadow-[0_10px_25px_rgba(37,99,235,0.25)]"
-          animate={{ y: [0, -6, 0], rotateZ: [-3, 3, -3] }}
-          transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-          loading="lazy"
-        />
         <div className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-4">
           The platform
         </div>
@@ -390,8 +363,8 @@ const FeatureGrid = () => (
             transition={{ duration: 0.5, delay: i * 0.06 }}
             className="group relative p-6 rounded-2xl bg-white/70 backdrop-blur-xl border border-blue-100 shadow-[0_10px_30px_-15px_rgba(37,99,235,0.25)] hover:shadow-[0_20px_50px_-20px_rgba(37,99,235,0.45)] hover:-translate-y-1 transition-all"
           >
-            <div className="mb-4">
-              <GlyphTile Icon={f.icon} size="md" />
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center mb-4 shadow-lg shadow-blue-500/30">
+              <f.icon className="w-6 h-6 text-white" />
             </div>
             <h3 className="text-lg font-bold text-slate-900 mb-2">{f.title}</h3>
             <p className="text-sm text-slate-600 leading-relaxed">{f.desc}</p>
@@ -587,9 +560,9 @@ const Showcase = () => {
 
 /* ---------- For Brands / Sponsors ---------- */
 const sponsorTasks = [
-  { icon: GlyphX, label: 'Follow on X', reward: 10 },
-  { icon: GlyphChat, label: 'Join Discord', reward: 25 },
-  { icon: GlyphRocket, label: 'Try the app', reward: 50 },
+  { icon: Twitter, label: 'Follow on X', reward: 10 },
+  { icon: MessageCircle, label: 'Join Discord', reward: 25 },
+  { icon: Rocket, label: 'Try the app', reward: 50 },
 ];
 
 const Sponsors = () => (
@@ -602,7 +575,7 @@ const Sponsors = () => (
         transition={{ duration: 0.6 }}
       >
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-5">
-          <GlyphScroll width={14} height={14} />
+          <Building2 className="w-3.5 h-3.5" />
           For Brands & Sponsors
         </div>
         <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
@@ -624,7 +597,7 @@ const Sponsors = () => (
             'Sponsor dashboard with live conversion data',
           ].map((p) => (
             <li key={p} className="flex items-start gap-2.5 text-sm text-slate-700">
-              <GlyphCheckMini width={18} height={18} className="shrink-0 mt-0.5" />
+              <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
               {p}
             </li>
           ))}
@@ -656,14 +629,14 @@ const Sponsors = () => (
             transition={{ duration: 0.4, delay: i * 0.08 }}
             className="flex items-center gap-4 p-5 rounded-2xl bg-white border border-blue-100 shadow-[0_10px_30px_-15px_rgba(37,99,235,0.25)] hover:shadow-[0_20px_50px_-20px_rgba(37,99,235,0.4)] transition-all"
           >
-            <div className="shrink-0">
-              <GlyphTile Icon={t.icon} size="sm" />
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shrink-0">
+              <t.icon className="w-5 h-5 text-white" />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <div className="text-sm font-bold text-slate-900">{t.label}</div>
                 <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-blue-50 text-[10px] font-bold text-blue-700">
-                  <GlyphChain width={10} height={10} /> Verified
+                  <ShieldCheck className="w-3 h-3" /> Verified
                 </div>
               </div>
               <div className="text-xs text-slate-500 mt-0.5">Sponsored · Partner Brand</div>
@@ -708,18 +681,18 @@ const CountUp: React.FC<{ to: number; suffix?: string }> = ({ to, suffix = '' })
 const Metrics = () => (
   <section id="rewards" className="relative py-24 md:py-32 bg-gradient-to-b from-white to-blue-50/50 overflow-hidden">
     <motion.img
-      src={coinTiltAsset.url}
+      src={coinAsset.url}
       alt=""
       aria-hidden
-      className="hidden md:block absolute -left-10 top-1/2 -translate-y-1/2 w-56 opacity-90 pointer-events-none select-none drop-shadow-2xl"
+      className="hidden md:block absolute -left-10 top-1/2 -translate-y-1/2 w-48 opacity-80 pointer-events-none"
       animate={{ y: [0, -20, 0], rotateZ: [0, 8, 0] }}
       transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
     />
     <motion.img
-      src={coinEdgeAsset.url}
+      src={coinAsset.url}
       alt=""
       aria-hidden
-      className="hidden md:block absolute -right-12 top-20 w-44 opacity-85 pointer-events-none select-none drop-shadow-2xl"
+      className="hidden md:block absolute -right-12 top-20 w-32 opacity-70 pointer-events-none"
       animate={{ y: [0, 20, 0], rotateZ: [0, -6, 0] }}
       transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
     />
@@ -771,15 +744,6 @@ const FinalCTA = () => (
         }}
       />
     </div>
-    <motion.img
-      src={coinStackAsset.url}
-      alt=""
-      aria-hidden
-      className="hidden md:block pointer-events-none select-none absolute -left-16 bottom-0 w-[320px] opacity-30"
-      animate={{ y: [0, -10, 0] }}
-      transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-      loading="lazy"
-    />
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
