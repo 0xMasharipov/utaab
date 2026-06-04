@@ -230,9 +230,7 @@ const FloatingDevice = () => {
         animate={{ y: [0, -8, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
       >
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
-          <Sparkles className="w-4 h-4 text-white" />
-        </div>
+        <img src={coinFrontAsset.url} alt="" aria-hidden className="w-9 h-9 object-contain drop-shadow-md" />
         <div className="text-left">
           <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">Earned</div>
           <div className="text-sm font-bold text-slate-900">+50 UBP</div>
