@@ -602,7 +602,7 @@ const Sponsors = () => (
         transition={{ duration: 0.6 }}
       >
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-5">
-          <Building2 className="w-3.5 h-3.5" />
+          <GlyphScroll width={14} height={14} />
           For Brands & Sponsors
         </div>
         <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
