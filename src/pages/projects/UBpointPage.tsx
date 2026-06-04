@@ -624,7 +624,7 @@ const Sponsors = () => (
             'Sponsor dashboard with live conversion data',
           ].map((p) => (
             <li key={p} className="flex items-start gap-2.5 text-sm text-slate-700">
-              <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+              <GlyphCheckMini width={18} height={18} className="shrink-0 mt-0.5" />
               {p}
             </li>
           ))}
