@@ -3,17 +3,7 @@ import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
-  Gift,
-  ShieldCheck,
-  Trophy,
-  GraduationCap,
-  Sparkles,
-  Coins,
-  CheckCircle2,
   Twitter,
-  MessageCircle,
-  Rocket,
-  Building2,
   ArrowUpRight,
   Menu,
   X,
@@ -21,6 +11,19 @@ import {
   Send,
   Mail,
 } from 'lucide-react';
+import {
+  GlyphCoin,
+  GlyphGift,
+  GlyphChain,
+  GlyphScroll,
+  GlyphLaurel,
+  GlyphSpark,
+  GlyphX,
+  GlyphChat,
+  GlyphRocket,
+  GlyphCheckMini,
+  GlyphTile,
+} from './ubpoint/glyphs';
 import { Button } from '@/components/ui/button';
 import logoAsset from '@/assets/ubpoint-logo.png.asset.json';
 import coinAsset from '@/assets/ubpoint-coin.png.asset.json';
@@ -244,7 +247,7 @@ const FloatingDevice = () => {
         transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
       >
         <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center">
-          <ShieldCheck className="w-4 h-4 text-blue-600" />
+          <GlyphChain width={16} height={16} />
         </div>
         <div className="text-left">
           <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">On-chain</div>
@@ -271,7 +274,7 @@ const Hero = () => (
           className="h-16 md:h-20 w-auto mb-6 drop-shadow-[0_10px_30px_rgba(37,99,235,0.3)]"
         />
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold mb-6">
-          <Sparkles className="w-3.5 h-3.5" />
+          <GlyphSpark width={14} height={14} />
           UTAAB · Blockchain Engagement Platform
         </div>
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.05]">
@@ -307,7 +310,7 @@ const Hero = () => (
             Live on Sepolia
           </div>
           <div className="flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-blue-500" />
+            <GlyphChain width={14} height={14} />
             On-chain verified
           </div>
         </div>
@@ -339,12 +342,12 @@ const Hero = () => (
 
 /* ---------- Feature grid ---------- */
 const features = [
-  { icon: Coins, title: 'Earn UBP', desc: 'Receive points for attending events, contributing to community projects, and participating in hackathons.' },
-  { icon: Gift, title: 'Unlock Rewards', desc: 'Redeem UBP for partner discounts, Steam gift cards, tokenized assets, silver, gold, and future ecosystem rewards.' },
-  { icon: ShieldCheck, title: 'On-Chain Verification', desc: 'Every transaction can be verified on-chain using the Sepolia blockchain network.' },
-  { icon: GraduationCap, title: 'Student Identity', desc: 'Build a verifiable portfolio of participation, contributions, and achievements.' },
-  { icon: Trophy, title: 'Leaderboards', desc: 'Compete with community members and climb the rankings.' },
-  { icon: Sparkles, title: 'Campus Engagement', desc: 'Transform university activities into measurable achievements.' },
+  { icon: GlyphCoin, title: 'Earn UBP', desc: 'Receive points for attending events, contributing to community projects, and participating in hackathons.' },
+  { icon: GlyphGift, title: 'Unlock Rewards', desc: 'Redeem UBP for partner discounts, Steam gift cards, tokenized assets, silver, gold, and future ecosystem rewards.' },
+  { icon: GlyphChain, title: 'On-Chain Verification', desc: 'Every transaction can be verified on-chain using the Sepolia blockchain network.' },
+  { icon: GlyphScroll, title: 'Student Identity', desc: 'Build a verifiable portfolio of participation, contributions, and achievements.' },
+  { icon: GlyphLaurel, title: 'Leaderboards', desc: 'Compete with community members and climb the rankings.' },
+  { icon: GlyphSpark, title: 'Campus Engagement', desc: 'Transform university activities into measurable achievements.' },
 ];
 
 const FeatureGrid = () => (
@@ -387,8 +390,8 @@ const FeatureGrid = () => (
             transition={{ duration: 0.5, delay: i * 0.06 }}
             className="group relative p-6 rounded-2xl bg-white/70 backdrop-blur-xl border border-blue-100 shadow-[0_10px_30px_-15px_rgba(37,99,235,0.25)] hover:shadow-[0_20px_50px_-20px_rgba(37,99,235,0.45)] hover:-translate-y-1 transition-all"
           >
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center mb-4 shadow-lg shadow-blue-500/30">
-              <f.icon className="w-6 h-6 text-white" />
+            <div className="mb-4">
+              <GlyphTile Icon={f.icon} size="md" />
             </div>
             <h3 className="text-lg font-bold text-slate-900 mb-2">{f.title}</h3>
             <p className="text-sm text-slate-600 leading-relaxed">{f.desc}</p>
@@ -584,9 +587,9 @@ const Showcase = () => {
 
 /* ---------- For Brands / Sponsors ---------- */
 const sponsorTasks = [
-  { icon: Twitter, label: 'Follow on X', reward: 10 },
-  { icon: MessageCircle, label: 'Join Discord', reward: 25 },
-  { icon: Rocket, label: 'Try the app', reward: 50 },
+  { icon: GlyphX, label: 'Follow on X', reward: 10 },
+  { icon: GlyphChat, label: 'Join Discord', reward: 25 },
+  { icon: GlyphRocket, label: 'Try the app', reward: 50 },
 ];
 
 const Sponsors = () => (
@@ -599,7 +602,7 @@ const Sponsors = () => (
         transition={{ duration: 0.6 }}
       >
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-5">
-          <Building2 className="w-3.5 h-3.5" />
+          <GlyphScroll width={14} height={14} />
           For Brands & Sponsors
         </div>
         <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
@@ -621,7 +624,7 @@ const Sponsors = () => (
             'Sponsor dashboard with live conversion data',
           ].map((p) => (
             <li key={p} className="flex items-start gap-2.5 text-sm text-slate-700">
-              <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+              <GlyphCheckMini width={18} height={18} className="shrink-0 mt-0.5" />
               {p}
             </li>
           ))}
@@ -653,14 +656,14 @@ const Sponsors = () => (
             transition={{ duration: 0.4, delay: i * 0.08 }}
             className="flex items-center gap-4 p-5 rounded-2xl bg-white border border-blue-100 shadow-[0_10px_30px_-15px_rgba(37,99,235,0.25)] hover:shadow-[0_20px_50px_-20px_rgba(37,99,235,0.4)] transition-all"
           >
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shrink-0">
-              <t.icon className="w-5 h-5 text-white" />
+            <div className="shrink-0">
+              <GlyphTile Icon={t.icon} size="sm" />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <div className="text-sm font-bold text-slate-900">{t.label}</div>
                 <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-blue-50 text-[10px] font-bold text-blue-700">
-                  <ShieldCheck className="w-3 h-3" /> Verified
+                  <GlyphChain width={10} height={10} /> Verified
                 </div>
               </div>
               <div className="text-xs text-slate-500 mt-0.5">Sponsored · Partner Brand</div>

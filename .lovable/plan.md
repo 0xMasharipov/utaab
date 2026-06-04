@@ -1,31 +1,51 @@
 ## Goal
 
-Process the 4 uploaded silver coin images (background removal → transparent PNGs), upload them as Lovable assets, and weave them into the `/projects/ubpoint` page as premium decorative elements.
+Replace the generic "blue-gradient rounded-square + lucide icon" pattern across the UBpoint page with custom **duotone SVG glyph tiles** — a more crafted, editorial visual language that ties into the UBpoint silver/blue identity.
 
-## Steps
+## Visual language
 
-### 1. Background removal + upload
-For each of the 4 uploads, run `imagegen--edit_image` with `transparent_background: true` to produce a transparent PNG, then upload via `lovable-assets create` and write `.asset.json` pointers:
-- `user-uploads://UB-Point_2.png` → `src/assets/ubpoint-coin-tilt.png.asset.json` (tilted single coin)
-- `user-uploads://UB-Point_4.png` → `src/assets/ubpoint-coin-front.png.asset.json` (front-facing coin)
-- `user-uploads://UB-Point_5.png` → `src/assets/ubpoint-coin-edge.png.asset.json` (edge / low-angle coin)
-- `user-uploads://UTAAB_UBP_2.png` → `src/assets/ubpoint-coin-stack.png.asset.json` (coin cluster)
+Each glyph is a hand-tuned 2-layer SVG:
+- **Back shape** — soft `fill-blue-200/70` silhouette, slightly offset
+- **Front shape** — `fill-blue-700` (or `stroke-blue-700` 1.5) primary mark
+- No gradient tile background. Instead: frosted square `bg-white/60 backdrop-blur` with a hairline `border-blue-200/70` and a soft inner glow `shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_8px_24px_-12px_rgba(37,99,235,0.35)]`
+- Rounded `rounded-2xl`, size 56×56 in feature cards, 48×48 in sponsor tasks
+- Subtle hover: back-shape drifts 2px, no color change
 
-### 2. Placement on `src/pages/projects/UBpointPage.tsx`
+Six custom glyphs to author (24×24 viewBox, inline SVGs in a new file):
+1. `GlyphCoin` — front coin disc + back coin disc offset (Earn UBP)
+2. `GlyphGift` — wrapped box + ribbon as back shape (Unlock Rewards)
+3. `GlyphChain` — two interlocking chain links, back link lighter (On-Chain Verification)
+4. `GlyphScroll` — diploma scroll + seal (Student Identity)
+5. `GlyphLaurel` — laurel wreath + star center (Leaderboards)
+6. `GlyphSpark` — 4-point sparkle + soft halo back (Campus Engagement)
 
-- **Hero (right side, behind the iPhone)** — add the `coin-stack` cluster as a large decorative element drifting top-right behind the floating phone (`absolute -top-10 -right-10 w-[320px] md:w-[420px] opacity-90 mix-blend-luminosity`), with a slow float animation. Adds visual weight to the hero.
-- **Hero floating accent** — replace the existing UBP `Sparkles` toast icon with the small `coin-tilt` thumbnail (32–40px) for an authentic brand touch.
-- **Feature grid intro** — add a small `coin-front` (w-12) inline next to the "The platform" pill for brand presence.
-- **Metrics section** — replace the two existing reused `coinAsset` floating decorations with the new transparent coins: `coin-tilt` on the left (w-56) and `coin-edge` on the right (w-40), keeping the existing float/rotate animations.
-- **Final CTA** — add a subtle `coin-stack` cluster bottom-left at low opacity (`opacity-20 w-[280px]`) for depth on the blue gradient.
+Sponsor task glyphs (smaller, same duotone style):
+- `GlyphX` — minimal X mark
+- `GlyphChat` — speech bubble + back bubble
+- `GlyphRocket` — rocket silhouette + flame back
 
-All new images use `pointer-events-none select-none`, `loading="lazy"` (except hero), and `aria-hidden` since they're decorative.
+## Small inline icons
 
-### 3. Verify
-- Read the edited file back.
-- Open `/projects/ubpoint` in the preview and confirm coins render with transparent backgrounds, no white halos, and don't break layout on mobile.
+Replace lucide usage in chips/lists with thinner, custom matching marks:
+- Hero `Sparkles` badge → `GlyphSpark` (12px)
+- `ShieldCheck` chips (hero + verified pill) → `GlyphChain` mini (no tile)
+- `CheckCircle2` (sponsor benefit list) → custom 14px duotone check (light disc back + thin check front)
+- `Building2` pill ("For Brands & Sponsors") → `GlyphScroll` mini
+
+Footer/nav social icons (Linkedin, Send, Twitter, Mail) — **leave untouched** (universally recognizable brand marks; replacing harms clarity).
+
+## Implementation
+
+1. Create `src/pages/projects/ubpoint/glyphs.tsx` exporting the 9 custom glyph components + a `GlyphTile` wrapper component (frosted square with hover animation).
+2. Edit `src/pages/projects/UBpointPage.tsx`:
+   - Replace `features` array `icon` refs with new Glyph components.
+   - Replace `FeatureGrid` icon tile (lines 390–392) with `<GlyphTile><f.icon /></GlyphTile>`.
+   - Replace `sponsorTasks` icons + their tile (lines 656–658) with smaller `GlyphTile` variant.
+   - Swap inline lucide uses noted above for custom mini-glyphs.
+   - Remove now-unused lucide imports (`Coins, Gift, ShieldCheck, GraduationCap, Trophy, Sparkles, CheckCircle2, Building2, Rocket, MessageCircle, Twitter`) — keep `ArrowRight`, `ArrowUpRight`, `Menu`, `X`, `Linkedin`, `Send`, `Mail`, `Twitter` (footer).
 
 ## Out of scope
-- No changes to other pages or the global Navbar/Footer.
-- No new routes or backend changes.
-- The original `ubpoint-coin.png` asset stays in place (still used elsewhere) — new coins are additive.
+
+- Coin imagery / mockup / layout / typography / copy
+- Navbar, Footer, routing
+- Any page other than `/projects/ubpoint`
