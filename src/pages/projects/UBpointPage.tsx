@@ -699,7 +699,7 @@ const Metrics = () => (
       src={coinTiltAsset.url}
       alt=""
       aria-hidden
-      className="hidden md:block absolute -left-10 top-1/2 -translate-y-1/2 w-48 opacity-80 pointer-events-none"
+      className="hidden md:block absolute -left-10 top-1/2 -translate-y-1/2 w-56 opacity-90 pointer-events-none select-none drop-shadow-2xl"
       animate={{ y: [0, -20, 0], rotateZ: [0, 8, 0] }}
       transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
     />
