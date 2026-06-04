@@ -566,7 +566,7 @@ const sponsorTasks = [
 ];
 
 const Sponsors = () => (
-  <section className="relative py-24 md:py-32 bg-white overflow-hidden">
+  <section id="sponsors" className="relative py-24 md:py-32 bg-white overflow-hidden">
     <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
       <motion.div
         initial={{ opacity: 0, x: -20 }}
