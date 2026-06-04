@@ -603,7 +603,7 @@ const Sponsors = () => (
           ))}
         </ul>
         <a href={SPONSOR_EMAIL} className="inline-block mt-8">
-          <Button className="h-12 px-6 bg-slate-900 hover:bg-slate-800 text-white rounded-full">
+          <Button className="h-12 px-6 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white rounded-full shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)]">
             Become a Sponsor
             <ArrowRight className="ml-2 w-4 h-4" />
           </Button>
