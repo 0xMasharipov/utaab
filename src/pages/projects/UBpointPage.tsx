@@ -319,8 +319,21 @@ const Hero = () => (
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.9, delay: 0.2, ease: 'easeOut' }}
+        className="relative"
       >
-        <FloatingDevice />
+        {/* Hero coin cluster behind the phone */}
+        <motion.img
+          src={coinStackAsset.url}
+          alt=""
+          aria-hidden
+          className="pointer-events-none select-none absolute -top-10 -right-6 md:-top-16 md:-right-16 w-[260px] md:w-[420px] opacity-90 drop-shadow-[0_20px_50px_rgba(37,99,235,0.25)] z-0"
+          animate={{ y: [0, -12, 0], rotateZ: [-2, 2, -2] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          loading="eager"
+        />
+        <div className="relative z-10">
+          <FloatingDevice />
+        </div>
       </motion.div>
     </div>
   </section>
