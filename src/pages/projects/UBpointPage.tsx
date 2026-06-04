@@ -704,7 +704,7 @@ const Metrics = () => (
       transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
     />
     <motion.img
-      src={coinAsset.url}
+      src={coinEdgeAsset.url}
       alt=""
       aria-hidden
       className="hidden md:block absolute -right-12 top-20 w-32 opacity-70 pointer-events-none"
