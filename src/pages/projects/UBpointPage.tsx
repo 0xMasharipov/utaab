@@ -656,8 +656,8 @@ const Sponsors = () => (
             transition={{ duration: 0.4, delay: i * 0.08 }}
             className="flex items-center gap-4 p-5 rounded-2xl bg-white border border-blue-100 shadow-[0_10px_30px_-15px_rgba(37,99,235,0.25)] hover:shadow-[0_20px_50px_-20px_rgba(37,99,235,0.4)] transition-all"
           >
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shrink-0">
-              <t.icon className="w-5 h-5 text-white" />
+            <div className="shrink-0">
+              <GlyphTile Icon={t.icon} size="sm" />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
