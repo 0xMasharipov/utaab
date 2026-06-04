@@ -519,7 +519,7 @@ const Showcase = () => {
   const x = useTransform(scrollYProgress, [0, 1], ['5%', '-30%']);
 
   return (
-    <section className="relative py-24 md:py-32 bg-gradient-to-b from-white via-blue-50/40 to-white overflow-hidden">
+    <section id="showcase" className="relative py-24 md:py-32 bg-gradient-to-b from-white via-blue-50/40 to-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 mb-14 text-center">
         <div className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-4">
           Inside the app
