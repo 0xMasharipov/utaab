@@ -24,6 +24,10 @@ import {
 import { Button } from '@/components/ui/button';
 import logoAsset from '@/assets/ubpoint-logo.png.asset.json';
 import coinAsset from '@/assets/ubpoint-coin.png.asset.json';
+import coinTiltAsset from '@/assets/ubpoint-coin-tilt.png.asset.json';
+import coinFrontAsset from '@/assets/ubpoint-coin-front.png.asset.json';
+import coinEdgeAsset from '@/assets/ubpoint-coin-edge.png.asset.json';
+import coinStackAsset from '@/assets/ubpoint-coin-stack.png.asset.json';
 import mockupAsset from '@/assets/ubpoint-mockup.png.asset.json';
 
 const WHATSAPP_URL = 'https://chat.whatsapp.com/HnTcuJYiKAiDpLPnG33mEr';
