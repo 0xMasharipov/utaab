@@ -666,7 +666,7 @@ const UBpointPage = () => {
         <Metrics />
         <FinalCTA />
       </main>
-      <Footer />
+      <Footer onPrivacyClick={() => {}} />
     </div>
   );
 };
