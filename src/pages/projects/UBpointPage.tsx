@@ -24,6 +24,10 @@ import {
 import { Button } from '@/components/ui/button';
 import logoAsset from '@/assets/ubpoint-logo.png.asset.json';
 import coinAsset from '@/assets/ubpoint-coin.png.asset.json';
+import coinTiltAsset from '@/assets/ubpoint-coin-tilt.png.asset.json';
+import coinFrontAsset from '@/assets/ubpoint-coin-front.png.asset.json';
+import coinEdgeAsset from '@/assets/ubpoint-coin-edge.png.asset.json';
+import coinStackAsset from '@/assets/ubpoint-coin-stack.png.asset.json';
 import mockupAsset from '@/assets/ubpoint-mockup.png.asset.json';
 
 const WHATSAPP_URL = 'https://chat.whatsapp.com/HnTcuJYiKAiDpLPnG33mEr';
@@ -226,9 +230,7 @@ const FloatingDevice = () => {
         animate={{ y: [0, -8, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
       >
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
-          <Sparkles className="w-4 h-4 text-white" />
-        </div>
+        <img src={coinFrontAsset.url} alt="" aria-hidden className="w-9 h-9 object-contain drop-shadow-md" />
         <div className="text-left">
           <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">Earned</div>
           <div className="text-sm font-bold text-slate-900">+50 UBP</div>
@@ -315,8 +317,21 @@ const Hero = () => (
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.9, delay: 0.2, ease: 'easeOut' }}
+        className="relative"
       >
-        <FloatingDevice />
+        {/* Hero coin cluster behind the phone */}
+        <motion.img
+          src={coinStackAsset.url}
+          alt=""
+          aria-hidden
+          className="pointer-events-none select-none absolute -top-10 -right-6 md:-top-16 md:-right-16 w-[260px] md:w-[420px] opacity-90 drop-shadow-[0_20px_50px_rgba(37,99,235,0.25)] z-0"
+          animate={{ y: [0, -12, 0], rotateZ: [-2, 2, -2] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          loading="eager"
+        />
+        <div className="relative z-10">
+          <FloatingDevice />
+        </div>
       </motion.div>
     </div>
   </section>
@@ -342,6 +357,15 @@ const FeatureGrid = () => (
         transition={{ duration: 0.6 }}
         className="text-center max-w-2xl mx-auto mb-16"
       >
+        <motion.img
+          src={coinFrontAsset.url}
+          alt=""
+          aria-hidden
+          className="w-16 h-16 mx-auto mb-5 drop-shadow-[0_10px_25px_rgba(37,99,235,0.25)]"
+          animate={{ y: [0, -6, 0], rotateZ: [-3, 3, -3] }}
+          transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+          loading="lazy"
+        />
         <div className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-4">
           The platform
         </div>
@@ -681,18 +705,18 @@ const CountUp: React.FC<{ to: number; suffix?: string }> = ({ to, suffix = '' })
 const Metrics = () => (
   <section id="rewards" className="relative py-24 md:py-32 bg-gradient-to-b from-white to-blue-50/50 overflow-hidden">
     <motion.img
-      src={coinAsset.url}
+      src={coinTiltAsset.url}
       alt=""
       aria-hidden
-      className="hidden md:block absolute -left-10 top-1/2 -translate-y-1/2 w-48 opacity-80 pointer-events-none"
+      className="hidden md:block absolute -left-10 top-1/2 -translate-y-1/2 w-56 opacity-90 pointer-events-none select-none drop-shadow-2xl"
       animate={{ y: [0, -20, 0], rotateZ: [0, 8, 0] }}
       transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
     />
     <motion.img
-      src={coinAsset.url}
+      src={coinEdgeAsset.url}
       alt=""
       aria-hidden
-      className="hidden md:block absolute -right-12 top-20 w-32 opacity-70 pointer-events-none"
+      className="hidden md:block absolute -right-12 top-20 w-44 opacity-85 pointer-events-none select-none drop-shadow-2xl"
       animate={{ y: [0, 20, 0], rotateZ: [0, -6, 0] }}
       transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
     />
@@ -744,6 +768,15 @@ const FinalCTA = () => (
         }}
       />
     </div>
+    <motion.img
+      src={coinStackAsset.url}
+      alt=""
+      aria-hidden
+      className="hidden md:block pointer-events-none select-none absolute -left-16 bottom-0 w-[320px] opacity-30"
+      animate={{ y: [0, -10, 0] }}
+      transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+      loading="lazy"
+    />
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}

@@ -1,38 +1,31 @@
 ## Goal
 
-Make the `/projects/ubpoint` page fully light-themed (currently the imported global `Navbar` and `Footer` are dark and clash with the white aesthetic), feature a prominent UBpoint logo lockup, and lighten the remaining dark buttons.
+Process the 4 uploaded silver coin images (background removal → transparent PNGs), upload them as Lovable assets, and weave them into the `/projects/ubpoint` page as premium decorative elements.
 
-Scope: only `src/pages/projects/UBpointPage.tsx` — no changes to global Navbar/Footer (used by every other dark-themed page).
+## Steps
 
-## Changes
+### 1. Background removal + upload
+For each of the 4 uploads, run `imagegen--edit_image` with `transparent_background: true` to produce a transparent PNG, then upload via `lovable-assets create` and write `.asset.json` pointers:
+- `user-uploads://UB-Point_2.png` → `src/assets/ubpoint-coin-tilt.png.asset.json` (tilted single coin)
+- `user-uploads://UB-Point_4.png` → `src/assets/ubpoint-coin-front.png.asset.json` (front-facing coin)
+- `user-uploads://UB-Point_5.png` → `src/assets/ubpoint-coin-edge.png.asset.json` (edge / low-angle coin)
+- `user-uploads://UTAAB_UBP_2.png` → `src/assets/ubpoint-coin-stack.png.asset.json` (coin cluster)
 
-### 1. Page-local light Navbar
-- Build a small inline `LightNavbar` component (sticky, `bg-white/80 backdrop-blur-xl border-b border-blue-100`, slate text).
-- Left: UBpoint logo image (`h-9 w-auto`) + wordmark "UBpoint".
-- Right: links (`Features`, `Inside the app`, `Sponsors`, `Rewards`) in `text-slate-700 hover:text-blue-600`, plus a primary blue gradient "Join UTAAB" pill.
-- Mobile: hamburger that toggles a light dropdown sheet (same tokens).
-- Replace `<Navbar />` in `UBpointPage` with `<LightNavbar />`.
+### 2. Placement on `src/pages/projects/UBpointPage.tsx`
 
-### 2. Page-local light Footer
-- Build inline `LightFooter` (`bg-blue-50/60 border-t border-blue-100`).
-- Logo lockup + tagline, three small link columns (Product / Resources / Community), social icons in blue, copyright in `text-slate-500`.
-- Replace `<Footer onPrivacyClick={...} />` with `<LightFooter />`.
+- **Hero (right side, behind the iPhone)** — add the `coin-stack` cluster as a large decorative element drifting top-right behind the floating phone (`absolute -top-10 -right-10 w-[320px] md:w-[420px] opacity-90 mix-blend-luminosity`), with a slow float animation. Adds visual weight to the hero.
+- **Hero floating accent** — replace the existing UBP `Sparkles` toast icon with the small `coin-tilt` thumbnail (32–40px) for an authentic brand touch.
+- **Feature grid intro** — add a small `coin-front` (w-12) inline next to the "The platform" pill for brand presence.
+- **Metrics section** — replace the two existing reused `coinAsset` floating decorations with the new transparent coins: `coin-tilt` on the left (w-56) and `coin-edge` on the right (w-40), keeping the existing float/rotate animations.
+- **Final CTA** — add a subtle `coin-stack` cluster bottom-left at low opacity (`opacity-20 w-[280px]`) for depth on the blue gradient.
 
-### 3. UBpoint logo — added & resized
-- Hero: replace the tiny `w-4 h-4` logo inside the badge with a real lockup above the H1 — `<img src={logoAsset.url} className="h-14 md:h-16 w-auto mb-6 drop-shadow-[0_8px_24px_rgba(37,99,235,0.25)]" />`.
-- Keep the small badge below it for the "UTAAB · Blockchain Engagement Platform" chip (no logo inside).
-- Reuse the same logo in the new LightNavbar (`h-9`) and LightFooter (`h-8`).
+All new images use `pointer-events-none select-none`, `loading="lazy"` (except hero), and `aria-hidden` since they're decorative.
 
-### 4. Lighten dark buttons
-- Sponsors section "Become a Sponsor" button: swap `bg-slate-900 hover:bg-slate-800 text-white` → `bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)]` to match the hero CTA.
-- PhoneFrame device chassis (`bg-slate-900`) stays dark — that's a realistic phone bezel, not a UI button. Leave as-is.
-- MockScreen header logo dot stays blue (already light).
-- FinalCTA gradient stays deep blue (intentional contrast for the final hero); white button on it is already light.
-
-### 5. Verify
-- Read the edited file back, then load `/projects/ubpoint` in the preview to confirm light navbar/footer, larger logo, and no dark button remnants.
+### 3. Verify
+- Read the edited file back.
+- Open `/projects/ubpoint` in the preview and confirm coins render with transparent backgrounds, no white halos, and don't break layout on mobile.
 
 ## Out of scope
-- No changes to the global `Navbar.tsx` / `Footer.tsx` (other pages keep their dark theme).
-- No new routes, assets, translations, or backend changes.
-- No design-system token changes.
+- No changes to other pages or the global Navbar/Footer.
+- No new routes or backend changes.
+- The original `ubpoint-coin.png` asset stays in place (still used elsewhere) — new coins are additive.
