@@ -15,9 +15,12 @@ import {
   Rocket,
   Building2,
   ArrowUpRight,
+  Menu,
+  X,
+  Linkedin,
+  Send,
+  Mail,
 } from 'lucide-react';
-import { Navbar } from '@/components/Navbar';
-import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import logoAsset from '@/assets/ubpoint-logo.png.asset.json';
 import coinAsset from '@/assets/ubpoint-coin.png.asset.json';
@@ -25,6 +28,131 @@ import mockupAsset from '@/assets/ubpoint-mockup.png.asset.json';
 
 const WHATSAPP_URL = 'https://chat.whatsapp.com/HnTcuJYiKAiDpLPnG33mEr';
 const SPONSOR_EMAIL = 'mailto:info@utaab.org?subject=UBpoint%20Sponsor%20Inquiry';
+
+/* ---------- Light Navbar (page-local) ---------- */
+const navLinks = [
+  { href: '#features', label: 'Features' },
+  { href: '#showcase', label: 'Inside the app' },
+  { href: '#sponsors', label: 'Sponsors' },
+  { href: '#rewards', label: 'Rewards' },
+];
+
+const LightNavbar = () => {
+  const [open, setOpen] = useState(false);
+  return (
+    <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-blue-100">
+      <div className="max-w-7xl mx-auto px-5 md:px-6 h-16 flex items-center justify-between">
+        <Link to="/" className="flex items-center gap-2.5">
+          <img src={logoAsset.url} alt="UBpoint" className="h-9 w-auto" />
+          <span className="text-base font-extrabold tracking-tight text-slate-900">UBpoint</span>
+        </Link>
+        <nav className="hidden md:flex items-center gap-7">
+          {navLinks.map((l) => (
+            <a key={l.href} href={l.href} className="text-sm font-semibold text-slate-700 hover:text-blue-600 transition-colors">
+              {l.label}
+            </a>
+          ))}
+        </nav>
+        <div className="flex items-center gap-2">
+          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="hidden sm:inline-block">
+            <Button className="h-9 px-4 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white text-sm font-semibold shadow-[0_8px_24px_-10px_rgba(37,99,235,0.6)]">
+              Join UTAAB
+            </Button>
+          </a>
+          <button
+            className="md:hidden p-2 rounded-lg text-slate-700 hover:bg-blue-50"
+            onClick={() => setOpen((v) => !v)}
+            aria-label="Toggle menu"
+          >
+            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
+      </div>
+      {open && (
+        <div className="md:hidden border-t border-blue-100 bg-white/95 backdrop-blur-xl">
+          <div className="px-5 py-3 flex flex-col gap-1">
+            {navLinks.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={() => setOpen(false)}
+                className="px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-700"
+              >
+                {l.label}
+              </a>
+            ))}
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="mt-2">
+              <Button className="w-full h-10 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm font-semibold">
+                Join UTAAB
+              </Button>
+            </a>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+};
+
+/* ---------- Light Footer (page-local) ---------- */
+const LightFooter = () => (
+  <footer className="relative bg-blue-50/60 border-t border-blue-100">
+    <div className="max-w-7xl mx-auto px-6 py-14 grid gap-10 md:grid-cols-4">
+      <div className="md:col-span-2">
+        <div className="flex items-center gap-2.5">
+          <img src={logoAsset.url} alt="UBpoint" className="h-9 w-auto" />
+          <span className="text-lg font-extrabold tracking-tight text-slate-900">UBpoint</span>
+        </div>
+        <p className="mt-4 text-sm text-slate-600 max-w-md leading-relaxed">
+          UTAAB's blockchain-powered student engagement platform. Earn UBP, unlock rewards,
+          and verify every action on-chain.
+        </p>
+        <div className="mt-5 flex items-center gap-2">
+          {[
+            { href: 'https://www.linkedin.com/company/utaa-blockchain/', icon: Linkedin },
+            { href: 'https://t.me/utaa_blockchain', icon: Send },
+            { href: 'https://x.com/utaa_blockchain?s=11', icon: Twitter },
+            { href: 'mailto:info@utaab.org', icon: Mail },
+          ].map((s, i) => (
+            <a
+              key={i}
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-10 h-10 rounded-full bg-white border border-blue-100 flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-colors"
+            >
+              <s.icon className="w-4 h-4" />
+            </a>
+          ))}
+        </div>
+      </div>
+      <div>
+        <div className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Product</div>
+        <ul className="space-y-2 text-sm">
+          {navLinks.map((l) => (
+            <li key={l.href}>
+              <a href={l.href} className="text-slate-700 hover:text-blue-600">{l.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <div className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Community</div>
+        <ul className="space-y-2 text-sm">
+          <li><Link to="/" className="text-slate-700 hover:text-blue-600">UTAAB Home</Link></li>
+          <li><Link to="/projects" className="text-slate-700 hover:text-blue-600">All Projects</Link></li>
+          <li><a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="text-slate-700 hover:text-blue-600">WhatsApp Community</a></li>
+          <li><a href={SPONSOR_EMAIL} className="text-slate-700 hover:text-blue-600">Become a Sponsor</a></li>
+        </ul>
+      </div>
+    </div>
+    <div className="border-t border-blue-100">
+      <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+        <div>© {new Date().getFullYear()} UTAAB · UBpoint. All rights reserved.</div>
+        <div>Built on Sepolia · utaab.org</div>
+      </div>
+    </div>
+  </footer>
+);
 
 /* ---------- Decorative background ---------- */
 const HeroBackground = () => (
