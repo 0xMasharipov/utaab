@@ -707,7 +707,7 @@ const Metrics = () => (
       src={coinEdgeAsset.url}
       alt=""
       aria-hidden
-      className="hidden md:block absolute -right-12 top-20 w-32 opacity-70 pointer-events-none"
+      className="hidden md:block absolute -right-12 top-20 w-44 opacity-85 pointer-events-none select-none drop-shadow-2xl"
       animate={{ y: [0, 20, 0], rotateZ: [0, -6, 0] }}
       transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
     />
