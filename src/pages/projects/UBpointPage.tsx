@@ -357,6 +357,15 @@ const FeatureGrid = () => (
         transition={{ duration: 0.6 }}
         className="text-center max-w-2xl mx-auto mb-16"
       >
+        <motion.img
+          src={coinFrontAsset.url}
+          alt=""
+          aria-hidden
+          className="w-16 h-16 mx-auto mb-5 drop-shadow-[0_10px_25px_rgba(37,99,235,0.25)]"
+          animate={{ y: [0, -6, 0], rotateZ: [-3, 3, -3] }}
+          transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+          loading="lazy"
+        />
         <div className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-4">
           The platform
         </div>
