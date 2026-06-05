@@ -239,7 +239,7 @@ const FloatingDevice = () => {
             key={i}
             src={c.src}
             alt=""
-            className={`absolute ${c.cls} opacity-70 blur-[1px] select-none`}
+            className={`absolute ${c.cls} select-none`}
             style={{ filter: `drop-shadow(0 14px 26px ${c.glow})` }}
             animate={{ y: [0, -10, 0], rotateZ: [-5, 5, -5] }}
             transition={{ duration: c.dur, repeat: Infinity, ease: 'easeInOut', delay: c.delay }}
@@ -311,7 +311,7 @@ const FloatingDevice = () => {
         src={btcCoinAsset.url}
         alt=""
         aria-hidden
-        className="absolute right-2 md:right-6 bottom-16 w-14 md:w-20 drop-shadow-[0_15px_30px_rgba(202,138,4,0.4)] pointer-events-none"
+        className="absolute -right-6 md:-right-14 bottom-2 md:bottom-6 w-14 md:w-20 drop-shadow-[0_15px_30px_rgba(202,138,4,0.4)] pointer-events-none"
         animate={{ y: [0, -10, 0], rotateZ: [-5, 5, -5] }}
         transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1.2 }}
       />
@@ -882,7 +882,7 @@ const Metrics = () => (
         src={c.src}
         alt=""
         aria-hidden
-        className={`absolute ${c.cls} opacity-80 pointer-events-none select-none`}
+        className={`absolute ${c.cls} pointer-events-none select-none`}
         style={{ filter: `drop-shadow(0 18px 32px ${c.glow})` }}
         animate={{ y: [0, i % 2 === 0 ? -16 : 16, 0], rotateZ: [0, i % 2 === 0 ? 8 : -8, 0] }}
         transition={{ duration: c.dur, repeat: Infinity, ease: 'easeInOut', delay: c.delay }}
