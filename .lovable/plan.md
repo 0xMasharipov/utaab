@@ -1,12 +1,8 @@
 ## Plan
 
-### 1. Fix "View Rewards" button visibility
-The hero "View Rewards" outline button will be switched to a solid white background with a dark readable font so it stands out cleanly against the light hero gradient.
+The "View Rewards" button is still rendering with the default dark-blue primary variant because twMerge isn't disambiguating the classes the way we need. I'll force it to be a true white button:
 
-### 2. Remove remaining "Sepolia" mention
-Line 348 still says `(Base Sepolia testnet)`. This will be updated to just `Base testnet` so the On-Chain Verification card no longer references Sepolia.
+- Set `variant="outline"` on the Button.
+- Use explicit white background + dark text classes with `!` important modifiers so they win against the variant defaults: `!bg-white !text-slate-900` plus blue border and a subtle hover.
 
-### 3. Update Student Wallet showcase hint
-The wallet mock hint (`Base-anchored token wallet`) will be replaced with `Verified, stay safe` per the clarification.
-
-No other pages or infrastructure are affected.
+Only the hero "View Rewards" button in `src/pages/projects/UBpointPage.tsx` is touched.
