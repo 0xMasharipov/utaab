@@ -534,8 +534,8 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
   }
   if (kind === 'rewards') {
     const rewardItems = [
-      { label: 'Steam Gift Card', price: '500 UBP', img: gamepadAsset.url },
-      { label: 'Silver Token', price: '1,200 UBP', img: silverBarAsset.url },
+      { label: 'Steam Gift Card', price: '500 UBP', img: steamAsset.url },
+      { label: 'Silver Token', price: '1,200 UBP', img: titaniumBarAsset.url },
       { label: 'Partner Discount', price: '250 UBP', img: goldCoinAsset.url },
       { label: 'Gold Token', price: '5,000 UBP', img: goldBarAsset.url },
     ];
