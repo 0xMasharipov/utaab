@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import logoAsset from '@/assets/ubpoint-logo.png.asset.json';
-import coinAsset from '@/assets/ubpoint-coin.png.asset.json';
+
 import mockupAsset from '@/assets/ubpoint-mockup.png.asset.json';
 import utaabCoinAsset from '@/assets/coins/utaab-coin.png.asset.json';
 import usdtCoinAsset from '@/assets/coins/ubp-usdt.png.asset.json';
