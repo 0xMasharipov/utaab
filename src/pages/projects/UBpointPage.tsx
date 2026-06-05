@@ -34,7 +34,7 @@ import ethCoinAsset from '@/assets/coins/eth.png.asset.json';
 import btcCoinAsset from '@/assets/coins/btc.png.asset.json';
 import goldCoinAsset from '@/assets/coins/gold-coin.png.asset.json';
 import goldBarAsset from '@/assets/coins/gold-bar.png.asset.json';
-import silverBarAsset from '@/assets/coins/silver-bar.png.asset.json';
+import steamAsset from '@/assets/coins/steam.png.asset.json';
 import steamAsset from '@/assets/coins/steam.png.asset.json';
 import titaniumBarAsset from '@/assets/coins/titanium-bar.png.asset.json';
 
