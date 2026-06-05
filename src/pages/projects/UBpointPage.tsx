@@ -816,18 +816,18 @@ const Metrics = () => (
       transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
     />
     <motion.img
-      src={tryAngleAsset.url}
+      src={goldBarAsset.url}
       alt=""
       aria-hidden
-      className="hidden md:block absolute -right-12 top-16 w-40 opacity-90 drop-shadow-[0_25px_50px_rgba(202,138,4,0.35)] pointer-events-none"
+      className="hidden md:block absolute -right-12 top-16 w-40 opacity-90 drop-shadow-[0_25px_50px_rgba(202,138,4,0.4)] pointer-events-none"
       animate={{ y: [0, 20, 0], rotateZ: [0, -6, 0] }}
       transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
     />
     <motion.img
-      src={usdtAngleAsset.url}
+      src={ethCoinAsset.url}
       alt=""
       aria-hidden
-      className="hidden md:block absolute right-10 bottom-10 w-28 opacity-80 drop-shadow-[0_20px_40px_rgba(16,185,129,0.35)] pointer-events-none"
+      className="hidden md:block absolute right-10 bottom-10 w-28 opacity-85 drop-shadow-[0_20px_40px_rgba(100,116,139,0.4)] pointer-events-none"
       animate={{ y: [0, -14, 0], rotateZ: [0, 10, 0] }}
       transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 0.7 }}
     />
