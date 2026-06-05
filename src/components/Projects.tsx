@@ -145,7 +145,7 @@ export const Projects = () => {
                     {t(project.titleKey)}
                   </h3>
 
-                  <p className="text-sm text-muted-foreground mb-4 flex-grow line-clamp-3">
+                  <p className="text-sm text-muted-foreground mb-4 flex-grow line-clamp-3 break-words overflow-hidden">
                     {t(project.descriptionKey)}
                   </p>
 
