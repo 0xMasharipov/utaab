@@ -1,9 +1,18 @@
-Two visual fixes:
+Fix overflow on phone mock screens and rebuild the Dashboard mock from scratch to match the other screens' style.
 
-### 1. Remove transparency on coin assets
-- Hero back-layer cluster (line 242 in `FloatingDevice`): drop `opacity-70 blur-[1px]` → render fully opaque, sharp.
-- Metrics decorations (line ~879): drop `opacity-80` → fully opaque.
+### 1. Overflow fix
+The screen container has `overflow-hidden`, but several mock kinds (wallet, leaderboard, events, analytics) place padded content tall enough to push past the rounded screen. Add `overflow-hidden` to each `h-full flex flex-col` wrapper so content visually clips inside the rounded screen edges.
 
-### 2. Move the BTC coin off the text
-The hero-front BTC (lines 310-317) is currently `absolute right-2 md:right-6 bottom-16`. On mobile that pins it to the right edge where the column transitions overlap the body copy.
-- New placement: `-right-6 md:-right-14 bottom-2 md:bottom-6 w-14 md:w-20` — tucks it outside the phone's bottom-right corner, away from the headline/body text.
+### 2. Rebuild `kind === 'real'` (Dashboard)
+Currently just renders the raw `mockupAsset` PNG which doesn't match the cohesive in-frame style. Rebuild as a designed dashboard:
+
+- `Header` (logo + UBP balance — same as others)
+- "Good morning" greeting + name row
+- Big balance card: gradient blue, "Total UBP", "200.00", small "+50 this week" delta with up-arrow
+- Quick action row: 3 small pill buttons (Earn / Redeem / Send) with icons
+- "Recent activity" list: 3 rows with icon + label + amount (e.g. +50 Hackathon, +25 Workshop, -100 Reward)
+- "Daily streak" mini-card: small flame icon + "5 day streak"
+
+Same compact `text-[10px]`/`text-[11px]` typography, `bg-blue-50/60` accents, `rounded-xl`, matching the other kinds. Wrap in `h-full flex flex-col overflow-hidden`.
+
+No other changes.
