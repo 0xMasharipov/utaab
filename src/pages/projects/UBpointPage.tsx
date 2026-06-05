@@ -148,7 +148,7 @@ const LightFooter = () => (
     <div className="border-t border-blue-100">
       <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
         <div>© {new Date().getFullYear()} UTAAB · UBpoint. All rights reserved.</div>
-        <div>Built on Sepolia · utaab.org</div>
+        <div>Built on Base · utaab.org</div>
       </div>
     </div>
   </footer>
@@ -246,7 +246,7 @@ const FloatingDevice = () => {
         </div>
         <div className="text-left">
           <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">On-chain</div>
-          <div className="text-sm font-bold text-slate-900">Verified · Sepolia</div>
+          <div className="text-sm font-bold text-slate-900">Verified · Base</div>
         </div>
       </motion.div>
     </div>
@@ -299,15 +299,34 @@ const Hero = () => (
           </a>
         </div>
 
-        <div className="mt-10 flex items-center gap-6 text-xs text-slate-500">
+        <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-500">
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            Live on Sepolia
+            Live on Base
           </div>
           <div className="flex items-center gap-1.5">
             <ShieldCheck className="w-3.5 h-3.5 text-blue-500" />
             On-chain verified
           </div>
+        </div>
+        <div className="mt-4 flex flex-wrap items-center gap-2 text-[11px]">
+          <a
+            href="https://basescan.org/address/0x4fF797906D7B56F9Bd2Db382BcB36C97d69A43A9"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-700 font-semibold hover:bg-blue-100 transition-colors"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
+            utaablockchain.base.eth
+          </a>
+          <a
+            href="https://basescan.org/address/0x4fF797906D7B56F9Bd2Db382BcB36C97d69A43A9"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white border border-blue-100 text-slate-600 font-mono hover:text-blue-700 hover:border-blue-200 transition-colors"
+          >
+            0x4fF7…43A9
+          </a>
         </div>
       </motion.div>
 
@@ -326,7 +345,7 @@ const Hero = () => (
 const features = [
   { icon: Coins, title: 'Earn UBP', desc: 'Receive points for attending events, contributing to community projects, and participating in hackathons.' },
   { icon: Gift, title: 'Unlock Rewards', desc: 'Redeem UBP for partner discounts, Steam gift cards, tokenized assets, silver, gold, and future ecosystem rewards.' },
-  { icon: ShieldCheck, title: 'On-Chain Verification', desc: 'Every transaction can be verified on-chain using the Sepolia blockchain network.' },
+  { icon: ShieldCheck, title: 'On-Chain Verification', desc: 'Every transaction can be verified on-chain on the Base network (Base Sepolia testnet).' },
   { icon: GraduationCap, title: 'Student Identity', desc: 'Build a verifiable portfolio of participation, contributions, and achievements.' },
   { icon: Trophy, title: 'Leaderboards', desc: 'Compete with community members and climb the rankings.' },
   { icon: Sparkles, title: 'Campus Engagement', desc: 'Transform university activities into measurable achievements.' },
@@ -380,7 +399,7 @@ const FeatureGrid = () => (
 const showcase = [
   { title: 'Home Dashboard', hint: 'Your UBP balance and progress at a glance', kind: 'real' as const },
   { title: 'Rewards Marketplace', hint: 'Redeem points for partner perks', kind: 'rewards' as const },
-  { title: 'Student Wallet', hint: 'Sepolia-anchored token wallet', kind: 'wallet' as const },
+  { title: 'Student Wallet', hint: 'Base-anchored token wallet', kind: 'wallet' as const },
   { title: 'Leaderboard', hint: 'See where you rank on campus', kind: 'leaderboard' as const },
   { title: 'Events', hint: 'Discover and check in on-chain', kind: 'events' as const },
   { title: 'Profile Analytics', hint: 'Your verified contribution history', kind: 'analytics' as const },
@@ -437,7 +456,7 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
           <div className="mt-2 p-4 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-400 text-white">
             <div className="text-[10px] opacity-80">UBP Token</div>
             <div className="text-3xl font-extrabold mt-1">200.00</div>
-            <div className="text-[9px] mt-3 opacity-80">0xA1...e3f9 · Sepolia</div>
+            <div className="text-[9px] mt-3 opacity-80">utaablockchain.base.eth · Base</div>
           </div>
           <div className="mt-3 space-y-1.5">
             {[['+50 UBP', 'Hackathon'], ['+25 UBP', 'Workshop'], ['-100 UBP', 'Reward redeem']].map(([a, l]) => (
@@ -457,7 +476,7 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
         {Header}
         <div className="p-3">
           <div className="text-[10px] uppercase font-bold text-slate-500 mb-2">Leaderboard</div>
-          {[['1', 'cryptostudent.eth', '1,820'], ['2', 'utaab.devon', '1,540'], ['3', 'you', '1,210'], ['4', 'web3.zara', '980'], ['5', 'sepolia.kai', '740']].map(([r, n, p]) => (
+          {[['1', 'cryptostudent.eth', '1,820'], ['2', 'utaab.devon', '1,540'], ['3', 'you', '1,210'], ['4', 'web3.zara', '980'], ['5', 'base.kai', '740']].map(([r, n, p]) => (
             <div key={r} className={`flex items-center gap-2 p-2 rounded-lg mb-1.5 ${n === 'you' ? 'bg-blue-50 border border-blue-200' : 'bg-slate-50'}`}>
               <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${r === '1' ? 'bg-amber-400 text-white' : 'bg-slate-200 text-slate-700'}`}>{r}</div>
               <div className="flex-1 text-[10px] font-semibold text-slate-900">{n}</div>
@@ -474,7 +493,7 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
         {Header}
         <div className="p-3 space-y-2">
           <div className="text-[10px] uppercase font-bold text-slate-500">Upcoming</div>
-          {[['Web3 Hackathon', 'Nov 12 · +100 UBP'], ['Solidity Workshop', 'Nov 18 · +30 UBP'], ['Sepolia Meetup', 'Nov 25 · +25 UBP']].map(([t, d]) => (
+          {[['Web3 Hackathon', 'Nov 12 · +100 UBP'], ['Solidity Workshop', 'Nov 18 · +30 UBP'], ['Base Meetup', 'Nov 25 · +25 UBP']].map(([t, d]) => (
             <div key={t} className="p-2.5 rounded-xl bg-white border border-blue-100">
               <div className="flex items-center justify-between">
                 <div className="text-[11px] font-bold text-slate-900">{t}</div>
@@ -586,7 +605,7 @@ const Sponsors = () => (
         </h2>
         <p className="mt-5 text-slate-600 md:text-lg leading-relaxed">
           Companies fund task bounties on UBpoint to acquire and activate verified student users.
-          Each completion is recorded on Sepolia — so every follow, signup, install, and event
+          Each completion is recorded on Base — so every follow, signup, install, and event
           attendance is provable, attributable, and free of bots.
         </p>
         <ul className="mt-6 space-y-3">
@@ -650,7 +669,7 @@ const Sponsors = () => (
         <div className="mt-4 p-4 rounded-2xl bg-blue-50/60 border border-blue-100 text-xs text-slate-600">
           <span className="font-bold text-slate-900">How it works:</span> Sponsors define a task and
           a UBP bounty. Students complete the action; UBpoint validates and records each completion
-          on Sepolia. Brands receive verified user acquisition data without paying for bots.
+          on Base. Brands receive verified user acquisition data without paying for bots.
         </div>
       </motion.div>
     </div>
