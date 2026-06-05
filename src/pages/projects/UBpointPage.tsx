@@ -25,8 +25,13 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import logoAsset from '@/assets/ubpoint-logo.png.asset.json';
-import coinAsset from '@/assets/ubpoint-coin.png.asset.json';
+
 import mockupAsset from '@/assets/ubpoint-mockup.png.asset.json';
+import utaabCoinAsset from '@/assets/coins/utaab-coin.png.asset.json';
+import usdtCoinAsset from '@/assets/coins/ubp-usdt.png.asset.json';
+import usdtAngleAsset from '@/assets/coins/ubp-usdt-angle.png.asset.json';
+import tryCoinAsset from '@/assets/coins/ubp-try.png.asset.json';
+import tryAngleAsset from '@/assets/coins/ubp-try-angle.png.asset.json';
 
 const WHATSAPP_URL = 'https://chat.whatsapp.com/HnTcuJYiKAiDpLPnG33mEr';
 const SPONSOR_EMAIL = 'mailto:info@utaab.org?subject=UBpoint%20Sponsor%20Inquiry';
@@ -251,6 +256,24 @@ const FloatingDevice = () => {
           <div className="text-sm font-bold text-slate-900">Verified · Base</div>
         </div>
       </motion.div>
+
+      {/* floating UTAAB coin */}
+      <motion.img
+        src={utaabCoinAsset.url}
+        alt=""
+        aria-hidden
+        className="absolute -left-10 md:-left-20 bottom-4 w-24 md:w-32 drop-shadow-[0_20px_40px_rgba(37,99,235,0.35)] pointer-events-none"
+        animate={{ y: [0, -12, 0], rotateZ: [-6, 6, -6] }}
+        transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.img
+        src={tryAngleAsset.url}
+        alt=""
+        aria-hidden
+        className="absolute -right-6 md:-right-12 top-4 w-16 md:w-24 drop-shadow-[0_15px_30px_rgba(202,138,4,0.35)] pointer-events-none"
+        animate={{ y: [0, 10, 0], rotateZ: [4, -4, 4] }}
+        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+      />
     </div>
   );
 };
@@ -497,18 +520,24 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
     return <img src={mockupAsset.url} alt="" className="w-full h-full object-cover" />;
   }
   if (kind === 'rewards') {
+    const rewardItems = [
+      { label: 'Steam Gift Card', price: '500 UBP', img: usdtAngleAsset.url },
+      { label: 'Silver Token', price: '1,200 UBP', img: utaabCoinAsset.url },
+      { label: 'Partner Discount', price: '250 UBP', img: usdtCoinAsset.url },
+      { label: 'Gold Token', price: '5,000 UBP', img: tryCoinAsset.url },
+    ];
     return (
       <div className="h-full flex flex-col">
         {Header}
         <div className="p-3 space-y-2 overflow-hidden">
           <div className="text-[10px] uppercase font-bold text-slate-500">Rewards</div>
-          {['Steam Gift Card · 500 UBP', 'Silver Token · 1,200 UBP', 'Partner Discount · 250 UBP', 'Gold Token · 5,000 UBP'].map((r) => (
-            <div key={r} className="flex items-center justify-between p-2 rounded-lg bg-blue-50/60 border border-blue-100">
+          {rewardItems.map((r) => (
+            <div key={r.label} className="flex items-center justify-between p-2 rounded-lg bg-blue-50/60 border border-blue-100">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-md bg-gradient-to-br from-blue-500 to-blue-700" />
-                <div className="text-[10px] font-semibold text-slate-900">{r.split(' · ')[0]}</div>
+                <img src={r.img} alt="" className="w-7 h-7 object-contain drop-shadow" />
+                <div className="text-[10px] font-semibold text-slate-900">{r.label}</div>
               </div>
-              <div className="text-[9px] font-bold text-blue-700">{r.split(' · ')[1]}</div>
+              <div className="text-[9px] font-bold text-blue-700">{r.price}</div>
             </div>
           ))}
         </div>
@@ -768,20 +797,28 @@ const CountUp: React.FC<{ to: number; suffix?: string }> = ({ to, suffix = '' })
 const Metrics = () => (
   <section id="rewards" className="relative py-24 md:py-32 bg-gradient-to-b from-white to-blue-50/50 overflow-hidden">
     <motion.img
-      src={coinAsset.url}
+      src={utaabCoinAsset.url}
       alt=""
       aria-hidden
-      className="hidden md:block absolute -left-10 top-1/2 -translate-y-1/2 w-48 opacity-80 pointer-events-none"
+      className="hidden md:block absolute -left-12 top-1/2 -translate-y-1/2 w-52 opacity-90 drop-shadow-[0_25px_50px_rgba(37,99,235,0.35)] pointer-events-none"
       animate={{ y: [0, -20, 0], rotateZ: [0, 8, 0] }}
       transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
     />
     <motion.img
-      src={coinAsset.url}
+      src={tryAngleAsset.url}
       alt=""
       aria-hidden
-      className="hidden md:block absolute -right-12 top-20 w-32 opacity-70 pointer-events-none"
+      className="hidden md:block absolute -right-12 top-16 w-40 opacity-90 drop-shadow-[0_25px_50px_rgba(202,138,4,0.35)] pointer-events-none"
       animate={{ y: [0, 20, 0], rotateZ: [0, -6, 0] }}
       transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
+    />
+    <motion.img
+      src={usdtAngleAsset.url}
+      alt=""
+      aria-hidden
+      className="hidden md:block absolute right-10 bottom-10 w-28 opacity-80 drop-shadow-[0_20px_40px_rgba(16,185,129,0.35)] pointer-events-none"
+      animate={{ y: [0, -14, 0], rotateZ: [0, 10, 0] }}
+      transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 0.7 }}
     />
     <div className="max-w-6xl mx-auto px-6 relative">
       <div className="text-center mb-14">
