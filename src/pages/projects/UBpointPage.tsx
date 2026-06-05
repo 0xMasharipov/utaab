@@ -538,24 +538,38 @@ const showcase = [
 ];
 
 const PhoneFrame: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="relative mx-auto w-[240px] h-[480px] rounded-[40px] bg-slate-900 p-2 shadow-2xl">
-    <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 bg-slate-900 rounded-b-2xl z-10" />
-    <div className="w-full h-full rounded-[32px] bg-white overflow-hidden relative">
-      {children}
+  <div className="relative mx-auto w-[250px] h-[510px] rounded-[52px] bg-gradient-to-b from-slate-700 via-slate-900 to-black p-[3px] shadow-[0_30px_60px_-20px_rgba(15,23,42,0.55)] ring-1 ring-white/10">
+    {/* metallic inner bezel */}
+    <div className="relative w-full h-full rounded-[49px] bg-black p-[2px] overflow-hidden">
+      {/* screen */}
+      <div className="relative w-full h-full rounded-[47px] bg-white overflow-hidden">
+        {children}
+        {/* Dynamic Island */}
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-[78px] h-[22px] rounded-full bg-black z-20 shadow-[inset_0_0_2px_rgba(255,255,255,0.15)]" />
+        {/* top reflection */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-white/40 to-transparent z-10" />
+      </div>
     </div>
+    {/* side buttons */}
+    <span className="absolute left-[-2px] top-[110px] h-7 w-[3px] rounded-l-sm bg-slate-700" />
+    <span className="absolute left-[-2px] top-[160px] h-12 w-[3px] rounded-l-sm bg-slate-700" />
+    <span className="absolute left-[-2px] top-[220px] h-12 w-[3px] rounded-l-sm bg-slate-700" />
+    <span className="absolute right-[-2px] top-[170px] h-16 w-[3px] rounded-r-sm bg-slate-700" />
   </div>
 );
 
+
 const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind }) => {
   const Header = (
-    <div className="px-4 pt-8 pb-3 flex items-center justify-between border-b border-slate-100">
+    <div className="px-4 pt-10 pb-3 flex items-center justify-between border-b border-slate-100">
       <div className="flex items-center gap-1.5">
-        <div className="w-5 h-5 rounded bg-blue-600" />
+        <img src={logoAsset.url} alt="UBpoint" className="h-4 w-auto object-contain" />
         <span className="text-[11px] font-bold text-slate-900">UBpoint.</span>
       </div>
       <div className="px-2 py-0.5 rounded-full bg-blue-50 text-[9px] font-bold text-blue-700">200 UBP</div>
     </div>
   );
+
 
   if (kind === 'real') {
     return <img src={mockupAsset.url} alt="" className="w-full h-full object-cover" />;
@@ -686,7 +700,7 @@ const Showcase = () => {
         </h2>
       </div>
       <div ref={ref} className="overflow-hidden">
-        <motion.div style={{ x }} className="flex gap-8 px-6">
+        <motion.div style={{ x }} className="flex gap-12 md:gap-16 px-6 pt-6 pb-10">
           {showcase.map((s, i) => (
             <motion.div
               key={s.title}
@@ -694,22 +708,24 @@ const Showcase = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: i * 0.05 }}
-              className="shrink-0 w-[300px] md:w-[340px]"
+              className="shrink-0 w-[260px] md:w-[300px] group"
             >
-              <div className="relative p-6 rounded-3xl bg-white/70 backdrop-blur-xl border border-blue-100 shadow-[0_20px_60px_-25px_rgba(37,99,235,0.4)]">
-                <div className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-br from-blue-200/40 to-transparent blur-2xl" />
+              <div className="relative transition-transform duration-500 group-hover:-translate-y-2">
+                {/* floor glow */}
+                <div aria-hidden className="absolute left-1/2 -translate-x-1/2 bottom-[-30px] w-[80%] h-12 rounded-full bg-blue-500/30 blur-2xl" />
                 <PhoneFrame>
                   <MockScreen kind={s.kind} />
                 </PhoneFrame>
-                <div className="mt-5">
-                  <div className="text-base font-bold text-slate-900">{s.title}</div>
-                  <div className="text-xs text-slate-500 mt-1">{s.hint}</div>
-                </div>
+              </div>
+              <div className="mt-8 text-center">
+                <div className="text-base font-bold text-slate-900">{s.title}</div>
+                <div className="text-xs text-slate-500 mt-1">{s.hint}</div>
               </div>
             </motion.div>
           ))}
           <div className="shrink-0 w-12" />
         </motion.div>
+
       </div>
     </section>
   );
