@@ -291,8 +291,7 @@ const Hero = () => (
           </a>
           <a href="#rewards">
             <Button
-              variant="outline"
-              className="h-12 px-6 rounded-full border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-800"
+              className="h-12 px-6 rounded-full bg-white text-slate-900 border border-blue-200 hover:bg-blue-50 hover:text-blue-800 shadow-[0_8px_24px_-12px_rgba(37,99,235,0.4)]"
             >
               View Rewards
             </Button>
@@ -345,7 +344,7 @@ const Hero = () => (
 const features = [
   { icon: Coins, title: 'Earn UBP', desc: 'Receive points for attending events, contributing to community projects, and participating in hackathons.' },
   { icon: Gift, title: 'Unlock Rewards', desc: 'Redeem UBP for partner discounts, Steam gift cards, tokenized assets, silver, gold, and future ecosystem rewards.' },
-  { icon: ShieldCheck, title: 'On-Chain Verification', desc: 'Every transaction can be verified on-chain on the Base network (Base Sepolia testnet).' },
+  { icon: ShieldCheck, title: 'On-Chain Verification', desc: 'Every transaction can be verified on-chain on the Base network (Base testnet) under utaablockchain.base.eth.' },
   { icon: GraduationCap, title: 'Student Identity', desc: 'Build a verifiable portfolio of participation, contributions, and achievements.' },
   { icon: Trophy, title: 'Leaderboards', desc: 'Compete with community members and climb the rankings.' },
   { icon: Sparkles, title: 'Campus Engagement', desc: 'Transform university activities into measurable achievements.' },
@@ -399,7 +398,7 @@ const FeatureGrid = () => (
 const showcase = [
   { title: 'Home Dashboard', hint: 'Your UBP balance and progress at a glance', kind: 'real' as const },
   { title: 'Rewards Marketplace', hint: 'Redeem points for partner perks', kind: 'rewards' as const },
-  { title: 'Student Wallet', hint: 'Base-anchored token wallet', kind: 'wallet' as const },
+  { title: 'Student Wallet', hint: 'Verified, stay safe', kind: 'wallet' as const },
   { title: 'Leaderboard', hint: 'See where you rank on campus', kind: 'leaderboard' as const },
   { title: 'Events', hint: 'Discover and check in on-chain', kind: 'events' as const },
   { title: 'Profile Analytics', hint: 'Your verified contribution history', kind: 'analytics' as const },
