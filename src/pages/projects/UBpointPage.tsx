@@ -291,8 +291,7 @@ const Hero = () => (
           </a>
           <a href="#rewards">
             <Button
-              variant="outline"
-              className="h-12 px-6 rounded-full border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-800"
+              className="h-12 px-6 rounded-full bg-white text-slate-900 border border-blue-200 hover:bg-blue-50 hover:text-blue-800 shadow-[0_8px_24px_-12px_rgba(37,99,235,0.4)]"
             >
               View Rewards
             </Button>
