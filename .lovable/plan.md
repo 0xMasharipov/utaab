@@ -1,27 +1,23 @@
-## Add "Verified On-Chain" section to UBpoint page
+## Summary
+Reorder the main page so Projects ("What We Build") appears before Community ("Community Projects"). Remove the Resources section from the homepage and place it on the `/learn/guides` (Educational Guides) page. Update the navbar to reflect that `resources` is no longer a homepage scroll target.
 
-Insert a new standalone section in `src/pages/projects/UBpointPage.tsx` **right after the features grid**, surfacing the Base name and wallet with a short trust-focused description.
+## Detailed Plan
 
-### Section content
-- **Heading:** "Verified On-Chain"
-- **Description:** "Stay safu. Always verify before you interact. UBpoint is officially registered on Base — these are our only verified identifiers. Do not trust any other address claiming to be UBpoint."
-- **Base Name card:**
-  - Label: "Base Name"
-  - Value: `utaablockchain.base.eth` (copy + external link to Basescan)
-- **Wallet card:**
-  - Label: "Official Wallet"
-  - Value: `0x4fF7…43A9` (copy + external link to Basescan)
-- Small "Live on Base" badge at the top of the section.
+### 1. Reorder homepage sections (`src/pages/Index.tsx`)
+Current order: AboutBlurb → Community → Learn → Resources → Projects → Events → BlogSection → Join
+New order: AboutBlurb → Projects → Community → Learn → Events → BlogSection → Join
+- Remove `<Resources />` from the BackgroundGrid children
+- Move `<Projects />` before `<Community />`
 
-### Styling
-- White background section with rounded cards, subtle blue border, matching existing page tokens (no new colors).
-- Two-column grid on desktop, stacked on mobile.
-- Reuse existing icons (ShieldCheck for heading, Copy/ExternalLink for actions) already imported in the file.
+### 2. Move Resources to Educational Guides page (`src/pages/learn/EducationalGuides.tsx`)
+- Import the `Resources` component
+- Render `<Resources />` after the existing Learning Journey section (before Footer)
+- Wrap it in the `section-container` for consistent padding
 
-### Cleanup
-- Remove the duplicate Base name + wallet block currently in the hero (lines ~305–329) so the info lives in one place.
-- Keep the "On-Chain Verification" feature card in the grid but trim its body to point users down to the new section (avoid repeating the full address).
+### 3. Update Navbar (`src/components/Navbar.tsx`)
+- Remove `{ key: 'resources', id: 'resources' }` from `navItems` since `#resources` no longer exists on the homepage
+- Keep the `/resources` page link in the mega menu unchanged (it already routes to the dedicated page)
 
-### Technical notes
-- Single-file change: `src/pages/projects/UBpointPage.tsx`.
-- No new dependencies, no business logic changes, no backend work.
+### 4. Verify no broken links
+- Check that the mega menu's "Resources" link under Explore still works (it uses `/resources`, not `#resources`)
+- Confirm no other components reference `document.getElementById('resources')` for scrolling

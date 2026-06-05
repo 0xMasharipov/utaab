@@ -138,7 +138,6 @@ export const Navbar = () => {
     { key: 'learn', id: 'learn' },
     { key: 'events', id: 'events' },
     { key: 'projects', id: 'projects' },
-    { key: 'resources', id: 'resources' },
   ];
 
   const pageNavItems = [
