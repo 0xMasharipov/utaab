@@ -20,6 +20,8 @@ import {
   Linkedin,
   Send,
   Mail,
+  Copy,
+  ExternalLink,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import logoAsset from '@/assets/ubpoint-logo.png.asset.json';
@@ -309,25 +311,6 @@ const Hero = () => (
             On-chain verified
           </div>
         </div>
-        <div className="mt-4 flex flex-wrap items-center gap-2 text-[11px]">
-          <a
-            href="https://basescan.org/address/0x4fF797906D7B56F9Bd2Db382BcB36C97d69A43A9"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-700 font-semibold hover:bg-blue-100 transition-colors"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
-            utaablockchain.base.eth
-          </a>
-          <a
-            href="https://basescan.org/address/0x4fF797906D7B56F9Bd2Db382BcB36C97d69A43A9"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white border border-blue-100 text-slate-600 font-mono hover:text-blue-700 hover:border-blue-200 transition-colors"
-          >
-            0x4fF7…43A9
-          </a>
-        </div>
       </motion.div>
 
       <motion.div
@@ -345,7 +328,7 @@ const Hero = () => (
 const features = [
   { icon: Coins, title: 'Earn UBP', desc: 'Receive points for attending events, contributing to community projects, and participating in hackathons.' },
   { icon: Gift, title: 'Unlock Rewards', desc: 'Redeem UBP for partner discounts, Steam gift cards, tokenized assets, silver, gold, and future ecosystem rewards.' },
-  { icon: ShieldCheck, title: 'On-Chain Verification', desc: 'Every transaction can be verified on-chain on the Base network (Base testnet) under utaablockchain.base.eth.' },
+  { icon: ShieldCheck, title: 'On-Chain Verification', desc: 'Every UBpoint transaction is verifiable on Base. See our official identifiers below.' },
   { icon: GraduationCap, title: 'Student Identity', desc: 'Build a verifiable portfolio of participation, contributions, and achievements.' },
   { icon: Trophy, title: 'Leaderboards', desc: 'Compete with community members and climb the rankings.' },
   { icon: Sparkles, title: 'Campus Engagement', desc: 'Transform university activities into measurable achievements.' },
@@ -394,6 +377,91 @@ const FeatureGrid = () => (
     </div>
   </section>
 );
+
+/* ---------- Verified On-Chain ---------- */
+const BASE_NAME = 'utaablockchain.base.eth';
+const BASE_WALLET = '0x4fF797906D7B56F9Bd2Db382BcB36C97d69A43A9';
+const BASESCAN_URL = `https://basescan.org/address/${BASE_WALLET}`;
+
+const VerifiedOnChain = () => {
+  const [copied, setCopied] = useState<string | null>(null);
+  const copy = (value: string, key: string) => {
+    navigator.clipboard?.writeText(value);
+    setCopied(key);
+    setTimeout(() => setCopied(null), 1500);
+  };
+
+  return (
+    <section id="verified" className="relative py-24 md:py-28 bg-white">
+      <div className="max-w-5xl mx-auto px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-2xl mx-auto mb-12"
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-4">
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+            Live on Base
+          </div>
+          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight flex items-center justify-center gap-3">
+            <ShieldCheck className="w-8 h-8 md:w-10 md:h-10 text-blue-600" />
+            Verified On-Chain
+          </h2>
+          <p className="mt-4 text-slate-600 md:text-lg leading-relaxed">
+            Stay safu. Always verify before you interact. UBpoint is officially registered on Base —
+            these are our only verified identifiers. Do not trust any other address claiming to be UBpoint.
+          </p>
+        </motion.div>
+
+        <div className="grid md:grid-cols-2 gap-5">
+          {[
+            { label: 'Base Name', value: BASE_NAME, key: 'name', mono: false },
+            { label: 'Official Wallet', value: BASE_WALLET, display: '0x4fF7…43A9', key: 'wallet', mono: true },
+          ].map((item) => (
+            <motion.div
+              key={item.key}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.5 }}
+              className="p-6 rounded-2xl bg-white border border-blue-100 shadow-[0_10px_30px_-15px_rgba(37,99,235,0.25)]"
+            >
+              <div className="text-xs font-semibold uppercase tracking-wider text-blue-700 mb-2">
+                {item.label}
+              </div>
+              <div className={`text-base md:text-lg text-slate-900 font-bold break-all ${item.mono ? 'font-mono' : ''}`}>
+                {item.display ?? item.value}
+              </div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => copy(item.value, item.key)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold hover:bg-blue-100 transition-colors"
+                >
+                  <Copy className="w-3.5 h-3.5" />
+                  {copied === item.key ? 'Copied' : 'Copy'}
+                </button>
+                <a
+                  href={BASESCAN_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-blue-100 text-slate-600 text-xs font-semibold hover:text-blue-700 hover:border-blue-200 transition-colors"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  View on Basescan
+                </a>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+
 
 /* ---------- Inside the app — horizontal scroll showcase ---------- */
 const showcase = [
@@ -813,6 +881,7 @@ const UBpointPage = () => {
       <main>
         <Hero />
         <FeatureGrid />
+        <VerifiedOnChain />
         <Showcase />
         <Sponsors />
         <Metrics />
