@@ -721,48 +721,6 @@ const sponsorTasks = [
   { icon: Rocket, label: 'Try the app', reward: 50 },
 ];
 
-/* ---------- Ecosystem strip ---------- */
-const ecosystemCoins = [
-  { src: tonCoinAsset.url, label: 'TON', glow: 'rgba(37,99,235,0.45)' },
-  { src: btcCoinAsset.url, label: 'BTC', glow: 'rgba(202,138,4,0.45)' },
-  { src: ethCoinAsset.url, label: 'ETH', glow: 'rgba(100,116,139,0.45)' },
-  { src: utaabCoinAsset.url, label: 'UTAAB', glow: 'rgba(148,163,184,0.5)' },
-];
-
-const EcosystemStrip = () => (
-  <section className="relative py-16 md:py-24 bg-white overflow-hidden">
-    <div className="max-w-5xl mx-auto px-6 text-center">
-      <div className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-4">
-        Ecosystem
-      </div>
-      <h2 className="text-2xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-10">
-        Built across leading blockchain networks
-      </h2>
-      <div className="flex flex-wrap items-center justify-center gap-8 md:gap-14">
-        {ecosystemCoins.map((c, i) => (
-          <motion.div
-            key={c.label}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
-            className="flex flex-col items-center gap-2"
-          >
-            <motion.img
-              src={c.src}
-              alt={c.label}
-              className="w-16 md:w-24 h-16 md:h-24 object-contain pointer-events-none select-none"
-              style={{ filter: `drop-shadow(0 12px 24px ${c.glow})` }}
-              animate={{ y: [0, -8, 0], rotateZ: [-4, 4, -4] }}
-              transition={{ duration: 6 + i, repeat: Infinity, ease: 'easeInOut', delay: i * 0.3 }}
-            />
-            <div className="text-xs font-bold tracking-wider text-slate-500 uppercase">{c.label}</div>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  </section>
-);
 
 const Sponsors = () => (
   <section id="sponsors" className="relative py-24 md:py-32 bg-white overflow-hidden">
@@ -1012,7 +970,7 @@ const UBpointPage = () => {
         <FeatureGrid />
         <VerifiedOnChain />
         <Showcase />
-        <EcosystemStrip />
+        
         <Sponsors />
         <Metrics />
         <FinalCTA />
