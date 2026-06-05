@@ -256,6 +256,24 @@ const FloatingDevice = () => {
           <div className="text-sm font-bold text-slate-900">Verified · Base</div>
         </div>
       </motion.div>
+
+      {/* floating UTAAB coin */}
+      <motion.img
+        src={utaabCoinAsset.url}
+        alt=""
+        aria-hidden
+        className="absolute -left-10 md:-left-20 bottom-4 w-24 md:w-32 drop-shadow-[0_20px_40px_rgba(37,99,235,0.35)] pointer-events-none"
+        animate={{ y: [0, -12, 0], rotateZ: [-6, 6, -6] }}
+        transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.img
+        src={tryAngleAsset.url}
+        alt=""
+        aria-hidden
+        className="absolute -right-6 md:-right-12 top-4 w-16 md:w-24 drop-shadow-[0_15px_30px_rgba(202,138,4,0.35)] pointer-events-none"
+        animate={{ y: [0, 10, 0], rotateZ: [4, -4, 4] }}
+        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+      />
     </div>
   );
 };
