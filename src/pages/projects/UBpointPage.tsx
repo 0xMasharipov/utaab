@@ -520,18 +520,24 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
     return <img src={mockupAsset.url} alt="" className="w-full h-full object-cover" />;
   }
   if (kind === 'rewards') {
+    const rewardItems = [
+      { label: 'Steam Gift Card', price: '500 UBP', img: usdtAngleAsset.url },
+      { label: 'Silver Token', price: '1,200 UBP', img: utaabCoinAsset.url },
+      { label: 'Partner Discount', price: '250 UBP', img: usdtCoinAsset.url },
+      { label: 'Gold Token', price: '5,000 UBP', img: tryCoinAsset.url },
+    ];
     return (
       <div className="h-full flex flex-col">
         {Header}
         <div className="p-3 space-y-2 overflow-hidden">
           <div className="text-[10px] uppercase font-bold text-slate-500">Rewards</div>
-          {['Steam Gift Card · 500 UBP', 'Silver Token · 1,200 UBP', 'Partner Discount · 250 UBP', 'Gold Token · 5,000 UBP'].map((r) => (
-            <div key={r} className="flex items-center justify-between p-2 rounded-lg bg-blue-50/60 border border-blue-100">
+          {rewardItems.map((r) => (
+            <div key={r.label} className="flex items-center justify-between p-2 rounded-lg bg-blue-50/60 border border-blue-100">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-md bg-gradient-to-br from-blue-500 to-blue-700" />
-                <div className="text-[10px] font-semibold text-slate-900">{r.split(' · ')[0]}</div>
+                <img src={r.img} alt="" className="w-7 h-7 object-contain drop-shadow" />
+                <div className="text-[10px] font-semibold text-slate-900">{r.label}</div>
               </div>
-              <div className="text-[9px] font-bold text-blue-700">{r.split(' · ')[1]}</div>
+              <div className="text-[9px] font-bold text-blue-700">{r.price}</div>
             </div>
           ))}
         </div>
