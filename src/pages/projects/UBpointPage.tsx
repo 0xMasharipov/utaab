@@ -28,10 +28,13 @@ import logoAsset from '@/assets/ubpoint-logo.png.asset.json';
 
 import mockupAsset from '@/assets/ubpoint-mockup.png.asset.json';
 import utaabCoinAsset from '@/assets/coins/utaab-coin.png.asset.json';
-import usdtCoinAsset from '@/assets/coins/ubp-usdt.png.asset.json';
-import usdtAngleAsset from '@/assets/coins/ubp-usdt-angle.png.asset.json';
-import tryCoinAsset from '@/assets/coins/ubp-try.png.asset.json';
-import tryAngleAsset from '@/assets/coins/ubp-try-angle.png.asset.json';
+import gamepadAsset from '@/assets/coins/gamepad.png.asset.json';
+import tonCoinAsset from '@/assets/coins/ton.png.asset.json';
+import ethCoinAsset from '@/assets/coins/eth.png.asset.json';
+import btcCoinAsset from '@/assets/coins/btc.png.asset.json';
+import goldCoinAsset from '@/assets/coins/gold-coin.png.asset.json';
+import goldBarAsset from '@/assets/coins/gold-bar.png.asset.json';
+import silverBarAsset from '@/assets/coins/silver-bar.png.asset.json';
 
 const WHATSAPP_URL = 'https://chat.whatsapp.com/HnTcuJYiKAiDpLPnG33mEr';
 const SPONSOR_EMAIL = 'mailto:info@utaab.org?subject=UBpoint%20Sponsor%20Inquiry';
