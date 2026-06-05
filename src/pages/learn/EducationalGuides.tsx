@@ -8,6 +8,7 @@ import { BookOpen, Clock, ChevronRight, ExternalLink, Layers, Shield, Code, Glob
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
+import { Resources } from '@/components/Resources';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -212,6 +213,8 @@ const EducationalGuides = () => {
           </div>
         </section>
       </div>
+
+      <Resources />
 
       <Footer onPrivacyClick={() => {}} />
     </div>

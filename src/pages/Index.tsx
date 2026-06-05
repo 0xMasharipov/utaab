@@ -11,7 +11,7 @@ const AnimatedBlobBackground = lazy(() => import('@/components/AnimatedBlobBackg
 const AboutBlurb = lazy(() => import('@/components/AboutBlurb').then(m => ({ default: m.AboutBlurb })));
 const Community = lazy(() => import('@/components/Community').then(m => ({ default: m.Community })));
 const Learn = lazy(() => import('@/components/Learn').then(m => ({ default: m.Learn })));
-const Resources = lazy(() => import('@/components/Resources').then(m => ({ default: m.Resources })));
+
 const Projects = lazy(() => import('@/components/Projects').then(m => ({ default: m.Projects })));
 const Events = lazy(() => import('@/components/Events').then(m => ({ default: m.Events })));
 const BlogSection = lazy(() => import('@/components/BlogSection').then(m => ({ default: m.BlogSection })));
@@ -115,10 +115,9 @@ const Index = () => {
         <Suspense fallback={null}>
           <BackgroundGrid>
             <AboutBlurb />
+            <Projects />
             <Community />
             <Learn />
-            <Resources />
-            <Projects />
             <Events />
             <BlogSection />
             <Join />
