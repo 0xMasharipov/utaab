@@ -532,10 +532,10 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
   }
   if (kind === 'rewards') {
     const rewardItems = [
-      { label: 'Steam Gift Card', price: '500 UBP', img: usdtAngleAsset.url },
-      { label: 'Silver Token', price: '1,200 UBP', img: utaabCoinAsset.url },
-      { label: 'Partner Discount', price: '250 UBP', img: usdtCoinAsset.url },
-      { label: 'Gold Token', price: '5,000 UBP', img: tryCoinAsset.url },
+      { label: 'Steam Gift Card', price: '500 UBP', img: gamepadAsset.url },
+      { label: 'Silver Token', price: '1,200 UBP', img: silverBarAsset.url },
+      { label: 'Partner Discount', price: '250 UBP', img: goldCoinAsset.url },
+      { label: 'Gold Token', price: '5,000 UBP', img: goldBarAsset.url },
     ];
     return (
       <div className="h-full flex flex-col">
