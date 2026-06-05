@@ -28,7 +28,7 @@ import logoAsset from '@/assets/ubpoint-logo.png.asset.json';
 
 import mockupAsset from '@/assets/ubpoint-mockup.png.asset.json';
 import utaabCoinAsset from '@/assets/coins/utaab-coin.png.asset.json';
-import gamepadAsset from '@/assets/coins/gamepad.png.asset.json';
+
 import tonCoinAsset from '@/assets/coins/ton.png.asset.json';
 import ethCoinAsset from '@/assets/coins/eth.png.asset.json';
 import btcCoinAsset from '@/assets/coins/btc.png.asset.json';
