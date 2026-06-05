@@ -797,20 +797,28 @@ const CountUp: React.FC<{ to: number; suffix?: string }> = ({ to, suffix = '' })
 const Metrics = () => (
   <section id="rewards" className="relative py-24 md:py-32 bg-gradient-to-b from-white to-blue-50/50 overflow-hidden">
     <motion.img
-      src={coinAsset.url}
+      src={utaabCoinAsset.url}
       alt=""
       aria-hidden
-      className="hidden md:block absolute -left-10 top-1/2 -translate-y-1/2 w-48 opacity-80 pointer-events-none"
+      className="hidden md:block absolute -left-12 top-1/2 -translate-y-1/2 w-52 opacity-90 drop-shadow-[0_25px_50px_rgba(37,99,235,0.35)] pointer-events-none"
       animate={{ y: [0, -20, 0], rotateZ: [0, 8, 0] }}
       transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
     />
     <motion.img
-      src={coinAsset.url}
+      src={tryAngleAsset.url}
       alt=""
       aria-hidden
-      className="hidden md:block absolute -right-12 top-20 w-32 opacity-70 pointer-events-none"
+      className="hidden md:block absolute -right-12 top-16 w-40 opacity-90 drop-shadow-[0_25px_50px_rgba(202,138,4,0.35)] pointer-events-none"
       animate={{ y: [0, 20, 0], rotateZ: [0, -6, 0] }}
       transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
+    />
+    <motion.img
+      src={usdtAngleAsset.url}
+      alt=""
+      aria-hidden
+      className="hidden md:block absolute right-10 bottom-10 w-28 opacity-80 drop-shadow-[0_20px_40px_rgba(16,185,129,0.35)] pointer-events-none"
+      animate={{ y: [0, -14, 0], rotateZ: [0, 10, 0] }}
+      transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 0.7 }}
     />
     <div className="max-w-6xl mx-auto px-6 relative">
       <div className="text-center mb-14">
