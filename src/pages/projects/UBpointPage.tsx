@@ -230,9 +230,10 @@ const FloatingDevice = () => {
           { src: tryAngleAsset.url, cls: 'top-10 -right-6 md:-right-14 w-16 md:w-24', glow: 'rgba(220,38,38,0.4)', dur: 10, delay: 0.4 },
           { src: ethCoinAsset.url, cls: 'top-1/2 -left-10 md:-left-20 w-14 md:w-20', glow: 'rgba(100,116,139,0.45)', dur: 11, delay: 0.8 },
           { src: goldCoinAsset.url, cls: 'bottom-12 -right-8 md:-right-16 w-14 md:w-20', glow: 'rgba(202,138,4,0.5)', dur: 12, delay: 0.2 },
-          { src: silverBarAsset.url, cls: 'bottom-2 left-6 md:left-2 w-12 md:w-16', glow: 'rgba(148,163,184,0.5)', dur: 13, delay: 1 },
-          { src: steamAsset.url, cls: 'top-24 right-2 md:right-6 w-12 md:w-16', glow: 'rgba(37,99,235,0.45)', dur: 10, delay: 1.3 },
-          { src: gamepadAsset.url, cls: 'bottom-24 -left-6 md:-left-14 w-12 md:w-16', glow: 'rgba(96,165,250,0.4)', dur: 11, delay: 0.6 },
+          { src: silverBarAsset.url, cls: 'bottom-2 left-6 md:left-2 w-16 md:w-20', glow: 'rgba(148,163,184,0.5)', dur: 13, delay: 1 },
+          { src: steamAsset.url, cls: 'top-4 -left-8 md:-left-16 w-16 md:w-24', glow: 'rgba(37,99,235,0.45)', dur: 10, delay: 1.3 },
+          { src: gamepadAsset.url, cls: 'bottom-8 -right-10 md:-right-20 w-20 md:w-28', glow: 'rgba(96,165,250,0.4)', dur: 11, delay: 0.6 },
+
         ].map((c, i) => (
           <motion.img
             key={i}
@@ -848,16 +849,17 @@ const Metrics = () => (
     {[
       { src: utaabCoinAsset.url, cls: 'hidden md:block -left-12 top-1/2 -translate-y-1/2 w-44', glow: 'rgba(37,99,235,0.4)', dur: 9, delay: 0 },
       { src: goldBarAsset.url, cls: 'hidden md:block -right-10 top-12 w-36', glow: 'rgba(202,138,4,0.45)', dur: 11, delay: 0.3 },
-      { src: titaniumBarAsset.url, cls: 'hidden md:block right-20 top-2 w-20', glow: 'rgba(148,163,184,0.45)', dur: 10, delay: 1.1 },
-      { src: silverBarAsset.url, cls: 'hidden md:block left-24 bottom-4 w-20', glow: 'rgba(148,163,184,0.45)', dur: 12, delay: 0.6 },
+      { src: titaniumBarAsset.url, cls: 'hidden md:block right-20 top-2 w-24', glow: 'rgba(148,163,184,0.45)', dur: 10, delay: 1.1 },
+      { src: silverBarAsset.url, cls: 'hidden md:block left-24 bottom-4 w-24', glow: 'rgba(148,163,184,0.45)', dur: 12, delay: 0.6 },
       { src: ethCoinAsset.url, cls: 'hidden md:block right-12 bottom-10 w-24', glow: 'rgba(100,116,139,0.4)', dur: 10, delay: 0.7 },
       { src: btcCoinAsset.url, cls: 'absolute left-2 md:left-1/3 -top-2 md:top-4 w-14 md:w-20', glow: 'rgba(202,138,4,0.45)', dur: 9, delay: 0.4 },
       { src: tonCoinAsset.url, cls: 'absolute right-2 md:right-1/3 -top-2 md:top-6 w-14 md:w-20', glow: 'rgba(37,99,235,0.5)', dur: 11, delay: 0.9 },
-      { src: usdtAngleAsset.url, cls: 'hidden md:block left-1/4 bottom-2 w-20', glow: 'rgba(16,185,129,0.45)', dur: 10, delay: 1.4 },
-      { src: tryAngleAsset.url, cls: 'hidden md:block right-1/4 top-1/3 w-20', glow: 'rgba(220,38,38,0.4)', dur: 12, delay: 0.2 },
+      { src: usdtAngleAsset.url, cls: 'hidden md:block left-1/4 bottom-2 w-24', glow: 'rgba(16,185,129,0.45)', dur: 10, delay: 1.4 },
+      { src: tryAngleAsset.url, cls: 'hidden md:block right-1/4 top-1/3 w-24', glow: 'rgba(220,38,38,0.4)', dur: 12, delay: 0.2 },
       { src: goldCoinAsset.url, cls: 'absolute right-4 md:left-10 bottom-2 md:bottom-16 w-12 md:w-20', glow: 'rgba(202,138,4,0.5)', dur: 10, delay: 0.5 },
-      { src: steamAsset.url, cls: 'hidden md:block left-1/2 -translate-x-1/2 -top-4 w-20', glow: 'rgba(37,99,235,0.45)', dur: 11, delay: 1.6 },
-      { src: gamepadAsset.url, cls: 'absolute left-4 md:right-1/4 bottom-4 md:bottom-6 w-12 md:w-20', glow: 'rgba(96,165,250,0.4)', dur: 9, delay: 0.8 },
+      { src: steamAsset.url, cls: 'hidden md:block right-8 top-8 w-24', glow: 'rgba(37,99,235,0.45)', dur: 11, delay: 1.6 },
+      { src: gamepadAsset.url, cls: 'absolute left-2 md:left-1/4 bottom-2 md:bottom-10 w-20 md:w-32', glow: 'rgba(96,165,250,0.4)', dur: 9, delay: 0.8 },
+
     ].map((c, i) => (
       <motion.img
         key={i}
