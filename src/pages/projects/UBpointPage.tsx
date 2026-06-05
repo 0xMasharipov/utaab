@@ -311,25 +311,6 @@ const Hero = () => (
             On-chain verified
           </div>
         </div>
-        <div className="mt-4 flex flex-wrap items-center gap-2 text-[11px]">
-          <a
-            href="https://basescan.org/address/0x4fF797906D7B56F9Bd2Db382BcB36C97d69A43A9"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-700 font-semibold hover:bg-blue-100 transition-colors"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
-            utaablockchain.base.eth
-          </a>
-          <a
-            href="https://basescan.org/address/0x4fF797906D7B56F9Bd2Db382BcB36C97d69A43A9"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white border border-blue-100 text-slate-600 font-mono hover:text-blue-700 hover:border-blue-200 transition-colors"
-          >
-            0x4fF7…43A9
-          </a>
-        </div>
       </motion.div>
 
       <motion.div
