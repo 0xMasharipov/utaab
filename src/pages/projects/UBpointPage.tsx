@@ -270,12 +270,20 @@ const FloatingDevice = () => {
         transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
       />
       <motion.img
-        src={tryAngleAsset.url}
+        src={tonCoinAsset.url}
         alt=""
         aria-hidden
-        className="absolute -right-6 md:-right-12 top-4 w-16 md:w-24 drop-shadow-[0_15px_30px_rgba(202,138,4,0.35)] pointer-events-none"
+        className="absolute -right-6 md:-right-12 top-4 w-20 md:w-28 drop-shadow-[0_15px_30px_rgba(37,99,235,0.45)] pointer-events-none"
         animate={{ y: [0, 10, 0], rotateZ: [4, -4, 4] }}
         transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+      />
+      <motion.img
+        src={btcCoinAsset.url}
+        alt=""
+        aria-hidden
+        className="absolute right-2 md:right-6 bottom-16 w-14 md:w-20 drop-shadow-[0_15px_30px_rgba(202,138,4,0.4)] pointer-events-none"
+        animate={{ y: [0, -10, 0], rotateZ: [-5, 5, -5] }}
+        transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1.2 }}
       />
     </div>
   );
