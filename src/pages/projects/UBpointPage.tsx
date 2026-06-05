@@ -398,7 +398,7 @@ const FeatureGrid = () => (
 const showcase = [
   { title: 'Home Dashboard', hint: 'Your UBP balance and progress at a glance', kind: 'real' as const },
   { title: 'Rewards Marketplace', hint: 'Redeem points for partner perks', kind: 'rewards' as const },
-  { title: 'Student Wallet', hint: 'Base-anchored token wallet', kind: 'wallet' as const },
+  { title: 'Student Wallet', hint: 'Verified, stay safe', kind: 'wallet' as const },
   { title: 'Leaderboard', hint: 'See where you rank on campus', kind: 'leaderboard' as const },
   { title: 'Events', hint: 'Discover and check in on-chain', kind: 'events' as const },
   { title: 'Profile Analytics', hint: 'Your verified contribution history', kind: 'analytics' as const },
