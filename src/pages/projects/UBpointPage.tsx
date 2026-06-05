@@ -222,8 +222,32 @@ const FloatingDevice = () => {
     <div className="relative w-full max-w-[360px] md:max-w-[420px] mx-auto">
       {/* glow */}
       <div className="absolute inset-0 -m-10 bg-gradient-to-br from-blue-400/40 via-blue-500/30 to-blue-600/20 blur-3xl rounded-full" />
+
+      {/* back-layer coin cluster behind the phone */}
+      <div aria-hidden className="absolute inset-0 -m-16 md:-m-24 pointer-events-none">
+        {[
+          { src: usdtAngleAsset.url, cls: 'top-2 -left-4 md:-left-10 w-16 md:w-24', glow: 'rgba(16,185,129,0.45)', dur: 9, delay: 0 },
+          { src: tryAngleAsset.url, cls: 'top-10 -right-6 md:-right-14 w-16 md:w-24', glow: 'rgba(220,38,38,0.4)', dur: 10, delay: 0.4 },
+          { src: ethCoinAsset.url, cls: 'top-1/2 -left-10 md:-left-20 w-14 md:w-20', glow: 'rgba(100,116,139,0.45)', dur: 11, delay: 0.8 },
+          { src: goldCoinAsset.url, cls: 'bottom-12 -right-8 md:-right-16 w-14 md:w-20', glow: 'rgba(202,138,4,0.5)', dur: 12, delay: 0.2 },
+          { src: silverBarAsset.url, cls: 'bottom-2 left-6 md:left-2 w-12 md:w-16', glow: 'rgba(148,163,184,0.5)', dur: 13, delay: 1 },
+          { src: steamAsset.url, cls: 'top-24 right-2 md:right-6 w-12 md:w-16', glow: 'rgba(37,99,235,0.45)', dur: 10, delay: 1.3 },
+          { src: gamepadAsset.url, cls: 'bottom-24 -left-6 md:-left-14 w-12 md:w-16', glow: 'rgba(96,165,250,0.4)', dur: 11, delay: 0.6 },
+        ].map((c, i) => (
+          <motion.img
+            key={i}
+            src={c.src}
+            alt=""
+            className={`absolute ${c.cls} opacity-70 blur-[1px] select-none`}
+            style={{ filter: `drop-shadow(0 14px 26px ${c.glow})` }}
+            animate={{ y: [0, -10, 0], rotateZ: [-5, 5, -5] }}
+            transition={{ duration: c.dur, repeat: Infinity, ease: 'easeInOut', delay: c.delay }}
+          />
+        ))}
+      </div>
+
       <motion.div
-        className="relative"
+        className="relative z-10"
         animate={{ y: [0, -14, 0], rotateZ: [-1.5, 1.5, -1.5] }}
         transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
       >
