@@ -36,6 +36,10 @@ import goldCoinAsset from '@/assets/coins/gold-coin.png.asset.json';
 import goldBarAsset from '@/assets/coins/gold-bar.png.asset.json';
 import steamAsset from '@/assets/coins/steam.png.asset.json';
 import titaniumBarAsset from '@/assets/coins/titanium-bar.png.asset.json';
+import silverBarAsset from '@/assets/coins/silver-bar.png.asset.json';
+import gamepadAsset from '@/assets/coins/gamepad.png.asset.json';
+import usdtAngleAsset from '@/assets/coins/ubp-usdt-angle.png.asset.json';
+import tryAngleAsset from '@/assets/coins/ubp-try-angle.png.asset.json';
 
 const WHATSAPP_URL = 'https://chat.whatsapp.com/HnTcuJYiKAiDpLPnG33mEr';
 const SPONSOR_EMAIL = 'mailto:info@utaab.org?subject=UBpoint%20Sponsor%20Inquiry';
