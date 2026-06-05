@@ -982,6 +982,7 @@ const UBpointPage = () => {
         <FeatureGrid />
         <VerifiedOnChain />
         <Showcase />
+        <EcosystemStrip />
         <Sponsors />
         <Metrics />
         <FinalCTA />
