@@ -1,19 +1,16 @@
-## Plan: Add Steam coin & Titanium ingot to UBpoint page
+## Plan: Coin assets on Economy section + Hero phone backdrop
 
-Two new assets uploaded:
-- `UBpoint_STEAM_1.png` — navy/silver Steam logo coin
-- `UBpoint_INGOT_TITANIUM.png` — silver titanium 1000g bar
+### 1. "A growing on-chain economy" (Metrics section, ~line 860)
+Replace the current 3 floating decorations with the full set of available coin/metal assets arranged around the metrics grid. Use all 10:
+USDT, TRY, BTC, TON, ETH, UTAAB, GOLD coin, GOLD bar, SILVER bar, TITANIUM bar, STEAM, GAMEPAD.
 
-### Steps
+Layout: distributed as `absolute`-positioned `motion.img` floats around the perimeter (top-left, top-right, mid-left, mid-right, bottom corners, etc.), each with staggered y/rotate animation, varying sizes (16–48 w), individual drop-shadow tints matching the asset color. On mobile, show a reduced subset (4–5 smaller, opacity-60) so it doesn't crowd.
 
-1. Upload both images to `src/assets/coins/` via `lovable-assets` → create `steam.png.asset.json` and `titanium-bar.png.asset.json`.
+### 2. Hero — phone backdrop coin cluster
+Add a dedicated coin cluster behind the iPhone mockup in `FloatingDevice`. Currently it has UTAAB, TON, BTC only. Add the remaining requested coins as a **back layer** (lower z-index than the phone) so they appear *behind* the device:
+- USDT (`ubp-usdt-angle`), TRY (`ubp-try-angle`), ETH, GOLD coin, SILVER bar, STEAM, GAMEPAD — positioned at varying offsets around/behind the phone with `-z-10` (or wrapped in a div placed before the phone img), reduced opacity (0.6–0.85), blur-sm on the furthest ones for depth, with subtle float animations.
+- Keep existing UTAAB / TON / BTC as the **front layer** floating coins (unchanged).
 
-2. Edit `src/pages/projects/UBpointPage.tsx`:
-   - Add 2 new imports: `steamAsset`, `titaniumBarAsset`.
-   - **Rewards mockup** — swap Steam Gift Card icon from `gamepadAsset` → `steamAsset` (proper brand match for the Steam reward).
-   - **Metrics section** — replace the `silverBarAsset` (or add alongside) with `titaniumBarAsset` to introduce a new tier visual; keep the gold bar on the opposite side. Specifically: left = UTAAB silver coin, center-left small = `titaniumBarAsset` (new), right = gold bar.
-   - Optionally keep `gamepadAsset` and `silverBarAsset` imports if still used elsewhere; otherwise remove unused imports.
+Imports to add back: `gamepadAsset`, `silverBarAsset`, plus new: `usdtAngleAsset`, `tryAngleAsset`.
 
-No copy/text or structural changes — only asset swaps.
-
-Confirm to proceed.
+No copy/structural changes — visual asset additions only.
