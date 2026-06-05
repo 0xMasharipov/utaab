@@ -887,30 +887,31 @@ const CountUp: React.FC<{ to: number; suffix?: string }> = ({ to, suffix = '' })
 
 const Metrics = () => (
   <section id="rewards" className="relative py-24 md:py-32 bg-gradient-to-b from-white to-blue-50/50 overflow-hidden">
-    <motion.img
-      src={utaabCoinAsset.url}
-      alt=""
-      aria-hidden
-      className="hidden md:block absolute -left-12 top-1/2 -translate-y-1/2 w-52 opacity-90 drop-shadow-[0_25px_50px_rgba(37,99,235,0.35)] pointer-events-none"
-      animate={{ y: [0, -20, 0], rotateZ: [0, 8, 0] }}
-      transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-    />
-    <motion.img
-      src={goldBarAsset.url}
-      alt=""
-      aria-hidden
-      className="hidden md:block absolute -right-12 top-16 w-40 opacity-90 drop-shadow-[0_25px_50px_rgba(202,138,4,0.4)] pointer-events-none"
-      animate={{ y: [0, 20, 0], rotateZ: [0, -6, 0] }}
-      transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
-    />
-    <motion.img
-      src={ethCoinAsset.url}
-      alt=""
-      aria-hidden
-      className="hidden md:block absolute right-10 bottom-10 w-28 opacity-85 drop-shadow-[0_20px_40px_rgba(100,116,139,0.4)] pointer-events-none"
-      animate={{ y: [0, -14, 0], rotateZ: [0, 10, 0] }}
-      transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 0.7 }}
-    />
+    {[
+      { src: utaabCoinAsset.url, cls: 'hidden md:block -left-12 top-1/2 -translate-y-1/2 w-44', glow: 'rgba(37,99,235,0.4)', dur: 9, delay: 0 },
+      { src: goldBarAsset.url, cls: 'hidden md:block -right-10 top-12 w-36', glow: 'rgba(202,138,4,0.45)', dur: 11, delay: 0.3 },
+      { src: titaniumBarAsset.url, cls: 'hidden md:block right-20 top-2 w-20', glow: 'rgba(148,163,184,0.45)', dur: 10, delay: 1.1 },
+      { src: silverBarAsset.url, cls: 'hidden md:block left-24 bottom-4 w-20', glow: 'rgba(148,163,184,0.45)', dur: 12, delay: 0.6 },
+      { src: ethCoinAsset.url, cls: 'hidden md:block right-12 bottom-10 w-24', glow: 'rgba(100,116,139,0.4)', dur: 10, delay: 0.7 },
+      { src: btcCoinAsset.url, cls: 'absolute left-2 md:left-1/3 -top-2 md:top-4 w-14 md:w-20', glow: 'rgba(202,138,4,0.45)', dur: 9, delay: 0.4 },
+      { src: tonCoinAsset.url, cls: 'absolute right-2 md:right-1/3 -top-2 md:top-6 w-14 md:w-20', glow: 'rgba(37,99,235,0.5)', dur: 11, delay: 0.9 },
+      { src: usdtAngleAsset.url, cls: 'hidden md:block left-1/4 bottom-2 w-20', glow: 'rgba(16,185,129,0.45)', dur: 10, delay: 1.4 },
+      { src: tryAngleAsset.url, cls: 'hidden md:block right-1/4 top-1/3 w-20', glow: 'rgba(220,38,38,0.4)', dur: 12, delay: 0.2 },
+      { src: goldCoinAsset.url, cls: 'absolute right-4 md:left-10 bottom-2 md:bottom-16 w-12 md:w-20', glow: 'rgba(202,138,4,0.5)', dur: 10, delay: 0.5 },
+      { src: steamAsset.url, cls: 'hidden md:block left-1/2 -translate-x-1/2 -top-4 w-20', glow: 'rgba(37,99,235,0.45)', dur: 11, delay: 1.6 },
+      { src: gamepadAsset.url, cls: 'absolute left-4 md:right-1/4 bottom-4 md:bottom-6 w-12 md:w-20', glow: 'rgba(96,165,250,0.4)', dur: 9, delay: 0.8 },
+    ].map((c, i) => (
+      <motion.img
+        key={i}
+        src={c.src}
+        alt=""
+        aria-hidden
+        className={`absolute ${c.cls} opacity-80 pointer-events-none select-none`}
+        style={{ filter: `drop-shadow(0 18px 32px ${c.glow})` }}
+        animate={{ y: [0, i % 2 === 0 ? -16 : 16, 0], rotateZ: [0, i % 2 === 0 ? 8 : -8, 0] }}
+        transition={{ duration: c.dur, repeat: Infinity, ease: 'easeInOut', delay: c.delay }}
+      />
+    ))}
     <div className="max-w-6xl mx-auto px-6 relative">
       <div className="text-center mb-14">
         <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
