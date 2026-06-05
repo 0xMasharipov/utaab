@@ -27,6 +27,11 @@ import { Button } from '@/components/ui/button';
 import logoAsset from '@/assets/ubpoint-logo.png.asset.json';
 import coinAsset from '@/assets/ubpoint-coin.png.asset.json';
 import mockupAsset from '@/assets/ubpoint-mockup.png.asset.json';
+import utaabCoinAsset from '@/assets/coins/utaab-coin.png.asset.json';
+import usdtCoinAsset from '@/assets/coins/ubp-usdt.png.asset.json';
+import usdtAngleAsset from '@/assets/coins/ubp-usdt-angle.png.asset.json';
+import tryCoinAsset from '@/assets/coins/ubp-try.png.asset.json';
+import tryAngleAsset from '@/assets/coins/ubp-try-angle.png.asset.json';
 
 const WHATSAPP_URL = 'https://chat.whatsapp.com/HnTcuJYiKAiDpLPnG33mEr';
 const SPONSOR_EMAIL = 'mailto:info@utaab.org?subject=UBpoint%20Sponsor%20Inquiry';
