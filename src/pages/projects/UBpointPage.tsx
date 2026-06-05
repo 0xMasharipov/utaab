@@ -15,6 +15,8 @@ import {
   Rocket,
   Building2,
   ArrowUpRight,
+  Flame,
+  TrendingUp,
   Menu,
   X,
   Linkedin,
@@ -572,7 +574,61 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
 
 
   if (kind === 'real') {
-    return <img src={mockupAsset.url} alt="" className="w-full h-full object-cover" />;
+    return (
+      <div className="h-full flex flex-col overflow-hidden">
+        {Header}
+        <div className="p-3 space-y-2.5 overflow-hidden">
+          <div>
+            <div className="text-[9px] uppercase font-bold text-slate-500">Good morning</div>
+            <div className="text-[12px] font-extrabold text-slate-900">Alex Karimov</div>
+          </div>
+          <div className="p-3 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-400 text-white">
+            <div className="text-[9px] opacity-80">Total UBP</div>
+            <div className="text-2xl font-extrabold mt-0.5 leading-tight">200.00</div>
+            <div className="mt-1.5 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-white/20 text-[9px] font-bold">
+              <TrendingUp className="w-2.5 h-2.5" /> +50 this week
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-1.5">
+            {[
+              { icon: Coins, label: 'Earn' },
+              { icon: Gift, label: 'Redeem' },
+              { icon: Send, label: 'Send' },
+            ].map((a) => (
+              <div key={a.label} className="flex flex-col items-center gap-1 p-1.5 rounded-lg bg-blue-50/60 border border-blue-100">
+                <a.icon className="w-3.5 h-3.5 text-blue-600" />
+                <div className="text-[9px] font-bold text-slate-700">{a.label}</div>
+              </div>
+            ))}
+          </div>
+          <div>
+            <div className="text-[9px] uppercase font-bold text-slate-500 mb-1">Recent</div>
+            <div className="space-y-1">
+              {[
+                { l: 'Hackathon', a: '+50', pos: true },
+                { l: 'Workshop', a: '+25', pos: true },
+                { l: 'Reward', a: '-100', pos: false },
+              ].map((t) => (
+                <div key={t.l} className="flex items-center justify-between p-1.5 rounded-lg bg-white border border-slate-100">
+                  <div className="flex items-center gap-1.5">
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${t.pos ? 'bg-green-50' : 'bg-slate-100'}`}>
+                      <Sparkles className={`w-2.5 h-2.5 ${t.pos ? 'text-green-600' : 'text-slate-500'}`} />
+                    </div>
+                    <div className="text-[10px] font-semibold text-slate-800">{t.l}</div>
+                  </div>
+                  <div className={`text-[10px] font-bold ${t.pos ? 'text-green-600' : 'text-slate-900'}`}>{t.a} UBP</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center gap-2 p-2 rounded-lg bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100">
+            <Flame className="w-4 h-4 text-orange-500" />
+            <div className="text-[10px] font-bold text-slate-800">5 day streak</div>
+            <div className="ml-auto text-[9px] text-slate-500 font-semibold">Keep going</div>
+          </div>
+        </div>
+      </div>
+    );
   }
   if (kind === 'rewards') {
     const rewardItems = [
@@ -582,7 +638,7 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
       { label: 'Gold Token', price: '5,000 UBP', img: goldBarAsset.url },
     ];
     return (
-      <div className="h-full flex flex-col">
+      <div className="h-full flex flex-col overflow-hidden">
         {Header}
         <div className="p-3 space-y-2 overflow-hidden">
           <div className="text-[10px] uppercase font-bold text-slate-500">Rewards</div>
@@ -601,9 +657,9 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
   }
   if (kind === 'wallet') {
     return (
-      <div className="h-full flex flex-col">
+      <div className="h-full flex flex-col overflow-hidden">
         {Header}
-        <div className="p-4">
+        <div className="p-4 overflow-hidden">
           <div className="text-[10px] uppercase font-bold text-slate-500">Wallet</div>
           <div className="mt-2 p-4 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-400 text-white">
             <div className="text-[10px] opacity-80">UBP Token</div>
@@ -624,9 +680,9 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
   }
   if (kind === 'leaderboard') {
     return (
-      <div className="h-full flex flex-col">
+      <div className="h-full flex flex-col overflow-hidden">
         {Header}
-        <div className="p-3">
+        <div className="p-3 overflow-hidden">
           <div className="text-[10px] uppercase font-bold text-slate-500 mb-2">Leaderboard</div>
           {[['1', 'cryptostudent.eth', '1,820'], ['2', 'utaab.devon', '1,540'], ['3', 'you', '1,210'], ['4', 'web3.zara', '980'], ['5', 'base.kai', '740']].map(([r, n, p]) => (
             <div key={r} className={`flex items-center gap-2 p-2 rounded-lg mb-1.5 ${n === 'you' ? 'bg-blue-50 border border-blue-200' : 'bg-slate-50'}`}>
@@ -641,9 +697,9 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
   }
   if (kind === 'events') {
     return (
-      <div className="h-full flex flex-col">
+      <div className="h-full flex flex-col overflow-hidden">
         {Header}
-        <div className="p-3 space-y-2">
+        <div className="p-3 space-y-2 overflow-hidden">
           <div className="text-[10px] uppercase font-bold text-slate-500">Upcoming</div>
           {[['Web3 Hackathon', 'Nov 12 · +100 UBP'], ['Solidity Workshop', 'Nov 18 · +30 UBP'], ['Base Meetup', 'Nov 25 · +25 UBP']].map(([t, d]) => (
             <div key={t} className="p-2.5 rounded-xl bg-white border border-blue-100">
@@ -662,9 +718,9 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
   }
   // analytics
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col overflow-hidden">
       {Header}
-      <div className="p-3">
+      <div className="p-3 overflow-hidden">
         <div className="text-[10px] uppercase font-bold text-slate-500">Your activity</div>
         <div className="mt-3 flex items-end gap-1.5 h-24">
           {[40, 60, 35, 80, 55, 90, 70].map((h, i) => (
@@ -683,6 +739,7 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
     </div>
   );
 };
+
 
 const Showcase = () => {
   const ref = useRef<HTMLDivElement>(null);
