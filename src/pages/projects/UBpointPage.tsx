@@ -20,6 +20,8 @@ import {
   Linkedin,
   Send,
   Mail,
+  Copy,
+  ExternalLink,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import logoAsset from '@/assets/ubpoint-logo.png.asset.json';
