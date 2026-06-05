@@ -28,10 +28,13 @@ import logoAsset from '@/assets/ubpoint-logo.png.asset.json';
 
 import mockupAsset from '@/assets/ubpoint-mockup.png.asset.json';
 import utaabCoinAsset from '@/assets/coins/utaab-coin.png.asset.json';
-import usdtCoinAsset from '@/assets/coins/ubp-usdt.png.asset.json';
-import usdtAngleAsset from '@/assets/coins/ubp-usdt-angle.png.asset.json';
-import tryCoinAsset from '@/assets/coins/ubp-try.png.asset.json';
-import tryAngleAsset from '@/assets/coins/ubp-try-angle.png.asset.json';
+import gamepadAsset from '@/assets/coins/gamepad.png.asset.json';
+import tonCoinAsset from '@/assets/coins/ton.png.asset.json';
+import ethCoinAsset from '@/assets/coins/eth.png.asset.json';
+import btcCoinAsset from '@/assets/coins/btc.png.asset.json';
+import goldCoinAsset from '@/assets/coins/gold-coin.png.asset.json';
+import goldBarAsset from '@/assets/coins/gold-bar.png.asset.json';
+import silverBarAsset from '@/assets/coins/silver-bar.png.asset.json';
 
 const WHATSAPP_URL = 'https://chat.whatsapp.com/HnTcuJYiKAiDpLPnG33mEr';
 const SPONSOR_EMAIL = 'mailto:info@utaab.org?subject=UBpoint%20Sponsor%20Inquiry';
@@ -267,12 +270,20 @@ const FloatingDevice = () => {
         transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
       />
       <motion.img
-        src={tryAngleAsset.url}
+        src={tonCoinAsset.url}
         alt=""
         aria-hidden
-        className="absolute -right-6 md:-right-12 top-4 w-16 md:w-24 drop-shadow-[0_15px_30px_rgba(202,138,4,0.35)] pointer-events-none"
+        className="absolute -right-6 md:-right-12 top-4 w-20 md:w-28 drop-shadow-[0_15px_30px_rgba(37,99,235,0.45)] pointer-events-none"
         animate={{ y: [0, 10, 0], rotateZ: [4, -4, 4] }}
         transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+      />
+      <motion.img
+        src={btcCoinAsset.url}
+        alt=""
+        aria-hidden
+        className="absolute right-2 md:right-6 bottom-16 w-14 md:w-20 drop-shadow-[0_15px_30px_rgba(202,138,4,0.4)] pointer-events-none"
+        animate={{ y: [0, -10, 0], rotateZ: [-5, 5, -5] }}
+        transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1.2 }}
       />
     </div>
   );
@@ -521,10 +532,10 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
   }
   if (kind === 'rewards') {
     const rewardItems = [
-      { label: 'Steam Gift Card', price: '500 UBP', img: usdtAngleAsset.url },
-      { label: 'Silver Token', price: '1,200 UBP', img: utaabCoinAsset.url },
-      { label: 'Partner Discount', price: '250 UBP', img: usdtCoinAsset.url },
-      { label: 'Gold Token', price: '5,000 UBP', img: tryCoinAsset.url },
+      { label: 'Steam Gift Card', price: '500 UBP', img: gamepadAsset.url },
+      { label: 'Silver Token', price: '1,200 UBP', img: silverBarAsset.url },
+      { label: 'Partner Discount', price: '250 UBP', img: goldCoinAsset.url },
+      { label: 'Gold Token', price: '5,000 UBP', img: goldBarAsset.url },
     ];
     return (
       <div className="h-full flex flex-col">
@@ -681,8 +692,59 @@ const sponsorTasks = [
   { icon: Rocket, label: 'Try the app', reward: 50 },
 ];
 
+/* ---------- Ecosystem strip ---------- */
+const ecosystemCoins = [
+  { src: tonCoinAsset.url, label: 'TON', glow: 'rgba(37,99,235,0.45)' },
+  { src: btcCoinAsset.url, label: 'BTC', glow: 'rgba(202,138,4,0.45)' },
+  { src: ethCoinAsset.url, label: 'ETH', glow: 'rgba(100,116,139,0.45)' },
+  { src: utaabCoinAsset.url, label: 'UTAAB', glow: 'rgba(148,163,184,0.5)' },
+];
+
+const EcosystemStrip = () => (
+  <section className="relative py-16 md:py-24 bg-white overflow-hidden">
+    <div className="max-w-5xl mx-auto px-6 text-center">
+      <div className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-4">
+        Ecosystem
+      </div>
+      <h2 className="text-2xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-10">
+        Built across leading blockchain networks
+      </h2>
+      <div className="flex flex-wrap items-center justify-center gap-8 md:gap-14">
+        {ecosystemCoins.map((c, i) => (
+          <motion.div
+            key={c.label}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: i * 0.1 }}
+            className="flex flex-col items-center gap-2"
+          >
+            <motion.img
+              src={c.src}
+              alt={c.label}
+              className="w-16 md:w-24 h-16 md:h-24 object-contain pointer-events-none select-none"
+              style={{ filter: `drop-shadow(0 12px 24px ${c.glow})` }}
+              animate={{ y: [0, -8, 0], rotateZ: [-4, 4, -4] }}
+              transition={{ duration: 6 + i, repeat: Infinity, ease: 'easeInOut', delay: i * 0.3 }}
+            />
+            <div className="text-xs font-bold tracking-wider text-slate-500 uppercase">{c.label}</div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
 const Sponsors = () => (
   <section id="sponsors" className="relative py-24 md:py-32 bg-white overflow-hidden">
+    <motion.img
+      src={goldCoinAsset.url}
+      alt=""
+      aria-hidden
+      className="hidden md:block absolute -left-10 bottom-10 w-32 opacity-70 drop-shadow-[0_20px_40px_rgba(202,138,4,0.35)] pointer-events-none"
+      animate={{ y: [0, -14, 0], rotateZ: [-6, 6, -6] }}
+      transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
+    />
     <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
       <motion.div
         initial={{ opacity: 0, x: -20 }}
@@ -805,18 +867,18 @@ const Metrics = () => (
       transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
     />
     <motion.img
-      src={tryAngleAsset.url}
+      src={goldBarAsset.url}
       alt=""
       aria-hidden
-      className="hidden md:block absolute -right-12 top-16 w-40 opacity-90 drop-shadow-[0_25px_50px_rgba(202,138,4,0.35)] pointer-events-none"
+      className="hidden md:block absolute -right-12 top-16 w-40 opacity-90 drop-shadow-[0_25px_50px_rgba(202,138,4,0.4)] pointer-events-none"
       animate={{ y: [0, 20, 0], rotateZ: [0, -6, 0] }}
       transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
     />
     <motion.img
-      src={usdtAngleAsset.url}
+      src={ethCoinAsset.url}
       alt=""
       aria-hidden
-      className="hidden md:block absolute right-10 bottom-10 w-28 opacity-80 drop-shadow-[0_20px_40px_rgba(16,185,129,0.35)] pointer-events-none"
+      className="hidden md:block absolute right-10 bottom-10 w-28 opacity-85 drop-shadow-[0_20px_40px_rgba(100,116,139,0.4)] pointer-events-none"
       animate={{ y: [0, -14, 0], rotateZ: [0, 10, 0] }}
       transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 0.7 }}
     />
@@ -920,6 +982,7 @@ const UBpointPage = () => {
         <FeatureGrid />
         <VerifiedOnChain />
         <Showcase />
+        <EcosystemStrip />
         <Sponsors />
         <Metrics />
         <FinalCTA />
