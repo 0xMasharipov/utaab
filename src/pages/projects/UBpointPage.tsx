@@ -881,6 +881,7 @@ const UBpointPage = () => {
       <main>
         <Hero />
         <FeatureGrid />
+        <VerifiedOnChain />
         <Showcase />
         <Sponsors />
         <Metrics />
