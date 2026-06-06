@@ -1,0 +1,28 @@
+# UTAAB
+
+> UTAAB is a student-led Web3 ecosystem for blockchain education, real projects, and cross-border collaboration — from first guide to first shipped project.
+
+## Pages
+
+- [Home](/): Overview of UTAAB's community, education, and projects.
+- [About](/about): Mission, vision, and what we do.
+- [Team](/team): Founders, contributors, and advisors.
+- [FAQ](/faq): Common questions about UTAAB, membership, and Web3 basics.
+- [Blog](/blog): Articles, updates, and field notes from the community.
+- [Learn Hub](/learn): Entry point for guides and workshops.
+- [Guides](/learn/guides): Beginner-to-advanced blockchain learning material.
+- [Workshops](/learn/workshops): Live and recorded workshop sessions.
+- [Resources](/resources): Curated tools, libraries, and reading list.
+- [Whitepaper](/whitepaper): UTAAB whitepaper.
+- [Contributor Match](/contributor-match): Match contributors to open initiatives.
+- [Education Home](/education): UTAAB Academy landing page.
+- [Course Catalog](/education/courses): Browse all courses.
+- [Blockchain and Money](/education/blockchain-and-money): Streamed MIT OCW course.
+- [TonRa Project](/projects/tonra): TonRa project page.
+- [UBpoint Project](/projects/ubpoint): UBpoint project page.
+- [Verify Certificate](/verify-certificate): Public certificate verification.
+
+## Optional
+
+- [Privacy Policy](/privacy-policy): Privacy and data handling.
+- [Terms of Service](/terms-of-service): Terms governing site use.

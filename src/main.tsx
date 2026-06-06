@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { createRoot } from "react-dom/client";
+import { HelmetProvider } from "react-helmet-async";
 import App from "./App.tsx";
 import UTAABLoader from "./components/UTAABLoader.tsx";
 import "./index.css";
@@ -29,6 +30,8 @@ function Boot() {
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Boot />
+    <HelmetProvider>
+      <Boot />
+    </HelmetProvider>
   </React.StrictMode>
 );

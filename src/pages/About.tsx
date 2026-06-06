@@ -13,6 +13,7 @@ import GlassSectionWrapper from '@/components/glass/GlassSectionWrapper';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import SEO from '@/components/SEO';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -47,6 +48,11 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SEO
+        title="About UTAAB — Our Mission in Blockchain Education"
+        description="UTAAB is a student-led Web3 ecosystem advancing blockchain education, real-world projects, and cross-border collaboration."
+        path="/about"
+      />
       <AnimatedBlobBackground />
       <Navbar />
 

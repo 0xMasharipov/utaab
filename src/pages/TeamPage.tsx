@@ -12,6 +12,7 @@ import TeamOverlapCard from '@/components/team/TeamOverlapCard';
 import TeamProfileModal from '@/components/team/TeamProfileModal';
 import TeamProfileDrawer from '@/components/team/TeamProfileDrawer';
 import type { TeamMember } from '@/components/team/TeamOverlapCard';
+import SEO from '@/components/SEO';
 
 import zinurbekImg from '@/assets/team/zinurbek.png';
 import umutImg from '@/assets/team/umut.png';
@@ -58,6 +59,11 @@ const TeamPage = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SEO
+        title="UTAAB Team — Founders, Contributors & Advisors"
+        description="Meet the UTAAB team — the founders, contributors, and advisors building the Web3 student ecosystem."
+        path="/team"
+      />
       <AnimatedBlobBackground />
       <Navbar />
 

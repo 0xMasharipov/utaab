@@ -17,6 +17,7 @@ import { PrivacyPopup } from '@/components/PrivacyPopup';
 import { PrivacyCenter } from '@/components/PrivacyCenter';
 import { FloatingPrivacyButton } from '@/components/FloatingPrivacyButton';
 import AnimatedImage from '@/components/common/AnimatedImage';
+import SEO from '@/components/SEO';
 
 interface ContentBlock {
   type: string;
@@ -160,8 +161,28 @@ const BlogPost = () => {
   const attachments: any[] = Array.isArray(post.attachments) ? post.attachments : [];
   const pdfAttachments = attachments.filter(a => a.type === 'pdf' || a.url?.endsWith('.pdf'));
 
+  const articleLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description: excerpt || post.meta_description || undefined,
+    image: post.cover_image || undefined,
+    datePublished: post.publish_date || post.created_at || undefined,
+    dateModified: post.updated_at || post.publish_date || undefined,
+    author: post.author_name ? { '@type': 'Person', name: post.author_name } : undefined,
+    mainEntityOfPage: `https://utaab.org/blog/${post.slug}`,
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SEO
+        title={post.meta_title || title}
+        description={post.meta_description || excerpt || undefined}
+        path={`/blog/${post.slug}`}
+        ogType="article"
+        image={post.cover_image || undefined}
+        jsonLd={articleLd}
+      />
       <AnimatedBlobBackground />
       <Navbar />
 
