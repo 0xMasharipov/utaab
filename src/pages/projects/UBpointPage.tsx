@@ -451,26 +451,26 @@ const Hero = () => {
             <CircleDot className="w-3.5 h-3.5" />
             {t('projects.ubpointPage.hero.kicker')}
           </div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.05]">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.05] text-balance">
             {t('projects.ubpointPage.hero.titleStart')}{' '}
             <span className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
               {t('projects.ubpointPage.hero.titleAccent')}
             </span>
           </h1>
-          <p className="mt-6 text-base sm:text-lg md:text-xl text-slate-600 max-w-xl leading-relaxed">
+          <p className="mt-5 sm:mt-6 text-base sm:text-lg md:text-xl text-slate-600 max-w-xl leading-relaxed">
             {t('projects.ubpointPage.hero.subtitle')}
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a href={UBPOINT_APP_URL} target="_blank" rel="noopener noreferrer">
-              <Button className="h-12 px-6 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-[0_10px_30px_-10px_rgba(37,99,235,0.6)] rounded-full">
+          <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row flex-wrap gap-3">
+            <a href={UBPOINT_APP_URL} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+              <Button className="w-full sm:w-auto h-12 px-6 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-[0_10px_30px_-10px_rgba(37,99,235,0.6)] rounded-full">
                 {t('projects.ubpointPage.hero.launchApp')}
                 <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
             </a>
-            <a href="#rewards">
+            <a href="#rewards" className="w-full sm:w-auto">
               <Button
                 variant="outline"
-                className="h-12 px-6 rounded-full !bg-white !text-slate-900 border-blue-200 hover:!bg-blue-50 hover:!text-slate-900 shadow-[0_8px_24px_-12px_rgba(37,99,235,0.4)]"
+                className="w-full sm:w-auto h-12 px-6 rounded-full !bg-white !text-slate-900 border-blue-200 hover:!bg-blue-50 hover:!text-slate-900 shadow-[0_8px_24px_-12px_rgba(37,99,235,0.4)]"
               >
                 {t('projects.ubpointPage.hero.viewRewards')}
               </Button>
