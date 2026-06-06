@@ -871,10 +871,18 @@ const Showcase = () => {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
   const x = useTransform(scrollYProgress, [0, 1], ['5%', '-30%']);
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia('(min-width: 768px)');
+    const update = () => setIsDesktop(mql.matches);
+    update();
+    mql.addEventListener('change', update);
+    return () => mql.removeEventListener('change', update);
+  }, []);
 
   return (
-    <section id="showcase" className="relative py-24 md:py-32 bg-gradient-to-b from-white via-blue-50/40 to-white overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 mb-14 text-center">
+    <section id="showcase" className="relative py-16 sm:py-24 md:py-32 bg-gradient-to-b from-white via-blue-50/40 to-white overflow-hidden">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 mb-10 sm:mb-14 text-center">
         <div className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-4">
           {t('projects.ubpointPage.showcase.eyebrow')}
         </div>
@@ -882,8 +890,11 @@ const Showcase = () => {
           {t('projects.ubpointPage.showcase.title')}
         </h2>
       </div>
-      <div ref={ref} className="overflow-hidden">
-        <motion.div style={{ x }} className="flex gap-12 md:gap-16 px-6 pt-6 pb-10">
+      <div ref={ref} className={isDesktop ? 'overflow-hidden' : 'overflow-x-auto snap-x snap-mandatory scrollbar-none'}>
+        <motion.div
+          style={isDesktop ? { x } : undefined}
+          className="flex gap-8 md:gap-16 px-5 sm:px-6 pt-6 pb-10"
+        >
           {showcaseDefs.map((s, i) => (
             <motion.div
               key={s.key}
@@ -891,7 +902,7 @@ const Showcase = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: i * 0.05 }}
-              className="shrink-0 w-[260px] md:w-[300px] group"
+              className="shrink-0 w-[240px] sm:w-[260px] md:w-[300px] snap-center group"
             >
               <div className="relative transition-transform duration-500 group-hover:-translate-y-2">
                 <div aria-hidden className="absolute left-1/2 -translate-x-1/2 bottom-[-30px] w-[80%] h-12 rounded-full bg-blue-500/30 blur-2xl" />
@@ -905,7 +916,7 @@ const Showcase = () => {
               </div>
             </motion.div>
           ))}
-          <div className="shrink-0 w-12" />
+          <div className="shrink-0 w-6 sm:w-12" />
         </motion.div>
 
       </div>
