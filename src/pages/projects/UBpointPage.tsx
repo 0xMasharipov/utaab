@@ -1115,7 +1115,7 @@ const Metrics = () => {
 const FinalCTA = () => {
   const { t } = useTranslation();
   return (
-    <section className="relative py-24 md:py-32 overflow-hidden">
+    <section className="relative py-16 sm:py-24 md:py-32 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-blue-700 via-blue-600 to-blue-500" />
       <div aria-hidden className="absolute inset-0">
         <div className="absolute -top-20 left-1/4 w-80 h-80 rounded-full bg-blue-300/30 blur-3xl" />
