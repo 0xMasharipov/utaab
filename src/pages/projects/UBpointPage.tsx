@@ -434,9 +434,9 @@ const FloatingDevice = () => {
 const Hero = () => {
   const { t } = useTranslation();
   return (
-    <section className="relative pt-28 md:pt-36 pb-20 md:pb-32 overflow-hidden">
+    <section className="relative pt-24 sm:pt-28 md:pt-36 pb-16 md:pb-32 overflow-hidden">
       <HeroBackground />
-      <div className="relative max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 md:gap-8 items-center">
+      <div className="relative max-w-7xl mx-auto px-5 sm:px-6 grid md:grid-cols-2 gap-16 md:gap-8 items-center">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -445,7 +445,7 @@ const Hero = () => {
           <FadeImg
             src={logoAsset.url}
             alt="UBpoint"
-            className="h-16 md:h-20 w-auto mb-6 drop-shadow-[0_10px_30px_rgba(37,99,235,0.3)]"
+            className="h-12 sm:h-16 md:h-20 w-auto mb-5 sm:mb-6 drop-shadow-[0_10px_30px_rgba(37,99,235,0.3)]"
           />
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold mb-6">
             <CircleDot className="w-3.5 h-3.5" />
