@@ -1,18 +1,16 @@
-Fix overflow on phone mock screens and rebuild the Dashboard mock from scratch to match the other screens' style.
+Wire the official UBpoint app URL (`https://ubpoint.app/`) into the UBpoint page so users can launch the live app.
 
-### 1. Overflow fix
-The screen container has `overflow-hidden`, but several mock kinds (wallet, leaderboard, events, analytics) place padded content tall enough to push past the rounded screen. Add `overflow-hidden` to each `h-full flex flex-col` wrapper so content visually clips inside the rounded screen edges.
+### Changes (all in `src/pages/projects/UBpointPage.tsx`)
 
-### 2. Rebuild `kind === 'real'` (Dashboard)
-Currently just renders the raw `mockupAsset` PNG which doesn't match the cohesive in-frame style. Rebuild as a designed dashboard:
+1. **Add a constant** near the other URL constants (e.g. `WHATSAPP_URL`):
+   ```ts
+   const UBPOINT_APP_URL = 'https://ubpoint.app/';
+   ```
 
-- `Header` (logo + UBP balance — same as others)
-- "Good morning" greeting + name row
-- Big balance card: gradient blue, "Total UBP", "200.00", small "+50 this week" delta with up-arrow
-- Quick action row: 3 small pill buttons (Earn / Redeem / Send) with icons
-- "Recent activity" list: 3 rows with icon + label + amount (e.g. +50 Hackathon, +25 Workshop, -100 Reward)
-- "Daily streak" mini-card: small flame icon + "5 day streak"
+2. **Navbar CTA** — currently the desktop nav shows a WhatsApp button (line 74). Add a primary "Open App" button alongside it (or replace the WhatsApp inline CTA) linking to `UBPOINT_APP_URL` with `target="_blank" rel="noopener noreferrer"`. Same change in mobile menu (~line 101).
 
-Same compact `text-[10px]`/`text-[11px]` typography, `bg-blue-50/60` accents, `rounded-xl`, matching the other kinds. Wrap in `h-full flex flex-col overflow-hidden`.
+3. **Hero primary CTA** — change the first hero button (line 354) from `<a href="#features">Explore UBpoint</a>` to `<a href={UBPOINT_APP_URL} target="_blank" rel="noopener noreferrer">Launch App</a>`. Keep "View Rewards" as the secondary.
 
-No other changes.
+4. **Final CTA section** (line 1010) — change the "Join UTAAB" CTA target from `WHATSAPP_URL` to `UBPOINT_APP_URL`, relabel to "Launch UBpoint App". Keep WhatsApp link available elsewhere (footer already has it).
+
+No other structural or copy changes.
