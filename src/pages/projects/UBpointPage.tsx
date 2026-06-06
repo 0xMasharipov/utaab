@@ -1134,7 +1134,7 @@ const FinalCTA = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.7 }}
-        className="relative max-w-3xl mx-auto px-6 text-center text-white"
+        className="relative max-w-3xl mx-auto px-5 sm:px-6 text-center text-white"
       >
         <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-tight">
           {t('projects.ubpointPage.finalCta.title')}
