@@ -43,8 +43,8 @@ function CertificatePlane() {
   });
 
   // A4 portrait ratio ~ 1 : 1.414
-  const w = 1.6;
-  const h = 2.26;
+  const w = 1.1;
+  const h = 1.555;
 
   return (
     <Float speed={1.1} rotationIntensity={0.12} floatIntensity={0.3}>
