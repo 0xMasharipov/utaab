@@ -285,21 +285,21 @@ const HeroBackground = () => (
 const FloatingDevice = () => {
   const { ready } = useSplash();
   const backCoins = [
-    { src: usdtAngleAsset.url, cls: 'top-2 -left-4 md:-left-10 w-16 md:w-24', glow: 'rgba(16,185,129,0.45)', dur: 9, delay: 0 },
-    { src: tryAngleAsset.url, cls: 'top-10 -right-6 md:-right-14 w-16 md:w-24', glow: 'rgba(220,38,38,0.4)', dur: 10, delay: 0.4 },
-    { src: ethCoinAsset.url, cls: 'top-1/2 -left-10 md:-left-20 w-14 md:w-20', glow: 'rgba(100,116,139,0.45)', dur: 11, delay: 0.8 },
-    { src: goldCoinAsset.url, cls: 'bottom-12 -right-8 md:-right-16 w-14 md:w-20', glow: 'rgba(202,138,4,0.5)', dur: 12, delay: 0.2 },
-    { src: silverBarAsset.url, cls: 'bottom-2 left-6 md:left-2 w-16 md:w-20', glow: 'rgba(148,163,184,0.5)', dur: 13, delay: 1 },
-    { src: steamAsset.url, cls: 'top-4 -left-8 md:-left-16 w-16 md:w-24', glow: 'rgba(37,99,235,0.45)', dur: 10, delay: 1.3 },
-    { src: gamepadAsset.url, cls: 'bottom-8 -right-10 md:-right-20 w-20 md:w-28', glow: 'rgba(96,165,250,0.4)', dur: 11, delay: 0.6 },
+    { src: usdtAngleAsset.url, cls: 'top-2 -left-2 sm:-left-4 md:-left-10 w-12 sm:w-16 md:w-24', glow: 'rgba(16,185,129,0.45)', dur: 9, delay: 0 },
+    { src: tryAngleAsset.url, cls: 'top-10 -right-2 sm:-right-6 md:-right-14 w-12 sm:w-16 md:w-24', glow: 'rgba(220,38,38,0.4)', dur: 10, delay: 0.4 },
+    { src: ethCoinAsset.url, cls: 'top-1/2 -left-4 sm:-left-10 md:-left-20 w-10 sm:w-14 md:w-20', glow: 'rgba(100,116,139,0.45)', dur: 11, delay: 0.8 },
+    { src: goldCoinAsset.url, cls: 'bottom-12 -right-3 sm:-right-8 md:-right-16 w-10 sm:w-14 md:w-20', glow: 'rgba(202,138,4,0.5)', dur: 12, delay: 0.2 },
+    { src: silverBarAsset.url, cls: 'bottom-2 left-2 sm:left-6 md:left-2 w-12 sm:w-16 md:w-20', glow: 'rgba(148,163,184,0.5)', dur: 13, delay: 1 },
+    { src: steamAsset.url, cls: 'top-4 -left-3 sm:-left-8 md:-left-16 w-12 sm:w-16 md:w-24', glow: 'rgba(37,99,235,0.45)', dur: 10, delay: 1.3 },
+    { src: gamepadAsset.url, cls: 'bottom-8 -right-4 sm:-right-10 md:-right-20 w-14 sm:w-20 md:w-28', glow: 'rgba(96,165,250,0.4)', dur: 11, delay: 0.6 },
   ];
   const { t } = useTranslation();
 
   return (
-    <div className="relative w-full max-w-[360px] md:max-w-[420px] mx-auto">
-      <div className="absolute inset-0 -m-10 bg-gradient-to-br from-blue-400/40 via-blue-500/30 to-blue-600/20 blur-3xl rounded-full" />
+    <div className="relative w-full max-w-[280px] sm:max-w-[340px] md:max-w-[420px] mx-auto px-2 sm:px-0">
+      <div className="absolute inset-0 -m-6 sm:-m-10 bg-gradient-to-br from-blue-400/40 via-blue-500/30 to-blue-600/20 blur-3xl rounded-full" />
 
-      <div aria-hidden className="absolute inset-0 -m-16 md:-m-24 pointer-events-none">
+      <div aria-hidden className="absolute inset-0 -m-8 sm:-m-12 md:-m-24 pointer-events-none">
         {backCoins.map((c, i) => (
           <motion.div
             key={i}
