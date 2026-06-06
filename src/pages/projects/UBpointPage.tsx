@@ -652,8 +652,8 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
           </div>
           <div className="grid grid-cols-3 gap-1.5">
             {[
-              { icon: Coins, label: 'Earn' },
-              { icon: Gift, label: 'Redeem' },
+              { icon: Wallet, label: 'Earn' },
+              { icon: Tag, label: 'Redeem' },
               { icon: Send, label: 'Send' },
             ].map((a) => (
               <div key={a.label} className="flex flex-col items-center gap-1 p-1.5 rounded-lg bg-blue-50/60 border border-blue-100">
