@@ -183,12 +183,12 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         allowed: true, // Fail open to avoid blocking legitimate users
-        error: error instanceof Error ? error.message : 'Unknown error',
       }),
       {
-        status: 500,
+        status: 200,
         headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' },
       }
     );
   }
+
 });
