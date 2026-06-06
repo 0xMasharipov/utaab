@@ -856,8 +856,8 @@ const Showcase = () => {
 /* ---------- For Brands / Sponsors ---------- */
 const sponsorTasks = [
   { icon: Twitter, label: 'Follow on X', reward: 10 },
-  { icon: MessageCircle, label: 'Join Discord', reward: 25 },
-  { icon: Rocket, label: 'Try the app', reward: 50 },
+  { icon: MessageSquare, label: 'Join Discord', reward: 25 },
+  { icon: Send, label: 'Try the app', reward: 50 },
 ];
 
 
