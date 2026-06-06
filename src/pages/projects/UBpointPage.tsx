@@ -1082,6 +1082,10 @@ const FinalCTA = () => (
 
 /* ---------- Page ---------- */
 const UBpointPage = () => {
+  const alreadySplashed =
+    typeof window !== 'undefined' && sessionStorage.getItem('ubpoint-splashed') === '1';
+  const [ready, setReady] = useState(alreadySplashed);
+
   useEffect(() => {
     const prev = document.title;
     document.title = 'UBpoint — Blockchain Student Engagement | UTAAB';
@@ -1097,21 +1101,72 @@ const UBpointPage = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (ready) return;
+    const prevBody = document.body.style.overflow;
+    const prevHtml = document.documentElement.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    const t = window.setTimeout(() => {
+      setReady(true);
+      sessionStorage.setItem('ubpoint-splashed', '1');
+    }, 2400);
+    return () => {
+      window.clearTimeout(t);
+      document.body.style.overflow = prevBody;
+      document.documentElement.style.overflow = prevHtml;
+    };
+  }, [ready]);
+
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans">
-      <LightNavbar />
-      <main>
-        <Hero />
-        <FeatureGrid />
-        <VerifiedOnChain />
-        <Showcase />
-        
-        <Sponsors />
-        <Metrics />
-        <FinalCTA />
-      </main>
-      <LightFooter />
-    </div>
+    <SplashContext.Provider value={{ ready }}>
+      <div className="min-h-screen bg-white text-slate-900 font-sans">
+        <LightNavbar />
+        <main>
+          <Hero />
+          <FeatureGrid />
+          <VerifiedOnChain />
+          <Showcase />
+
+          <Sponsors />
+          <Metrics />
+          <FinalCTA />
+        </main>
+        <LightFooter />
+
+        <AnimatePresence>
+          {!ready && (
+            <motion.div
+              key="ubpoint-splash-overlay"
+              className="fixed inset-0 z-[60] cursor-wait"
+              initial={{ opacity: 1 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+              onWheelCapture={(e) => e.preventDefault()}
+              onTouchMoveCapture={(e) => e.preventDefault()}
+              style={{ touchAction: 'none' }}
+            >
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-b from-white/60 via-blue-50/30 to-white/0 backdrop-blur-[2px]"
+                initial={{ opacity: 1 }}
+                animate={{ opacity: 0 }}
+                transition={{ delay: 0.4, duration: 1.2, ease: 'easeOut' }}
+              />
+              <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 border border-blue-100 shadow-lg backdrop-blur-md">
+                  <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                  <span className="text-xs font-semibold text-slate-700 tracking-wide">
+                    Initializing UBpoint…
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </SplashContext.Provider>
   );
 };
 
