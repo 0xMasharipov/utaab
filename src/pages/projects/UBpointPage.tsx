@@ -341,44 +341,50 @@ const FloatingDevice = () => {
 
       <motion.div
         className="absolute left-0 sm:-left-4 md:-left-12 top-8 sm:top-12 backdrop-blur-xl bg-white/80 border border-blue-100 rounded-2xl px-3 py-2 sm:px-3.5 sm:py-2.5 shadow-xl flex items-center gap-2"
-        initial={{ opacity: 0, scale: 0.3, filter: 'blur(8px)' }}
-        animate={ready ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 0.3, filter: 'blur(8px)' }}
-        transition={splashTransition(9)}
+        initial={{ opacity: 0, scale: 0.3, filter: 'blur(8px)', y: 0 }}
+        animate={ready
+          ? { opacity: 1, scale: 1, filter: 'blur(0px)', y: [0, -8, 0] }
+          : { opacity: 0, scale: 0.3, filter: 'blur(8px)', y: 0 }}
+        transition={ready
+          ? {
+              opacity: splashTransition(9),
+              scale: splashTransition(9),
+              filter: splashTransition(9),
+              y: { duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 },
+            }
+          : splashTransition(9)}
       >
-        <motion.div
-          className="flex items-center gap-2"
-          animate={ready ? { y: [0, -8, 0] } : undefined}
-          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
-            <BadgeCheck className="w-4 h-4 text-white" />
-          </div>
-          <div className="text-left">
-            <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">{t('projects.ubpointPage.hero.earned')}</div>
-            <div className="text-sm font-bold text-slate-900">{t('projects.ubpointPage.hero.ubp50')}</div>
-          </div>
-        </motion.div>
+        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shrink-0">
+          <BadgeCheck className="w-4 h-4 text-white" />
+        </div>
+        <div className="text-left">
+          <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">{t('projects.ubpointPage.hero.earned')}</div>
+          <div className="text-sm font-bold text-slate-900">{t('projects.ubpointPage.hero.ubp50')}</div>
+        </div>
       </motion.div>
 
       <motion.div
         className="absolute right-0 sm:-right-2 md:-right-10 bottom-20 sm:bottom-24 backdrop-blur-xl bg-white/80 border border-blue-100 rounded-2xl px-3 py-2 sm:px-3.5 sm:py-2.5 shadow-xl flex items-center gap-2"
-        initial={{ opacity: 0, scale: 0.3, filter: 'blur(8px)' }}
-        animate={ready ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 0.3, filter: 'blur(8px)' }}
-        transition={splashTransition(10)}
+        initial={{ opacity: 0, scale: 0.3, filter: 'blur(8px)', y: 0 }}
+        animate={ready
+          ? { opacity: 1, scale: 1, filter: 'blur(0px)', y: [0, 10, 0] }
+          : { opacity: 0, scale: 0.3, filter: 'blur(8px)', y: 0 }}
+        transition={ready
+          ? {
+              opacity: splashTransition(10),
+              scale: splashTransition(10),
+              filter: splashTransition(10),
+              y: { duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1.5 },
+            }
+          : splashTransition(10)}
       >
-        <motion.div
-          className="flex items-center gap-2"
-          animate={ready ? { y: [0, 10, 0] } : undefined}
-          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-        >
-          <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center">
-            <ShieldCheck className="w-4 h-4 text-blue-600" />
-          </div>
-          <div className="text-left">
-            <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">{t('projects.ubpointPage.hero.onChain')}</div>
-            <div className="text-sm font-bold text-slate-900">{t('projects.ubpointPage.hero.verifiedBase')}</div>
-          </div>
-        </motion.div>
+        <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
+          <ShieldCheck className="w-4 h-4 text-blue-600" />
+        </div>
+        <div className="text-left">
+          <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">{t('projects.ubpointPage.hero.onChain')}</div>
+          <div className="text-sm font-bold text-slate-900">{t('projects.ubpointPage.hero.verifiedBase')}</div>
+        </div>
       </motion.div>
 
       <motion.div
