@@ -325,12 +325,30 @@
       "usedFor": {
         "title": "What is TonRa used for?",
         "items": {
-          "wallet": { "title": "Check TON wallets", "desc": "Review wallet behavior before sending funds." },
-          "token": { "title": "Review tokens", "desc": "Inspect tokens before buying or interacting with them." },
-          "project": { "title": "Identify risky projects", "desc": "Spot suspicious or risky project behavior early." },
-          "airdrop": { "title": "Detect fake airdrops", "desc": "Recognize possible scam campaigns and fake airdrops." },
-          "overview": { "title": "Quick risk overview", "desc": "Get a quick risk summary directly inside Telegram." },
-          "decisions": { "title": "Safer decisions", "desc": "Make better-informed choices when exploring TON." }
+          "wallet": {
+            "title": "Check TON wallets",
+            "desc": "Review wallet behavior before sending funds."
+          },
+          "token": {
+            "title": "Review tokens",
+            "desc": "Inspect tokens before buying or interacting with them."
+          },
+          "project": {
+            "title": "Identify risky projects",
+            "desc": "Spot suspicious or risky project behavior early."
+          },
+          "airdrop": {
+            "title": "Detect fake airdrops",
+            "desc": "Recognize possible scam campaigns and fake airdrops."
+          },
+          "overview": {
+            "title": "Quick risk overview",
+            "desc": "Get a quick risk summary directly inside Telegram."
+          },
+          "decisions": {
+            "title": "Safer decisions",
+            "desc": "Make better-informed choices when exploring TON."
+          }
         }
       },
       "why": {
@@ -341,6 +359,186 @@
         "title": "Open TonRa on Telegram",
         "button": "Try Early Beta",
         "note": "Some features are still under development."
+      }
+    },
+    "ubpointPage": {
+      "nav": {
+        "features": "Features",
+        "insideApp": "Inside the app",
+        "sponsors": "Sponsors",
+        "rewards": "Rewards",
+        "openApp": "Open App"
+      },
+      "hero": {
+        "kicker": "UTAAB · Blockchain Engagement Platform",
+        "titleStart": "Turn Participation Into",
+        "titleAccent": "Opportunity",
+        "subtitle": "UBpoint is UTAAB's blockchain-powered student engagement platform. Attend events, contribute to projects, join hackathons, and earn verifiable on-chain rewards.",
+        "launchApp": "Launch App",
+        "viewRewards": "View Rewards",
+        "liveOnBase": "Live on Base",
+        "onChainVerified": "On-chain verified",
+        "earned": "Earned",
+        "ubp50": "+50 UBP",
+        "onChain": "On-chain",
+        "verifiedBase": "Verified · Base"
+      },
+      "features": {
+        "eyebrow": "The platform",
+        "title": "Built for the next generation of students",
+        "subtitle": "Six pillars that turn every event, hackathon, and contribution into measurable, on-chain value.",
+        "items": {
+          "earnUbp": {
+            "t": "Earn UBP",
+            "d": "Receive points for attending events, contributing to community projects, and participating in hackathons."
+          },
+          "unlockRewards": {
+            "t": "Unlock Rewards",
+            "d": "Redeem UBP for partner discounts, Steam gift cards, tokenized assets, silver, gold, and future ecosystem rewards."
+          },
+          "onChainVerification": {
+            "t": "On-Chain Verification",
+            "d": "Every UBpoint transaction is verifiable on Base. See our official identifiers below."
+          },
+          "studentIdentity": {
+            "t": "Student Identity",
+            "d": "Build a verifiable portfolio of participation, contributions, and achievements."
+          },
+          "leaderboards": {
+            "t": "Leaderboards",
+            "d": "Compete with community members and climb the rankings."
+          },
+          "campusEngagement": {
+            "t": "Campus Engagement",
+            "d": "Transform university activities into measurable achievements."
+          }
+        }
+      },
+      "verified": {
+        "eyebrow": "Live on Base",
+        "title": "Verified On-Chain",
+        "subtitle": "Stay safu. Always verify before you interact. UBpoint is officially registered on Base — these are our only verified identifiers. Do not trust any other address claiming to be UBpoint.",
+        "baseName": "Base Name",
+        "officialWallet": "Official Wallet",
+        "copy": "Copy",
+        "copied": "Copied",
+        "viewOnBasescan": "View on Basescan"
+      },
+      "showcase": {
+        "eyebrow": "Inside the app",
+        "title": "A pocket-sized student economy",
+        "screens": {
+          "homeDashboard": {
+            "t": "Home Dashboard",
+            "h": "Your UBP balance and progress at a glance"
+          },
+          "rewardsMarketplace": {
+            "t": "Rewards Marketplace",
+            "h": "Redeem points for partner perks"
+          },
+          "studentWallet": {
+            "t": "Student Wallet",
+            "h": "Verified, stay safe"
+          },
+          "leaderboard": {
+            "t": "Leaderboard",
+            "h": "See where you rank on campus"
+          },
+          "events": {
+            "t": "Events",
+            "h": "Discover and check in on-chain"
+          },
+          "profileAnalytics": {
+            "t": "Profile Analytics",
+            "h": "Your verified contribution history"
+          }
+        }
+      },
+      "inApp": {
+        "goodMorning": "Good morning",
+        "totalUbp": "Total UBP",
+        "plus50": "+50 this week",
+        "earn": "Earn",
+        "redeem": "Redeem",
+        "send": "Send",
+        "recent": "Recent",
+        "hackathon": "Hackathon",
+        "workshop": "Workshop",
+        "reward": "Reward",
+        "streak": "5 day streak",
+        "keepGoing": "Keep going",
+        "rewards": "Rewards",
+        "wallet": "Wallet",
+        "ubpToken": "UBP Token",
+        "rewardRedeem": "Reward redeem",
+        "leaderboard": "Leaderboard",
+        "upcoming": "Upcoming",
+        "yourActivity": "Your activity",
+        "eventsLabel": "Events",
+        "hackathonsLabel": "Hackathons",
+        "projectsLabel": "Projects",
+        "rankLabel": "Rank",
+        "items": {
+          "steam": "Steam Gift Card",
+          "silver": "Silver Token",
+          "partner": "Partner Discount",
+          "gold": "Gold Token"
+        },
+        "events": {
+          "hackathon": "Web3 Hackathon",
+          "workshop": "Solidity Workshop",
+          "meetup": "Base Meetup"
+        }
+      },
+      "sponsors": {
+        "eyebrow": "For Brands & Sponsors",
+        "titleStart": "Real students. Real engagement.",
+        "titleAccent": "On-chain proof.",
+        "body": "Companies fund task bounties on UBpoint to acquire and activate verified student users. Each completion is recorded on Base — so every follow, signup, install, and event attendance is provable, attributable, and free of bots.",
+        "list": [
+          "Verified university audience — no fake clicks",
+          "Pay only for completed, on-chain proven actions",
+          "Real retention, not vanity downloads",
+          "Sponsor dashboard with live conversion data"
+        ],
+        "becomeSponsor": "Become a Sponsor",
+        "liveSponsoredTasks": "Live sponsored tasks",
+        "tasks": {
+          "twitter": "Follow on X",
+          "discord": "Join Discord",
+          "tryApp": "Try the app"
+        },
+        "verified": "Verified",
+        "sponsoredPartner": "Sponsored · Partner Brand",
+        "howItWorksLabel": "How it works:",
+        "howItWorks": "Sponsors define a task and a UBP bounty. Students complete the action; UBpoint validates and records each completion on Base. Brands receive verified user acquisition data without paying for bots."
+      },
+      "metrics": {
+        "title": "A growing on-chain economy",
+        "distributed": "UBP Distributed",
+        "events": "Campus Events",
+        "recorded": "On-Chain Recorded",
+        "futureEcosystem": "Future Ecosystem"
+      },
+      "finalCta": {
+        "title": "The Future Student Economy Starts Here",
+        "body": "UBpoint bridges student engagement and blockchain technology by transforming participation into verifiable digital value.",
+        "launchApp": "Launch UBpoint App",
+        "backToProjects": "Back to all projects"
+      },
+      "footer": {
+        "tagline": "UTAAB's blockchain-powered student engagement platform. Earn UBP, unlock rewards, and verify every action on-chain.",
+        "product": "Product",
+        "community": "Community",
+        "utaabHome": "UTAAB Home",
+        "allProjects": "All Projects",
+        "whatsapp": "WhatsApp Community",
+        "becomeSponsor": "Become a Sponsor",
+        "rights": "All rights reserved.",
+        "builtOn": "Built on Base · utaab.org"
+      },
+      "splash": {
+        "initializing": "Initializing UBpoint…"
       }
     }
   },
