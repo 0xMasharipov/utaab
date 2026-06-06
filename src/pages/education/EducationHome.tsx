@@ -114,8 +114,9 @@ export const EducationHome = () => {
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 className="glass h-14 text-lg"
               />
-              <Button onClick={handleSearch} size="lg" className="btn-primary h-14 px-5">
-                <Search className="h-5 w-5" />
+              <Button onClick={handleSearch} size="lg" className="btn-primary h-14 px-5" aria-label={t('education.home.search_placeholder')}>
+                <Search className="h-5 w-5" aria-hidden="true" />
+                <span className="sr-only">{t('education.home.search_placeholder')}</span>
               </Button>
             </div>
 
