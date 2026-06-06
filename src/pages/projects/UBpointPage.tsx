@@ -382,7 +382,7 @@ const FloatingDevice = () => {
       </motion.div>
 
       <motion.div
-        className="absolute -left-10 md:-left-20 bottom-4 w-24 md:w-32 pointer-events-none"
+        className="absolute -left-6 sm:-left-10 md:-left-20 bottom-2 sm:bottom-4 w-16 sm:w-24 md:w-32 pointer-events-none"
         initial={{ opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
         animate={ready ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
         transition={splashTransition(0)}
@@ -397,7 +397,7 @@ const FloatingDevice = () => {
         />
       </motion.div>
       <motion.div
-        className="absolute -right-6 md:-right-12 top-4 w-20 md:w-28 pointer-events-none"
+        className="absolute -right-3 sm:-right-6 md:-right-12 top-2 sm:top-4 w-14 sm:w-20 md:w-28 pointer-events-none"
         initial={{ opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
         animate={ready ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
         transition={splashTransition(1)}
@@ -412,7 +412,7 @@ const FloatingDevice = () => {
         />
       </motion.div>
       <motion.div
-        className="absolute -right-6 md:-right-14 bottom-2 md:bottom-6 w-14 md:w-20 pointer-events-none"
+        className="absolute -right-3 sm:-right-6 md:-right-14 bottom-1 sm:bottom-2 md:bottom-6 w-10 sm:w-14 md:w-20 pointer-events-none"
         initial={{ opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
         animate={ready ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
         transition={splashTransition(11)}
