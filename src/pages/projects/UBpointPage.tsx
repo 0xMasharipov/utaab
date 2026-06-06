@@ -45,6 +45,7 @@ import tryAngleAsset from '@/assets/coins/ubp-try-angle.png.asset.json';
 
 const WHATSAPP_URL = 'https://chat.whatsapp.com/HnTcuJYiKAiDpLPnG33mEr';
 const SPONSOR_EMAIL = 'mailto:info@utaab.org?subject=UBpoint%20Sponsor%20Inquiry';
+const UBPOINT_APP_URL = 'https://ubpoint.app/';
 
 /* ---------- Light Navbar (page-local) ---------- */
 const navLinks = [
@@ -71,9 +72,9 @@ const LightNavbar = () => {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="hidden sm:inline-block">
+          <a href={UBPOINT_APP_URL} target="_blank" rel="noopener noreferrer" className="hidden sm:inline-block">
             <Button className="h-9 px-4 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white text-sm font-semibold shadow-[0_8px_24px_-10px_rgba(37,99,235,0.6)]">
-              Join UTAAB
+              Open App
             </Button>
           </a>
           <button
@@ -98,9 +99,9 @@ const LightNavbar = () => {
                 {l.label}
               </a>
             ))}
-            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="mt-2">
+            <a href={UBPOINT_APP_URL} target="_blank" rel="noopener noreferrer" className="mt-2">
               <Button className="w-full h-10 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm font-semibold">
-                Join UTAAB
+                Open App
               </Button>
             </a>
           </div>
@@ -351,9 +352,9 @@ const Hero = () => (
           contribute to projects, join hackathons, and earn verifiable on-chain rewards.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
-          <a href="#features">
+          <a href={UBPOINT_APP_URL} target="_blank" rel="noopener noreferrer">
             <Button className="h-12 px-6 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-[0_10px_30px_-10px_rgba(37,99,235,0.6)] rounded-full">
-              Explore UBpoint
+              Launch App
               <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
           </a>
@@ -1007,9 +1008,9 @@ const FinalCTA = () => (
         UBpoint bridges student engagement and blockchain technology by transforming participation
         into verifiable digital value.
       </p>
-      <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="inline-block mt-10">
+      <a href={UBPOINT_APP_URL} target="_blank" rel="noopener noreferrer" className="inline-block mt-10">
         <Button className="h-14 px-8 bg-white text-blue-700 hover:bg-blue-50 rounded-full text-base font-bold shadow-2xl">
-          Join UTAAB
+          Launch UBpoint App
           <ArrowRight className="ml-2 w-5 h-5" />
         </Button>
       </a>
