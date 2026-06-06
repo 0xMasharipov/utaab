@@ -514,14 +514,14 @@ const featureDefs = [
 const FeatureGrid = () => {
   const { t } = useTranslation();
   return (
-    <section id="features" className="relative py-24 md:py-32 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="features" className="relative py-16 sm:py-24 md:py-32 bg-white">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6 }}
-          className="text-center max-w-2xl mx-auto mb-16"
+          className="text-center max-w-2xl mx-auto mb-10 sm:mb-16"
         >
           <div className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-4">
             {t('projects.ubpointPage.features.eyebrow')}
