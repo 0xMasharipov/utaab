@@ -1052,20 +1052,20 @@ const CountUp: React.FC<{ to: number; suffix?: string }> = ({ to, suffix = '' })
 const Metrics = () => {
   const { t } = useTranslation();
   return (
-    <section id="rewards" className="relative py-24 md:py-32 bg-gradient-to-b from-white to-blue-50/50 overflow-hidden">
+    <section id="rewards" className="relative py-16 sm:py-24 md:py-32 bg-gradient-to-b from-white to-blue-50/50 overflow-hidden">
       {[
         { src: utaabCoinAsset.url, cls: 'hidden md:block -left-12 top-1/2 -translate-y-1/2 w-44', glow: 'rgba(37,99,235,0.4)', dur: 9, delay: 0 },
         { src: goldBarAsset.url, cls: 'hidden md:block -right-10 top-12 w-36', glow: 'rgba(202,138,4,0.45)', dur: 11, delay: 0.3 },
         { src: titaniumBarAsset.url, cls: 'hidden md:block right-20 top-2 w-24', glow: 'rgba(148,163,184,0.45)', dur: 10, delay: 1.1 },
         { src: silverBarAsset.url, cls: 'hidden md:block left-24 bottom-4 w-24', glow: 'rgba(148,163,184,0.45)', dur: 12, delay: 0.6 },
         { src: ethCoinAsset.url, cls: 'hidden md:block right-12 bottom-10 w-24', glow: 'rgba(100,116,139,0.4)', dur: 10, delay: 0.7 },
-        { src: btcCoinAsset.url, cls: 'absolute left-2 md:left-1/3 -top-2 md:top-4 w-14 md:w-20', glow: 'rgba(202,138,4,0.45)', dur: 9, delay: 0.4 },
-        { src: tonCoinAsset.url, cls: 'absolute right-2 md:right-1/3 -top-2 md:top-6 w-14 md:w-20', glow: 'rgba(37,99,235,0.5)', dur: 11, delay: 0.9 },
+        { src: btcCoinAsset.url, cls: 'hidden sm:block absolute left-2 md:left-1/3 -top-2 md:top-4 w-14 md:w-20', glow: 'rgba(202,138,4,0.45)', dur: 9, delay: 0.4 },
+        { src: tonCoinAsset.url, cls: 'hidden sm:block absolute right-2 md:right-1/3 -top-2 md:top-6 w-14 md:w-20', glow: 'rgba(37,99,235,0.5)', dur: 11, delay: 0.9 },
         { src: usdtAngleAsset.url, cls: 'hidden md:block left-1/4 bottom-2 w-24', glow: 'rgba(16,185,129,0.45)', dur: 10, delay: 1.4 },
         { src: tryAngleAsset.url, cls: 'hidden md:block right-1/4 top-1/3 w-24', glow: 'rgba(220,38,38,0.4)', dur: 12, delay: 0.2 },
-        { src: goldCoinAsset.url, cls: 'absolute right-4 md:left-10 bottom-2 md:bottom-16 w-12 md:w-20', glow: 'rgba(202,138,4,0.5)', dur: 10, delay: 0.5 },
+        { src: goldCoinAsset.url, cls: 'hidden sm:block absolute right-4 md:left-10 bottom-2 md:bottom-16 w-12 md:w-20', glow: 'rgba(202,138,4,0.5)', dur: 10, delay: 0.5 },
         { src: steamAsset.url, cls: 'hidden md:block right-8 top-8 w-24', glow: 'rgba(37,99,235,0.45)', dur: 11, delay: 1.6 },
-        { src: gamepadAsset.url, cls: 'absolute left-2 md:left-1/4 bottom-2 md:bottom-10 w-20 md:w-32', glow: 'rgba(96,165,250,0.4)', dur: 9, delay: 0.8 },
+        { src: gamepadAsset.url, cls: 'hidden sm:block absolute left-2 md:left-1/4 bottom-2 md:bottom-10 w-20 md:w-32', glow: 'rgba(96,165,250,0.4)', dur: 9, delay: 0.8 },
       ].map((c, i) => (
         <motion.img
           key={i}
@@ -1078,13 +1078,13 @@ const Metrics = () => {
           transition={{ duration: c.dur, repeat: Infinity, ease: 'easeInOut', delay: c.delay }}
         />
       ))}
-      <div className="max-w-6xl mx-auto px-6 relative">
-        <div className="text-center mb-14">
+      <div className="max-w-6xl mx-auto px-5 sm:px-6 relative">
+        <div className="text-center mb-10 sm:mb-14">
           <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
             {t('projects.ubpointPage.metrics.title')}
           </h2>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
           {[
             { value: <><CountUp to={200} />+</>, label: t('projects.ubpointPage.metrics.distributed') },
             { value: <><CountUp to={1} />+</>, label: t('projects.ubpointPage.metrics.events') },
@@ -1097,9 +1097,9 @@ const Metrics = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="p-6 md:p-8 rounded-2xl bg-white/80 backdrop-blur-xl border border-blue-100 text-center shadow-[0_10px_30px_-15px_rgba(37,99,235,0.25)]"
+              className="p-5 sm:p-6 md:p-8 rounded-2xl bg-white/80 backdrop-blur-xl border border-blue-100 text-center shadow-[0_10px_30px_-15px_rgba(37,99,235,0.25)]"
             >
-              <div className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+              <div className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
                 {m.value}
               </div>
               <div className="mt-2 text-xs md:text-sm text-slate-600 font-semibold">{m.label}</div>
