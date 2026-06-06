@@ -1,9 +1,8 @@
 import { createPublicClient, http } from 'viem';
-import { sepolia } from 'viem/chains';
-import { SEPOLIA_RPC_URL } from './wagmi';
+import { ACTIVE_CHAIN, BASE_RPC_URL } from './wagmi';
 
-/** Public read-only RPC client (no wallet required). */
+/** Public read-only RPC client (no wallet required), targets Base by default. */
 export const publicClient = createPublicClient({
-  chain: sepolia,
-  transport: http(SEPOLIA_RPC_URL),
+  chain: ACTIVE_CHAIN,
+  transport: http(BASE_RPC_URL),
 });
