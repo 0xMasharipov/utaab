@@ -17,6 +17,7 @@ import { PrivacyPopup } from '@/components/PrivacyPopup';
 import { PrivacyCenter } from '@/components/PrivacyCenter';
 import { FloatingPrivacyButton } from '@/components/FloatingPrivacyButton';
 import AnimatedImage from '@/components/common/AnimatedImage';
+import SEO from '@/components/SEO';
 
 interface ContentBlock {
   type: string;
