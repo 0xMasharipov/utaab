@@ -936,7 +936,7 @@ const Sponsors = () => {
   const { t } = useTranslation();
   const list = t('projects.ubpointPage.sponsors.list', { returnObjects: true }) as string[];
   return (
-    <section id="sponsors" className="relative py-24 md:py-32 bg-white overflow-hidden">
+    <section id="sponsors" className="relative py-16 sm:py-24 md:py-32 bg-white overflow-hidden">
       <motion.img
         src={goldCoinAsset.url}
         alt=""
