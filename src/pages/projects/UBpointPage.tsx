@@ -890,7 +890,7 @@ const Showcase = () => {
           {t('projects.ubpointPage.showcase.title')}
         </h2>
       </div>
-      <div ref={ref} className={isDesktop ? 'overflow-hidden' : 'overflow-x-auto snap-x snap-mandatory scrollbar-none'}>
+      <div ref={ref} className={isDesktop ? 'overflow-hidden' : 'overflow-x-auto snap-x snap-mandatory scrollbar-hide'}>
         <motion.div
           style={isDesktop ? { x } : undefined}
           className="flex gap-8 md:gap-16 px-5 sm:px-6 pt-6 pb-10"
