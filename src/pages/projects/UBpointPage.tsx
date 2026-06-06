@@ -687,7 +687,7 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
             </div>
           </div>
           <div className="flex items-center gap-2 p-2 rounded-lg bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100">
-            <Flame className="w-4 h-4 text-orange-500" />
+            <TrendingUp className="w-4 h-4 text-orange-500" />
             <div className="text-[10px] font-bold text-slate-800">5 day streak</div>
             <div className="ml-auto text-[9px] text-slate-500 font-semibold">Keep going</div>
           </div>
