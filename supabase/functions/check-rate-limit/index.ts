@@ -40,7 +40,7 @@ serve(async (req) => {
   }
 
   try {
-    const { identifier: clientIdentifier, endpoint } = await req.json() as RateLimitRequest;
+    const { endpoint } = await req.json() as RateLimitRequest;
 
     if (!endpoint || typeof endpoint !== 'string') {
       return new Response(
@@ -51,20 +51,20 @@ serve(async (req) => {
 
     const { limit, window } = ENDPOINT_LIMITS[endpoint] ?? ENDPOINT_LIMITS.default;
 
-    // For sensitive endpoints, always use server-derived IP to prevent identifier spoofing
-    let identifier: string;
-    if (SERVER_DERIVED_ENDPOINTS.includes(endpoint)) {
-      identifier = getClientIP(req);
-      if (identifier === 'unknown') {
-        // If we can't determine the IP, allow the request (fail open)
-        return new Response(
-          JSON.stringify({ allowed: true, request_count: 0, limit, window, retry_after: null }),
-          { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-    } else {
-      identifier = clientIdentifier;
+    // SECURITY: Always derive the identifier server-side from the caller's IP.
+    // Never trust a client-supplied identifier — an attacker could otherwise
+    // exhaust another user's quota by sending their email/user-id as the
+    // identifier, locking them out of forms.
+    const identifier: string = getClientIP(req);
+    if (identifier === 'unknown') {
+      // If we can't determine the IP, allow the request (fail open) — real
+      // enforcement still happens server-side in each individual edge function.
+      return new Response(
+        JSON.stringify({ allowed: true, request_count: 0, limit, window, retry_after: null }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
+
 
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
