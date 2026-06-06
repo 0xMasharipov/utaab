@@ -12,19 +12,13 @@ const splashTransition = (i: number) => ({
 });
 import {
   ArrowRight,
-  Gift,
   ShieldCheck,
-  Trophy,
   GraduationCap,
-  Sparkles,
-  Coins,
   CheckCircle2,
   Twitter,
-  MessageCircle,
-  Rocket,
   Building2,
   ArrowUpRight,
-  Flame,
+  ArrowDownLeft,
   TrendingUp,
   Menu,
   X,
@@ -33,6 +27,13 @@ import {
   Mail,
   Copy,
   ExternalLink,
+  BadgeCheck,
+  CircleDot,
+  Medal,
+  Compass,
+  Wallet,
+  Tag,
+  MessageSquare,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import logoAsset from '@/assets/ubpoint-logo.png.asset.json';
@@ -300,7 +301,7 @@ const FloatingDevice = () => {
           transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
         >
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
-            <Sparkles className="w-4 h-4 text-white" />
+            <BadgeCheck className="w-4 h-4 text-white" />
           </div>
           <div className="text-left">
             <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">Earned</div>
@@ -397,7 +398,7 @@ const Hero = () => (
           className="h-16 md:h-20 w-auto mb-6 drop-shadow-[0_10px_30px_rgba(37,99,235,0.3)]"
         />
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold mb-6">
-          <Sparkles className="w-3.5 h-3.5" />
+          <CircleDot className="w-3.5 h-3.5" />
           UTAAB · Blockchain Engagement Platform
         </div>
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.05]">
@@ -452,12 +453,12 @@ const Hero = () => (
 
 /* ---------- Feature grid ---------- */
 const features = [
-  { icon: Coins, title: 'Earn UBP', desc: 'Receive points for attending events, contributing to community projects, and participating in hackathons.' },
-  { icon: Gift, title: 'Unlock Rewards', desc: 'Redeem UBP for partner discounts, Steam gift cards, tokenized assets, silver, gold, and future ecosystem rewards.' },
+  { icon: Wallet, title: 'Earn UBP', desc: 'Receive points for attending events, contributing to community projects, and participating in hackathons.' },
+  { icon: Tag, title: 'Unlock Rewards', desc: 'Redeem UBP for partner discounts, Steam gift cards, tokenized assets, silver, gold, and future ecosystem rewards.' },
   { icon: ShieldCheck, title: 'On-Chain Verification', desc: 'Every UBpoint transaction is verifiable on Base. See our official identifiers below.' },
   { icon: GraduationCap, title: 'Student Identity', desc: 'Build a verifiable portfolio of participation, contributions, and achievements.' },
-  { icon: Trophy, title: 'Leaderboards', desc: 'Compete with community members and climb the rankings.' },
-  { icon: Sparkles, title: 'Campus Engagement', desc: 'Transform university activities into measurable achievements.' },
+  { icon: Medal, title: 'Leaderboards', desc: 'Compete with community members and climb the rankings.' },
+  { icon: Compass, title: 'Campus Engagement', desc: 'Transform university activities into measurable achievements.' },
 ];
 
 const FeatureGrid = () => (
@@ -651,8 +652,8 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
           </div>
           <div className="grid grid-cols-3 gap-1.5">
             {[
-              { icon: Coins, label: 'Earn' },
-              { icon: Gift, label: 'Redeem' },
+              { icon: Wallet, label: 'Earn' },
+              { icon: Tag, label: 'Redeem' },
               { icon: Send, label: 'Send' },
             ].map((a) => (
               <div key={a.label} className="flex flex-col items-center gap-1 p-1.5 rounded-lg bg-blue-50/60 border border-blue-100">
@@ -672,7 +673,11 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
                 <div key={t.l} className="flex items-center justify-between p-1.5 rounded-lg bg-white border border-slate-100">
                   <div className="flex items-center gap-1.5">
                     <div className={`w-5 h-5 rounded-full flex items-center justify-center ${t.pos ? 'bg-green-50' : 'bg-slate-100'}`}>
-                      <Sparkles className={`w-2.5 h-2.5 ${t.pos ? 'text-green-600' : 'text-slate-500'}`} />
+                      {t.pos ? (
+                        <ArrowDownLeft className="w-2.5 h-2.5 text-green-600" />
+                      ) : (
+                        <ArrowUpRight className="w-2.5 h-2.5 text-slate-500" />
+                      )}
                     </div>
                     <div className="text-[10px] font-semibold text-slate-800">{t.l}</div>
                   </div>
@@ -682,7 +687,7 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
             </div>
           </div>
           <div className="flex items-center gap-2 p-2 rounded-lg bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100">
-            <Flame className="w-4 h-4 text-orange-500" />
+            <TrendingUp className="w-4 h-4 text-orange-500" />
             <div className="text-[10px] font-bold text-slate-800">5 day streak</div>
             <div className="ml-auto text-[9px] text-slate-500 font-semibold">Keep going</div>
           </div>
@@ -851,8 +856,8 @@ const Showcase = () => {
 /* ---------- For Brands / Sponsors ---------- */
 const sponsorTasks = [
   { icon: Twitter, label: 'Follow on X', reward: 10 },
-  { icon: MessageCircle, label: 'Join Discord', reward: 25 },
-  { icon: Rocket, label: 'Try the app', reward: 50 },
+  { icon: MessageSquare, label: 'Join Discord', reward: 25 },
+  { icon: Send, label: 'Try the app', reward: 50 },
 ];
 
 

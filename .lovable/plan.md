@@ -1,21 +1,36 @@
-Add a one-time intro splash on the UBpoint hero: scroll is locked until every coin/asset has erupted from behind the phone and faded into its final orbit position.
+# Polish UBpoint Icons — Editorial Refinement
 
-### Behavior
-1. On page mount: lock `document.body.style.overflow = 'hidden'` and `document.documentElement.style.overflow = 'hidden'`. Stash previous value.
-2. A full-viewport transparent overlay sits over the hero only (`fixed inset-0 z-[60]`) capturing pointer events (`pointer-events-auto`) and showing a soft "Loading the economy…" hint at the bottom. Cursor stays visible but page interaction is blocked.
-3. Start a master splash timeline (~1.8s total) using a shared `isReady` flag in `UBpointPage`:
-   - Each floating asset (`FloatingDevice` back-layer coins + UTAAB/TON/BTC + toasts) starts at `scale: 0.2`, `opacity: 0`, `x/y: 0` (centered behind the phone).
-   - Stagger them out to their resting `cls` positions with `scale: 1`, `opacity: 1`, fading in and easing into their final spot. Use `motion` `initial` + `animate` with `transition={{ delay: i * 0.12, duration: 0.7, ease: [0.16,1,0.3,1] }}`.
-   - Phone itself slides up + fades in slightly ahead of coins.
-4. When the longest coin finishes (use a `setTimeout` matching the last delay+duration, ~2000ms), set `isReady=true`, restore `body/html overflow`, remove the overlay, and resume the existing infinite float loops.
-5. Persist via `sessionStorage.setItem('ubpoint-splashed', '1')` so revisits in the same tab skip the splash (immediately mount in final positions, scroll unlocked).
+Goal: Replace the generic "AI / vibecoded" lucide icons (Sparkles, Rocket, Flame, etc.) with a calmer, more professional set. Keep all layout, grids, gradients, colors, sizes, and animations exactly as they are. Only `lucide-react` import names and JSX icon component names change.
 
-### Implementation notes
-- Add a `SplashContext` (simple React context) at the top of `UBpointPage` providing `{ ready, started }`.
-- `FloatingDevice` reads context: when `!ready`, render each asset with `initial={{ opacity:0, scale:0.2, x:0, y:0 }}` and `animate={{ opacity:1, scale:1, x:0, y:0 }}` (target = the asset's actual offset; CSS `cls` positioning stays). After ready, the existing infinite `animate={{ y:[...] }}` floats take over (swap `animate` based on `ready`).
-- Overlay component is rendered conditionally inside `UBpointPage` at the root. Includes a small centered "Initializing UBpoint" pill with a pulsing dot, plus a hint "scroll to continue" that appears the moment splash finishes.
-- No new dependencies; pure framer-motion + a `useEffect` for scroll lock.
+## Icon swap map (UBpointPage.tsx only)
 
-### Out of scope
-- No real "mouse capture" via Pointer Lock API (would hide cursor and feel broken). The overlay blocks page scroll/click which matches the user's intent.
-- Splash only on first visit per tab; doesn't fire on internal navigation back.
+| Location | Current | New | Rationale |
+|---|---|---|---|
+| Toast header badge (line 303) | `Sparkles` | `BadgeCheck` | Reads as verified transaction, not magic |
+| Verify pill on phone (line 325, 436, 535, 938) | `ShieldCheck` | keep | Already professional |
+| Hero kicker pill (line 400) | `Sparkles` | `CircleDot` | Quiet live-status dot, matches "Now live" |
+| Toast row entries (line 675) | `Sparkles` | `ArrowDownLeft` / `ArrowUpRight` | Directional transaction marks |
+| Features grid — Earn UBP (455) | `Coins` | `Wallet` | Cleaner finance metaphor |
+| Features grid — Unlock Rewards (456) | `Gift` | `Tag` | Editorial commerce icon |
+| Features grid — Student Identity (458) | `GraduationCap` | keep | Contextually correct |
+| Features grid — Leaderboards (459) | `Trophy` | `Medal` | Less arcade, more credential |
+| Features grid — Campus Engagement (460) | `Sparkles` | `Compass` | Direction / participation, not "AI" |
+| Rewards heading (line 685) | `Flame` | `TrendingUp` | Already used elsewhere, more neutral |
+| Quick actions row (line 654) | `Coins`, `Gift` | `Wallet`, `Tag` | Match features set |
+| CTA list (line 854) — Try the app | `Rocket` | `Send` | Same paper-plane motion, no rocket cliché |
+| CTA list (line 854) — Join Discord | `MessageCircle` | `MessageSquare` | Squared, more editorial |
+| `+50 this week` (line 649) | `TrendingUp` | keep | Fine |
+
+## Implementation
+
+Single file edit: `src/pages/projects/UBpointPage.tsx`.
+
+1. Update the `lucide-react` import block: remove `Sparkles, Trophy, Flame, Rocket, MessageCircle, Coins, Gift`; add `BadgeCheck, CircleDot, Medal, Compass, Wallet, Tag, Send, MessageSquare, ArrowDownLeft`.
+2. Find/replace each icon component name at the lines above. Preserve every `className`, parent wrapper, color, and size.
+3. Leave the back-layer floating coin **images** (btc/eth/ton/gold/etc.) untouched — those are product assets, not icons.
+4. Leave splash intro, grids, gradients, glass cards, and the navbar visuals unchanged.
+
+## Out of scope
+- No color, spacing, typography, or layout changes.
+- No new components, no copy changes.
+- No other pages touched.
