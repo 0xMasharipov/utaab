@@ -175,7 +175,7 @@ const LightFooter = () => {
   const navLinks = useNavLinks();
   return (
     <footer className="relative bg-blue-50/60 border-t border-blue-100">
-      <div className="max-w-7xl mx-auto px-6 py-14 grid gap-10 md:grid-cols-4">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 py-10 sm:py-14 grid gap-8 sm:gap-10 md:grid-cols-4">
         <div className="md:col-span-2">
           <div className="flex items-center gap-2.5">
             <FadeImg src={logoAsset.url} alt="UBpoint" className="h-9 w-auto" />
