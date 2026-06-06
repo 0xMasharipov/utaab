@@ -1,6 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
-import { motion, useInView, useScroll, useTransform } from 'framer-motion';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence, useInView, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
+
+/* ---------- Splash intro context ---------- */
+const SplashContext = createContext<{ ready: boolean }>({ ready: true });
+const useSplash = () => useContext(SplashContext);
+const splashTransition = (i: number) => ({
+  delay: 0.25 + i * 0.13,
+  duration: 0.75,
+  ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+});
 import {
   ArrowRight,
   Gift,
@@ -221,6 +230,17 @@ const HeroBackground = () => (
 
 /* ---------- Floating iPhone device ---------- */
 const FloatingDevice = () => {
+  const { ready } = useSplash();
+  const backCoins = [
+    { src: usdtAngleAsset.url, cls: 'top-2 -left-4 md:-left-10 w-16 md:w-24', glow: 'rgba(16,185,129,0.45)', dur: 9, delay: 0 },
+    { src: tryAngleAsset.url, cls: 'top-10 -right-6 md:-right-14 w-16 md:w-24', glow: 'rgba(220,38,38,0.4)', dur: 10, delay: 0.4 },
+    { src: ethCoinAsset.url, cls: 'top-1/2 -left-10 md:-left-20 w-14 md:w-20', glow: 'rgba(100,116,139,0.45)', dur: 11, delay: 0.8 },
+    { src: goldCoinAsset.url, cls: 'bottom-12 -right-8 md:-right-16 w-14 md:w-20', glow: 'rgba(202,138,4,0.5)', dur: 12, delay: 0.2 },
+    { src: silverBarAsset.url, cls: 'bottom-2 left-6 md:left-2 w-16 md:w-20', glow: 'rgba(148,163,184,0.5)', dur: 13, delay: 1 },
+    { src: steamAsset.url, cls: 'top-4 -left-8 md:-left-16 w-16 md:w-24', glow: 'rgba(37,99,235,0.45)', dur: 10, delay: 1.3 },
+    { src: gamepadAsset.url, cls: 'bottom-8 -right-10 md:-right-20 w-20 md:w-28', glow: 'rgba(96,165,250,0.4)', dur: 11, delay: 0.6 },
+  ];
+
   return (
     <div className="relative w-full max-w-[360px] md:max-w-[420px] mx-auto">
       {/* glow */}
@@ -228,96 +248,135 @@ const FloatingDevice = () => {
 
       {/* back-layer coin cluster behind the phone */}
       <div aria-hidden className="absolute inset-0 -m-16 md:-m-24 pointer-events-none">
-        {[
-          { src: usdtAngleAsset.url, cls: 'top-2 -left-4 md:-left-10 w-16 md:w-24', glow: 'rgba(16,185,129,0.45)', dur: 9, delay: 0 },
-          { src: tryAngleAsset.url, cls: 'top-10 -right-6 md:-right-14 w-16 md:w-24', glow: 'rgba(220,38,38,0.4)', dur: 10, delay: 0.4 },
-          { src: ethCoinAsset.url, cls: 'top-1/2 -left-10 md:-left-20 w-14 md:w-20', glow: 'rgba(100,116,139,0.45)', dur: 11, delay: 0.8 },
-          { src: goldCoinAsset.url, cls: 'bottom-12 -right-8 md:-right-16 w-14 md:w-20', glow: 'rgba(202,138,4,0.5)', dur: 12, delay: 0.2 },
-          { src: silverBarAsset.url, cls: 'bottom-2 left-6 md:left-2 w-16 md:w-20', glow: 'rgba(148,163,184,0.5)', dur: 13, delay: 1 },
-          { src: steamAsset.url, cls: 'top-4 -left-8 md:-left-16 w-16 md:w-24', glow: 'rgba(37,99,235,0.45)', dur: 10, delay: 1.3 },
-          { src: gamepadAsset.url, cls: 'bottom-8 -right-10 md:-right-20 w-20 md:w-28', glow: 'rgba(96,165,250,0.4)', dur: 11, delay: 0.6 },
-
-        ].map((c, i) => (
-          <motion.img
+        {backCoins.map((c, i) => (
+          <motion.div
             key={i}
-            src={c.src}
-            alt=""
-            className={`absolute ${c.cls} select-none`}
-            style={{ filter: `drop-shadow(0 14px 26px ${c.glow})` }}
-            animate={{ y: [0, -10, 0], rotateZ: [-5, 5, -5] }}
-            transition={{ duration: c.dur, repeat: Infinity, ease: 'easeInOut', delay: c.delay }}
-          />
+            className={`absolute ${c.cls}`}
+            initial={{ opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
+            animate={ready ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
+            transition={splashTransition(i + 2)}
+          >
+            <motion.img
+              src={c.src}
+              alt=""
+              className="w-full select-none"
+              style={{ filter: `drop-shadow(0 14px 26px ${c.glow})` }}
+              animate={ready ? { y: [0, -10, 0], rotateZ: [-5, 5, -5] } : undefined}
+              transition={{ duration: c.dur, repeat: Infinity, ease: 'easeInOut', delay: c.delay }}
+            />
+          </motion.div>
         ))}
       </div>
 
       <motion.div
         className="relative z-10"
-        animate={{ y: [0, -14, 0], rotateZ: [-1.5, 1.5, -1.5] }}
-        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+        initial={{ opacity: 0, scale: 0.85, y: 20 }}
+        animate={ready ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.85, y: 20 }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       >
-        <img
-          src={mockupAsset.url}
-          alt="UBpoint mobile app interface"
-          className="w-full h-auto drop-shadow-[0_30px_60px_rgba(37,99,235,0.35)]"
-          loading="eager"
-        />
+        <motion.div
+          animate={ready ? { y: [0, -14, 0], rotateZ: [-1.5, 1.5, -1.5] } : undefined}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <img
+            src={mockupAsset.url}
+            alt="UBpoint mobile app interface"
+            className="w-full h-auto drop-shadow-[0_30px_60px_rgba(37,99,235,0.35)]"
+            loading="eager"
+          />
+        </motion.div>
       </motion.div>
 
       {/* orbiting toast */}
       <motion.div
         className="absolute -left-4 md:-left-12 top-12 backdrop-blur-xl bg-white/80 border border-blue-100 rounded-2xl px-3.5 py-2.5 shadow-xl flex items-center gap-2"
-        animate={{ y: [0, -8, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+        initial={{ opacity: 0, scale: 0.3, filter: 'blur(8px)' }}
+        animate={ready ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 0.3, filter: 'blur(8px)' }}
+        transition={splashTransition(9)}
       >
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
-          <Sparkles className="w-4 h-4 text-white" />
-        </div>
-        <div className="text-left">
-          <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">Earned</div>
-          <div className="text-sm font-bold text-slate-900">+50 UBP</div>
-        </div>
+        <motion.div
+          className="flex items-center gap-2"
+          animate={ready ? { y: [0, -8, 0] } : undefined}
+          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+            <Sparkles className="w-4 h-4 text-white" />
+          </div>
+          <div className="text-left">
+            <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">Earned</div>
+            <div className="text-sm font-bold text-slate-900">+50 UBP</div>
+          </div>
+        </motion.div>
       </motion.div>
 
       {/* orbiting verify badge */}
       <motion.div
         className="absolute -right-2 md:-right-10 bottom-24 backdrop-blur-xl bg-white/80 border border-blue-100 rounded-2xl px-3.5 py-2.5 shadow-xl flex items-center gap-2"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+        initial={{ opacity: 0, scale: 0.3, filter: 'blur(8px)' }}
+        animate={ready ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 0.3, filter: 'blur(8px)' }}
+        transition={splashTransition(10)}
       >
-        <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center">
-          <ShieldCheck className="w-4 h-4 text-blue-600" />
-        </div>
-        <div className="text-left">
-          <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">On-chain</div>
-          <div className="text-sm font-bold text-slate-900">Verified · Base</div>
-        </div>
+        <motion.div
+          className="flex items-center gap-2"
+          animate={ready ? { y: [0, 10, 0] } : undefined}
+          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+        >
+          <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center">
+            <ShieldCheck className="w-4 h-4 text-blue-600" />
+          </div>
+          <div className="text-left">
+            <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">On-chain</div>
+            <div className="text-sm font-bold text-slate-900">Verified · Base</div>
+          </div>
+        </motion.div>
       </motion.div>
 
       {/* floating UTAAB coin */}
-      <motion.img
-        src={utaabCoinAsset.url}
-        alt=""
-        aria-hidden
-        className="absolute -left-10 md:-left-20 bottom-4 w-24 md:w-32 drop-shadow-[0_20px_40px_rgba(37,99,235,0.35)] pointer-events-none"
-        animate={{ y: [0, -12, 0], rotateZ: [-6, 6, -6] }}
-        transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-      />
-      <motion.img
-        src={tonCoinAsset.url}
-        alt=""
-        aria-hidden
-        className="absolute -right-6 md:-right-12 top-4 w-20 md:w-28 drop-shadow-[0_15px_30px_rgba(37,99,235,0.45)] pointer-events-none"
-        animate={{ y: [0, 10, 0], rotateZ: [4, -4, 4] }}
-        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-      />
-      <motion.img
-        src={btcCoinAsset.url}
-        alt=""
-        aria-hidden
-        className="absolute -right-6 md:-right-14 bottom-2 md:bottom-6 w-14 md:w-20 drop-shadow-[0_15px_30px_rgba(202,138,4,0.4)] pointer-events-none"
-        animate={{ y: [0, -10, 0], rotateZ: [-5, 5, -5] }}
-        transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1.2 }}
-      />
+      <motion.div
+        className="absolute -left-10 md:-left-20 bottom-4 w-24 md:w-32 pointer-events-none"
+        initial={{ opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
+        animate={ready ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
+        transition={splashTransition(0)}
+      >
+        <motion.img
+          src={utaabCoinAsset.url}
+          alt=""
+          aria-hidden
+          className="w-full drop-shadow-[0_20px_40px_rgba(37,99,235,0.35)]"
+          animate={ready ? { y: [0, -12, 0], rotateZ: [-6, 6, -6] } : undefined}
+          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      </motion.div>
+      <motion.div
+        className="absolute -right-6 md:-right-12 top-4 w-20 md:w-28 pointer-events-none"
+        initial={{ opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
+        animate={ready ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
+        transition={splashTransition(1)}
+      >
+        <motion.img
+          src={tonCoinAsset.url}
+          alt=""
+          aria-hidden
+          className="w-full drop-shadow-[0_15px_30px_rgba(37,99,235,0.45)]"
+          animate={ready ? { y: [0, 10, 0], rotateZ: [4, -4, 4] } : undefined}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+        />
+      </motion.div>
+      <motion.div
+        className="absolute -right-6 md:-right-14 bottom-2 md:bottom-6 w-14 md:w-20 pointer-events-none"
+        initial={{ opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
+        animate={ready ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
+        transition={splashTransition(11)}
+      >
+        <motion.img
+          src={btcCoinAsset.url}
+          alt=""
+          aria-hidden
+          className="w-full drop-shadow-[0_15px_30px_rgba(202,138,4,0.4)]"
+          animate={ready ? { y: [0, -10, 0], rotateZ: [-5, 5, -5] } : undefined}
+          transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1.2 }}
+        />
+      </motion.div>
     </div>
   );
 };
@@ -1023,6 +1082,10 @@ const FinalCTA = () => (
 
 /* ---------- Page ---------- */
 const UBpointPage = () => {
+  const alreadySplashed =
+    typeof window !== 'undefined' && sessionStorage.getItem('ubpoint-splashed') === '1';
+  const [ready, setReady] = useState(alreadySplashed);
+
   useEffect(() => {
     const prev = document.title;
     document.title = 'UBpoint — Blockchain Student Engagement | UTAAB';
@@ -1038,21 +1101,72 @@ const UBpointPage = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (ready) return;
+    const prevBody = document.body.style.overflow;
+    const prevHtml = document.documentElement.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    const t = window.setTimeout(() => {
+      setReady(true);
+      sessionStorage.setItem('ubpoint-splashed', '1');
+    }, 2400);
+    return () => {
+      window.clearTimeout(t);
+      document.body.style.overflow = prevBody;
+      document.documentElement.style.overflow = prevHtml;
+    };
+  }, [ready]);
+
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans">
-      <LightNavbar />
-      <main>
-        <Hero />
-        <FeatureGrid />
-        <VerifiedOnChain />
-        <Showcase />
-        
-        <Sponsors />
-        <Metrics />
-        <FinalCTA />
-      </main>
-      <LightFooter />
-    </div>
+    <SplashContext.Provider value={{ ready }}>
+      <div className="min-h-screen bg-white text-slate-900 font-sans">
+        <LightNavbar />
+        <main>
+          <Hero />
+          <FeatureGrid />
+          <VerifiedOnChain />
+          <Showcase />
+
+          <Sponsors />
+          <Metrics />
+          <FinalCTA />
+        </main>
+        <LightFooter />
+
+        <AnimatePresence>
+          {!ready && (
+            <motion.div
+              key="ubpoint-splash-overlay"
+              className="fixed inset-0 z-[60] cursor-wait"
+              initial={{ opacity: 1 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+              onWheelCapture={(e) => e.preventDefault()}
+              onTouchMoveCapture={(e) => e.preventDefault()}
+              style={{ touchAction: 'none' }}
+            >
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-b from-white/60 via-blue-50/30 to-white/0 backdrop-blur-[2px]"
+                initial={{ opacity: 1 }}
+                animate={{ opacity: 0 }}
+                transition={{ delay: 0.4, duration: 1.2, ease: 'easeOut' }}
+              />
+              <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 border border-blue-100 shadow-lg backdrop-blur-md">
+                  <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                  <span className="text-xs font-semibold text-slate-700 tracking-wide">
+                    Initializing UBpoint…
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </SplashContext.Provider>
   );
 };
 
