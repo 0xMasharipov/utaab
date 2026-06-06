@@ -673,7 +673,11 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
                 <div key={t.l} className="flex items-center justify-between p-1.5 rounded-lg bg-white border border-slate-100">
                   <div className="flex items-center gap-1.5">
                     <div className={`w-5 h-5 rounded-full flex items-center justify-center ${t.pos ? 'bg-green-50' : 'bg-slate-100'}`}>
-                      <Sparkles className={`w-2.5 h-2.5 ${t.pos ? 'text-green-600' : 'text-slate-500'}`} />
+                      {t.pos ? (
+                        <ArrowDownLeft className="w-2.5 h-2.5 text-green-600" />
+                      ) : (
+                        <ArrowUpRight className="w-2.5 h-2.5 text-slate-500" />
+                      )}
                     </div>
                     <div className="text-[10px] font-semibold text-slate-800">{t.l}</div>
                   </div>
