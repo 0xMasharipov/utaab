@@ -325,12 +325,30 @@
       "usedFor": {
         "title": "TonRa ne için kullanılır?",
         "items": {
-          "wallet": { "title": "TON cüzdanlarını kontrol edin", "desc": "Fon göndermeden önce cüzdan davranışını inceleyin." },
-          "token": { "title": "Tokenleri inceleyin", "desc": "Satın almadan veya etkileşime geçmeden önce tokenleri kontrol edin." },
-          "project": { "title": "Riskli projeleri tespit edin", "desc": "Şüpheli veya riskli proje davranışlarını erkenden fark edin." },
-          "airdrop": { "title": "Sahte airdrop'ları tespit edin", "desc": "Olası dolandırıcılık kampanyalarını ve sahte airdrop'ları tanıyın." },
-          "overview": { "title": "Hızlı risk özeti", "desc": "Doğrudan Telegram üzerinden hızlı bir risk özeti alın." },
-          "decisions": { "title": "Daha güvenli kararlar", "desc": "TON'u keşfederken daha bilinçli seçimler yapın." }
+          "wallet": {
+            "title": "TON cüzdanlarını kontrol edin",
+            "desc": "Fon göndermeden önce cüzdan davranışını inceleyin."
+          },
+          "token": {
+            "title": "Tokenleri inceleyin",
+            "desc": "Satın almadan veya etkileşime geçmeden önce tokenleri kontrol edin."
+          },
+          "project": {
+            "title": "Riskli projeleri tespit edin",
+            "desc": "Şüpheli veya riskli proje davranışlarını erkenden fark edin."
+          },
+          "airdrop": {
+            "title": "Sahte airdrop'ları tespit edin",
+            "desc": "Olası dolandırıcılık kampanyalarını ve sahte airdrop'ları tanıyın."
+          },
+          "overview": {
+            "title": "Hızlı risk özeti",
+            "desc": "Doğrudan Telegram üzerinden hızlı bir risk özeti alın."
+          },
+          "decisions": {
+            "title": "Daha güvenli kararlar",
+            "desc": "TON'u keşfederken daha bilinçli seçimler yapın."
+          }
         }
       },
       "why": {
@@ -341,6 +359,186 @@
         "title": "TonRa'yı Telegram'da aç",
         "button": "Erken Beta'yı Dene",
         "note": "Bazı özellikler hâlâ geliştirme aşamasındadır."
+      }
+    },
+    "ubpointPage": {
+      "nav": {
+        "features": "Özellikler",
+        "insideApp": "Uygulamanın içi",
+        "sponsors": "Sponsorlar",
+        "rewards": "Ödüller",
+        "openApp": "Uygulamayı Aç"
+      },
+      "hero": {
+        "kicker": "UTAAB · Blockchain Katılım Platformu",
+        "titleStart": "Katılımı şuna dönüştür:",
+        "titleAccent": "Fırsat",
+        "subtitle": "UBpoint, UTAAB'ın blockchain destekli öğrenci katılım platformudur. Etkinliklere katılın, projelere katkıda bulunun, hackathonlara katılın ve doğrulanabilir on-chain ödüller kazanın.",
+        "launchApp": "Uygulamayı Başlat",
+        "viewRewards": "Ödülleri Gör",
+        "liveOnBase": "Base'de canlı",
+        "onChainVerified": "On-chain doğrulandı",
+        "earned": "Kazanıldı",
+        "ubp50": "+50 UBP",
+        "onChain": "On-chain",
+        "verifiedBase": "Doğrulandı · Base"
+      },
+      "features": {
+        "eyebrow": "Platform",
+        "title": "Yeni nesil öğrenciler için tasarlandı",
+        "subtitle": "Her etkinliği, hackathonu ve katkıyı ölçülebilir, on-chain değere dönüştüren altı temel.",
+        "items": {
+          "earnUbp": {
+            "t": "UBP Kazan",
+            "d": "Etkinliklere katılarak, topluluk projelerine katkıda bulunarak ve hackathonlara katılarak puan kazanın."
+          },
+          "unlockRewards": {
+            "t": "Ödülleri Aç",
+            "d": "UBP'yi partner indirimleri, Steam hediye kartları, tokenize edilmiş varlıklar, gümüş, altın ve gelecekteki ekosistem ödülleriyle değiştirin."
+          },
+          "onChainVerification": {
+            "t": "On-Chain Doğrulama",
+            "d": "Her UBpoint işlemi Base'de doğrulanabilir. Resmi tanımlayıcılarımız aşağıdadır."
+          },
+          "studentIdentity": {
+            "t": "Öğrenci Kimliği",
+            "d": "Katılım, katkı ve başarıların doğrulanabilir bir portföyünü oluşturun."
+          },
+          "leaderboards": {
+            "t": "Lider Tabloları",
+            "d": "Topluluk üyeleriyle yarışın ve sıralamada yükselin."
+          },
+          "campusEngagement": {
+            "t": "Kampüs Katılımı",
+            "d": "Üniversite faaliyetlerini ölçülebilir başarılara dönüştürün."
+          }
+        }
+      },
+      "verified": {
+        "eyebrow": "Base'de canlı",
+        "title": "On-Chain Doğrulandı",
+        "subtitle": "Dikkatli olun. Etkileşime geçmeden önce her zaman doğrulayın. UBpoint resmi olarak Base'de kayıtlıdır — bunlar bizim tek doğrulanmış tanımlayıcılarımızdır. UBpoint olduğunu iddia eden başka adreslere güvenmeyin.",
+        "baseName": "Base Adı",
+        "officialWallet": "Resmi Cüzdan",
+        "copy": "Kopyala",
+        "copied": "Kopyalandı",
+        "viewOnBasescan": "Basescan'de Görüntüle"
+      },
+      "showcase": {
+        "eyebrow": "Uygulamanın içi",
+        "title": "Cebe sığan bir öğrenci ekonomisi",
+        "screens": {
+          "homeDashboard": {
+            "t": "Ana Panel",
+            "h": "UBP bakiyeniz ve ilerlemeniz tek bakışta"
+          },
+          "rewardsMarketplace": {
+            "t": "Ödül Pazarı",
+            "h": "Puanları partner avantajlarıyla değiştirin"
+          },
+          "studentWallet": {
+            "t": "Öğrenci Cüzdanı",
+            "h": "Doğrulanmış, güvende kalın"
+          },
+          "leaderboard": {
+            "t": "Lider Tablosu",
+            "h": "Kampüsteki sıranızı görün"
+          },
+          "events": {
+            "t": "Etkinlikler",
+            "h": "On-chain keşfedin ve giriş yapın"
+          },
+          "profileAnalytics": {
+            "t": "Profil Analitiği",
+            "h": "Doğrulanmış katkı geçmişiniz"
+          }
+        }
+      },
+      "inApp": {
+        "goodMorning": "Günaydın",
+        "totalUbp": "Toplam UBP",
+        "plus50": "Bu hafta +50",
+        "earn": "Kazan",
+        "redeem": "Kullan",
+        "send": "Gönder",
+        "recent": "Son işlemler",
+        "hackathon": "Hackathon",
+        "workshop": "Atölye",
+        "reward": "Ödül",
+        "streak": "5 gün seri",
+        "keepGoing": "Devam et",
+        "rewards": "Ödüller",
+        "wallet": "Cüzdan",
+        "ubpToken": "UBP Token",
+        "rewardRedeem": "Ödül kullanımı",
+        "leaderboard": "Lider tablosu",
+        "upcoming": "Yaklaşan",
+        "yourActivity": "Etkinliğiniz",
+        "eventsLabel": "Etkinlik",
+        "hackathonsLabel": "Hackathon",
+        "projectsLabel": "Proje",
+        "rankLabel": "Sıra",
+        "items": {
+          "steam": "Steam Hediye Kartı",
+          "silver": "Gümüş Token",
+          "partner": "Partner İndirimi",
+          "gold": "Altın Token"
+        },
+        "events": {
+          "hackathon": "Web3 Hackathon",
+          "workshop": "Solidity Atölyesi",
+          "meetup": "Base Buluşması"
+        }
+      },
+      "sponsors": {
+        "eyebrow": "Markalar & Sponsorlar İçin",
+        "titleStart": "Gerçek öğrenciler. Gerçek katılım.",
+        "titleAccent": "On-chain kanıt.",
+        "body": "Şirketler, doğrulanmış öğrenci kullanıcıları edinmek ve aktive etmek için UBpoint'te görev ödülleri finanse eder. Her tamamlama Base'e kaydedilir — yani her takip, kayıt, kurulum ve etkinlik katılımı kanıtlanabilir, atfedilebilir ve bot içermez.",
+        "list": [
+          "Doğrulanmış üniversite kitlesi — sahte tıklamalar yok",
+          "Yalnızca tamamlanmış, on-chain kanıtlı eylemler için ödeyin",
+          "Sahte indirmeler değil, gerçek bağlılık",
+          "Canlı dönüşüm verileriyle sponsor paneli"
+        ],
+        "becomeSponsor": "Sponsor Ol",
+        "liveSponsoredTasks": "Aktif sponsorlu görevler",
+        "tasks": {
+          "twitter": "X'te takip et",
+          "discord": "Discord'a katıl",
+          "tryApp": "Uygulamayı dene"
+        },
+        "verified": "Doğrulandı",
+        "sponsoredPartner": "Sponsorlu · Partner Marka",
+        "howItWorksLabel": "Nasıl çalışır:",
+        "howItWorks": "Sponsorlar bir görev ve UBP ödülü tanımlar. Öğrenciler eylemi tamamlar; UBpoint her tamamlamayı doğrular ve Base'e kaydeder. Markalar bot ödemeden doğrulanmış kullanıcı edinim verisi alır."
+      },
+      "metrics": {
+        "title": "Büyüyen bir on-chain ekonomi",
+        "distributed": "Dağıtılan UBP",
+        "events": "Kampüs Etkinliği",
+        "recorded": "On-Chain Kayıt",
+        "futureEcosystem": "Gelecek Ekosistem"
+      },
+      "finalCta": {
+        "title": "Geleceğin Öğrenci Ekonomisi Burada Başlıyor",
+        "body": "UBpoint, katılımı doğrulanabilir dijital değere dönüştürerek öğrenci katılımını blockchain teknolojisiyle birleştirir.",
+        "launchApp": "UBpoint'i Başlat",
+        "backToProjects": "Tüm projelere dön"
+      },
+      "footer": {
+        "tagline": "UTAAB'ın blockchain destekli öğrenci katılım platformu. UBP kazanın, ödülleri açın ve her eylemi on-chain doğrulayın.",
+        "product": "Ürün",
+        "community": "Topluluk",
+        "utaabHome": "UTAAB Ana Sayfa",
+        "allProjects": "Tüm Projeler",
+        "whatsapp": "WhatsApp Topluluğu",
+        "becomeSponsor": "Sponsor Ol",
+        "rights": "Tüm hakları saklıdır.",
+        "builtOn": "Base üzerinde · utaab.org"
+      },
+      "splash": {
+        "initializing": "UBpoint başlatılıyor…"
       }
     }
   },
