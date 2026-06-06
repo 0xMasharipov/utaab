@@ -611,7 +611,7 @@ const VerifiedOnChain = () => {
               <div className="text-xs font-semibold uppercase tracking-wider text-blue-700 mb-2">
                 {item.label}
               </div>
-              <div className={`text-base md:text-lg text-slate-900 font-bold break-all ${item.mono ? 'font-mono' : ''}`}>
+              <div className={`text-sm sm:text-base md:text-lg text-slate-900 font-bold break-all ${item.mono ? 'font-mono' : ''}`}>
                 {item.display ?? item.value}
               </div>
               <div className="mt-4 flex flex-wrap gap-2">
