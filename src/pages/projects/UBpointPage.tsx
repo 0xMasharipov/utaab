@@ -1,6 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
-import { motion, useInView, useScroll, useTransform } from 'framer-motion';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence, useInView, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
+
+/* ---------- Splash intro context ---------- */
+const SplashContext = createContext<{ ready: boolean }>({ ready: true });
+const useSplash = () => useContext(SplashContext);
+const splashTransition = (i: number) => ({
+  delay: 0.25 + i * 0.13,
+  duration: 0.75,
+  ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+});
 import {
   ArrowRight,
   Gift,
