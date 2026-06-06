@@ -398,7 +398,7 @@ const Hero = () => (
           className="h-16 md:h-20 w-auto mb-6 drop-shadow-[0_10px_30px_rgba(37,99,235,0.3)]"
         />
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold mb-6">
-          <Sparkles className="w-3.5 h-3.5" />
+          <CircleDot className="w-3.5 h-3.5" />
           UTAAB · Blockchain Engagement Platform
         </div>
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.05]">
