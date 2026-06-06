@@ -33,14 +33,11 @@ export const isContractConfigured =
   CONTRACT_ADDRESS !== '0x0000000000000000000000000000000000000000';
 
 export const wagmiConfig = createConfig({
-  chains: [ACTIVE_CHAIN],
-  connectors: [
-    coinbaseWallet({ appName: 'UTAAB', preference: 'smartWalletOnly' }),
-    metaMask(),
-    injected(),
-  ],
+  chains: [baseSepolia, base],
+  connectors: [coinbaseWallet({ appName: 'UTAAB' }), metaMask(), injected()],
   transports: {
-    [ACTIVE_CHAIN.id]: http(BASE_RPC_URL),
+    [baseSepolia.id]: http(CHAIN_ID === 84532 ? BASE_RPC_URL : 'https://sepolia.base.org'),
+    [base.id]: http(CHAIN_ID === 8453 ? BASE_RPC_URL : 'https://mainnet.base.org'),
   },
 });
 

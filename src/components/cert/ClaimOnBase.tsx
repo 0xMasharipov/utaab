@@ -62,6 +62,8 @@ export function ClaimOnBase({ serialHash, voucher, signature }: Props) {
       }
 
       const hash = await writeContractAsync({
+        account: address!,
+        chain: ACTIVE_CHAIN,
         address: CONTRACT_ADDRESS as `0x${string}`,
         abi: certificateRegistryAbi,
         functionName: 'claim',

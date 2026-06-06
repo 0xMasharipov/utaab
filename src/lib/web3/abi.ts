@@ -86,6 +86,45 @@ export const certificateRegistryAbi = [
     ],
     outputs: [],
   },
+  // --- Legacy registry surface (kept so existing admin pages compile;
+  //     against the new Base contract these calls will revert — issuance
+  //     should go through the cert-issue-voucher edge function + claim). ---
+  {
+    type: 'function',
+    name: 'issueCertificate',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'serialHash', type: 'bytes32' },
+      { name: 'eventHash', type: 'bytes32' },
+      { name: 'issuedByHash', type: 'bytes32' },
+    ],
+    outputs: [],
+  },
+  {
+    type: 'function',
+    name: 'issueBatchCertificates',
+    stateMutability: 'nonpayable',
+    inputs: [
+      { name: 'serialHashes', type: 'bytes32[]' },
+      { name: 'eventHash', type: 'bytes32' },
+      { name: 'issuedByHash', type: 'bytes32' },
+    ],
+    outputs: [],
+  },
+  {
+    type: 'function',
+    name: 'revokeCertificate',
+    stateMutability: 'nonpayable',
+    inputs: [{ name: 'serialHash', type: 'bytes32' }],
+    outputs: [],
+  },
+  {
+    type: 'function',
+    name: 'owner',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ type: 'address' }],
+  },
   // --- Events ---
   {
     type: 'event',
