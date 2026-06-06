@@ -13,6 +13,7 @@ import GlassSectionWrapper from '@/components/glass/GlassSectionWrapper';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import SEO from '@/components/SEO';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
