@@ -12,6 +12,7 @@ import TeamOverlapCard from '@/components/team/TeamOverlapCard';
 import TeamProfileModal from '@/components/team/TeamProfileModal';
 import TeamProfileDrawer from '@/components/team/TeamProfileDrawer';
 import type { TeamMember } from '@/components/team/TeamOverlapCard';
+import SEO from '@/components/SEO';
 
 import zinurbekImg from '@/assets/team/zinurbek.png';
 import umutImg from '@/assets/team/umut.png';
