@@ -1,45 +1,42 @@
-## Goal
-Make `/verify` (VerifyCertificate page) feel premium and on-brand, with a hero 3D certificate that uses the uploaded template image as the card face.
+# Fix Certificate Page + UBpoint Graphical Bugs
 
-## 1. Asset
-- Upload `UTAAB_Certificate(2).png` as a Lovable asset (`src/assets/utaab-certificate-template.png.asset.json`). Used as the texture/face of the 3D card.
+## What's actually wrong
 
-## 2. New component: `src/components/cert/Certificate3D.tsx`
-- React Three Fiber scene (already in project — `@react-three/fiber` + `@react-three/drei`).
-- A single A4-ratio `RoundedBox` (≈ 0.7 × 1.0 × 0.02) with:
-  - Front face = `meshPhysicalMaterial` with the template image as `map` (via `useTexture`).
-  - Edges/back = dark navy with subtle metalness + clearcoat for a "card" feel.
-  - Soft floating rotation (Float from drei: tiny rotationIntensity, slow speed).
-  - Pointer-driven tilt: rotate ±10° on mouse X/Y over the canvas (no drag controls).
-- Lighting: ambient + 2 directional lights tuned to make the blue gradient pop; environment preset `"city"` for reflections.
-- `<Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 2.2], fov: 35 }}>` — capped DPR for perf.
-- Loading fallback: `<Skeleton>` matching aspect ratio. Lazy-load via `React.lazy` so Three doesn't bloat the verify page's initial bundle.
+**Verify Certificate page (`/verify-certificate`)**
+- The page itself loads, but the right-side 3D certificate area renders as a flat dark rectangle (no image, no card). The R3F `Canvas` mounts, but the texture path resolves to a Lovable CDN URL that doesn't always load inside the WebGL context in time, and the dark `meshPhysicalMaterial` makes the whole face look like a black box while we wait. End result: the hero looks broken / "crashed."
+- The Suspense fallback never re-shows after the canvas mounts, so users see an empty dark slab indefinitely.
 
-## 3. Refine `src/pages/VerifyCertificate.tsx`
-Keep all logic (`runVerify`, state, edge fn calls) intact. Only restructure presentation:
+**UBpoint page (`/projects/ubpoint`)**
+- Several sections (Features grid, Verified On-Chain, Showcase, Sponsors) render only their outer padding — their inner content stays at `opacity: 0`. This is the framer-motion `whileInView` with `viewport={{ margin: '-100px' }}` combined with the splash overlay locking `body.overflow = hidden` and scrolling to top. The IntersectionObserver evaluates before the splash releases scroll, marks elements as "not in view," and with `once: true` never re-triggers. You see huge white gaps between the hero, the "pocket-sized student economy" title, and "growing on-chain economy."
 
-- Wrap page in `BackgroundGrid` (used across other polished pages like TonRaPage) for consistent web3 backdrop.
-- New hero layout (two-column on `lg`, stacked on mobile):
-  - **Left:** existing pill badge → larger gradient H1 "Verify on Base" → subtitle mentioning Base network + soulbound NFT → the search `Card` (restyled: thinner border, `backdrop-blur`, focus ring on input, primary gradient button with shadow glow like TonRa CTA).
-  - **Right:** `Certificate3D` inside an aspect-[1/1.414] container with soft radial glow behind it (same pattern as TonRa logo glow).
-- Below hero: small trust strip — 3 `GlassCard` tiles ("On-chain on Base", "Tamper-proof", "Public RPC verification") with lucide icons.
-- `VerificationResultCard` stays where it is, but its container gets `motion.div` fade-in.
-- Footer "Back to home" link styled as ghost button.
+## Fix plan
 
-## 4. SEO / a11y
-- Update `document.title` via existing pattern.
-- Canvas wrapper has `role="img"` + `aria-label="Interactive 3D UTAAB certificate preview"`.
-- `prefers-reduced-motion`: disable Float + tilt, show static tilted card.
+### 1. Make `Certificate3D` reliable and aesthetic
+- Replace the heavy `RoundedBox` + per-face material array with a single textured plane (mesh + planeGeometry sized to A4 portrait ratio) backed by a subtle frame mesh. Avoids the "all-dark faces" problem when the texture is still loading.
+- Wrap the texture load in `<Suspense fallback={...}/>` that shows a soft glowing skeleton card (matching the design) so users never see an empty black canvas.
+- Add a graceful fallback: if WebGL is unavailable or the texture fails, render a plain `<img>` of the certificate with a CSS tilt/parallax (mouse-follow `transform: perspective(...) rotateX/Y`). Same aesthetic, zero risk of a blank canvas.
+- Lower the camera distance / fov so the certificate fills the frame nicely.
+- Keep the soft blue radial glow and the floating motion.
 
-## Out of scope
-- No changes to verify logic, edge functions, contract, or DB.
-- No new routes.
-- Not touching admin cert pages.
+### 2. Polish the Verify hero around it
+- Add a thin gradient ring + soft drop shadow around the certificate stage so it reads as a "stage," not an empty void.
+- Add a tiny "Live on Base" pill above the 3D stage for visual interest.
+- No layout changes beyond the right column.
 
-## Files
-**Create**
-- `src/assets/utaab-certificate-template.png.asset.json`
-- `src/components/cert/Certificate3D.tsx`
+### 3. Fix UBpoint section visibility
+- Replace the brittle `whileInView` + negative-margin pattern across `FeatureGrid`, `VerifiedOnChain`, `Showcase`, `Sponsors`, `Metrics`, `FinalCTA` with one of:
+  - `whileInView` using `viewport={{ once: true, amount: 0.15 }}` (no negative margin), OR
+  - a small reusable `<Reveal>` wrapper that uses `useInView` + a fallback `setTimeout` so content always becomes visible even if the observer never fires.
+- Guarantee: after the splash dismisses (or after 1.5s as a safety net), every section's content is at `opacity: 1`.
+- Remove the `cursor-wait` splash overlay's `pointer-events` capture from blocking child observers (or render the splash as a sibling of `<main>` outside its stacking context, which it already is — just ensure it doesn't keep `body.overflow` locked longer than 3s, which it already caps).
 
-**Edit**
-- `src/pages/VerifyCertificate.tsx` (presentation only)
+### 4. Verification
+- Reload `/verify-certificate` in the browser, screenshot, confirm the certificate is clearly visible with the template image and subtle tilt.
+- Reload `/projects/ubpoint`, scroll the full page, screenshot full-page, confirm Features, Verified On-Chain, Showcase, Sponsors, Metrics, FinalCTA all render their text and cards (no white gaps).
+
+## Files touched
+- `src/components/cert/Certificate3D.tsx` — simplify to textured plane + WebGL/texture fallback to `<img>`.
+- `src/pages/VerifyCertificate.tsx` — small wrapper polish around the 3D stage and a non-WebGL fallback path.
+- `src/pages/projects/UBpointPage.tsx` — swap `whileInView` patterns for a safe `<Reveal>` (or adjust viewport options) so sections always appear.
+
+No backend, schema, or route changes.
