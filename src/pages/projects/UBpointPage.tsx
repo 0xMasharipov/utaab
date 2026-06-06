@@ -228,7 +228,7 @@ const LightFooter = () => {
         </div>
       </div>
       <div className="border-t border-blue-100">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
           <div>© {new Date().getFullYear()} UTAAB · UBpoint. {t('projects.ubpointPage.footer.rights')}</div>
           <div>{t('projects.ubpointPage.footer.builtOn')}</div>
         </div>
