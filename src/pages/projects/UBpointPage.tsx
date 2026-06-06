@@ -12,19 +12,13 @@ const splashTransition = (i: number) => ({
 });
 import {
   ArrowRight,
-  Gift,
   ShieldCheck,
-  Trophy,
   GraduationCap,
-  Sparkles,
-  Coins,
   CheckCircle2,
   Twitter,
-  MessageCircle,
-  Rocket,
   Building2,
   ArrowUpRight,
-  Flame,
+  ArrowDownLeft,
   TrendingUp,
   Menu,
   X,
@@ -33,6 +27,13 @@ import {
   Mail,
   Copy,
   ExternalLink,
+  BadgeCheck,
+  CircleDot,
+  Medal,
+  Compass,
+  Wallet,
+  Tag,
+  MessageSquare,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import logoAsset from '@/assets/ubpoint-logo.png.asset.json';
