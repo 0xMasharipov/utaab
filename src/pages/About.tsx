@@ -48,6 +48,11 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SEO
+        title="About UTAAB — Our Mission in Blockchain Education"
+        description="UTAAB is a student-led Web3 ecosystem advancing blockchain education, real-world projects, and cross-border collaboration."
+        path="/about"
+      />
       <AnimatedBlobBackground />
       <Navbar />
 
