@@ -30,6 +30,8 @@ function Boot() {
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Boot />
+    <HelmetProvider>
+      <Boot />
+    </HelmetProvider>
   </React.StrictMode>
 );
