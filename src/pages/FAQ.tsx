@@ -65,8 +65,24 @@ const FAQ = () => {
     },
   ];
 
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SEO
+        title="UTAAB FAQ — Web3, Membership & Getting Started"
+        description="Answers to common questions about UTAAB, joining the community, learning Web3, and contributing to projects."
+        path="/faq"
+        jsonLd={faqJsonLd}
+      />
       <AnimatedBlobBackground />
       <Navbar />
 
