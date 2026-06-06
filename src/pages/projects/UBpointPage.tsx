@@ -361,7 +361,7 @@ const FloatingDevice = () => {
       </motion.div>
 
       <motion.div
-        className="absolute -right-2 md:-right-10 bottom-24 backdrop-blur-xl bg-white/80 border border-blue-100 rounded-2xl px-3.5 py-2.5 shadow-xl flex items-center gap-2"
+        className="absolute right-0 sm:-right-2 md:-right-10 bottom-20 sm:bottom-24 backdrop-blur-xl bg-white/80 border border-blue-100 rounded-2xl px-3 py-2 sm:px-3.5 sm:py-2.5 shadow-xl flex items-center gap-2"
         initial={{ opacity: 0, scale: 0.3, filter: 'blur(8px)' }}
         animate={ready ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 0.3, filter: 'blur(8px)' }}
         transition={splashTransition(10)}
