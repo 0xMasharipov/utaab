@@ -945,7 +945,7 @@ const Sponsors = () => {
         animate={{ y: [0, -14, 0], rotateZ: [-6, 6, -6] }}
         transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
       />
-      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 grid md:grid-cols-2 gap-10 sm:gap-12 items-center">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
