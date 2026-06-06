@@ -10,7 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { hashSerial, normalizeSerial, toDbHex } from '@/lib/certHash';
 import { publicClient } from '@/lib/web3/publicClient';
 import { certificateRegistryAbi } from '@/lib/web3/abi';
-import { CONTRACT_ADDRESS, isContractConfigured } from '@/lib/web3/wagmi';
+import { CONTRACT_ADDRESS, NETWORK_LABEL, isContractConfigured } from '@/lib/web3/wagmi';
 import {
   VerificationResultCard,
   type VerificationState,
@@ -62,7 +62,7 @@ export default function VerifyCertificate() {
         if (!dbRow) {
           setState({
             kind: 'error',
-            message: 'Could not reach the Sepolia network. Please try again later.',
+            message: `Could not reach ${NETWORK_LABEL}. Please try again later.`,
           });
           return;
         }
@@ -121,7 +121,7 @@ export default function VerifyCertificate() {
             <h1 className="text-4xl md:text-5xl font-extrabold">Verify UTAAB Certificate</h1>
             <p className="text-muted-foreground max-w-xl mx-auto">
               Check whether a certificate was officially issued by UTAAB and recorded on
-              blockchain.
+              the {NETWORK_LABEL} blockchain.
             </p>
           </div>
 

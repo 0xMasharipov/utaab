@@ -536,6 +536,7 @@ export type Database = {
           created_at: string
           event_hash: string
           event_id: string
+          holder_address: string | null
           id: string
           issued_at: string | null
           issued_by_hash: string
@@ -547,7 +548,10 @@ export type Database = {
           serial_hash: string
           serial_number: string
           status: string
+          token_id: number | null
           updated_at: string
+          voucher: Json | null
+          voucher_signature: string | null
         }
         Insert: {
           blockchain_tx_hash?: string | null
@@ -556,6 +560,7 @@ export type Database = {
           created_at?: string
           event_hash: string
           event_id: string
+          holder_address?: string | null
           id?: string
           issued_at?: string | null
           issued_by_hash: string
@@ -567,7 +572,10 @@ export type Database = {
           serial_hash: string
           serial_number: string
           status?: string
+          token_id?: number | null
           updated_at?: string
+          voucher?: Json | null
+          voucher_signature?: string | null
         }
         Update: {
           blockchain_tx_hash?: string | null
@@ -576,6 +584,7 @@ export type Database = {
           created_at?: string
           event_hash?: string
           event_id?: string
+          holder_address?: string | null
           id?: string
           issued_at?: string | null
           issued_by_hash?: string
@@ -587,7 +596,10 @@ export type Database = {
           serial_hash?: string
           serial_number?: string
           status?: string
+          token_id?: number | null
           updated_at?: string
+          voucher?: Json | null
+          voucher_signature?: string | null
         }
         Relationships: [
           {
