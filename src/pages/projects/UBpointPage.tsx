@@ -1,6 +1,7 @@
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef, useState, forwardRef } from 'react';
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 /* ---------- Splash intro context ---------- */
 const SplashContext = createContext<{ ready: boolean }>({ ready: true });
@@ -10,6 +11,7 @@ const splashTransition = (i: number) => ({
   duration: 0.75,
   ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
 });
+
 import {
   ArrowRight,
   ShieldCheck,
@@ -57,21 +59,67 @@ const WHATSAPP_URL = 'https://chat.whatsapp.com/HnTcuJYiKAiDpLPnG33mEr';
 const SPONSOR_EMAIL = 'mailto:info@utaab.org?subject=UBpoint%20Sponsor%20Inquiry';
 const UBPOINT_APP_URL = 'https://ubpoint.app/';
 
-/* ---------- Light Navbar (page-local) ---------- */
-const navLinks = [
-  { href: '#features', label: 'Features' },
-  { href: '#showcase', label: 'Inside the app' },
-  { href: '#sponsors', label: 'Sponsors' },
-  { href: '#rewards', label: 'Rewards' },
+/* ---------- Asset preload registry ---------- */
+const HERO_CRITICAL_ASSETS = [logoAsset.url, mockupAsset.url, utaabCoinAsset.url];
+const DECORATIVE_ASSETS = [
+  tonCoinAsset.url,
+  ethCoinAsset.url,
+  btcCoinAsset.url,
+  goldCoinAsset.url,
+  goldBarAsset.url,
+  steamAsset.url,
+  titaniumBarAsset.url,
+  silverBarAsset.url,
+  gamepadAsset.url,
+  usdtAngleAsset.url,
+  tryAngleAsset.url,
 ];
+const ALL_ASSETS = [...HERO_CRITICAL_ASSETS, ...DECORATIVE_ASSETS];
+
+/* ---------- FadeImg: drop-in <img> that fades in on load ---------- */
+interface FadeImgProps extends React.ImgHTMLAttributes<HTMLImageElement> {}
+const FadeImg = forwardRef<HTMLImageElement, FadeImgProps>(
+  ({ onLoad, style, ...props }, ref) => {
+    const [loaded, setLoaded] = useState(false);
+    return (
+      <img
+        ref={ref}
+        {...props}
+        onLoad={(e) => {
+          setLoaded(true);
+          onLoad?.(e);
+        }}
+        style={{
+          opacity: loaded ? 1 : 0,
+          transition: 'opacity 600ms cubic-bezier(0.16,1,0.3,1)',
+          ...style,
+        }}
+      />
+    );
+  },
+);
+FadeImg.displayName = 'FadeImg';
+
+/* ---------- Light Navbar (page-local) ---------- */
+const useNavLinks = () => {
+  const { t } = useTranslation();
+  return [
+    { href: '#features', label: t('projects.ubpointPage.nav.features') },
+    { href: '#showcase', label: t('projects.ubpointPage.nav.insideApp') },
+    { href: '#sponsors', label: t('projects.ubpointPage.nav.sponsors') },
+    { href: '#rewards', label: t('projects.ubpointPage.nav.rewards') },
+  ];
+};
 
 const LightNavbar = () => {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
+  const navLinks = useNavLinks();
   return (
     <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-blue-100">
       <div className="max-w-7xl mx-auto px-5 md:px-6 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2.5">
-          <img src={logoAsset.url} alt="UBpoint" className="h-9 w-auto" />
+          <FadeImg src={logoAsset.url} alt="UBpoint" className="h-9 w-auto" />
           <span className="text-base font-extrabold tracking-tight text-slate-900">UBpoint</span>
         </Link>
         <nav className="hidden md:flex items-center gap-7">
@@ -84,7 +132,7 @@ const LightNavbar = () => {
         <div className="flex items-center gap-2">
           <a href={UBPOINT_APP_URL} target="_blank" rel="noopener noreferrer" className="hidden sm:inline-block">
             <Button className="h-9 px-4 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white text-sm font-semibold shadow-[0_8px_24px_-10px_rgba(37,99,235,0.6)]">
-              Open App
+              {t('projects.ubpointPage.nav.openApp')}
             </Button>
           </a>
           <button
@@ -111,7 +159,7 @@ const LightNavbar = () => {
             ))}
             <a href={UBPOINT_APP_URL} target="_blank" rel="noopener noreferrer" className="mt-2">
               <Button className="w-full h-10 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm font-semibold">
-                Open App
+                {t('projects.ubpointPage.nav.openApp')}
               </Button>
             </a>
           </div>
@@ -122,71 +170,77 @@ const LightNavbar = () => {
 };
 
 /* ---------- Light Footer (page-local) ---------- */
-const LightFooter = () => (
-  <footer className="relative bg-blue-50/60 border-t border-blue-100">
-    <div className="max-w-7xl mx-auto px-6 py-14 grid gap-10 md:grid-cols-4">
-      <div className="md:col-span-2">
-        <div className="flex items-center gap-2.5">
-          <img src={logoAsset.url} alt="UBpoint" className="h-9 w-auto" />
-          <span className="text-lg font-extrabold tracking-tight text-slate-900">UBpoint</span>
+const LightFooter = () => {
+  const { t } = useTranslation();
+  const navLinks = useNavLinks();
+  return (
+    <footer className="relative bg-blue-50/60 border-t border-blue-100">
+      <div className="max-w-7xl mx-auto px-6 py-14 grid gap-10 md:grid-cols-4">
+        <div className="md:col-span-2">
+          <div className="flex items-center gap-2.5">
+            <FadeImg src={logoAsset.url} alt="UBpoint" className="h-9 w-auto" />
+            <span className="text-lg font-extrabold tracking-tight text-slate-900">UBpoint</span>
+          </div>
+          <p className="mt-4 text-sm text-slate-600 max-w-md leading-relaxed">
+            {t('projects.ubpointPage.footer.tagline')}
+          </p>
+          <div className="mt-5 flex items-center gap-2">
+            {[
+              { href: 'https://www.linkedin.com/company/utaa-blockchain/', icon: Linkedin },
+              { href: 'https://t.me/utaa_blockchain', icon: Send },
+              { href: 'https://x.com/utaa_blockchain?s=11', icon: Twitter },
+              { href: 'mailto:info@utaab.org', icon: Mail },
+            ].map((s, i) => (
+              <a
+                key={i}
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-white border border-blue-100 flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-colors"
+              >
+                <s.icon className="w-4 h-4" />
+              </a>
+            ))}
+          </div>
         </div>
-        <p className="mt-4 text-sm text-slate-600 max-w-md leading-relaxed">
-          UTAAB's blockchain-powered student engagement platform. Earn UBP, unlock rewards,
-          and verify every action on-chain.
-        </p>
-        <div className="mt-5 flex items-center gap-2">
-          {[
-            { href: 'https://www.linkedin.com/company/utaa-blockchain/', icon: Linkedin },
-            { href: 'https://t.me/utaa_blockchain', icon: Send },
-            { href: 'https://x.com/utaa_blockchain?s=11', icon: Twitter },
-            { href: 'mailto:info@utaab.org', icon: Mail },
-          ].map((s, i) => (
-            <a
-              key={i}
-              href={s.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full bg-white border border-blue-100 flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-colors"
-            >
-              <s.icon className="w-4 h-4" />
-            </a>
-          ))}
+        <div>
+          <div className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
+            {t('projects.ubpointPage.footer.product')}
+          </div>
+          <ul className="space-y-2 text-sm">
+            {navLinks.map((l) => (
+              <li key={l.href}>
+                <a href={l.href} className="text-slate-700 hover:text-blue-600">{l.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <div className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
+            {t('projects.ubpointPage.footer.community')}
+          </div>
+          <ul className="space-y-2 text-sm">
+            <li><Link to="/" className="text-slate-700 hover:text-blue-600">{t('projects.ubpointPage.footer.utaabHome')}</Link></li>
+            <li><Link to="/projects" className="text-slate-700 hover:text-blue-600">{t('projects.ubpointPage.footer.allProjects')}</Link></li>
+            <li><a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="text-slate-700 hover:text-blue-600">{t('projects.ubpointPage.footer.whatsapp')}</a></li>
+            <li><a href={SPONSOR_EMAIL} className="text-slate-700 hover:text-blue-600">{t('projects.ubpointPage.footer.becomeSponsor')}</a></li>
+          </ul>
         </div>
       </div>
-      <div>
-        <div className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Product</div>
-        <ul className="space-y-2 text-sm">
-          {navLinks.map((l) => (
-            <li key={l.href}>
-              <a href={l.href} className="text-slate-700 hover:text-blue-600">{l.label}</a>
-            </li>
-          ))}
-        </ul>
+      <div className="border-t border-blue-100">
+        <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+          <div>© {new Date().getFullYear()} UTAAB · UBpoint. {t('projects.ubpointPage.footer.rights')}</div>
+          <div>{t('projects.ubpointPage.footer.builtOn')}</div>
+        </div>
       </div>
-      <div>
-        <div className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Community</div>
-        <ul className="space-y-2 text-sm">
-          <li><Link to="/" className="text-slate-700 hover:text-blue-600">UTAAB Home</Link></li>
-          <li><Link to="/projects" className="text-slate-700 hover:text-blue-600">All Projects</Link></li>
-          <li><a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="text-slate-700 hover:text-blue-600">WhatsApp Community</a></li>
-          <li><a href={SPONSOR_EMAIL} className="text-slate-700 hover:text-blue-600">Become a Sponsor</a></li>
-        </ul>
-      </div>
-    </div>
-    <div className="border-t border-blue-100">
-      <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
-        <div>© {new Date().getFullYear()} UTAAB · UBpoint. All rights reserved.</div>
-        <div>Built on Base · utaab.org</div>
-      </div>
-    </div>
-  </footer>
-);
+    </footer>
+  );
+};
 
 /* ---------- Decorative background ---------- */
 const HeroBackground = () => (
   <div aria-hidden className="absolute inset-0 overflow-hidden pointer-events-none">
     <div className="absolute inset-0 bg-gradient-to-b from-white via-blue-50/60 to-white" />
-    {/* grid */}
     <div
       className="absolute inset-0 opacity-[0.07]"
       style={{
@@ -197,7 +251,6 @@ const HeroBackground = () => (
           'radial-gradient(ellipse at center, rgba(0,0,0,0.9), transparent 75%)',
       }}
     />
-    {/* orbs */}
     <motion.div
       className="absolute -top-32 -left-24 w-[420px] h-[420px] rounded-full bg-blue-400/30 blur-3xl"
       animate={{ y: [0, 30, 0], x: [0, 20, 0] }}
@@ -213,7 +266,6 @@ const HeroBackground = () => (
       animate={{ y: [0, -20, 0] }}
       transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
     />
-    {/* particles */}
     {Array.from({ length: 18 }).map((_, i) => (
       <motion.span
         key={i}
@@ -241,13 +293,12 @@ const FloatingDevice = () => {
     { src: steamAsset.url, cls: 'top-4 -left-8 md:-left-16 w-16 md:w-24', glow: 'rgba(37,99,235,0.45)', dur: 10, delay: 1.3 },
     { src: gamepadAsset.url, cls: 'bottom-8 -right-10 md:-right-20 w-20 md:w-28', glow: 'rgba(96,165,250,0.4)', dur: 11, delay: 0.6 },
   ];
+  const { t } = useTranslation();
 
   return (
     <div className="relative w-full max-w-[360px] md:max-w-[420px] mx-auto">
-      {/* glow */}
       <div className="absolute inset-0 -m-10 bg-gradient-to-br from-blue-400/40 via-blue-500/30 to-blue-600/20 blur-3xl rounded-full" />
 
-      {/* back-layer coin cluster behind the phone */}
       <div aria-hidden className="absolute inset-0 -m-16 md:-m-24 pointer-events-none">
         {backCoins.map((c, i) => (
           <motion.div
@@ -288,7 +339,6 @@ const FloatingDevice = () => {
         </motion.div>
       </motion.div>
 
-      {/* orbiting toast */}
       <motion.div
         className="absolute -left-4 md:-left-12 top-12 backdrop-blur-xl bg-white/80 border border-blue-100 rounded-2xl px-3.5 py-2.5 shadow-xl flex items-center gap-2"
         initial={{ opacity: 0, scale: 0.3, filter: 'blur(8px)' }}
@@ -304,13 +354,12 @@ const FloatingDevice = () => {
             <BadgeCheck className="w-4 h-4 text-white" />
           </div>
           <div className="text-left">
-            <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">Earned</div>
-            <div className="text-sm font-bold text-slate-900">+50 UBP</div>
+            <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">{t('projects.ubpointPage.hero.earned')}</div>
+            <div className="text-sm font-bold text-slate-900">{t('projects.ubpointPage.hero.ubp50')}</div>
           </div>
         </motion.div>
       </motion.div>
 
-      {/* orbiting verify badge */}
       <motion.div
         className="absolute -right-2 md:-right-10 bottom-24 backdrop-blur-xl bg-white/80 border border-blue-100 rounded-2xl px-3.5 py-2.5 shadow-xl flex items-center gap-2"
         initial={{ opacity: 0, scale: 0.3, filter: 'blur(8px)' }}
@@ -326,13 +375,12 @@ const FloatingDevice = () => {
             <ShieldCheck className="w-4 h-4 text-blue-600" />
           </div>
           <div className="text-left">
-            <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">On-chain</div>
-            <div className="text-sm font-bold text-slate-900">Verified · Base</div>
+            <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">{t('projects.ubpointPage.hero.onChain')}</div>
+            <div className="text-sm font-bold text-slate-900">{t('projects.ubpointPage.hero.verifiedBase')}</div>
           </div>
         </motion.div>
       </motion.div>
 
-      {/* floating UTAAB coin */}
       <motion.div
         className="absolute -left-10 md:-left-20 bottom-4 w-24 md:w-32 pointer-events-none"
         initial={{ opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
@@ -383,127 +431,132 @@ const FloatingDevice = () => {
 };
 
 /* ---------- Hero ---------- */
-const Hero = () => (
-  <section className="relative pt-28 md:pt-36 pb-20 md:pb-32 overflow-hidden">
-    <HeroBackground />
-    <div className="relative max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 md:gap-8 items-center">
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: 'easeOut' }}
-      >
-        <img
-          src={logoAsset.url}
-          alt="UBpoint"
-          className="h-16 md:h-20 w-auto mb-6 drop-shadow-[0_10px_30px_rgba(37,99,235,0.3)]"
-        />
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold mb-6">
-          <CircleDot className="w-3.5 h-3.5" />
-          UTAAB · Blockchain Engagement Platform
-        </div>
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.05]">
-          Turn Participation Into{' '}
-          <span className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
-            Opportunity
-          </span>
-        </h1>
-        <p className="mt-6 text-base sm:text-lg md:text-xl text-slate-600 max-w-xl leading-relaxed">
-          UBpoint is UTAAB's blockchain-powered student engagement platform. Attend events,
-          contribute to projects, join hackathons, and earn verifiable on-chain rewards.
-        </p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <a href={UBPOINT_APP_URL} target="_blank" rel="noopener noreferrer">
-            <Button className="h-12 px-6 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-[0_10px_30px_-10px_rgba(37,99,235,0.6)] rounded-full">
-              Launch App
-              <ArrowRight className="ml-2 w-4 h-4" />
-            </Button>
-          </a>
-          <a href="#rewards">
-            <Button
-              variant="outline"
-              className="h-12 px-6 rounded-full !bg-white !text-slate-900 border-blue-200 hover:!bg-blue-50 hover:!text-slate-900 shadow-[0_8px_24px_-12px_rgba(37,99,235,0.4)]"
-            >
-              View Rewards
-            </Button>
-          </a>
-        </div>
-
-        <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-500">
-          <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            Live on Base
+const Hero = () => {
+  const { t } = useTranslation();
+  return (
+    <section className="relative pt-28 md:pt-36 pb-20 md:pb-32 overflow-hidden">
+      <HeroBackground />
+      <div className="relative max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 md:gap-8 items-center">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: 'easeOut' }}
+        >
+          <FadeImg
+            src={logoAsset.url}
+            alt="UBpoint"
+            className="h-16 md:h-20 w-auto mb-6 drop-shadow-[0_10px_30px_rgba(37,99,235,0.3)]"
+          />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold mb-6">
+            <CircleDot className="w-3.5 h-3.5" />
+            {t('projects.ubpointPage.hero.kicker')}
           </div>
-          <div className="flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-blue-500" />
-            On-chain verified
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.05]">
+            {t('projects.ubpointPage.hero.titleStart')}{' '}
+            <span className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+              {t('projects.ubpointPage.hero.titleAccent')}
+            </span>
+          </h1>
+          <p className="mt-6 text-base sm:text-lg md:text-xl text-slate-600 max-w-xl leading-relaxed">
+            {t('projects.ubpointPage.hero.subtitle')}
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <a href={UBPOINT_APP_URL} target="_blank" rel="noopener noreferrer">
+              <Button className="h-12 px-6 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-[0_10px_30px_-10px_rgba(37,99,235,0.6)] rounded-full">
+                {t('projects.ubpointPage.hero.launchApp')}
+                <ArrowRight className="ml-2 w-4 h-4" />
+              </Button>
+            </a>
+            <a href="#rewards">
+              <Button
+                variant="outline"
+                className="h-12 px-6 rounded-full !bg-white !text-slate-900 border-blue-200 hover:!bg-blue-50 hover:!text-slate-900 shadow-[0_8px_24px_-12px_rgba(37,99,235,0.4)]"
+              >
+                {t('projects.ubpointPage.hero.viewRewards')}
+              </Button>
+            </a>
           </div>
-        </div>
-      </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.9, delay: 0.2, ease: 'easeOut' }}
-      >
-        <FloatingDevice />
-      </motion.div>
-    </div>
-  </section>
-);
+          <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-500">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+              {t('projects.ubpointPage.hero.liveOnBase')}
+            </div>
+            <div className="flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-blue-500" />
+              {t('projects.ubpointPage.hero.onChainVerified')}
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.9, delay: 0.2, ease: 'easeOut' }}
+        >
+          <FloatingDevice />
+        </motion.div>
+      </div>
+    </section>
+  );
+};
 
 /* ---------- Feature grid ---------- */
-const features = [
-  { icon: Wallet, title: 'Earn UBP', desc: 'Receive points for attending events, contributing to community projects, and participating in hackathons.' },
-  { icon: Tag, title: 'Unlock Rewards', desc: 'Redeem UBP for partner discounts, Steam gift cards, tokenized assets, silver, gold, and future ecosystem rewards.' },
-  { icon: ShieldCheck, title: 'On-Chain Verification', desc: 'Every UBpoint transaction is verifiable on Base. See our official identifiers below.' },
-  { icon: GraduationCap, title: 'Student Identity', desc: 'Build a verifiable portfolio of participation, contributions, and achievements.' },
-  { icon: Medal, title: 'Leaderboards', desc: 'Compete with community members and climb the rankings.' },
-  { icon: Compass, title: 'Campus Engagement', desc: 'Transform university activities into measurable achievements.' },
-];
+const featureDefs = [
+  { key: 'earnUbp', icon: Wallet },
+  { key: 'unlockRewards', icon: Tag },
+  { key: 'onChainVerification', icon: ShieldCheck },
+  { key: 'studentIdentity', icon: GraduationCap },
+  { key: 'leaderboards', icon: Medal },
+  { key: 'campusEngagement', icon: Compass },
+] as const;
 
-const FeatureGrid = () => (
-  <section id="features" className="relative py-24 md:py-32 bg-white">
-    <div className="max-w-7xl mx-auto px-6">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: 0.6 }}
-        className="text-center max-w-2xl mx-auto mb-16"
-      >
-        <div className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-4">
-          The platform
+const FeatureGrid = () => {
+  const { t } = useTranslation();
+  return (
+    <section id="features" className="relative py-24 md:py-32 bg-white">
+      <div className="max-w-7xl mx-auto px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-2xl mx-auto mb-16"
+        >
+          <div className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-4">
+            {t('projects.ubpointPage.features.eyebrow')}
+          </div>
+          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
+            {t('projects.ubpointPage.features.title')}
+          </h2>
+          <p className="mt-4 text-slate-600 md:text-lg">
+            {t('projects.ubpointPage.features.subtitle')}
+          </p>
+        </motion.div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {featureDefs.map((f, i) => (
+            <motion.div
+              key={f.key}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.5, delay: i * 0.06 }}
+              className="group relative p-6 rounded-2xl bg-white/70 backdrop-blur-xl border border-blue-100 shadow-[0_10px_30px_-15px_rgba(37,99,235,0.25)] hover:shadow-[0_20px_50px_-20px_rgba(37,99,235,0.45)] hover:-translate-y-1 transition-all"
+            >
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center mb-4 shadow-lg shadow-blue-500/30">
+                <f.icon className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">{t(`projects.ubpointPage.features.items.${f.key}.t`)}</h3>
+              <p className="text-sm text-slate-600 leading-relaxed">{t(`projects.ubpointPage.features.items.${f.key}.d`)}</p>
+              <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-blue-300/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            </motion.div>
+          ))}
         </div>
-        <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
-          Built for the next generation of students
-        </h2>
-        <p className="mt-4 text-slate-600 md:text-lg">
-          Six pillars that turn every event, hackathon, and contribution into measurable, on-chain value.
-        </p>
-      </motion.div>
-
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {features.map((f, i) => (
-          <motion.div
-            key={f.title}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.5, delay: i * 0.06 }}
-            className="group relative p-6 rounded-2xl bg-white/70 backdrop-blur-xl border border-blue-100 shadow-[0_10px_30px_-15px_rgba(37,99,235,0.25)] hover:shadow-[0_20px_50px_-20px_rgba(37,99,235,0.45)] hover:-translate-y-1 transition-all"
-          >
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center mb-4 shadow-lg shadow-blue-500/30">
-              <f.icon className="w-6 h-6 text-white" />
-            </div>
-            <h3 className="text-lg font-bold text-slate-900 mb-2">{f.title}</h3>
-            <p className="text-sm text-slate-600 leading-relaxed">{f.desc}</p>
-            <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-blue-300/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          </motion.div>
-        ))}
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 /* ---------- Verified On-Chain ---------- */
 const BASE_NAME = 'utaablockchain.base.eth';
@@ -511,6 +564,7 @@ const BASE_WALLET = '0x4fF797906D7B56F9Bd2Db382BcB36C97d69A43A9';
 const BASESCAN_URL = `https://basescan.org/address/${BASE_WALLET}`;
 
 const VerifiedOnChain = () => {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState<string | null>(null);
   const copy = (value: string, key: string) => {
     navigator.clipboard?.writeText(value);
@@ -530,23 +584,22 @@ const VerifiedOnChain = () => {
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-4">
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            Live on Base
+            {t('projects.ubpointPage.verified.eyebrow')}
           </div>
           <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight flex items-center justify-center gap-3">
             <ShieldCheck className="w-8 h-8 md:w-10 md:h-10 text-blue-600" />
-            Verified On-Chain
+            {t('projects.ubpointPage.verified.title')}
           </h2>
           <p className="mt-4 text-slate-600 md:text-lg leading-relaxed">
-            Stay safu. Always verify before you interact. UBpoint is officially registered on Base —
-            these are our only verified identifiers. Do not trust any other address claiming to be UBpoint.
+            {t('projects.ubpointPage.verified.subtitle')}
           </p>
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-5">
           {[
-            { label: 'Base Name', value: BASE_NAME, key: 'name', mono: false },
-            { label: 'Official Wallet', value: BASE_WALLET, display: '0x4fF7…43A9', key: 'wallet', mono: true },
-          ].map((item) => (
+            { label: t('projects.ubpointPage.verified.baseName'), value: BASE_NAME, key: 'name', mono: false },
+            { label: t('projects.ubpointPage.verified.officialWallet'), value: BASE_WALLET, display: '0x4fF7…43A9', key: 'wallet', mono: true },
+          ].map((item: any) => (
             <motion.div
               key={item.key}
               initial={{ opacity: 0, y: 20 }}
@@ -568,7 +621,7 @@ const VerifiedOnChain = () => {
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold hover:bg-blue-100 transition-colors"
                 >
                   <Copy className="w-3.5 h-3.5" />
-                  {copied === item.key ? 'Copied' : 'Copy'}
+                  {copied === item.key ? t('projects.ubpointPage.verified.copied') : t('projects.ubpointPage.verified.copy')}
                 </button>
                 <a
                   href={BASESCAN_URL}
@@ -577,7 +630,7 @@ const VerifiedOnChain = () => {
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-blue-100 text-slate-600 text-xs font-semibold hover:text-blue-700 hover:border-blue-200 transition-colors"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
-                  View on Basescan
+                  {t('projects.ubpointPage.verified.viewOnBasescan')}
                 </a>
               </div>
             </motion.div>
@@ -588,32 +641,25 @@ const VerifiedOnChain = () => {
   );
 };
 
-
-
 /* ---------- Inside the app — horizontal scroll showcase ---------- */
-const showcase = [
-  { title: 'Home Dashboard', hint: 'Your UBP balance and progress at a glance', kind: 'real' as const },
-  { title: 'Rewards Marketplace', hint: 'Redeem points for partner perks', kind: 'rewards' as const },
-  { title: 'Student Wallet', hint: 'Verified, stay safe', kind: 'wallet' as const },
-  { title: 'Leaderboard', hint: 'See where you rank on campus', kind: 'leaderboard' as const },
-  { title: 'Events', hint: 'Discover and check in on-chain', kind: 'events' as const },
-  { title: 'Profile Analytics', hint: 'Your verified contribution history', kind: 'analytics' as const },
-];
+const showcaseDefs = [
+  { kind: 'real', key: 'homeDashboard' },
+  { kind: 'rewards', key: 'rewardsMarketplace' },
+  { kind: 'wallet', key: 'studentWallet' },
+  { kind: 'leaderboard', key: 'leaderboard' },
+  { kind: 'events', key: 'events' },
+  { kind: 'analytics', key: 'profileAnalytics' },
+] as const;
 
 const PhoneFrame: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div className="relative mx-auto w-[250px] h-[510px] rounded-[52px] bg-gradient-to-b from-slate-700 via-slate-900 to-black p-[3px] shadow-[0_30px_60px_-20px_rgba(15,23,42,0.55)] ring-1 ring-white/10">
-    {/* metallic inner bezel */}
     <div className="relative w-full h-full rounded-[49px] bg-black p-[2px] overflow-hidden">
-      {/* screen */}
       <div className="relative w-full h-full rounded-[47px] bg-white overflow-hidden">
         {children}
-        {/* Dynamic Island */}
         <div className="absolute top-2 left-1/2 -translate-x-1/2 w-[78px] h-[22px] rounded-full bg-black z-20 shadow-[inset_0_0_2px_rgba(255,255,255,0.15)]" />
-        {/* top reflection */}
         <div className="pointer-events-none absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-white/40 to-transparent z-10" />
       </div>
     </div>
-    {/* side buttons */}
     <span className="absolute left-[-2px] top-[110px] h-7 w-[3px] rounded-l-sm bg-slate-700" />
     <span className="absolute left-[-2px] top-[160px] h-12 w-[3px] rounded-l-sm bg-slate-700" />
     <span className="absolute left-[-2px] top-[220px] h-12 w-[3px] rounded-l-sm bg-slate-700" />
@@ -622,11 +668,12 @@ const PhoneFrame: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 );
 
 
-const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind }) => {
+const MockScreen: React.FC<{ kind: typeof showcaseDefs[number]['kind'] }> = ({ kind }) => {
+  const { t } = useTranslation();
   const Header = (
     <div className="px-4 pt-10 pb-3 flex items-center justify-between border-b border-slate-100">
       <div className="flex items-center gap-1.5">
-        <img src={logoAsset.url} alt="UBpoint" className="h-4 w-auto object-contain" />
+        <FadeImg src={logoAsset.url} alt="UBpoint" className="h-4 w-auto object-contain" />
         <span className="text-[11px] font-bold text-slate-900">UBpoint.</span>
       </div>
       <div className="px-2 py-0.5 rounded-full bg-blue-50 text-[9px] font-bold text-blue-700">200 UBP</div>
@@ -640,21 +687,21 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
         {Header}
         <div className="p-3 space-y-2.5 overflow-hidden">
           <div>
-            <div className="text-[9px] uppercase font-bold text-slate-500">Good morning</div>
+            <div className="text-[9px] uppercase font-bold text-slate-500">{t('projects.ubpointPage.inApp.goodMorning')}</div>
             <div className="text-[12px] font-extrabold text-slate-900">Alex Karimov</div>
           </div>
           <div className="p-3 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-400 text-white">
-            <div className="text-[9px] opacity-80">Total UBP</div>
+            <div className="text-[9px] opacity-80">{t('projects.ubpointPage.inApp.totalUbp')}</div>
             <div className="text-2xl font-extrabold mt-0.5 leading-tight">200.00</div>
             <div className="mt-1.5 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-white/20 text-[9px] font-bold">
-              <TrendingUp className="w-2.5 h-2.5" /> +50 this week
+              <TrendingUp className="w-2.5 h-2.5" /> {t('projects.ubpointPage.inApp.plus50')}
             </div>
           </div>
           <div className="grid grid-cols-3 gap-1.5">
             {[
-              { icon: Wallet, label: 'Earn' },
-              { icon: Tag, label: 'Redeem' },
-              { icon: Send, label: 'Send' },
+              { icon: Wallet, label: t('projects.ubpointPage.inApp.earn') },
+              { icon: Tag, label: t('projects.ubpointPage.inApp.redeem') },
+              { icon: Send, label: t('projects.ubpointPage.inApp.send') },
             ].map((a) => (
               <div key={a.label} className="flex flex-col items-center gap-1 p-1.5 rounded-lg bg-blue-50/60 border border-blue-100">
                 <a.icon className="w-3.5 h-3.5 text-blue-600" />
@@ -663,33 +710,33 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
             ))}
           </div>
           <div>
-            <div className="text-[9px] uppercase font-bold text-slate-500 mb-1">Recent</div>
+            <div className="text-[9px] uppercase font-bold text-slate-500 mb-1">{t('projects.ubpointPage.inApp.recent')}</div>
             <div className="space-y-1">
               {[
-                { l: 'Hackathon', a: '+50', pos: true },
-                { l: 'Workshop', a: '+25', pos: true },
-                { l: 'Reward', a: '-100', pos: false },
-              ].map((t) => (
-                <div key={t.l} className="flex items-center justify-between p-1.5 rounded-lg bg-white border border-slate-100">
+                { l: t('projects.ubpointPage.inApp.hackathon'), a: '+50', pos: true },
+                { l: t('projects.ubpointPage.inApp.workshop'), a: '+25', pos: true },
+                { l: t('projects.ubpointPage.inApp.reward'), a: '-100', pos: false },
+              ].map((tx) => (
+                <div key={tx.l} className="flex items-center justify-between p-1.5 rounded-lg bg-white border border-slate-100">
                   <div className="flex items-center gap-1.5">
-                    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${t.pos ? 'bg-green-50' : 'bg-slate-100'}`}>
-                      {t.pos ? (
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${tx.pos ? 'bg-green-50' : 'bg-slate-100'}`}>
+                      {tx.pos ? (
                         <ArrowDownLeft className="w-2.5 h-2.5 text-green-600" />
                       ) : (
                         <ArrowUpRight className="w-2.5 h-2.5 text-slate-500" />
                       )}
                     </div>
-                    <div className="text-[10px] font-semibold text-slate-800">{t.l}</div>
+                    <div className="text-[10px] font-semibold text-slate-800">{tx.l}</div>
                   </div>
-                  <div className={`text-[10px] font-bold ${t.pos ? 'text-green-600' : 'text-slate-900'}`}>{t.a} UBP</div>
+                  <div className={`text-[10px] font-bold ${tx.pos ? 'text-green-600' : 'text-slate-900'}`}>{tx.a} UBP</div>
                 </div>
               ))}
             </div>
           </div>
           <div className="flex items-center gap-2 p-2 rounded-lg bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100">
             <TrendingUp className="w-4 h-4 text-orange-500" />
-            <div className="text-[10px] font-bold text-slate-800">5 day streak</div>
-            <div className="ml-auto text-[9px] text-slate-500 font-semibold">Keep going</div>
+            <div className="text-[10px] font-bold text-slate-800">{t('projects.ubpointPage.inApp.streak')}</div>
+            <div className="ml-auto text-[9px] text-slate-500 font-semibold">{t('projects.ubpointPage.inApp.keepGoing')}</div>
           </div>
         </div>
       </div>
@@ -697,20 +744,20 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
   }
   if (kind === 'rewards') {
     const rewardItems = [
-      { label: 'Steam Gift Card', price: '500 UBP', img: steamAsset.url },
-      { label: 'Silver Token', price: '1,200 UBP', img: titaniumBarAsset.url },
-      { label: 'Partner Discount', price: '250 UBP', img: goldCoinAsset.url },
-      { label: 'Gold Token', price: '5,000 UBP', img: goldBarAsset.url },
+      { label: t('projects.ubpointPage.inApp.items.steam'), price: '500 UBP', img: steamAsset.url },
+      { label: t('projects.ubpointPage.inApp.items.silver'), price: '1,200 UBP', img: titaniumBarAsset.url },
+      { label: t('projects.ubpointPage.inApp.items.partner'), price: '250 UBP', img: goldCoinAsset.url },
+      { label: t('projects.ubpointPage.inApp.items.gold'), price: '5,000 UBP', img: goldBarAsset.url },
     ];
     return (
       <div className="h-full flex flex-col overflow-hidden">
         {Header}
         <div className="p-3 space-y-2 overflow-hidden">
-          <div className="text-[10px] uppercase font-bold text-slate-500">Rewards</div>
+          <div className="text-[10px] uppercase font-bold text-slate-500">{t('projects.ubpointPage.inApp.rewards')}</div>
           {rewardItems.map((r) => (
             <div key={r.label} className="flex items-center justify-between p-2 rounded-lg bg-blue-50/60 border border-blue-100">
               <div className="flex items-center gap-2">
-                <img src={r.img} alt="" className="w-7 h-7 object-contain drop-shadow" />
+                <FadeImg src={r.img} alt="" className="w-7 h-7 object-contain drop-shadow" />
                 <div className="text-[10px] font-semibold text-slate-900">{r.label}</div>
               </div>
               <div className="text-[9px] font-bold text-blue-700">{r.price}</div>
@@ -725,14 +772,18 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
       <div className="h-full flex flex-col overflow-hidden">
         {Header}
         <div className="p-4 overflow-hidden">
-          <div className="text-[10px] uppercase font-bold text-slate-500">Wallet</div>
+          <div className="text-[10px] uppercase font-bold text-slate-500">{t('projects.ubpointPage.inApp.wallet')}</div>
           <div className="mt-2 p-4 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-400 text-white">
-            <div className="text-[10px] opacity-80">UBP Token</div>
+            <div className="text-[10px] opacity-80">{t('projects.ubpointPage.inApp.ubpToken')}</div>
             <div className="text-3xl font-extrabold mt-1">200.00</div>
             <div className="text-[9px] mt-3 opacity-80">utaablockchain.base.eth · Base</div>
           </div>
           <div className="mt-3 space-y-1.5">
-            {[['+50 UBP', 'Hackathon'], ['+25 UBP', 'Workshop'], ['-100 UBP', 'Reward redeem']].map(([a, l]) => (
+            {[
+              ['+50 UBP', t('projects.ubpointPage.inApp.hackathon')],
+              ['+25 UBP', t('projects.ubpointPage.inApp.workshop')],
+              ['-100 UBP', t('projects.ubpointPage.inApp.rewardRedeem')],
+            ].map(([a, l]) => (
               <div key={l} className="flex justify-between text-[10px] py-1 border-b border-slate-100">
                 <span className="text-slate-600">{l}</span>
                 <span className={a.startsWith('+') ? 'text-green-600 font-bold' : 'text-slate-900 font-bold'}>{a}</span>
@@ -748,7 +799,7 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
       <div className="h-full flex flex-col overflow-hidden">
         {Header}
         <div className="p-3 overflow-hidden">
-          <div className="text-[10px] uppercase font-bold text-slate-500 mb-2">Leaderboard</div>
+          <div className="text-[10px] uppercase font-bold text-slate-500 mb-2">{t('projects.ubpointPage.inApp.leaderboard')}</div>
           {[['1', 'cryptostudent.eth', '1,820'], ['2', 'utaab.devon', '1,540'], ['3', 'you', '1,210'], ['4', 'web3.zara', '980'], ['5', 'base.kai', '740']].map(([r, n, p]) => (
             <div key={r} className={`flex items-center gap-2 p-2 rounded-lg mb-1.5 ${n === 'you' ? 'bg-blue-50 border border-blue-200' : 'bg-slate-50'}`}>
               <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${r === '1' ? 'bg-amber-400 text-white' : 'bg-slate-200 text-slate-700'}`}>{r}</div>
@@ -765,11 +816,15 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
       <div className="h-full flex flex-col overflow-hidden">
         {Header}
         <div className="p-3 space-y-2 overflow-hidden">
-          <div className="text-[10px] uppercase font-bold text-slate-500">Upcoming</div>
-          {[['Web3 Hackathon', 'Nov 12 · +100 UBP'], ['Solidity Workshop', 'Nov 18 · +30 UBP'], ['Base Meetup', 'Nov 25 · +25 UBP']].map(([t, d]) => (
-            <div key={t} className="p-2.5 rounded-xl bg-white border border-blue-100">
+          <div className="text-[10px] uppercase font-bold text-slate-500">{t('projects.ubpointPage.inApp.upcoming')}</div>
+          {[
+            [t('projects.ubpointPage.inApp.events.hackathon'), 'Nov 12 · +100 UBP'],
+            [t('projects.ubpointPage.inApp.events.workshop'), 'Nov 18 · +30 UBP'],
+            [t('projects.ubpointPage.inApp.events.meetup'), 'Nov 25 · +25 UBP'],
+          ].map(([tt, d]) => (
+            <div key={tt} className="p-2.5 rounded-xl bg-white border border-blue-100">
               <div className="flex items-center justify-between">
-                <div className="text-[11px] font-bold text-slate-900">{t}</div>
+                <div className="text-[11px] font-bold text-slate-900">{tt}</div>
                 <div className="w-5 h-5 rounded-full bg-blue-50 flex items-center justify-center">
                   <ArrowUpRight className="w-3 h-3 text-blue-600" />
                 </div>
@@ -786,14 +841,19 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
     <div className="h-full flex flex-col overflow-hidden">
       {Header}
       <div className="p-3 overflow-hidden">
-        <div className="text-[10px] uppercase font-bold text-slate-500">Your activity</div>
+        <div className="text-[10px] uppercase font-bold text-slate-500">{t('projects.ubpointPage.inApp.yourActivity')}</div>
         <div className="mt-3 flex items-end gap-1.5 h-24">
           {[40, 60, 35, 80, 55, 90, 70].map((h, i) => (
             <div key={i} className="flex-1 rounded-t bg-gradient-to-t from-blue-200 to-blue-600" style={{ height: `${h}%` }} />
           ))}
         </div>
         <div className="mt-4 grid grid-cols-2 gap-2">
-          {[['Events', '12'], ['Hackathons', '3'], ['Projects', '5'], ['Rank', '#3']].map(([l, v]) => (
+          {[
+            [t('projects.ubpointPage.inApp.eventsLabel'), '12'],
+            [t('projects.ubpointPage.inApp.hackathonsLabel'), '3'],
+            [t('projects.ubpointPage.inApp.projectsLabel'), '5'],
+            [t('projects.ubpointPage.inApp.rankLabel'), '#3'],
+          ].map(([l, v]) => (
             <div key={l} className="p-2 rounded-lg bg-blue-50/60 border border-blue-100">
               <div className="text-[9px] uppercase font-bold text-slate-500">{l}</div>
               <div className="text-base font-extrabold text-slate-900">{v}</div>
@@ -807,6 +867,7 @@ const MockScreen: React.FC<{ kind: typeof showcase[number]['kind'] }> = ({ kind 
 
 
 const Showcase = () => {
+  const { t } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
   const x = useTransform(scrollYProgress, [0, 1], ['5%', '-30%']);
@@ -815,17 +876,17 @@ const Showcase = () => {
     <section id="showcase" className="relative py-24 md:py-32 bg-gradient-to-b from-white via-blue-50/40 to-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 mb-14 text-center">
         <div className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-4">
-          Inside the app
+          {t('projects.ubpointPage.showcase.eyebrow')}
         </div>
         <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
-          A pocket-sized student economy
+          {t('projects.ubpointPage.showcase.title')}
         </h2>
       </div>
       <div ref={ref} className="overflow-hidden">
         <motion.div style={{ x }} className="flex gap-12 md:gap-16 px-6 pt-6 pb-10">
-          {showcase.map((s, i) => (
+          {showcaseDefs.map((s, i) => (
             <motion.div
-              key={s.title}
+              key={s.key}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -833,15 +894,14 @@ const Showcase = () => {
               className="shrink-0 w-[260px] md:w-[300px] group"
             >
               <div className="relative transition-transform duration-500 group-hover:-translate-y-2">
-                {/* floor glow */}
                 <div aria-hidden className="absolute left-1/2 -translate-x-1/2 bottom-[-30px] w-[80%] h-12 rounded-full bg-blue-500/30 blur-2xl" />
                 <PhoneFrame>
                   <MockScreen kind={s.kind} />
                 </PhoneFrame>
               </div>
               <div className="mt-8 text-center">
-                <div className="text-base font-bold text-slate-900">{s.title}</div>
-                <div className="text-xs text-slate-500 mt-1">{s.hint}</div>
+                <div className="text-base font-bold text-slate-900">{t(`projects.ubpointPage.showcase.screens.${s.key}.t`)}</div>
+                <div className="text-xs text-slate-500 mt-1">{t(`projects.ubpointPage.showcase.screens.${s.key}.h`)}</div>
               </div>
             </motion.div>
           ))}
@@ -854,112 +914,108 @@ const Showcase = () => {
 };
 
 /* ---------- For Brands / Sponsors ---------- */
-const sponsorTasks = [
-  { icon: Twitter, label: 'Follow on X', reward: 10 },
-  { icon: MessageSquare, label: 'Join Discord', reward: 25 },
-  { icon: Send, label: 'Try the app', reward: 50 },
-];
+const sponsorTaskDefs = [
+  { key: 'twitter', icon: Twitter, reward: 10 },
+  { key: 'discord', icon: MessageSquare, reward: 25 },
+  { key: 'tryApp', icon: Send, reward: 50 },
+] as const;
 
 
-const Sponsors = () => (
-  <section id="sponsors" className="relative py-24 md:py-32 bg-white overflow-hidden">
-    <motion.img
-      src={goldCoinAsset.url}
-      alt=""
-      aria-hidden
-      className="hidden md:block absolute -left-10 bottom-10 w-32 opacity-70 drop-shadow-[0_20px_40px_rgba(202,138,4,0.35)] pointer-events-none"
-      animate={{ y: [0, -14, 0], rotateZ: [-6, 6, -6] }}
-      transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
-    />
-    <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-5">
-          <Building2 className="w-3.5 h-3.5" />
-          For Brands & Sponsors
-        </div>
-        <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
-          Real students. Real engagement.{' '}
-          <span className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
-            On-chain proof.
-          </span>
-        </h2>
-        <p className="mt-5 text-slate-600 md:text-lg leading-relaxed">
-          Companies fund task bounties on UBpoint to acquire and activate verified student users.
-          Each completion is recorded on Base — so every follow, signup, install, and event
-          attendance is provable, attributable, and free of bots.
-        </p>
-        <ul className="mt-6 space-y-3">
-          {[
-            'Verified university audience — no fake clicks',
-            'Pay only for completed, on-chain proven actions',
-            'Real retention, not vanity downloads',
-            'Sponsor dashboard with live conversion data',
-          ].map((p) => (
-            <li key={p} className="flex items-start gap-2.5 text-sm text-slate-700">
-              <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-              {p}
-            </li>
-          ))}
-        </ul>
-        <a href={SPONSOR_EMAIL} className="inline-block mt-8">
-          <Button className="h-12 px-6 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white rounded-full shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)]">
-            Become a Sponsor
-            <ArrowRight className="ml-2 w-4 h-4" />
-          </Button>
-        </a>
-      </motion.div>
+const Sponsors = () => {
+  const { t } = useTranslation();
+  const list = t('projects.ubpointPage.sponsors.list', { returnObjects: true }) as string[];
+  return (
+    <section id="sponsors" className="relative py-24 md:py-32 bg-white overflow-hidden">
+      <motion.img
+        src={goldCoinAsset.url}
+        alt=""
+        aria-hidden
+        className="hidden md:block absolute -left-10 bottom-10 w-32 opacity-70 drop-shadow-[0_20px_40px_rgba(202,138,4,0.35)] pointer-events-none"
+        animate={{ y: [0, -14, 0], rotateZ: [-6, 6, -6] }}
+        transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-5">
+            <Building2 className="w-3.5 h-3.5" />
+            {t('projects.ubpointPage.sponsors.eyebrow')}
+          </div>
+          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
+            {t('projects.ubpointPage.sponsors.titleStart')}{' '}
+            <span className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+              {t('projects.ubpointPage.sponsors.titleAccent')}
+            </span>
+          </h2>
+          <p className="mt-5 text-slate-600 md:text-lg leading-relaxed">
+            {t('projects.ubpointPage.sponsors.body')}
+          </p>
+          <ul className="mt-6 space-y-3">
+            {(Array.isArray(list) ? list : []).map((p) => (
+              <li key={p} className="flex items-start gap-2.5 text-sm text-slate-700">
+                <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                {p}
+              </li>
+            ))}
+          </ul>
+          <a href={SPONSOR_EMAIL} className="inline-block mt-8">
+            <Button className="h-12 px-6 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white rounded-full shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)]">
+              {t('projects.ubpointPage.sponsors.becomeSponsor')}
+              <ArrowRight className="ml-2 w-4 h-4" />
+            </Button>
+          </a>
+        </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="space-y-3"
-      >
-        <div className="text-xs uppercase tracking-wider font-bold text-slate-500 px-2">
-          Live sponsored tasks
-        </div>
-        {sponsorTasks.map((t, i) => (
-          <motion.div
-            key={t.label}
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: i * 0.08 }}
-            className="flex items-center gap-4 p-5 rounded-2xl bg-white border border-blue-100 shadow-[0_10px_30px_-15px_rgba(37,99,235,0.25)] hover:shadow-[0_20px_50px_-20px_rgba(37,99,235,0.4)] transition-all"
-          >
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shrink-0">
-              <t.icon className="w-5 h-5 text-white" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <div className="text-sm font-bold text-slate-900">{t.label}</div>
-                <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-blue-50 text-[10px] font-bold text-blue-700">
-                  <ShieldCheck className="w-3 h-3" /> Verified
-                </div>
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="space-y-3"
+        >
+          <div className="text-xs uppercase tracking-wider font-bold text-slate-500 px-2">
+            {t('projects.ubpointPage.sponsors.liveSponsoredTasks')}
+          </div>
+          {sponsorTaskDefs.map((tk, i) => (
+            <motion.div
+              key={tk.key}
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: i * 0.08 }}
+              className="flex items-center gap-4 p-5 rounded-2xl bg-white border border-blue-100 shadow-[0_10px_30px_-15px_rgba(37,99,235,0.25)] hover:shadow-[0_20px_50px_-20px_rgba(37,99,235,0.4)] transition-all"
+            >
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shrink-0">
+                <tk.icon className="w-5 h-5 text-white" />
               </div>
-              <div className="text-xs text-slate-500 mt-0.5">Sponsored · Partner Brand</div>
-            </div>
-            <div className="text-right">
-              <div className="text-lg font-extrabold text-blue-600">+{t.reward}</div>
-              <div className="text-[10px] uppercase font-bold text-slate-500">UBP</div>
-            </div>
-          </motion.div>
-        ))}
-        <div className="mt-4 p-4 rounded-2xl bg-blue-50/60 border border-blue-100 text-xs text-slate-600">
-          <span className="font-bold text-slate-900">How it works:</span> Sponsors define a task and
-          a UBP bounty. Students complete the action; UBpoint validates and records each completion
-          on Base. Brands receive verified user acquisition data without paying for bots.
-        </div>
-      </motion.div>
-    </div>
-  </section>
-);
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <div className="text-sm font-bold text-slate-900">{t(`projects.ubpointPage.sponsors.tasks.${tk.key}`)}</div>
+                  <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-blue-50 text-[10px] font-bold text-blue-700">
+                    <ShieldCheck className="w-3 h-3" /> {t('projects.ubpointPage.sponsors.verified')}
+                  </div>
+                </div>
+                <div className="text-xs text-slate-500 mt-0.5">{t('projects.ubpointPage.sponsors.sponsoredPartner')}</div>
+              </div>
+              <div className="text-right">
+                <div className="text-lg font-extrabold text-blue-600">+{tk.reward}</div>
+                <div className="text-[10px] uppercase font-bold text-slate-500">UBP</div>
+              </div>
+            </motion.div>
+          ))}
+          <div className="mt-4 p-4 rounded-2xl bg-blue-50/60 border border-blue-100 text-xs text-slate-600">
+            <span className="font-bold text-slate-900">{t('projects.ubpointPage.sponsors.howItWorksLabel')}</span>{' '}
+            {t('projects.ubpointPage.sponsors.howItWorks')}
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
 
 /* ---------- Metrics ---------- */
 const CountUp: React.FC<{ to: number; suffix?: string }> = ({ to, suffix = '' }) => {
@@ -982,111 +1038,116 @@ const CountUp: React.FC<{ to: number; suffix?: string }> = ({ to, suffix = '' })
   return <span ref={ref}>{val}{suffix}</span>;
 };
 
-const Metrics = () => (
-  <section id="rewards" className="relative py-24 md:py-32 bg-gradient-to-b from-white to-blue-50/50 overflow-hidden">
-    {[
-      { src: utaabCoinAsset.url, cls: 'hidden md:block -left-12 top-1/2 -translate-y-1/2 w-44', glow: 'rgba(37,99,235,0.4)', dur: 9, delay: 0 },
-      { src: goldBarAsset.url, cls: 'hidden md:block -right-10 top-12 w-36', glow: 'rgba(202,138,4,0.45)', dur: 11, delay: 0.3 },
-      { src: titaniumBarAsset.url, cls: 'hidden md:block right-20 top-2 w-24', glow: 'rgba(148,163,184,0.45)', dur: 10, delay: 1.1 },
-      { src: silverBarAsset.url, cls: 'hidden md:block left-24 bottom-4 w-24', glow: 'rgba(148,163,184,0.45)', dur: 12, delay: 0.6 },
-      { src: ethCoinAsset.url, cls: 'hidden md:block right-12 bottom-10 w-24', glow: 'rgba(100,116,139,0.4)', dur: 10, delay: 0.7 },
-      { src: btcCoinAsset.url, cls: 'absolute left-2 md:left-1/3 -top-2 md:top-4 w-14 md:w-20', glow: 'rgba(202,138,4,0.45)', dur: 9, delay: 0.4 },
-      { src: tonCoinAsset.url, cls: 'absolute right-2 md:right-1/3 -top-2 md:top-6 w-14 md:w-20', glow: 'rgba(37,99,235,0.5)', dur: 11, delay: 0.9 },
-      { src: usdtAngleAsset.url, cls: 'hidden md:block left-1/4 bottom-2 w-24', glow: 'rgba(16,185,129,0.45)', dur: 10, delay: 1.4 },
-      { src: tryAngleAsset.url, cls: 'hidden md:block right-1/4 top-1/3 w-24', glow: 'rgba(220,38,38,0.4)', dur: 12, delay: 0.2 },
-      { src: goldCoinAsset.url, cls: 'absolute right-4 md:left-10 bottom-2 md:bottom-16 w-12 md:w-20', glow: 'rgba(202,138,4,0.5)', dur: 10, delay: 0.5 },
-      { src: steamAsset.url, cls: 'hidden md:block right-8 top-8 w-24', glow: 'rgba(37,99,235,0.45)', dur: 11, delay: 1.6 },
-      { src: gamepadAsset.url, cls: 'absolute left-2 md:left-1/4 bottom-2 md:bottom-10 w-20 md:w-32', glow: 'rgba(96,165,250,0.4)', dur: 9, delay: 0.8 },
-
-    ].map((c, i) => (
-      <motion.img
-        key={i}
-        src={c.src}
-        alt=""
-        aria-hidden
-        className={`absolute ${c.cls} pointer-events-none select-none`}
-        style={{ filter: `drop-shadow(0 18px 32px ${c.glow})` }}
-        animate={{ y: [0, i % 2 === 0 ? -16 : 16, 0], rotateZ: [0, i % 2 === 0 ? 8 : -8, 0] }}
-        transition={{ duration: c.dur, repeat: Infinity, ease: 'easeInOut', delay: c.delay }}
-      />
-    ))}
-    <div className="max-w-6xl mx-auto px-6 relative">
-      <div className="text-center mb-14">
-        <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
-          A growing on-chain economy
-        </h2>
+const Metrics = () => {
+  const { t } = useTranslation();
+  return (
+    <section id="rewards" className="relative py-24 md:py-32 bg-gradient-to-b from-white to-blue-50/50 overflow-hidden">
+      {[
+        { src: utaabCoinAsset.url, cls: 'hidden md:block -left-12 top-1/2 -translate-y-1/2 w-44', glow: 'rgba(37,99,235,0.4)', dur: 9, delay: 0 },
+        { src: goldBarAsset.url, cls: 'hidden md:block -right-10 top-12 w-36', glow: 'rgba(202,138,4,0.45)', dur: 11, delay: 0.3 },
+        { src: titaniumBarAsset.url, cls: 'hidden md:block right-20 top-2 w-24', glow: 'rgba(148,163,184,0.45)', dur: 10, delay: 1.1 },
+        { src: silverBarAsset.url, cls: 'hidden md:block left-24 bottom-4 w-24', glow: 'rgba(148,163,184,0.45)', dur: 12, delay: 0.6 },
+        { src: ethCoinAsset.url, cls: 'hidden md:block right-12 bottom-10 w-24', glow: 'rgba(100,116,139,0.4)', dur: 10, delay: 0.7 },
+        { src: btcCoinAsset.url, cls: 'absolute left-2 md:left-1/3 -top-2 md:top-4 w-14 md:w-20', glow: 'rgba(202,138,4,0.45)', dur: 9, delay: 0.4 },
+        { src: tonCoinAsset.url, cls: 'absolute right-2 md:right-1/3 -top-2 md:top-6 w-14 md:w-20', glow: 'rgba(37,99,235,0.5)', dur: 11, delay: 0.9 },
+        { src: usdtAngleAsset.url, cls: 'hidden md:block left-1/4 bottom-2 w-24', glow: 'rgba(16,185,129,0.45)', dur: 10, delay: 1.4 },
+        { src: tryAngleAsset.url, cls: 'hidden md:block right-1/4 top-1/3 w-24', glow: 'rgba(220,38,38,0.4)', dur: 12, delay: 0.2 },
+        { src: goldCoinAsset.url, cls: 'absolute right-4 md:left-10 bottom-2 md:bottom-16 w-12 md:w-20', glow: 'rgba(202,138,4,0.5)', dur: 10, delay: 0.5 },
+        { src: steamAsset.url, cls: 'hidden md:block right-8 top-8 w-24', glow: 'rgba(37,99,235,0.45)', dur: 11, delay: 1.6 },
+        { src: gamepadAsset.url, cls: 'absolute left-2 md:left-1/4 bottom-2 md:bottom-10 w-20 md:w-32', glow: 'rgba(96,165,250,0.4)', dur: 9, delay: 0.8 },
+      ].map((c, i) => (
+        <motion.img
+          key={i}
+          src={c.src}
+          alt=""
+          aria-hidden
+          className={`absolute ${c.cls} pointer-events-none select-none`}
+          style={{ filter: `drop-shadow(0 18px 32px ${c.glow})` }}
+          animate={{ y: [0, i % 2 === 0 ? -16 : 16, 0], rotateZ: [0, i % 2 === 0 ? 8 : -8, 0] }}
+          transition={{ duration: c.dur, repeat: Infinity, ease: 'easeInOut', delay: c.delay }}
+        />
+      ))}
+      <div className="max-w-6xl mx-auto px-6 relative">
+        <div className="text-center mb-14">
+          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
+            {t('projects.ubpointPage.metrics.title')}
+          </h2>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          {[
+            { value: <><CountUp to={200} />+</>, label: t('projects.ubpointPage.metrics.distributed') },
+            { value: <><CountUp to={1} />+</>, label: t('projects.ubpointPage.metrics.events') },
+            { value: <><CountUp to={100} suffix="%" /></>, label: t('projects.ubpointPage.metrics.recorded') },
+            { value: '∞', label: t('projects.ubpointPage.metrics.futureEcosystem') },
+          ].map((m, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+              className="p-6 md:p-8 rounded-2xl bg-white/80 backdrop-blur-xl border border-blue-100 text-center shadow-[0_10px_30px_-15px_rgba(37,99,235,0.25)]"
+            >
+              <div className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+                {m.value}
+              </div>
+              <div className="mt-2 text-xs md:text-sm text-slate-600 font-semibold">{m.label}</div>
+            </motion.div>
+          ))}
+        </div>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-        {[
-          { value: <><CountUp to={200} />+</>, label: 'UBP Distributed' },
-          { value: <><CountUp to={1} />+</>, label: 'Campus Events' },
-          { value: <><CountUp to={100} suffix="%" /></>, label: 'On-Chain Recorded' },
-          { value: '∞', label: 'Future Ecosystem' },
-        ].map((m, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: i * 0.08 }}
-            className="p-6 md:p-8 rounded-2xl bg-white/80 backdrop-blur-xl border border-blue-100 text-center shadow-[0_10px_30px_-15px_rgba(37,99,235,0.25)]"
-          >
-            <div className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
-              {m.value}
-            </div>
-            <div className="mt-2 text-xs md:text-sm text-slate-600 font-semibold">{m.label}</div>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 /* ---------- Final CTA ---------- */
-const FinalCTA = () => (
-  <section className="relative py-24 md:py-32 overflow-hidden">
-    <div className="absolute inset-0 bg-gradient-to-br from-blue-700 via-blue-600 to-blue-500" />
-    <div aria-hidden className="absolute inset-0">
-      <div className="absolute -top-20 left-1/4 w-80 h-80 rounded-full bg-blue-300/30 blur-3xl" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full bg-white/10 blur-3xl" />
-      <div
-        className="absolute inset-0 opacity-[0.08]"
-        style={{
-          backgroundImage:
-            'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)',
-          backgroundSize: '40px 40px',
-        }}
-      />
-    </div>
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.7 }}
-      className="relative max-w-3xl mx-auto px-6 text-center text-white"
-    >
-      <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-tight">
-        The Future Student Economy Starts Here
-      </h2>
-      <p className="mt-6 text-base md:text-lg text-blue-50/90 leading-relaxed">
-        UBpoint bridges student engagement and blockchain technology by transforming participation
-        into verifiable digital value.
-      </p>
-      <a href={UBPOINT_APP_URL} target="_blank" rel="noopener noreferrer" className="inline-block mt-10">
-        <Button className="h-14 px-8 bg-white text-blue-700 hover:bg-blue-50 rounded-full text-base font-bold shadow-2xl">
-          Launch UBpoint App
-          <ArrowRight className="ml-2 w-5 h-5" />
-        </Button>
-      </a>
-      <div className="mt-6 text-xs text-blue-100/70">
-        <Link to="/projects" className="underline-offset-4 hover:underline">Back to all projects</Link>
+const FinalCTA = () => {
+  const { t } = useTranslation();
+  return (
+    <section className="relative py-24 md:py-32 overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-700 via-blue-600 to-blue-500" />
+      <div aria-hidden className="absolute inset-0">
+        <div className="absolute -top-20 left-1/4 w-80 h-80 rounded-full bg-blue-300/30 blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full bg-white/10 blur-3xl" />
+        <div
+          className="absolute inset-0 opacity-[0.08]"
+          style={{
+            backgroundImage:
+              'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)',
+            backgroundSize: '40px 40px',
+          }}
+        />
       </div>
-    </motion.div>
-  </section>
-);
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
+        className="relative max-w-3xl mx-auto px-6 text-center text-white"
+      >
+        <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-tight">
+          {t('projects.ubpointPage.finalCta.title')}
+        </h2>
+        <p className="mt-6 text-base md:text-lg text-blue-50/90 leading-relaxed">
+          {t('projects.ubpointPage.finalCta.body')}
+        </p>
+        <a href={UBPOINT_APP_URL} target="_blank" rel="noopener noreferrer" className="inline-block mt-10">
+          <Button className="h-14 px-8 bg-white text-blue-700 hover:bg-blue-50 rounded-full text-base font-bold shadow-2xl">
+            {t('projects.ubpointPage.finalCta.launchApp')}
+            <ArrowRight className="ml-2 w-5 h-5" />
+          </Button>
+        </a>
+        <div className="mt-6 text-xs text-blue-100/70">
+          <Link to="/projects" className="underline-offset-4 hover:underline">{t('projects.ubpointPage.finalCta.backToProjects')}</Link>
+        </div>
+      </motion.div>
+    </section>
+  );
+};
 
 /* ---------- Page ---------- */
 const UBpointPage = () => {
+  const { t } = useTranslation();
   const alreadySplashed =
     typeof window !== 'undefined' && sessionStorage.getItem('ubpoint-splashed') === '1';
   const [ready, setReady] = useState(alreadySplashed);
@@ -1106,6 +1167,8 @@ const UBpointPage = () => {
     };
   }, []);
 
+  // Preload + decode all hero assets before unlocking the splash. Replaces
+  // the previous fixed 2400ms timer so coins/mockup never pop in statically.
   useEffect(() => {
     if (ready) return;
     const prevBody = document.body.style.overflow;
@@ -1113,14 +1176,54 @@ const UBpointPage = () => {
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
     window.scrollTo({ top: 0, behavior: 'auto' });
-    const t = window.setTimeout(() => {
+
+    // Inject <link rel="preload"> hints for browser-level scheduling.
+    const links: HTMLLinkElement[] = [];
+    const addPreload = (href: string, priority: 'high' | 'low') => {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = href;
+      (link as any).fetchPriority = priority;
+      document.head.appendChild(link);
+      links.push(link);
+    };
+    HERO_CRITICAL_ASSETS.forEach((u) => addPreload(u, 'high'));
+    DECORATIVE_ASSETS.forEach((u) => addPreload(u, 'low'));
+
+    let cancelled = false;
+    const decodeAll = Promise.allSettled(
+      ALL_ASSETS.map((url) => {
+        const img = new Image();
+        img.src = url;
+        return img.decode().catch(() => undefined);
+      }),
+    );
+
+    // Safety net: never block more than 3s even on flaky networks.
+    const safety = window.setTimeout(() => {
+      if (cancelled) return;
       setReady(true);
       sessionStorage.setItem('ubpoint-splashed', '1');
-    }, 2400);
+    }, 3000);
+
+    decodeAll.then(() => {
+      if (cancelled) return;
+      window.clearTimeout(safety);
+      // Small grace tick so the staggered splash motion still plays.
+      window.setTimeout(() => {
+        if (cancelled) return;
+        setReady(true);
+        sessionStorage.setItem('ubpoint-splashed', '1');
+      }, 350);
+    });
+
     return () => {
-      window.clearTimeout(t);
+      cancelled = true;
+      window.clearTimeout(safety);
       document.body.style.overflow = prevBody;
       document.documentElement.style.overflow = prevHtml;
+      links.forEach((l) => l.parentNode?.removeChild(l));
     };
   }, [ready]);
 
@@ -1163,7 +1266,7 @@ const UBpointPage = () => {
                 <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 border border-blue-100 shadow-lg backdrop-blur-md">
                   <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
                   <span className="text-xs font-semibold text-slate-700 tracking-wide">
-                    Initializing UBpoint…
+                    {t('projects.ubpointPage.splash.initializing')}
                   </span>
                 </div>
               </div>
