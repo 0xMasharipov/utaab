@@ -1,21 +1,38 @@
-import { Suspense, useRef } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { RoundedBox, Float, Environment, useTexture } from '@react-three/drei';
+import { Float, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import { Group, MathUtils } from 'three';
 import { Skeleton } from '@/components/ui/skeleton';
 import templateAsset from '@/assets/utaab-certificate-template.png.asset.json';
 
-function CertificateMesh() {
+const TEMPLATE_URL = templateAsset.url;
+
+/* ---------- WebGL detection ---------- */
+function hasWebGL(): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    const canvas = document.createElement('canvas');
+    return !!(
+      window.WebGLRenderingContext &&
+      (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
+    );
+  } catch {
+    return false;
+  }
+}
+
+/* ---------- 3D textured plane ---------- */
+function CertificatePlane() {
   const groupRef = useRef<Group>(null);
-  const texture = useTexture(templateAsset.url);
-  // Ensure proper color reproduction
+  const texture = useTexture(TEMPLATE_URL);
+
+  // Proper sRGB color space
   // @ts-ignore — three's typing for colorSpace varies by version
-  texture.colorSpace = THREE.SRGBColorSpace ?? texture.colorSpace;
+  texture.colorSpace = (THREE as any).SRGBColorSpace ?? texture.colorSpace;
   texture.anisotropy = 8;
 
   const target = useRef({ x: 0, y: 0 });
-
   useFrame((state) => {
     if (!groupRef.current) return;
     const { pointer } = state;
@@ -26,35 +43,86 @@ function CertificateMesh() {
   });
 
   // A4 portrait ratio ~ 1 : 1.414
-  const w = 1.3;
-  const h = 1.84;
-  const d = 0.04;
+  const w = 1.6;
+  const h = 2.26;
 
   return (
-    <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.35}>
+    <Float speed={1.1} rotationIntensity={0.12} floatIntensity={0.3}>
       <group ref={groupRef}>
-        <RoundedBox args={[w, h, d]} radius={0.04} smoothness={4} castShadow receiveShadow>
-          {/* Order matches BoxGeometry face order: +x, -x, +y, -y, +z (front), -z (back) */}
-          <meshPhysicalMaterial attach="material-0" color="#0b1a33" metalness={0.6} roughness={0.4} />
-          <meshPhysicalMaterial attach="material-1" color="#0b1a33" metalness={0.6} roughness={0.4} />
-          <meshPhysicalMaterial attach="material-2" color="#0b1a33" metalness={0.6} roughness={0.4} />
-          <meshPhysicalMaterial attach="material-3" color="#0b1a33" metalness={0.6} roughness={0.4} />
-          <meshPhysicalMaterial
-            attach="material-4"
-            map={texture}
-            metalness={0.25}
-            roughness={0.35}
-            clearcoat={0.7}
-            clearcoatRoughness={0.2}
-          />
-          <meshPhysicalMaterial attach="material-5" color="#0a1428" metalness={0.5} roughness={0.55} />
-        </RoundedBox>
+        {/* Front face: full template image, always visible regardless of lighting */}
+        <mesh position={[0, 0, 0.01]}>
+          <planeGeometry args={[w, h]} />
+          <meshBasicMaterial map={texture} toneMapped={false} />
+        </mesh>
+        {/* Back card: subtle navy with rim light */}
+        <mesh position={[0, 0, -0.01]} rotation={[0, Math.PI, 0]}>
+          <planeGeometry args={[w, h]} />
+          <meshStandardMaterial color="#0b1a33" metalness={0.4} roughness={0.5} />
+        </mesh>
       </group>
     </Float>
   );
 }
 
+/* ---------- CSS-only tilt fallback (no WebGL) ---------- */
+function CertificateTiltFallback() {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let raf = 0;
+    const onMove = (e: PointerEvent) => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const r = el.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        el.style.transform = `perspective(1200px) rotateX(${(-py * 10).toFixed(2)}deg) rotateY(${(px * 14).toFixed(2)}deg)`;
+      });
+    };
+    const onLeave = () => {
+      if (raf) cancelAnimationFrame(raf);
+      el.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)';
+    };
+    window.addEventListener('pointermove', onMove, { passive: true });
+    el.addEventListener('pointerleave', onLeave);
+    return () => {
+      window.removeEventListener('pointermove', onMove);
+      el.removeEventListener('pointerleave', onLeave);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  return (
+    <div className="absolute inset-0 flex items-center justify-center p-4">
+      <div
+        ref={ref}
+        className="relative w-full h-full rounded-xl overflow-hidden shadow-[0_30px_80px_-20px_rgba(59,130,246,0.45)] transition-transform duration-200 ease-out"
+        style={{ transformStyle: 'preserve-3d' }}
+      >
+        <img
+          src={TEMPLATE_URL}
+          alt="UTAAB certificate preview"
+          className="w-full h-full object-cover select-none pointer-events-none"
+          draggable={false}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 40%, rgba(0,0,0,0.10) 100%)',
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function Certificate3D() {
+  const [webgl] = useState(() => hasWebGL());
+  const [failed, setFailed] = useState(false);
+
   const reduceMotion =
     typeof window !== 'undefined' &&
     window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -74,23 +142,41 @@ export default function Certificate3D() {
             'radial-gradient(circle at 50% 45%, rgba(59,130,246,0.35) 0%, rgba(59,130,246,0.10) 40%, transparent 70%)',
         }}
       />
-      <Suspense fallback={<Skeleton className="absolute inset-0" />}>
-        <Canvas
-          dpr={[1, 1.5]}
-          camera={{ position: [0, 0, 2.8], fov: 32 }}
-          gl={{ antialias: true, alpha: true }}
-          style={{ background: 'transparent' }}
-          frameloop={reduceMotion ? 'demand' : 'always'}
-        >
-          <ambientLight intensity={0.55} />
-          <directionalLight position={[3, 4, 5]} intensity={1.2} castShadow />
-          <directionalLight position={[-4, -2, 3]} intensity={0.6} color="#3b82f6" />
-          <Suspense fallback={null}>
-            <CertificateMesh />
-            <Environment preset="city" />
-          </Suspense>
-        </Canvas>
-      </Suspense>
+      {/* Subtle gradient ring */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 rounded-2xl"
+        style={{
+          background:
+            'linear-gradient(180deg, rgba(59,130,246,0.18) 0%, rgba(15,23,42,0.0) 50%, rgba(59,130,246,0.12) 100%)',
+          maskImage:
+            'linear-gradient(#000 0 0)',
+        }}
+      />
+
+      {(!webgl || failed) ? (
+        <CertificateTiltFallback />
+      ) : (
+        <Suspense fallback={<Skeleton className="absolute inset-4 rounded-xl" />}>
+          <Canvas
+            dpr={[1, 1.5]}
+            camera={{ position: [0, 0, 3.4], fov: 32 }}
+            gl={{ antialias: true, alpha: true }}
+            style={{ background: 'transparent' }}
+            frameloop={reduceMotion ? 'demand' : 'always'}
+            onCreated={({ gl }) => {
+              gl.domElement.addEventListener('webglcontextlost', () => setFailed(true));
+            }}
+          >
+            <ambientLight intensity={0.9} />
+            <directionalLight position={[3, 4, 5]} intensity={0.8} />
+            <directionalLight position={[-4, -2, 3]} intensity={0.3} color="#3b82f6" />
+            <Suspense fallback={null}>
+              <CertificatePlane />
+            </Suspense>
+          </Canvas>
+        </Suspense>
+      )}
     </div>
   );
 }
