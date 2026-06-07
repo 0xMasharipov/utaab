@@ -84,31 +84,93 @@ export default function CertRecords() {
 
   const issue = async () => {
     if (selectedRows.length === 0) { toast.error('No drafts selected'); return; }
-    if (fallbackHolder && !isAddress(fallbackHolder)) {
-      toast.error('Fallback holder is not a valid wallet address');
+    if (selectedRows.length > MAX_BATCH) {
+      toast.error(`Batch capped at ${MAX_BATCH} certificates per run`);
       return;
     }
+    let fallbackChecksummed: string | undefined;
+    if (fallbackHolder) {
+      if (!isAddress(fallbackHolder)) {
+        toast.error('Fallback holder is not a valid wallet address');
+        return;
+      }
+      try {
+        fallbackChecksummed = getAddress(fallbackHolder);
+      } catch {
+        toast.error('Fallback holder checksum invalid');
+        return;
+      }
+    }
+
     setIssuing(true);
     setIssueResults([]);
-    const results: Array<{ serial: string; name: string; ok: boolean; reason?: string }> = [];
+    const results: Array<{ serial: string; name: string; ok: boolean; reason?: string; attempts?: number }> = [];
+    const batchSize = selectedRows.length;
+
     try {
       for (const r of selectedRows) {
         const p = r.participant_id ? partsById.get(r.participant_id) : null;
         const name = p?.full_name ?? '—';
-        const holder = r.holder_address || fallbackHolder;
-        if (!holder || !isAddress(holder)) {
-          results.push({ serial: r.serial_number, name, ok: false, reason: 'no wallet on file' });
+        const rawHolder = r.holder_address || fallbackChecksummed || fallbackHolder;
+        const serialLower = (r.serial_hash || '').toLowerCase();
+
+        // Client-side payload validation (Zod) — never round-trip bad data.
+        const candidate = {
+          serial_hash: serialLower,
+          holder: rawHolder ? (() => { try { return getAddress(rawHolder); } catch { return rawHolder; } })() : '',
+          chain_id: r.chain_id ?? CHAIN_ID,
+          status: r.status,
+        };
+        const validation = IssueRowSchema.safeParse(candidate);
+        if (!validation.success) {
+          const reason = validation.error.issues[0]?.message || 'invalid payload';
+          console.debug('[cert-issue:invalid]', { serial: r.serial_number, reason, candidate });
+          results.push({ serial: r.serial_number, name, ok: false, reason });
           continue;
         }
-        try {
-          const { data, error } = await supabase.functions.invoke('cert-issue-voucher', {
-            body: { serial_hash: r.serial_hash, holder },
-          });
-          if (error || !data) throw new Error(error?.message || 'voucher failed');
-          results.push({ serial: r.serial_number, name, ok: true });
-        } catch (err: any) {
-          results.push({ serial: r.serial_number, name, ok: false, reason: err?.message || 'failed' });
+        if (candidate.chain_id !== CHAIN_ID) {
+          console.debug('[cert-issue:chain-mismatch]', { serial: r.serial_number, row_chain: candidate.chain_id, active: CHAIN_ID });
+          results.push({ serial: r.serial_number, name, ok: false, reason: `chain mismatch (row=${candidate.chain_id})` });
+          continue;
         }
+
+        // Retry loop: re-invoke the edge function so a fresh issuedAt + signature are produced each attempt.
+        let attempt = 0;
+        let lastReason = '';
+        let ok = false;
+        while (attempt < 3 && !ok) {
+          attempt++;
+          const startedAt = Date.now();
+          console.debug('[cert-issue]', {
+            attempt,
+            serial: r.serial_number,
+            holder: validation.data.holder,
+            chainId: CHAIN_ID,
+            batchSize,
+          });
+          try {
+            const { data, error } = await supabase.functions.invoke('cert-issue-voucher', {
+              body: { serial_hash: validation.data.serial_hash, holder: validation.data.holder },
+            });
+            const status = (error as any)?.context?.status ?? (error as any)?.status;
+            if (error || !data) {
+              lastReason = (error as any)?.message || 'voucher failed';
+              console.debug('[cert-issue:result]', { serial: r.serial_number, ok: false, status, durationMs: Date.now() - startedAt, attempt });
+              // Terminal: client errors (400/401/403/404/409)
+              if (status && status >= 400 && status < 500) break;
+              // Transient: backoff and retry
+              if (attempt < 3) await sleep(300 * Math.pow(3, attempt - 1));
+              continue;
+            }
+            ok = true;
+            console.debug('[cert-issue:result]', { serial: r.serial_number, ok: true, status: 200, durationMs: Date.now() - startedAt, attempt });
+          } catch (err: any) {
+            lastReason = err?.message || 'failed';
+            console.debug('[cert-issue:result]', { serial: r.serial_number, ok: false, error: lastReason, durationMs: Date.now() - startedAt, attempt });
+            if (attempt < 3) await sleep(300 * Math.pow(3, attempt - 1));
+          }
+        }
+        results.push({ serial: r.serial_number, name, ok, reason: ok ? undefined : lastReason, attempts: attempt });
       }
       setIssueResults(results);
       const okCount = results.filter((x) => x.ok).length;
