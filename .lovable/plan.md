@@ -1,46 +1,42 @@
-# Retry-safe voucher issue flow + validation + debug logging
+## Problem
 
-## Context
+The `Security checks / SECURITY DEFINER grants` job fails at the **Install pg client** step (~16s). The current step runs:
 
-`IssueBatchCertificates` is no longer used — the active admin path is the voucher flow (`cert-issue-voucher` edge function → `ClaimOnBase`). All requirements will be applied there.
+```yaml
+- name: Install pg client
+  run: npm install --no-save pg@8
+```
 
-## Changes
+Even with `--no-save`, npm still resolves and installs the project's entire `package.json` dependency tree. This repo is managed with Bun (no `package-lock.json`, peer-dep conflicts), so the npm install fails before `pg` is available.
 
-### 1. Client validation (`src/pages/admin/cert/CertRecords.tsx`)
-Zod schema gate before any network call:
-- `serial_hash`: `^0x[0-9a-f]{64}$` (lowercased)
-- `holder`: viem `isAddress` + `getAddress` checksum normalization
-- `row.chain_id === CHAIN_ID` (skip mismatched rows)
-- `status === 'draft'`
-- batch size ≤ 50
-Failures surface in the results panel; never hit the server.
+## Fix
 
-### 2. Retry-safe issuance with re-sign
-Per-row loop, up to **3 attempts**, exponential backoff (300 / 900 / 2700 ms). Each retry re-invokes `cert-issue-voucher` so a fresh `issuedAt` + new signature are produced. Retry only on network / 5xx / "voucher failed". Terminal on 400 and 409. Results panel shows attempt count.
+Edit `.github/workflows/security-checks.yml` to install `pg` in an isolated location that ignores the project's `package.json`, then point Node at it when running the check.
 
-### 3. Retry on student claim (`src/components/cert/ClaimOnBase.tsx`)
-Wrap `claim()` with the same 3-attempt + re-fetch-voucher pattern (wagmi handles gas estimation each send). Terminal on user-rejection.
+Replace the two steps with:
 
-### 4. Backend hardening (`supabase/functions/cert-issue-voucher/index.ts`)
-- Lowercase `serial_hash` before lookup
-- `getAddress(holder)` (400 on bad checksum)
-- 409 if `row.status === 'issued'` (in addition to existing 'revoked')
-- Require `https://` on `token_uri`
-- Verify `row.chain_id ?? CHAIN_ID === CHAIN_ID`
-- Keep generic 4xx/500 bodies (no error leakage)
+```yaml
+- name: Install pg client (isolated)
+  run: |
+    mkdir -p "$RUNNER_TEMP/pgdeps"
+    cd "$RUNNER_TEMP/pgdeps"
+    npm init -y >/dev/null
+    npm install --no-audit --no-fund --silent pg@8
 
-### 5. Debug logging
-Client: `console.debug('[cert-issue]', { attempt, serial, holder, chainId, batchSize })` and per-result entries.
-Edge function: structured `console.log('[voucher]', { attempt_id, serial_hash, holder, chain_id, contract, row_status })` and `[voucher:signed]` / `[voucher:error]` with stage codes only.
+- name: Check definer grants
+  env:
+    SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+    NODE_PATH: ${{ runner.temp }}/pgdeps/node_modules
+  run: node scripts/security/check-definer-grants.mjs
+```
 
-### 6. ABI markers (`src/lib/web3/abi.ts`)
-JSDoc `@deprecated` on `issueBatchCertificates` / `issueCertificate` / `revokeCertificate` to prevent accidental reuse.
+This avoids touching the repo's `package.json` entirely and makes `import pg from "pg"` resolve via `NODE_PATH`.
 
 ## Out of scope
-Contract, DB schema, PDF generation, list/filter UI.
 
-## Files touched
-- `src/pages/admin/cert/CertRecords.tsx`
-- `src/components/cert/ClaimOnBase.tsx`
-- `supabase/functions/cert-issue-voucher/index.ts`
-- `src/lib/web3/abi.ts`
+- No changes to `scripts/security/check-definer-grants.mjs` or `allowlist.json`.
+- No changes to the previously-planned voucher retry work.
+
+## Files
+
+- `.github/workflows/security-checks.yml`
