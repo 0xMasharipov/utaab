@@ -75,7 +75,7 @@ import usdtAngleAsset from '@/assets/coins/ubp-usdt-angle.png.asset.json';
 import tryAngleAsset from '@/assets/coins/ubp-try-angle.png.asset.json';
 
 const WHATSAPP_URL = 'https://chat.whatsapp.com/HnTcuJYiKAiDpLPnG33mEr';
-const SPONSOR_EMAIL = 'mailto:info@utaab.org?subject=UBpoint%20Sponsor%20Inquiry';
+const SPONSOR_EMAIL = 'mailto:contact@utaab.org?subject=UBpoint%20Sponsor%20Inquiry';
 const UBPOINT_APP_URL = 'https://ubpoint.app/';
 
 /* ---------- Asset preload registry ---------- */
@@ -208,7 +208,7 @@ const LightFooter = () => {
               { href: 'https://www.linkedin.com/company/utaa-blockchain/', icon: Linkedin },
               { href: 'https://t.me/utaa_blockchain', icon: Send },
               { href: 'https://x.com/utaa_blockchain?s=11', icon: Twitter },
-              { href: 'mailto:info@utaab.org', icon: Mail },
+              { href: 'mailto:contact@utaab.org', icon: Mail },
             ].map((s, i) => (
               <a
                 key={i}
