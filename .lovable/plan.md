@@ -1,83 +1,49 @@
 # Goal
 
-Improve discoverability of **About**, **FAQ**, **Blog**, **Blog posts**, and **Projects** pages so that when users type related keywords or full questions, **utaab.org** appears in Google, Bing, and AI search engines (ChatGPT, Perplexity, Gemini).
+Strengthen structured data for Q&A content, ship a complete `sitemap.xml`, and confirm `robots.txt` is correctly indexable.
 
-This is a frontend/metadata-only change. No business logic, no backend.
+## Current state (already in place)
 
----
+- `src/pages/FAQ.tsx` — already emits `FAQPage` JSON-LD with all 10 Q&As ✅
+- `public/sitemap.xml` — already lists `/`, `/about`, `/team`, `/faq`, `/blog`, `/learn*`, `/projects/tonra`, `/projects/ubpoint`, `/education*`, plus legal pages ✅
+- `public/robots.txt` — already `Allow: /` for all major bots + `Sitemap: https://utaab.org/sitemap.xml` ✅
 
-## What's already in place
+What's missing: **dynamic `/blog/:slug` URLs are not in the sitemap**, and the TonRa / UBpoint project pages don't expose their built-in Q-style content as `FAQPage` schema even though both have question-shaped sections in their i18n copy.
 
-- `index.html` sitewide title, description, OG/Twitter, Organization + WebSite JSON-LD ✅
-- `public/sitemap.xml` lists all key routes ✅
-- `public/robots.txt` allows crawlers + points to sitemap ✅
-- `<SEO>` component (react-helmet-async) used on: About, FAQ, BlogPost, TonRa, Team, BlockchainAndMoney ✅
+## Plan
 
-## What's missing or weak
+### 1. FAQPage structured data — extend beyond `/faq`
+- **`/faq`** — no change; already correct.
+- **`/projects/tonra`** — add a small `FAQPage` JSON-LD block with 4–5 user-intent questions pulled from the page's existing copy (e.g. *"What is TonRa?"*, *"Is TonRa free?"*, *"Does TonRa store my wallet keys?"*, *"How do I verify a TON token?"*, *"What chains does TonRa support?"*). Stacked alongside the existing `SoftwareApplication` schema via the `jsonLd` array of `<SEO>`.
+- **`/projects/ubpoint`** — same treatment: 4–5 questions (e.g. *"What is UBpoint?"*, *"How do I earn UBP?"*, *"Is UBP a cryptocurrency?"*, *"What can I do with UBP?"*). Stacked alongside the `Product` schema.
+- **`/about`** — add 3 short "about UTAAB" questions as a secondary `FAQPage` block (*"What is UTAAB?"*, *"Who runs UTAAB?"*, *"Is UTAAB free to join?"*) — these are the exact phrasings users type into Google and ChatGPT.
 
-1. **Blog index** (`/blog`) — uses `document.title` only, no `<SEO>` tag, no canonical, no OG, no JSON-LD `Blog` schema.
-2. **UBpoint project page** (`/projects/ubpoint`) — no `<SEO>` tag at all.
-3. **About** — has `<SEO>` but no JSON-LD `AboutPage` / `Organization` schema, weak keyword targeting in title/description.
-4. **FAQ** — has FAQPage JSON-LD ✅ but the `<SEO>` description is generic and doesn't include long-tail keywords ("what is UTAAB", "is UTAAB free", etc.).
-5. **BlogPost** — has `<SEO>` but does not pass `Article` JSON-LD (headline, author, datePublished, image) which is what Google needs for rich results and AI answer engines.
-6. **TonRa / UBpoint** — descriptions could include question-style phrases users actually type.
+No visible UI changes; this is metadata only.
 
----
+### 2. Sitemap — make it complete (including dynamic blog posts)
 
-## Plan (file-by-file)
+The current `public/sitemap.xml` is a hand-edited static file. To include every published blog post (currently `/blog/:slug` URLs are missing), we'll migrate to a **build-time generator script**:
 
-### 1. `src/pages/Blog.tsx`
-- Add `<SEO>` with:
-  - title: `UTAAB Blog — Web3, Blockchain & Student Innovation Insights`
-  - description: keyword-rich (~155 chars) covering "blockchain blog", "Web3 articles", "student crypto community updates".
-  - path: `/blog`
-  - JSON-LD: `Blog` schema linked to Organization UTAAB.
-- Remove the `useEffect` that sets `document.title` (Helmet handles it).
+- Create `scripts/generate-sitemap.ts` that:
+  - Outputs all 19 static routes already in the current sitemap (verbatim, same priorities/changefreq).
+  - Connects to Lovable Cloud (Supabase) with the public anon key and pulls all `blog_posts` rows where `status = 'published'`, appending each as `/blog/<slug>` with `lastmod = updated_at` and `changefreq = monthly`.
+  - Writes `public/sitemap.xml`.
+- Add `predev` and `prebuild` npm scripts to `package.json` so it runs automatically before dev and production builds:
+  - `"predev": "bunx tsx scripts/generate-sitemap.ts"`
+  - `"prebuild": "bunx tsx scripts/generate-sitemap.ts"`
+- The generated file keeps `BASE_URL = "https://utaab.org"`.
 
-### 2. `src/pages/BlogPost.tsx`
-- Extend the existing `<SEO>` call to also pass `jsonLd` with an `Article` schema:
-  - `headline`, `description`, `image` (cover_image), `datePublished`, `dateModified`, `author` (UTAAB), `publisher` (Organization), `mainEntityOfPage` canonical URL.
-- Ensure title/description fall back to localized title/excerpt.
+If the DB fetch fails at build time (network/auth), the script falls back to writing the static route list only, so a flaky build never produces an empty sitemap.
 
-### 3. `src/pages/projects/UBpointPage.tsx`
-- Add `<SEO>` mirroring the TonRa pattern:
-  - title: `UBpoint — Community Rewards Token by UTAAB`
-  - description targeting "blockchain rewards", "community engagement token", "Web3 student project".
-  - JSON-LD: `SoftwareApplication` / `Product` with publisher = UTAAB.
+### 3. Robots.txt — verify and leave as is
+- `public/robots.txt` already allows Googlebot, Bingbot, Twitterbot, facebookexternalhit, and `*`, and points to `https://utaab.org/sitemap.xml`. **No change needed.**
 
-### 4. `src/pages/About.tsx`
-- Strengthen title and description with high-intent phrases ("what is UTAAB", "student blockchain community", "Web3 education Turkey/global").
-- Add JSON-LD: `AboutPage` referencing the UTAAB `Organization` (founder, foundingDate if known, sameAs social links — pull from existing footer config).
+## Out of scope (not requested)
 
-### 5. `src/pages/FAQ.tsx`
-- Keep existing `FAQPage` JSON-LD (it is the key win for "people also ask" / AI snippets).
-- Improve `<SEO>` description with long-tail phrases like "UTAAB blockchain community FAQ — how to join, is it free, certificates, wallets".
+- Per-language `hreflang` tags (the site is i18n but pages share one URL).
+- Generating Open Graph images per blog post.
+- Adding `BreadcrumbList` schema (could be a follow-up).
 
-### 6. `src/pages/projects/TonRaPage.tsx`
-- Minor: enrich description with question-style phrases ("Is this TON wallet safe?", "verify TON token before airdrop") to win long-tail/AI queries. Same JSON-LD.
+## One question before I implement
 
-### 7. `public/sitemap.xml`
-- Already lists all target routes. Verify `priority`/`changefreq` are reasonable; no structural change.
-- (Optional) After build, dynamic blog post URLs are NOT in sitemap. Add a TODO comment noting that a generator script could append `/blog/<slug>` entries from Supabase — but do not implement unless you approve, since this introduces a build-time DB fetch.
-
-### 8. `public/robots.txt`
-- No change needed; already permissive + sitemap reference.
-
----
-
-## Out of scope (ask before doing)
-
-- Adding a build-time sitemap generator that pulls blog slugs from the database.
-- Generating per-page Open Graph images for blog posts / projects.
-- Translating meta tags per language (currently English only; multilingual hreflang would be a separate, larger task).
-- Server-side rendering (needed for perfect LinkedIn/Slack previews on dynamic blog posts — current Helmet approach works for Google but not non-JS crawlers).
-
----
-
-## Expected impact
-
-- Google can index per-page titles, descriptions, and structured data → richer SERP results (FAQ accordions, article cards).
-- AI engines (ChatGPT, Perplexity) consume JSON-LD + clean meta → higher chance of citing utaab.org when users ask "what is UTAAB", "UTAAB blockchain community", "TonRa bot", etc.
-- No visual/UX change for end users.
-
-Shall I proceed with these edits?
+Migrating the sitemap from a hand-edited file to an auto-generator is the only way to keep `/blog/:slug` URLs in sync. **OK to do that?** If you'd rather keep the file hand-edited, I'll just add the currently-published blog slugs once and you'll need to ping me whenever you publish a new post.

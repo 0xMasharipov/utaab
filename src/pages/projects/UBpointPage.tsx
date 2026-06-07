@@ -1500,14 +1500,54 @@ const UBpointPage = () => (
       path="/projects/ubpoint"
       ogType="website"
       image="https://utaab.org/og-image.png"
-      jsonLd={{
-        '@context': 'https://schema.org',
-        '@type': 'Product',
-        name: 'UBpoint (UBP)',
-        description: 'Community rewards token by UTAAB for Web3 learning, contributions and engagement.',
-        url: 'https://utaab.org/projects/ubpoint',
-        brand: { '@type': 'Organization', name: 'UTAAB', url: 'https://utaab.org' },
-      }}
+      jsonLd={[
+        {
+          '@context': 'https://schema.org',
+          '@type': 'Product',
+          name: 'UBpoint (UBP)',
+          description: 'Community rewards token by UTAAB for Web3 learning, contributions and engagement.',
+          url: 'https://utaab.org/projects/ubpoint',
+          brand: { '@type': 'Organization', name: 'UTAAB', url: 'https://utaab.org' },
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: [
+            {
+              '@type': 'Question',
+              name: 'What is UBpoint (UBP)?',
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'UBpoint (UBP) is the UTAAB community rewards token. It tracks contributions, learning progress and engagement across the UTAAB blockchain ecosystem.',
+              },
+            },
+            {
+              '@type': 'Question',
+              name: 'How do I earn UBpoint?',
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'You earn UBP by completing UTAAB courses, contributing to community projects, participating in events, and engaging with the UTAAB Web3 community.',
+              },
+            },
+            {
+              '@type': 'Question',
+              name: 'Is UBpoint a cryptocurrency I can trade?',
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'UBpoint is currently a community rewards token used inside the UTAAB ecosystem. Any future on-chain or trading utility will be announced officially on utaab.org.',
+              },
+            },
+            {
+              '@type': 'Question',
+              name: 'What can I do with UBpoint?',
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'UBP can be used to unlock community perks, access selected programs, recognize top contributors, and participate in UTAAB initiatives.',
+              },
+            },
+          ],
+        },
+      ]}
     />
     <UBpointPageInner />
   </UBpointErrorBoundary>
