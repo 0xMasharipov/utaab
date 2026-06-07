@@ -277,17 +277,35 @@ const HeroBackground = () => (
 
 /* ---------- Floating iPhone device ---------- */
 const FloatingDevice = () => {
-  const { ready, tier } = useSplash();
+  const { ready, heroReady, tier, replayKey } = useSplash();
   const loop = tier === 'full';
-  const allBackCoins = [
+
+  // Latch: once the spread has started, never reset on re-renders.
+  // Only an explicit replayKey bump (from the debug panel) triggers a re-run.
+  const [spreadActive, setSpreadActive] = useState(false);
+  const startedKeyRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (!heroReady) return;
+    if (startedKeyRef.current === replayKey) return;
+    startedKeyRef.current = replayKey;
+    setSpreadActive(false);
+    const t = window.setTimeout(() => setSpreadActive(true), 30);
+    return () => window.clearTimeout(t);
+  }, [heroReady, replayKey]);
+
+  const allBackCoins = useMemo(() => ([
     { src: usdtAngleAsset.url, cls: 'top-2 -left-2 sm:-left-4 md:-left-10 w-16 sm:w-24 md:w-36', glow: 'rgba(16,185,129,0.45)', dur: 9, delay: 0, from: { x: 140, y: 40 } },
     { src: tryAngleAsset.url, cls: 'top-10 -right-2 sm:-right-6 md:-right-14 w-16 sm:w-24 md:w-36', glow: 'rgba(220,38,38,0.4)', dur: 10, delay: 0.4, from: { x: -140, y: 30 } },
     { src: ethCoinAsset.url, cls: 'top-1/2 -left-4 sm:-left-10 md:-left-20 w-14 sm:w-20 md:w-32', glow: 'rgba(100,116,139,0.45)', dur: 11, delay: 0.8, from: { x: 160, y: 0 } },
     { src: goldCoinAsset.url, cls: 'bottom-12 -right-3 sm:-right-8 md:-right-16 w-14 sm:w-20 md:w-32', glow: 'rgba(202,138,4,0.5)', dur: 12, delay: 0.2, from: { x: -150, y: -20 } },
     { src: silverBarAsset.url, cls: 'bottom-2 left-2 sm:left-6 md:left-2 w-16 sm:w-24 md:w-32', glow: 'rgba(148,163,184,0.5)', dur: 13, delay: 1, from: { x: 100, y: -80 } },
     { src: steamAsset.url, cls: 'top-4 -left-3 sm:-left-8 md:-left-16 w-16 sm:w-24 md:w-36', glow: 'rgba(37,99,235,0.45)', dur: 10, delay: 1.3, from: { x: 140, y: 60 } },
-  ];
-  const backCoins = tier === 'minimal' ? [] : tier === 'reduced' ? allBackCoins.slice(0, 3) : allBackCoins;
+  ]), []);
+  const backCoins = useMemo(
+    () => (tier === 'minimal' ? [] : tier === 'reduced' ? allBackCoins.slice(0, 3) : allBackCoins),
+    [tier, allBackCoins],
+  );
+
   const { t } = useTranslation();
 
   return (
