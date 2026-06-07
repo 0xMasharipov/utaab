@@ -26,7 +26,7 @@ const TonRaPage = () => {
     <div className="min-h-screen bg-background text-foreground">
       <SEO
         title="TonRa — Telegram Security Bot for TON | UTAAB"
-        description="TonRa is UTAAB's beta Telegram security bot for the TON ecosystem — verify wallets, tokens, projects and airdrops before you interact."
+        description="Is this TON wallet, token, project or airdrop safe? TonRa by UTAAB is a Telegram security bot that verifies TON addresses, tokens and projects before you interact."
         path="/projects/tonra"
         ogType="website"
         image="https://utaab.org/og-image.png"
