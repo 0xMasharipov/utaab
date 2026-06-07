@@ -305,7 +305,7 @@ const FloatingDevice = () => {
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       >
         <motion.div
-          animate={ready ? { y: [0, -14, 0], rotateZ: [-1.5, 1.5, -1.5] } : undefined}
+          animate={ready && loop ? { y: [0, -14, 0], rotateZ: [-1.5, 1.5, -1.5] } : undefined}
           transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
         >
           <img
