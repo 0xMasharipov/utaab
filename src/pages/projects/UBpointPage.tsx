@@ -237,7 +237,7 @@ const LightFooter = () => {
   );
 };
 
-/* ---------- Decorative background ---------- */
+/* ---------- Decorative background (lightweight, no looped animations) ---------- */
 const HeroBackground = () => (
   <div aria-hidden className="absolute inset-0 overflow-hidden pointer-events-none">
     <div className="absolute inset-0 bg-gradient-to-b from-white via-blue-50/60 to-white" />
@@ -251,33 +251,8 @@ const HeroBackground = () => (
           'radial-gradient(ellipse at center, rgba(0,0,0,0.9), transparent 75%)',
       }}
     />
-    <motion.div
-      className="absolute -top-32 -left-24 w-[420px] h-[420px] rounded-full bg-blue-400/30 blur-3xl"
-      animate={{ y: [0, 30, 0], x: [0, 20, 0] }}
-      transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-    />
-    <motion.div
-      className="absolute top-1/3 -right-32 w-[480px] h-[480px] rounded-full bg-blue-500/20 blur-3xl"
-      animate={{ y: [0, -40, 0], x: [0, -25, 0] }}
-      transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
-    />
-    <motion.div
-      className="absolute bottom-0 left-1/3 w-[360px] h-[360px] rounded-full bg-blue-300/30 blur-3xl"
-      animate={{ y: [0, -20, 0] }}
-      transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-    />
-    {Array.from({ length: 18 }).map((_, i) => (
-      <motion.span
-        key={i}
-        className="absolute w-1.5 h-1.5 rounded-full bg-blue-500/40"
-        style={{
-          left: `${(i * 53) % 100}%`,
-          top: `${(i * 37) % 100}%`,
-        }}
-        animate={{ y: [0, -20, 0], opacity: [0.2, 0.8, 0.2] }}
-        transition={{ duration: 4 + (i % 5), repeat: Infinity, delay: i * 0.2 }}
-      />
-    ))}
+    {/* Single static blurred blob — keep visual identity, drop GPU cost */}
+    <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[520px] h-[520px] rounded-full bg-blue-400/20 blur-3xl" />
   </div>
 );
 
@@ -304,8 +279,8 @@ const FloatingDevice = () => {
           <motion.div
             key={i}
             className={`absolute ${c.cls}`}
-            initial={{ opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
-            animate={ready ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
+            initial={{ opacity: 0, scale: 0.2 }}
+            animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.2 }}
             transition={splashTransition(i + 2)}
           >
             <motion.img
@@ -341,10 +316,10 @@ const FloatingDevice = () => {
 
       <motion.div
         className="absolute left-0 sm:-left-4 md:-left-12 top-8 sm:top-12 backdrop-blur-xl bg-white/80 border border-blue-100 rounded-2xl px-3 py-2 sm:px-3.5 sm:py-2.5 shadow-xl flex items-center gap-2"
-        initial={{ opacity: 0, scale: 0.3, filter: 'blur(8px)', y: 0 }}
+        initial={{ opacity: 0, scale: 0.3, y: 0 }}
         animate={ready
-          ? { opacity: 1, scale: 1, filter: 'blur(0px)', y: [0, -8, 0] }
-          : { opacity: 0, scale: 0.3, filter: 'blur(8px)', y: 0 }}
+          ? { opacity: 1, scale: 1, y: [0, -8, 0] }
+          : { opacity: 0, scale: 0.3, y: 0 }}
         transition={ready
           ? {
               opacity: splashTransition(9),
@@ -365,10 +340,10 @@ const FloatingDevice = () => {
 
       <motion.div
         className="absolute right-0 sm:-right-2 md:-right-10 bottom-20 sm:bottom-24 backdrop-blur-xl bg-white/80 border border-blue-100 rounded-2xl px-3 py-2 sm:px-3.5 sm:py-2.5 shadow-xl flex items-center gap-2"
-        initial={{ opacity: 0, scale: 0.3, filter: 'blur(8px)', y: 0 }}
+        initial={{ opacity: 0, scale: 0.3, y: 0 }}
         animate={ready
-          ? { opacity: 1, scale: 1, filter: 'blur(0px)', y: [0, 10, 0] }
-          : { opacity: 0, scale: 0.3, filter: 'blur(8px)', y: 0 }}
+          ? { opacity: 1, scale: 1, y: [0, 10, 0] }
+          : { opacity: 0, scale: 0.3, y: 0 }}
         transition={ready
           ? {
               opacity: splashTransition(10),
@@ -389,8 +364,8 @@ const FloatingDevice = () => {
 
       <motion.div
         className="absolute -left-6 sm:-left-10 md:-left-20 bottom-2 sm:bottom-4 w-16 sm:w-24 md:w-32 pointer-events-none"
-        initial={{ opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
-        animate={ready ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
+        initial={{ opacity: 0, scale: 0.2 }}
+        animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.2 }}
         transition={splashTransition(0)}
       >
         <motion.img
@@ -404,8 +379,8 @@ const FloatingDevice = () => {
       </motion.div>
       <motion.div
         className="absolute -right-3 sm:-right-6 md:-right-12 top-2 sm:top-4 w-14 sm:w-20 md:w-28 pointer-events-none"
-        initial={{ opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
-        animate={ready ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
+        initial={{ opacity: 0, scale: 0.2 }}
+        animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.2 }}
         transition={splashTransition(1)}
       >
         <motion.img
@@ -419,8 +394,8 @@ const FloatingDevice = () => {
       </motion.div>
       <motion.div
         className="absolute -right-3 sm:-right-6 md:-right-14 bottom-1 sm:bottom-2 md:bottom-6 w-10 sm:w-14 md:w-20 pointer-events-none"
-        initial={{ opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
-        animate={ready ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
+        initial={{ opacity: 0, scale: 0.2 }}
+        animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.2 }}
         transition={splashTransition(11)}
       >
         <motion.img
@@ -875,16 +850,6 @@ const MockScreen: React.FC<{ kind: typeof showcaseDefs[number]['kind'] }> = ({ k
 const Showcase = () => {
   const { t } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
-  const x = useTransform(scrollYProgress, [0, 1], ['5%', '-30%']);
-  const [isDesktop, setIsDesktop] = useState(false);
-  useEffect(() => {
-    const mql = window.matchMedia('(min-width: 768px)');
-    const update = () => setIsDesktop(mql.matches);
-    update();
-    mql.addEventListener('change', update);
-    return () => mql.removeEventListener('change', update);
-  }, []);
 
   return (
     <section id="showcase" className="relative py-16 sm:py-24 md:py-32 bg-gradient-to-b from-white via-blue-50/40 to-white overflow-hidden">
@@ -896,9 +861,8 @@ const Showcase = () => {
           {t('projects.ubpointPage.showcase.title')}
         </h2>
       </div>
-      <div ref={ref} className={isDesktop ? 'overflow-hidden' : 'overflow-x-auto snap-x snap-mandatory scrollbar-hide'}>
-        <motion.div
-          style={isDesktop ? { x } : undefined}
+      <div ref={ref} className="overflow-x-auto snap-x snap-mandatory scrollbar-hide">
+        <div
           className="flex gap-8 md:gap-16 px-5 sm:px-6 pt-6 pb-10"
         >
           {showcaseDefs.map((s, i) => (
@@ -923,7 +887,7 @@ const Showcase = () => {
             </motion.div>
           ))}
           <div className="shrink-0 w-6 sm:w-12" />
-        </motion.div>
+        </div>
 
       </div>
     </section>
@@ -1162,12 +1126,78 @@ const FinalCTA = () => {
   );
 };
 
+/* ---------- Error boundary (page-local, light-themed fallback) ---------- */
+import { Component, ErrorInfo, ReactNode } from 'react';
+class UBpointErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
+  state = { hasError: false };
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch(err: Error, info: ErrorInfo) {
+    // Surface for debugging without crashing the route.
+    // eslint-disable-next-line no-console
+    console.error('[UBpointPage] render error', err, info);
+  }
+  render() {
+    if (!this.state.hasError) return this.props.children;
+    return (
+      <div className="min-h-screen bg-white text-slate-900 flex flex-col items-center justify-center px-6 text-center">
+        <img src={logoAsset.url} alt="UBpoint" className="h-12 w-auto mb-5 drop-shadow-[0_10px_30px_rgba(37,99,235,0.3)]" />
+        <h1 className="text-2xl font-extrabold mb-2">UBpoint hit a snag</h1>
+        <p className="text-slate-600 max-w-md mb-6">
+          Something went wrong rendering this page. Please reload — your session is safe.
+        </p>
+        <div className="flex gap-3">
+          <button
+            onClick={() => window.location.reload()}
+            className="h-11 px-5 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm font-semibold shadow-[0_8px_24px_-10px_rgba(37,99,235,0.6)]"
+          >
+            Reload
+          </button>
+          <Link
+            to="/"
+            className="h-11 px-5 inline-flex items-center rounded-full bg-white border border-blue-200 text-slate-900 text-sm font-semibold hover:bg-blue-50"
+          >
+            Back to UTAAB
+          </Link>
+        </div>
+      </div>
+    );
+  }
+}
+
 /* ---------- Page ---------- */
-const UBpointPage = () => {
+const UBpointPageInner = () => {
   const { t } = useTranslation();
-  const alreadySplashed =
-    typeof window !== 'undefined' && sessionStorage.getItem('ubpoint-splashed') === '1';
-  const [ready, setReady] = useState(alreadySplashed);
+
+  // Skip the splash entirely on reduced-motion or low-memory devices, or if we
+  // already splashed this tab.
+  const initialReady = (() => {
+    if (typeof window === 'undefined') return false;
+    if (sessionStorage.getItem('ubpoint-splashed') === '1') return true;
+    try {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return true;
+      const mem = (navigator as any).deviceMemory;
+      if (typeof mem === 'number' && mem > 0 && mem <= 4) return true;
+    } catch {}
+    return false;
+  })();
+  const [ready, setReady] = useState(initialReady);
+
+  // Lock html/body background to opaque white so the global dark theme can
+  // never bleed through during paint gaps or splash fade-out.
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const prevHtmlBg = html.style.background;
+    const prevBodyBg = body.style.background;
+    html.style.background = '#ffffff';
+    body.style.background = '#ffffff';
+    return () => {
+      html.style.background = prevHtmlBg;
+      body.style.background = prevBodyBg;
+    };
+  }, []);
 
   useEffect(() => {
     const prev = document.title;
@@ -1184,8 +1214,7 @@ const UBpointPage = () => {
     };
   }, []);
 
-  // Preload + decode all hero assets before unlocking the splash. Replaces
-  // the previous fixed 2400ms timer so coins/mockup never pop in statically.
+  // Preload hero assets, hard-cap splash at 1500ms, always release scroll lock.
   useEffect(() => {
     if (ready) return;
     const prevBody = document.body.style.overflow;
@@ -1194,7 +1223,6 @@ const UBpointPage = () => {
     document.documentElement.style.overflow = 'hidden';
     window.scrollTo({ top: 0, behavior: 'auto' });
 
-    // Inject <link rel="preload"> hints for browser-level scheduling.
     const links: HTMLLinkElement[] = [];
     const addPreload = (href: string, priority: 'high' | 'low') => {
       const link = document.createElement('link');
@@ -1206,41 +1234,42 @@ const UBpointPage = () => {
       links.push(link);
     };
     HERO_CRITICAL_ASSETS.forEach((u) => addPreload(u, 'high'));
-    DECORATIVE_ASSETS.forEach((u) => addPreload(u, 'low'));
 
     let cancelled = false;
-    const decodeAll = Promise.allSettled(
-      ALL_ASSETS.map((url) => {
+    const decodeCritical = Promise.allSettled(
+      HERO_CRITICAL_ASSETS.map((url) => {
         const img = new Image();
         img.src = url;
         return img.decode().catch(() => undefined);
       }),
     );
 
-    // Safety net: never block more than 3s even on flaky networks.
     const safety = window.setTimeout(() => {
       if (cancelled) return;
       setReady(true);
-      sessionStorage.setItem('ubpoint-splashed', '1');
-    }, 3000);
+      try { sessionStorage.setItem('ubpoint-splashed', '1'); } catch {}
+    }, 1500);
 
-    decodeAll.then(() => {
+    decodeCritical.then(() => {
       if (cancelled) return;
       window.clearTimeout(safety);
-      // Small grace tick so the staggered splash motion still plays.
       window.setTimeout(() => {
         if (cancelled) return;
         setReady(true);
-        sessionStorage.setItem('ubpoint-splashed', '1');
-      }, 350);
+        try { sessionStorage.setItem('ubpoint-splashed', '1'); } catch {}
+      }, 200);
     });
+
+    const release = () => {
+      document.body.style.overflow = prevBody;
+      document.documentElement.style.overflow = prevHtml;
+      links.forEach((l) => l.parentNode?.removeChild(l));
+    };
 
     return () => {
       cancelled = true;
       window.clearTimeout(safety);
-      document.body.style.overflow = prevBody;
-      document.documentElement.style.overflow = prevHtml;
-      links.forEach((l) => l.parentNode?.removeChild(l));
+      release();
     };
   }, [ready]);
 
@@ -1264,23 +1293,20 @@ const UBpointPage = () => {
           {!ready && (
             <motion.div
               key="ubpoint-splash-overlay"
-              className="fixed inset-0 z-[60] cursor-wait"
+              className="fixed inset-0 z-[60] cursor-wait bg-white"
               initial={{ opacity: 1 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.5, ease: 'easeOut' }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
               onWheelCapture={(e) => e.preventDefault()}
               onTouchMoveCapture={(e) => e.preventDefault()}
               style={{ touchAction: 'none' }}
             >
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-b from-white/60 via-blue-50/30 to-white/0 backdrop-blur-[2px]"
-                initial={{ opacity: 1 }}
-                animate={{ opacity: 0 }}
-                transition={{ delay: 0.4, duration: 1.2, ease: 'easeOut' }}
-              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <img src={logoAsset.url} alt="UBpoint" className="h-14 w-auto opacity-90" />
+              </div>
               <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 border border-blue-100 shadow-lg backdrop-blur-md">
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-blue-100 shadow-lg">
                   <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
                   <span className="text-xs font-semibold text-slate-700 tracking-wide">
                     {t('projects.ubpointPage.splash.initializing')}
@@ -1294,5 +1320,11 @@ const UBpointPage = () => {
     </SplashContext.Provider>
   );
 };
+
+const UBpointPage = () => (
+  <UBpointErrorBoundary>
+    <UBpointPageInner />
+  </UBpointErrorBoundary>
+);
 
 export default UBpointPage;
