@@ -907,17 +907,23 @@ const sponsorTaskDefs = [
 
 const Sponsors = () => {
   const { t } = useTranslation();
+  const { tier } = useSplash();
+  const loop = tier === 'full';
   const list = t('projects.ubpointPage.sponsors.list', { returnObjects: true }) as string[];
   return (
     <section id="sponsors" className="relative py-16 sm:py-24 md:py-32 bg-white overflow-hidden">
-      <motion.img
-        src={goldCoinAsset.url}
-        alt=""
-        aria-hidden
-        className="hidden md:block absolute -left-10 bottom-10 w-32 opacity-70 drop-shadow-[0_20px_40px_rgba(202,138,4,0.35)] pointer-events-none"
-        animate={{ y: [0, -14, 0], rotateZ: [-6, 6, -6] }}
-        transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
-      />
+      {tier !== 'minimal' && (
+        <motion.img
+          src={goldCoinAsset.url}
+          alt=""
+          aria-hidden
+          loading="lazy"
+          decoding="async"
+          className="hidden md:block absolute -left-10 bottom-10 w-32 opacity-70 drop-shadow-[0_20px_40px_rgba(202,138,4,0.35)] pointer-events-none"
+          animate={loop ? { y: [0, -14, 0], rotateZ: [-6, 6, -6] } : undefined}
+          transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      )}
       <div className="max-w-7xl mx-auto px-5 sm:px-6 grid md:grid-cols-2 gap-10 sm:gap-12 items-center">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
