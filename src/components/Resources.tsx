@@ -62,7 +62,7 @@ export const Resources = () => {
   };
 
   return (
-    <section id="resources" className="py-20 md:py-32 relative cv-auto" ref={ref}>
+    <section id="resources" className="py-16 md:py-24 relative cv-auto" ref={ref}>
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -119,15 +119,9 @@ export const Resources = () => {
 
                 {/* Layer 4: Content */}
                 <div className="relative z-20 p-6 sm:p-8">
-                  <AnimatedImage
-                    src={resource.image}
-                    alt=""
-                    aria-hidden="true"
-                    loading="lazy"
-                    containerClassName="inline-block"
-                    className="w-12 h-12 sm:w-14 sm:h-14 object-contain mb-4 sm:mb-6 group-hover:scale-105 transition-[filter,transform] duration-300 drop-shadow-[0_6px_18px_rgba(59,130,246,0.25)] group-hover:drop-shadow-[0_10px_28px_rgba(59,130,246,0.4)]"
-                    placeholderClassName="opacity-0"
-                  />
+                  <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-medium mb-4">
+                    {String(index + 1).padStart(2, '0')}
+                  </div>
                   <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6">{resource.title}</h3>
                   <ul className="space-y-2 sm:space-y-3">
                     {resource.items.map((item, itemIndex) => (

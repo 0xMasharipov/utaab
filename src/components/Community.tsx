@@ -18,7 +18,7 @@ export const Community = () => {
   };
 
   return (
-    <section id="community" className="relative py-24 md:py-36 overflow-hidden" ref={ref}>
+    <section id="community" className="relative py-20 md:py-28 overflow-hidden" ref={ref}>
       {/* Subtle radial glow background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,hsl(var(--accent)/0.08),transparent_70%)]" />
 

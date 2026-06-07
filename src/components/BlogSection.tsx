@@ -31,7 +31,7 @@ export const BlogSection = () => {
   });
 
   return (
-    <section id="blog" className="py-20 md:py-32 relative" ref={ref}>
+    <section id="blog" className="py-16 md:py-24 relative" ref={ref}>
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
