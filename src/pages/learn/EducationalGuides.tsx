@@ -54,19 +54,19 @@ const Section = ({ id, title, subtitle, cards, t }: { id: string; title: string;
             animate={isInView ? 'visible' : 'hidden'}
             variants={fadeUp}
             custom={i + 1}
-            className="glass rounded-2xl p-6 hover:bg-white/[0.08] hover:-translate-y-1 transition-all duration-300 group flex flex-col"
+            className="glass rounded-2xl p-6 hover:bg-white/[0.06] hover:-translate-y-0.5 transition-all duration-300 group flex flex-col"
           >
-            <div className="flex items-start justify-between mb-4">
-              <div className="p-2.5 rounded-xl bg-primary/20 text-accent">
-                <card.icon className="h-5 w-5" />
-              </div>
+            <div className="flex items-baseline justify-between mb-4">
+              <span className="text-2xl font-extralight text-foreground/25 tabular-nums">
+                {String(i + 1).padStart(2, '0')}
+              </span>
               <Badge className={`${badgeColor(card.difficulty)} text-[10px] font-semibold border`}>
                 {t(difficultyKey(card.difficulty))}
               </Badge>
             </div>
             <h3 className="text-lg font-bold text-foreground mb-2">{t(card.titleKey)}</h3>
             <p className="text-sm text-muted-foreground mb-4 flex-1">{t(card.descriptionKey)}</p>
-            <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/[0.08]">
+            <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/[0.06]">
               <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Clock className="h-3.5 w-3.5" /> {card.readTime}
               </span>
@@ -132,8 +132,8 @@ const EducationalGuides = () => {
       <section className="pt-32 pb-16 md:pt-40 md:pb-20">
         <div className="section-container text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-accent text-sm font-medium mb-6">
-              <BookOpen className="h-4 w-4" /> {t('learn.guidesPage.heroBadge')}
+            <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-medium mb-5">
+              {t('learn.guidesPage.heroBadge')}
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-5 text-foreground">
               {t('learn.guidesPage.heroTitle')}<span className="text-accent">{t('learn.guidesPage.heroTitleAccent')}</span>
