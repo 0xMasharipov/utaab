@@ -117,24 +117,55 @@ const About = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="max-w-3xl mx-auto"
+          className="max-w-5xl mx-auto"
         >
-          <GlassCard hover className="p-8 sm:p-10 text-center border-t-2 border-t-accent/30">
-            <h2 className={getTransitionClasses("text-2xl sm:text-3xl font-bold mb-4 text-foreground")}>
-              {t('aboutPage.officialCommunity.title')}
-            </h2>
-            <p className={getTransitionClasses("text-muted-foreground text-base sm:text-lg leading-relaxed mb-6")}>
-              {t('aboutPage.officialCommunity.body')}
-            </p>
-            <a
-              href={t('aboutPage.officialCommunity.url')}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold text-accent border border-accent/30 hover:bg-accent/10 transition-colors"
-            >
-              {t('aboutPage.officialCommunity.linkLabel')}
-              <NavArrowRight className="h-4 w-4" strokeWidth={1.5} />
-            </a>
+          <GlassCard hover className="p-0 overflow-hidden border-t-2 border-t-accent/30">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-0 items-stretch">
+              {/* Image */}
+              <div className="relative min-h-[260px] md:min-h-[360px]">
+                <div
+                  className="absolute inset-0 opacity-[0.06]"
+                  style={{
+                    backgroundImage:
+                      'linear-gradient(to right, hsl(213 94% 68%) 1px, transparent 1px), linear-gradient(to bottom, hsl(213 94% 68%) 1px, transparent 1px)',
+                    backgroundSize: '32px 32px',
+                  }}
+                  aria-hidden="true"
+                />
+                <AnimatedImage
+                  src={utaaCommunityAsset.url}
+                  alt="Türk-Alman Üniversitesi (TAU) — official university community"
+                  containerClassName="absolute inset-0"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+                <div
+                  className="absolute inset-0 pointer-events-none md:bg-[linear-gradient(to_right,transparent_60%,hsl(217_50%_8%/0.85)_100%)] bg-[linear-gradient(to_top,hsl(217_50%_8%/0.85)_0%,transparent_60%)]"
+                  aria-hidden="true"
+                />
+              </div>
+
+              {/* Text */}
+              <div className="p-8 sm:p-10 md:p-12 flex flex-col justify-center text-center md:text-left">
+                <h2 className={getTransitionClasses("text-2xl sm:text-3xl font-bold mb-4 text-foreground")}>
+                  {t('aboutPage.officialCommunity.title')}
+                </h2>
+                <p className={getTransitionClasses("text-muted-foreground text-base sm:text-lg leading-relaxed mb-6")}>
+                  {t('aboutPage.officialCommunity.body')}
+                </p>
+                <div className="md:self-start">
+                  <a
+                    href={t('aboutPage.officialCommunity.url')}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold text-accent border border-accent/30 hover:bg-accent/10 transition-colors"
+                  >
+                    {t('aboutPage.officialCommunity.linkLabel')}
+                    <NavArrowRight className="h-4 w-4" strokeWidth={1.5} />
+                  </a>
+                </div>
+              </div>
+            </div>
           </GlassCard>
         </motion.div>
       </GlassSectionWrapper>
