@@ -30,19 +30,67 @@ const TonRaPage = () => {
         path="/projects/tonra"
         ogType="website"
         image="https://utaab.org/og-image.png"
-        jsonLd={{
-          '@context': 'https://schema.org',
-          '@type': 'SoftwareApplication',
-          name: 'TonRa',
-          applicationCategory: 'SecurityApplication',
-          operatingSystem: 'Telegram',
-          url: 'https://utaab.org/projects/tonra',
-          publisher: {
-            '@type': 'Organization',
-            name: 'UTAAB',
-            url: 'https://utaab.org',
+        jsonLd={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'SoftwareApplication',
+            name: 'TonRa',
+            applicationCategory: 'SecurityApplication',
+            operatingSystem: 'Telegram',
+            url: 'https://utaab.org/projects/tonra',
+            publisher: {
+              '@type': 'Organization',
+              name: 'UTAAB',
+              url: 'https://utaab.org',
+            },
           },
-        }}
+          {
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: [
+              {
+                '@type': 'Question',
+                name: 'What is TonRa?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'TonRa is a Telegram security bot by UTAAB for the TON ecosystem. It lets you verify wallets, tokens, projects and airdrops before you interact with them.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'Is TonRa free to use?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Yes, TonRa is currently free to use directly inside Telegram.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'Does TonRa store my wallet keys or seed phrase?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'No. TonRa never asks for your seed phrase or private keys. It only inspects public on-chain data for the wallets, tokens and projects you ask about.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'How do I verify a TON token or airdrop with TonRa?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Open @TonRa_Robot on Telegram and send the wallet address, token contract, project link or airdrop you want to check. TonRa returns a risk summary based on on-chain signals.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'What blockchain does TonRa support?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'TonRa focuses on the TON (The Open Network) ecosystem.',
+                },
+              },
+            ],
+          },
+        ]}
       />
       <Navbar />
 

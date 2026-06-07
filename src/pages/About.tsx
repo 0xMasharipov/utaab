@@ -69,6 +69,36 @@ const About = () => {
               description: 'UTAAB is a student-led Web3 ecosystem for blockchain education, real projects, and cross-border collaboration.',
             },
           },
+          {
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: [
+              {
+                '@type': 'Question',
+                name: 'What is UTAAB?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'UTAAB is a student-led Web3 ecosystem focused on blockchain education, real projects, and cross-border collaboration — giving beginners a clear path from first guide to first shipped Web3 project.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'Who runs UTAAB?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'UTAAB is run by students and Web3 builders from multiple universities, led by founder Zinurbek Masharipov and a volunteer core team.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'Is UTAAB free to join?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Yes. Joining the community, reading the guides, and most courses are free. Any paid program is clearly labeled.',
+                },
+              },
+            ],
+          },
         ]}
       />
       <AnimatedBlobBackground />
