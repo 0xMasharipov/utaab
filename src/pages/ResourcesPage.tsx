@@ -89,8 +89,7 @@ const ResourcesPage = () => {
       <section className="pt-32 pb-16 md:pt-40 md:pb-20">
         <div className="section-container text-center max-w-3xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-accent text-sm font-medium mb-6">
-              <BookOpen className="h-4 w-4" />
+            <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-medium mb-5">
               {t('resourcesPage.hero.badge', 'Knowledge Hub')}
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-5 leading-tight">
@@ -116,11 +115,11 @@ const ResourcesPage = () => {
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.5, delay: i * 0.05 }}
               >
-                <GlassCard hover className="p-6 md:p-7 h-full flex flex-col">
-                  <div className="flex items-start justify-between mb-5">
-                    <div className="w-12 h-12 rounded-xl bg-primary/15 border border-accent/20 flex items-center justify-center text-accent">
-                      <res.icon className="h-6 w-6" />
-                    </div>
+                <GlassCard variant="subtle" hover className="p-6 md:p-7 h-full flex flex-col">
+                  <div className="flex items-baseline justify-between mb-4">
+                    <span className="text-2xl font-extralight text-foreground/25 tabular-nums">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
                     {res.badge && (
                       <span className="text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">
                         {res.badge}
@@ -136,7 +135,6 @@ const ResourcesPage = () => {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 text-accent font-medium hover:gap-3 transition-all"
                     >
-                      {res.id === 'developers' && <Github className="h-4 w-4" />}
                       {res.cta}
                       <ExternalLink className="h-4 w-4" />
                     </a>
