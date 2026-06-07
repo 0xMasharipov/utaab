@@ -1290,7 +1290,7 @@ const UBpointPageInner = () => {
   }, [ready]);
 
   return (
-    <SplashContext.Provider value={{ ready }}>
+    <SplashContext.Provider value={{ ready, tier }}>
       <div className="min-h-screen bg-white text-slate-900 font-sans">
         <LightNavbar />
         <main>
