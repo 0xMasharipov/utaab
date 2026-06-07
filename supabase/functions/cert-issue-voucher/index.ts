@@ -102,6 +102,8 @@ Deno.serve(async (req) => {
     }
 
     const { serial_hash, token_uri } = parsed.data;
+    // DB stores serial_hash as 64 hex chars without the 0x prefix.
+    const serialHashDb = serial_hash.slice(2);
 
     logStage('request', {
       attempt_id: attemptId,
@@ -116,7 +118,7 @@ Deno.serve(async (req) => {
     const { data: row, error } = await admin
       .from('cert_records')
       .select('id, event_hash, issued_by_hash, status, serial_number, chain_id')
-      .eq('serial_hash', serial_hash)
+      .eq('serial_hash', serialHashDb)
       .maybeSingle();
     if (error || !row) {
       logStage('error', { attempt_id: attemptId, stage: 'lookup', found: !!row });
