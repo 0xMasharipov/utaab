@@ -91,6 +91,9 @@ async function main() {
     process.exit(0);
   }
 
+  console.error(
+    `::error title=Risky SECURITY DEFINER grants::${violations.length} function(s) need REVOKE or allowlisting`
+  );
   console.error("✗ Risky EXECUTE grants on SECURITY DEFINER functions detected:\n");
   for (const v of violations) {
     console.error(`  • public.${v.sig}  →  ${v.grantee}`);
