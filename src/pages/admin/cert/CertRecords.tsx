@@ -209,7 +209,7 @@ export default function CertRecords() {
       {wrongNetwork && (
         <Alert>
           <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>Wallet is on chain {chainId}. <Button size="sm" variant="link" onClick={() => switchChain?.({ chainId: sepolia.id })}>Switch to Sepolia</Button></AlertDescription>
+          <AlertDescription>Wallet is on chain {chainId}. <Button size="sm" variant="link" onClick={() => switchChain?.({ chainId: CHAIN_ID })}>Switch to {NETWORK_LABEL}</Button></AlertDescription>
         </Alert>
       )}
 
