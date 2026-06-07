@@ -1220,7 +1220,101 @@ class UBpointErrorBoundary extends Component<{ children: ReactNode }, { hasError
   }
 }
 
-/* ---------- Page ---------- */
+/* ---------- Perf-tier debug panel (no console required) ---------- */
+const PerfDebugPanel = () => {
+  const { tier, tierOverride, setTierOverride, replaySpread, heroReady, ready } = useSplash();
+  const [enabled, setEnabled] = useState(false);
+
+  useEffect(() => {
+    try {
+      const fromQuery = new URLSearchParams(window.location.search).get('perf-debug') === '1';
+      const fromStorage = localStorage.getItem('ubpoint-perf-debug') === '1';
+      if (fromQuery || fromStorage) setEnabled(true);
+    } catch {}
+    const onKey = (e: KeyboardEvent) => {
+      if (e.shiftKey && (e.key === 'P' || e.key === 'p') && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        const target = e.target as HTMLElement | null;
+        if (target && /input|textarea|select/i.test(target.tagName)) return;
+        setEnabled((v) => {
+          const next = !v;
+          try { localStorage.setItem('ubpoint-perf-debug', next ? '1' : '0'); } catch {}
+          return next;
+        });
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  if (!enabled) return null;
+
+  const tiers: PerfTier[] = ['full', 'reduced', 'minimal'];
+  return (
+    <div
+      role="region"
+      aria-label="UBpoint performance debug panel"
+      className="fixed bottom-4 right-4 z-[70] w-[240px] rounded-2xl border border-blue-100 bg-white/95 backdrop-blur-xl shadow-2xl p-3 text-slate-900"
+    >
+      <div className="flex items-center justify-between mb-2">
+        <div className="text-[11px] font-extrabold uppercase tracking-wider text-blue-700">Perf debug</div>
+        <button
+          type="button"
+          onClick={() => {
+            setEnabled(false);
+            try { localStorage.setItem('ubpoint-perf-debug', '0'); } catch {}
+          }}
+          className="text-slate-400 hover:text-slate-700 text-xs"
+          aria-label="Close"
+        >
+          ✕
+        </button>
+      </div>
+      <div className="text-[11px] text-slate-500 mb-2">
+        Tier <span className="font-bold text-slate-900">{tier}</span>
+        {tierOverride && <span className="ml-1 text-blue-600">(override)</span>}
+        <span className="ml-2">· ready {ready ? '✓' : '…'} · hero {heroReady ? '✓' : '…'}</span>
+      </div>
+      <div className="grid grid-cols-3 gap-1.5 mb-2">
+        {tiers.map((tt) => {
+          const active = tierOverride === tt;
+          return (
+            <button
+              key={tt}
+              type="button"
+              onClick={() => setTierOverride(tt)}
+              className={`px-2 py-1.5 rounded-lg text-[11px] font-semibold border transition-colors ${
+                active
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white text-slate-700 border-blue-100 hover:bg-blue-50'
+              }`}
+            >
+              {tt}
+            </button>
+          );
+        })}
+      </div>
+      <div className="flex gap-1.5">
+        <button
+          type="button"
+          onClick={() => setTierOverride(null)}
+          className="flex-1 px-2 py-1.5 rounded-lg text-[11px] font-semibold bg-white border border-blue-100 text-slate-700 hover:bg-blue-50"
+        >
+          Auto
+        </button>
+        <button
+          type="button"
+          onClick={replaySpread}
+          className="flex-1 px-2 py-1.5 rounded-lg text-[11px] font-semibold bg-blue-50 border border-blue-100 text-blue-700 hover:bg-blue-100"
+        >
+          Replay
+        </button>
+      </div>
+      <div className="mt-2 text-[10px] text-slate-400">Toggle with Shift + P</div>
+    </div>
+  );
+};
+
+
 const UBpointPageInner = () => {
   const { t } = useTranslation();
 
