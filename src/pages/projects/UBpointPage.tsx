@@ -376,7 +376,7 @@ const FloatingDevice = () => {
           alt=""
           aria-hidden
           className="w-full drop-shadow-[0_20px_40px_rgba(37,99,235,0.35)]"
-          animate={ready ? { y: [0, -12, 0], rotateZ: [-6, 6, -6] } : undefined}
+          animate={ready && loop ? { y: [0, -12, 0], rotateZ: [-6, 6, -6] } : undefined}
           transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
         />
       </motion.div>
