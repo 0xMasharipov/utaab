@@ -14,23 +14,23 @@ import pg from "pg";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ALLOWLIST_PATH = join(__dirname, "allowlist.json");
 
-const RISKY_GRANTEES = ["PUBLIC", "anon", "authenticated"];
-
 const SQL = `
 SELECT
   p.proname AS function_name,
   pg_catalog.pg_get_function_identity_arguments(p.oid) AS arg_types,
-  r.grantee::text AS grantee
+  CASE WHEN a.grantee = 0 THEN 'PUBLIC'
+       ELSE pg_catalog.pg_get_userbyid(a.grantee) END AS grantee
 FROM pg_proc p
 JOIN pg_namespace n ON n.oid = p.pronamespace
-JOIN information_schema.routine_privileges r
-  ON r.routine_schema = n.nspname
- AND r.routine_name = p.proname
- AND r.privilege_type = 'EXECUTE'
+CROSS JOIN LATERAL aclexplode(COALESCE(p.proacl, acldefault('f', p.proowner))) AS a
 WHERE n.nspname = 'public'
   AND p.prosecdef = true
-  AND r.grantee = ANY($1::text[])
-ORDER BY p.proname, r.grantee;
+  AND a.privilege_type = 'EXECUTE'
+  AND (
+    a.grantee = 0
+    OR pg_catalog.pg_get_userbyid(a.grantee) IN ('anon', 'authenticated')
+  )
+ORDER BY p.proname, grantee;
 `;
 
 function loadAllowlist() {
@@ -63,7 +63,7 @@ async function main() {
   await client.connect();
   let rows;
   try {
-    const res = await client.query(SQL, [RISKY_GRANTEES]);
+    const res = await client.query(SQL);
     rows = res.rows;
   } finally {
     await client.end();
@@ -91,6 +91,9 @@ async function main() {
     process.exit(0);
   }
 
+  console.error(
+    `::error title=Risky SECURITY DEFINER grants::${violations.length} function(s) need REVOKE or allowlisting`
+  );
   console.error("✗ Risky EXECUTE grants on SECURITY DEFINER functions detected:\n");
   for (const v of violations) {
     console.error(`  • public.${v.sig}  →  ${v.grantee}`);
