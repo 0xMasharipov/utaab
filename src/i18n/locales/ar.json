@@ -1803,6 +1803,11 @@
         "title": "الدعم",
         "description": "تمكين النمو المالي والنفسي والمهني."
       }
+    },
+    "officialCommunity": {
+      "text": "نستضيف مجتمعنا الطلابي الرسمي في جامعة الجمعية الجوية التركية (UTAA) في أنقرة، تركيا.",
+      "linkLabel": "زيارة صفحة مجتمع UTAA للبلوكتشين الرسمية ←",
+      "url": "https://www.thk.edu.tr/tr/student-clubs/turk-hava-kurumu-universitesi-blockchain-toplulugu"
     }
   },
   "aboutPage": {
@@ -1864,6 +1869,12 @@
       "title": "كن جزءًا من المستقبل الذي نبنيه",
       "joinButton": "انضم للمجتمع",
       "exploreButton": "استكشف المشاريع"
+    },
+    "officialCommunity": {
+      "title": "المجتمع الجامعي الرسمي",
+      "body": "يستضيف UTAAB مجتمعه الطلابي الرسمي في جامعة الجمعية الجوية التركية (UTAA) في أنقرة، تركيا.",
+      "linkLabel": "عرض على thk.edu.tr",
+      "url": "https://www.thk.edu.tr/tr/student-clubs/turk-hava-kurumu-universitesi-blockchain-toplulugu"
     }
   },
   "learnHub": {
@@ -2083,6 +2094,56 @@
       "subtitle": "تواصل معنا عبر contact@utaab.org أو انضم إلى المجتمع — نحن نقرأ كل رسالة.",
       "button": "انضم إلى المجتمع",
       "email": "راسلنا عبر البريد الإلكتروني"
+    }
+  },
+  "verifyCertificate": {
+    "pageTitle": "تحقق من الشهادة على Base — UTAAB",
+    "backHome": "العودة إلى الصفحة الرئيسية",
+    "badge": "التحقق من الشهادة",
+    "headingPrefix": "تحقق على",
+    "headingNetwork": "Base",
+    "subtitle": "تأكّد من أن شهادة UTAAB قد أُصدرت رسميًا وسُجّلت على شبكة {{network}} كرمز Soulbound غير قابل للنقل.",
+    "placeholder": "UTAAB-BB-2026-0001",
+    "submit": "تحقق",
+    "notConfigured": "السجل على السلسلة لم يُهيَّأ بعد — يعتمد التحقق على السجل الآمن فقط.",
+    "networkError": "تعذّر الوصول إلى {{network}}. يرجى المحاولة لاحقًا.",
+    "unknownEvent": "فعالية غير معروفة",
+    "defaultTitle": "شهادة مشاركة",
+    "trust": {
+      "onChainTitle": "على سلسلة {{network}}",
+      "onChainDesc": "كل شهادة مسجّلة كرمز Soulbound.",
+      "tamperTitle": "مقاومة للتلاعب",
+      "tamperDesc": "تجزئة تشفيرية للرقم التسلسلي يمكن التحقق منها عبر RPC عام.",
+      "publicTitle": "تحقق علني",
+      "publicDesc": "يمكن لأي شخص التحقق — بدون حساب أو مفتاح API."
+    },
+    "result": {
+      "loading": "جارٍ التحقق من البلوكتشين والسجل…",
+      "notFoundTitle": "لم يتم العثور على الشهادة",
+      "notFoundDesc": "لا توجد شهادة بهذا الرقم التسلسلي. يُرجى التحقق والمحاولة مرة أخرى.",
+      "errorTitle": "خطأ في التحقق",
+      "validTitle": "الشهادة صالحة",
+      "revokedTitle": "تم إلغاء الشهادة",
+      "validDesc": "تم إصدار هذه الشهادة رسميًا من قبل UTAAB وتسجيلها على البلوكتشين.",
+      "revokedDesc": "صدرت هذه الشهادة ولكن تم إلغاؤها لاحقًا من قبل UTAAB.",
+      "participant": "المشارك",
+      "certificateTitle": "عنوان الشهادة",
+      "speaker": "المتحدث / المدرّب",
+      "eventDate": "تاريخ الفعالية",
+      "location": "الموقع",
+      "issuedBy": "صادرة عن",
+      "partners": "الشركاء",
+      "serial": "الرقم التسلسلي",
+      "issuedOn": "تاريخ الإصدار",
+      "revokedOn": "تاريخ الإلغاء",
+      "revocationReason": "سبب الإلغاء",
+      "network": "الشبكة",
+      "networkValue": "Sepolia Testnet",
+      "transaction": "المعاملة",
+      "contract": "العقد",
+      "viewPdf": "عرض الـ PDF",
+      "download": "تنزيل",
+      "empty": "—"
     }
   }
 }

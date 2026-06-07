@@ -1803,6 +1803,11 @@
         "title": "Destek",
         "description": "Finansal, zihinsel ve profesyonel büyümeyi mümkün kılma."
       }
+    },
+    "officialCommunity": {
+      "text": "Resmi öğrenci topluluğumuza Türk Hava Kurumu Üniversitesi'nde (THKÜ / UTAA), Ankara, Türkiye'de ev sahipliği yapıyoruz.",
+      "linkLabel": "Resmi UTAA Blockchain Topluluğu sayfasını ziyaret et →",
+      "url": "https://www.thk.edu.tr/tr/student-clubs/turk-hava-kurumu-universitesi-blockchain-toplulugu"
     }
   },
   "aboutPage": {
@@ -1864,6 +1869,12 @@
       "title": "İnşa Ettiğimiz Geleceğin Parçası Olun",
       "joinButton": "Topluluğa Katıl",
       "exploreButton": "Projeleri Keşfet"
+    },
+    "officialCommunity": {
+      "title": "Resmi Üniversite Topluluğu",
+      "body": "UTAAB, resmi öğrenci topluluğuna Ankara, Türkiye'de bulunan Türk Hava Kurumu Üniversitesi'nde (THKÜ / UTAA) ev sahipliği yapmaktadır.",
+      "linkLabel": "thk.edu.tr üzerinde görüntüle",
+      "url": "https://www.thk.edu.tr/tr/student-clubs/turk-hava-kurumu-universitesi-blockchain-toplulugu"
     }
   },
   "learnHub": {
@@ -2083,6 +2094,56 @@
       "subtitle": "contact@utaab.org adresinden bize ulaşın veya topluluğa katılın — her mesajı okuyoruz.",
       "button": "Topluluğa Katıl",
       "email": "Bize E-posta Gönderin"
+    }
+  },
+  "verifyCertificate": {
+    "pageTitle": "Sertifikayı Base üzerinde doğrula — UTAAB",
+    "backHome": "Ana sayfaya dön",
+    "badge": "Sertifika Doğrulama",
+    "headingPrefix": "Doğrula:",
+    "headingNetwork": "Base",
+    "subtitle": "Bir UTAAB sertifikasının {{network}} blok zincirine ruhbağlı, devredilemez bir token olarak resmi şekilde kaydedildiğini doğrulayın.",
+    "placeholder": "UTAAB-BB-2026-0001",
+    "submit": "Doğrula",
+    "notConfigured": "Zincir üstü kayıt henüz yapılandırılmadı — doğrulama yalnızca güvenli kayıt defteri üzerinden yapılır.",
+    "networkError": "{{network}} ağına ulaşılamadı. Lütfen daha sonra tekrar deneyin.",
+    "unknownEvent": "Bilinmeyen etkinlik",
+    "defaultTitle": "Katılım Sertifikası",
+    "trust": {
+      "onChainTitle": "{{network}} üzerinde zincir üstü",
+      "onChainDesc": "Her sertifika ruhbağlı (soulbound) token olarak kaydedilir.",
+      "tamperTitle": "Değiştirilemez",
+      "tamperDesc": "Kriptografik seri özeti, halka açık RPC üzerinden doğrulanabilir.",
+      "publicTitle": "Herkese açık doğrulama",
+      "publicDesc": "Herkes doğrulayabilir — hesap veya API anahtarı gerekmez."
+    },
+    "result": {
+      "loading": "Blok zinciri ve kayıt defteri kontrol ediliyor…",
+      "notFoundTitle": "Sertifika bulunamadı",
+      "notFoundDesc": "Bu seri numarası için sertifika bulunamadı. Lütfen tekrar kontrol edin.",
+      "errorTitle": "Doğrulama hatası",
+      "validTitle": "Sertifika geçerli",
+      "revokedTitle": "Sertifika iptal edildi",
+      "validDesc": "Bu sertifika UTAAB tarafından resmi olarak verilmiş ve blok zincirine kaydedilmiştir.",
+      "revokedDesc": "Bu sertifika düzenlendi ancak daha sonra UTAAB tarafından iptal edildi.",
+      "participant": "Katılımcı",
+      "certificateTitle": "Sertifika başlığı",
+      "speaker": "Konuşmacı / Eğitmen",
+      "eventDate": "Etkinlik tarihi",
+      "location": "Konum",
+      "issuedBy": "Düzenleyen",
+      "partners": "Ortaklar",
+      "serial": "Seri numarası",
+      "issuedOn": "Düzenleme tarihi",
+      "revokedOn": "İptal tarihi",
+      "revocationReason": "İptal nedeni",
+      "network": "Ağ",
+      "networkValue": "Sepolia Test Ağı",
+      "transaction": "İşlem",
+      "contract": "Sözleşme",
+      "viewPdf": "PDF'i görüntüle",
+      "download": "İndir",
+      "empty": "—"
     }
   }
 }

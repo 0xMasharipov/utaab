@@ -1803,6 +1803,11 @@
         "title": "Support",
         "description": "Enabling financial, mental, and professional growth."
       }
+    },
+    "officialCommunity": {
+      "text": "We host our official student community at the University of Turkish Aeronautical Association (UTAA) in Ankara, Türkiye.",
+      "linkLabel": "Visit the official UTAA Blockchain Community page →",
+      "url": "https://www.thk.edu.tr/tr/student-clubs/turk-hava-kurumu-universitesi-blockchain-toplulugu"
     }
   },
   "aboutPage": {
@@ -1864,6 +1869,12 @@
       "title": "Be Part of the Future We're Building",
       "joinButton": "Join Community",
       "exploreButton": "Explore Projects"
+    },
+    "officialCommunity": {
+      "title": "Official University Community",
+      "body": "UTAAB hosts its official student community at the University of Turkish Aeronautical Association (UTAA), located in Ankara, Türkiye.",
+      "linkLabel": "View on thk.edu.tr",
+      "url": "https://www.thk.edu.tr/tr/student-clubs/turk-hava-kurumu-universitesi-blockchain-toplulugu"
     }
   },
   "learnHub": {
@@ -2083,6 +2094,56 @@
       "subtitle": "Reach out at contact@utaab.org or join the community — we read every message.",
       "button": "Join the Community",
       "email": "Email Us"
+    }
+  },
+  "verifyCertificate": {
+    "pageTitle": "Verify Certificate on Base — UTAAB",
+    "backHome": "Back to home",
+    "badge": "Certificate Verification",
+    "headingPrefix": "Verify on",
+    "headingNetwork": "Base",
+    "subtitle": "Confirm that a UTAAB certificate was officially issued and recorded on the {{network}} blockchain as a soulbound, non-transferable token.",
+    "placeholder": "UTAAB-BB-2026-0001",
+    "submit": "Verify",
+    "notConfigured": "On-chain registry not yet configured — verification uses the secure registry only.",
+    "networkError": "Could not reach {{network}}. Please try again later.",
+    "unknownEvent": "Unknown event",
+    "defaultTitle": "Certificate of Participation",
+    "trust": {
+      "onChainTitle": "On-chain on {{network}}",
+      "onChainDesc": "Every certificate is registered as a soulbound token.",
+      "tamperTitle": "Tamper-proof",
+      "tamperDesc": "Cryptographic serial hash, verifiable on public RPC.",
+      "publicTitle": "Public verification",
+      "publicDesc": "Anyone can verify — no account, no API key."
+    },
+    "result": {
+      "loading": "Checking blockchain & registry…",
+      "notFoundTitle": "Certificate not found",
+      "notFoundDesc": "No certificate found for this serial number. Please double-check and try again.",
+      "errorTitle": "Verification error",
+      "validTitle": "Certificate is valid",
+      "revokedTitle": "Certificate has been revoked",
+      "validDesc": "This certificate was officially issued by UTAAB and recorded on the blockchain.",
+      "revokedDesc": "This certificate was issued but later revoked by UTAAB.",
+      "participant": "Participant",
+      "certificateTitle": "Certificate title",
+      "speaker": "Speaker / Instructor",
+      "eventDate": "Event date",
+      "location": "Location",
+      "issuedBy": "Issued by",
+      "partners": "Partners",
+      "serial": "Serial number",
+      "issuedOn": "Issued on",
+      "revokedOn": "Revoked on",
+      "revocationReason": "Revocation reason",
+      "network": "Network",
+      "networkValue": "Sepolia Testnet",
+      "transaction": "Transaction",
+      "contract": "Contract",
+      "viewPdf": "View PDF",
+      "download": "Download",
+      "empty": "—"
     }
   }
 }

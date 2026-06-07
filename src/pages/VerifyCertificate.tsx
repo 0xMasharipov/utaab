@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
@@ -23,6 +24,7 @@ import {
 const Certificate3D = lazy(() => import('@/components/cert/Certificate3D'));
 
 export default function VerifyCertificate() {
+  const { t } = useTranslation();
   const [params, setParams] = useSearchParams();
   const initial = params.get('serial') || '';
   const [serial, setSerial] = useState(initial);
@@ -66,7 +68,7 @@ export default function VerifyCertificate() {
         if (!dbRow) {
           setState({
             kind: 'error',
-            message: `Could not reach ${NETWORK_LABEL}. Please try again later.`,
+            message: t('verifyCertificate.networkError', { network: NETWORK_LABEL }),
           });
           return;
         }
@@ -85,14 +87,14 @@ export default function VerifyCertificate() {
     setState({
       kind,
       participantName: dbRow?.participant_name ?? null,
-      eventName: dbRow?.event_name ?? 'Unknown event',
+      eventName: dbRow?.event_name ?? t('verifyCertificate.unknownEvent'),
       speakerName: dbRow?.speaker_name ?? null,
       eventDate: dbRow?.event_date ?? null,
       location: dbRow?.location ?? null,
       issuedBy: dbRow?.issued_by ?? 'UTAAB',
       organizer: dbRow?.organizer ?? null,
       partners: dbRow?.partners ?? null,
-      certificateTitle: dbRow?.certificate_title ?? 'Certificate of Participation',
+      certificateTitle: dbRow?.certificate_title ?? t('verifyCertificate.defaultTitle'),
       serialNumber: dbRow?.serial_number ?? normalized,
       issuedAt: dbRow?.issued_at ?? null,
       revokedAt: dbRow?.revoked_at ?? null,
@@ -105,18 +107,30 @@ export default function VerifyCertificate() {
 
   useEffect(() => {
     const prev = document.title;
-    document.title = 'Verify Certificate on Base — UTAAB';
+    document.title = t('verifyCertificate.pageTitle');
     if (initial) runVerify(initial);
     return () => {
       document.title = prev;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [t]);
 
   const trust = [
-    { Icon: Link2, title: `On-chain on ${NETWORK_LABEL}`, desc: 'Every certificate is registered as a soulbound token.' },
-    { Icon: Lock, title: 'Tamper-proof', desc: 'Cryptographic serial hash, verifiable on public RPC.' },
-    { Icon: Globe2, title: 'Public verification', desc: 'Anyone can verify — no account, no API key.' },
+    {
+      Icon: Link2,
+      title: t('verifyCertificate.trust.onChainTitle', { network: NETWORK_LABEL }),
+      desc: t('verifyCertificate.trust.onChainDesc'),
+    },
+    {
+      Icon: Lock,
+      title: t('verifyCertificate.trust.tamperTitle'),
+      desc: t('verifyCertificate.trust.tamperDesc'),
+    },
+    {
+      Icon: Globe2,
+      title: t('verifyCertificate.trust.publicTitle'),
+      desc: t('verifyCertificate.trust.publicDesc'),
+    },
   ];
 
   return (
@@ -136,7 +150,7 @@ export default function VerifyCertificate() {
                 to="/"
                 className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
-                <ArrowLeft className="w-4 h-4" /> Back to home
+                <ArrowLeft className="w-4 h-4" /> {t('verifyCertificate.backHome')}
               </Link>
             </motion.div>
 
@@ -148,17 +162,16 @@ export default function VerifyCertificate() {
                 transition={{ duration: 0.6 }}
               >
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/15 text-primary text-xs font-semibold mb-4">
-                  <ShieldCheck className="h-3.5 w-3.5" /> Certificate Verification
+                  <ShieldCheck className="h-3.5 w-3.5" /> {t('verifyCertificate.badge')}
                 </div>
                 <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight mb-4 text-glow-soft">
-                  Verify on{' '}
+                  {t('verifyCertificate.headingPrefix')}{' '}
                   <span className="bg-gradient-to-r from-primary to-sky-400 bg-clip-text text-transparent">
-                    Base
+                    {t('verifyCertificate.headingNetwork')}
                   </span>
                 </h1>
                 <p className="text-base sm:text-lg text-muted-foreground mb-8 leading-relaxed max-w-xl">
-                  Confirm that a UTAAB certificate was officially issued and recorded on the{' '}
-                  {NETWORK_LABEL} blockchain as a soulbound, non-transferable token.
+                  {t('verifyCertificate.subtitle', { network: NETWORK_LABEL })}
                 </p>
 
                 <Card className="bg-card/40 backdrop-blur-xl border-primary/20 shadow-[0_8px_32px_rgba(59,130,246,0.15)]">
@@ -171,7 +184,7 @@ export default function VerifyCertificate() {
                       }}
                     >
                       <Input
-                        placeholder="UTAAB-BB-2026-0001"
+                        placeholder={t('verifyCertificate.placeholder')}
                         value={serial}
                         onChange={(e) => setSerial(e.target.value)}
                         className="flex-1 font-mono bg-background/60 border-white/10 focus-visible:ring-primary/40"
@@ -182,12 +195,12 @@ export default function VerifyCertificate() {
                         size="lg"
                         className="font-bold shadow-[0_8px_24px_rgba(59,130,246,0.35)] hover:shadow-[0_12px_36px_rgba(59,130,246,0.5)] hover:scale-[1.02] transition-all"
                       >
-                        <Search className="h-4 w-4 mr-2" /> Verify
+                        <Search className="h-4 w-4 mr-2" /> {t('verifyCertificate.submit')}
                       </Button>
                     </form>
                     {!isContractConfigured && (
                       <p className="text-xs text-amber-300/90 mt-3">
-                        On-chain registry not yet configured — verification uses the secure registry only.
+                        {t('verifyCertificate.notConfigured')}
                       </p>
                     )}
                   </CardContent>
