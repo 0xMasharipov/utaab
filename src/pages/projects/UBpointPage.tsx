@@ -1379,6 +1379,9 @@ const UBpointPageInner = () => {
         </main>
         <LightFooter />
 
+        <PerfDebugPanel />
+
+
         <AnimatePresence>
           {!ready && (
             <motion.div
