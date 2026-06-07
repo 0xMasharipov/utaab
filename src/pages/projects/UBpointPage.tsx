@@ -276,14 +276,14 @@ const FloatingDevice = () => {
     <div className="relative w-full max-w-[280px] sm:max-w-[340px] md:max-w-[420px] mx-auto px-2 sm:px-0">
       <div className="absolute inset-0 -m-6 sm:-m-10 bg-gradient-to-br from-blue-400/40 via-blue-500/30 to-blue-600/20 blur-3xl rounded-full" />
 
-      <div aria-hidden className="absolute inset-0 -m-8 sm:-m-12 md:-m-24 pointer-events-none">
+      <div aria-hidden className="absolute inset-0 -m-8 sm:-m-12 md:-m-24 pointer-events-none z-0">
         {backCoins.map((c, i) => (
           <motion.div
             key={i}
             className={`absolute ${c.cls}`}
-            initial={{ opacity: 0, scale: 0.2 }}
-            animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.2 }}
-            transition={splashTransition(i + 2)}
+            initial={{ opacity: 0, scale: 0.35, x: c.from.x, y: c.from.y }}
+            animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0 } : { opacity: 0, scale: 0.35, x: c.from.x, y: c.from.y }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 + i * 0.08 }}
           >
             <motion.img
               src={c.src}
