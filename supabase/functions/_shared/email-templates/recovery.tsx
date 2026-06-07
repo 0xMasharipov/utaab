@@ -59,14 +59,6 @@ export const RecoveryEmail = ({
               </Button>
             </Section>
 
-            <Text style={fallbackText}>
-              Or paste this link into your browser:
-            </Text>
-            <Text style={fallbackLink}>
-              <Link href={confirmationUrl} style={fallbackLinkAnchor}>
-                {confirmationUrl}
-              </Link>
-            </Text>
 
             <Hr style={divider} />
 
@@ -134,22 +126,6 @@ const button: React.CSSProperties = {
   padding: '14px 28px',
   textDecoration: 'none',
   display: 'inline-block',
-}
-const fallbackText: React.CSSProperties = {
-  fontSize: '12px',
-  color: '#9ca3af',
-  textAlign: 'center' as const,
-  margin: '0 0 6px',
-}
-const fallbackLink: React.CSSProperties = {
-  fontSize: '12px',
-  textAlign: 'center' as const,
-  margin: '0 0 8px',
-  wordBreak: 'break-all' as const,
-}
-const fallbackLinkAnchor: React.CSSProperties = {
-  color: '#3b82f6',
-  textDecoration: 'underline',
 }
 const divider: React.CSSProperties = { borderColor: '#e5e7eb', margin: '24px 0' }
 const footerDisclaimer: React.CSSProperties = {
