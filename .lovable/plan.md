@@ -1,71 +1,53 @@
-## Plan
+## Refine the TonRa page
 
-### 1. Localize the Verify Certificate page (`src/pages/VerifyCertificate.tsx`)
+Goal: make `src/pages/projects/TonRaPage.tsx` feel like the rest of the site — editorial, restrained, web3-blue/navy, Montserrat — instead of an icon-heavy "vibe coded" landing. No new dependencies, no copy changes (i18n keys stay the same), no business logic touched.
 
-Currently all copy is hardcoded English. Wire it to `react-i18next` like the rest of the site.
+### What changes
 
-**New translation keys** (added to `en.json`, `tr.json`, `ru.json`, `ar.json`):
+**1. Hero — calmer, more editorial**
+- Tighter vertical rhythm; numbered/lettered eyebrow ("01 — Security · TON") instead of the pill badge alone, using thin uppercase tracking.
+- Wordmark-style "TonRa" with refined gradient on a single accent word, slightly tighter `tracking-tight`, paired with a thin hairline divider above the tagline.
+- Keep the existing `tryBeta` and `backToProjects` actions, but:
+  - Primary button restyled to match the site's existing rounded primary buttons (same shadow tokens as TonRa currently has, just toned down — no oversized glow).
+  - Secondary "back" becomes a quiet ghost button with hairline border, matching `UBpointPage`/other pages.
+- Remove the heavy white radial glow behind the logo; replace with a soft, single low-opacity blue radial + a faint conic ring (CSS only) so the logo sits in a quiet pocket of light rather than a "stage spotlight".
+- Add a small meta row under the CTAs: "Beta · Telegram · TON" as three quiet hairline chips (no icons), matching the project's existing chip style.
 
-```
-verifyCertificate: {
-  pageTitle: "Verify Certificate on Base — UTAAB",
-  backHome: "Back to home",
-  badge: "Certificate Verification",
-  heading: { prefix: "Verify on", network: "Base" },
-  subtitle: "Confirm that a UTAAB certificate was officially issued and recorded on the {{network}} blockchain as a soulbound, non-transferable token.",
-  form: { placeholder: "UTAAB-BB-2026-0001", submit: "Verify" },
-  notConfigured: "On-chain registry not yet configured — verification uses the secure registry only.",
-  errors: { network: "Could not reach {{network}}. Please try again later." },
-  trust: {
-    onChain:   { title: "On-chain on {{network}}", desc: "Every certificate is registered as a soulbound token." },
-    tamper:    { title: "Tamper-proof",            desc: "Cryptographic serial hash, verifiable on public RPC." },
-    public:    { title: "Public verification",     desc: "Anyone can verify — no account, no API key." }
-  }
-}
-```
+**2. "What is TonRa" — editorial long-form block**
+- Replace the centered narrow column with a 12-col grid: left rail shows a small sticky label ("About") in uppercase tracking, right column holds the paragraphs.
+- First paragraph rendered as a larger drop-intro (`text-xl text-foreground/90`), remaining paragraphs in muted body. This matches the editorial feel of other UTAAB pages.
 
-- Replace hardcoded strings in `VerifyCertificate.tsx` with `t(...)` calls, passing `{ network: NETWORK_LABEL }` for interpolation.
-- Also localize fallback values returned from `runVerify` (e.g. `'Unknown event'`, `'Certificate of Participation'`, `'UTAAB'`) via `t()`.
-- `document.title` uses the translated `pageTitle`.
+**3. "What is TonRa used for" — kill the 6-icon-card grid**
+- Current 6 colored icon tiles read as AI-generated. Replace with a numbered feature list (01–06), two columns on desktop, single column on mobile. Each row:
+  - Large faded numeral (`text-5xl font-extralight text-foreground/15`)
+  - Title in Montserrat bold
+  - One-line description in muted
+  - Thin top hairline (`border-t border-white/10`) between rows
+- No Lucide icons at all in this section. The numerals + typography carry the rhythm. Keeps it aesthetic and professional.
 
-**`VerificationResultCard`** (`src/components/verify/VerificationResultCard.tsx`) — also localize its labels/status copy in the same pass so the result panel matches the active language. (I'll inspect it during implementation and add corresponding `verifyCertificate.result.*` keys.)
+**4. "Why TonRa matters" — quote-style block**
+- Replace the GlassCard with a centered editorial pull-quote: oversized opening quote glyph (typographic, not an icon), body text at `text-2xl md:text-3xl font-light leading-snug`, attribution line "— TonRa, UTAAB project" underneath in muted small caps.
+- Thin top + bottom hairlines, no card chrome.
 
-Translations provided in all four locales (en/tr/ru/ar) for every new key.
+**5. CTA section — restrained**
+- Smaller heading, single Telegram button (keep the `Send` icon since it's a real platform action, not decorative), centered, with a single faint blue radial behind it.
+- Remove the secondary trailing `ExternalLink` next to the Send icon (double-icon noise).
+- Note line below stays.
 
-### 2. Add the official UTAA university community note to the About section
+**6. Section dividers + background**
+- Add subtle full-width hairline dividers (`border-t border-white/[0.06]`) between sections instead of relying purely on padding.
+- Keep `BackgroundGrid`, but reduce per-section padding slightly (`py-20 md:py-28` → `py-16 md:py-24`) so the page reads tighter.
 
-Two surfaces:
-
-**a) Homepage About blurb** (`src/components/AboutBlurb.tsx` + `about` namespace)
-Add a small line below the existing `about.blurb` and render it as a new paragraph with an external link:
-
-```
-about.officialCommunity.text: "We host our official student community at the University of Turkish Aeronautical Association (UTAA) in Ankara, Türkiye."
-about.officialCommunity.linkLabel: "Visit the official UTAA Blockchain Community page →"
-about.officialCommunity.url:  "https://www.thk.edu.tr/tr/student-clubs/turk-hava-kurumu-universitesi-blockchain-toplulugu"
-```
-
-Render below the existing blurb paragraph as a centered text + link (`target="_blank" rel="noopener noreferrer"`), using existing tokens (`text-muted-foreground`, `text-accent hover:underline`).
-
-**b) About page** (`src/pages/About.tsx` + `aboutPage` namespace)
-Add a compact info card (or paragraph in the existing `whyUtaab` / `mission` area) titled "Official University Community" with the same text and link, so the information lives on both the homepage blurb and the full About page.
-
-```
-aboutPage.officialCommunity: {
-  title: "Official University Community",
-  body: "UTAAB hosts its official student community at the University of Turkish Aeronautical Association (UTAA), located in Ankara, Türkiye.",
-  linkLabel: "View on thk.edu.tr",
-  url:  "https://www.thk.edu.tr/tr/student-clubs/turk-hava-kurumu-universitesi-blockchain-toplulugu"
-}
-```
-
-Translations added in en/tr/ru/ar (Turkish & Russian: appropriate native phrasing; Arabic: RTL-safe text).
+**7. Icon hygiene (the "AI smell" fix)**
+- Remove all decorative Lucide icons from "What is TonRa used for" (6 removed).
+- Remove the `ExternalLink` next to "Try the beta bot" in the hero CTA (keep `Send`, drop the trailing arrow — one icon per button max).
+- Keep functional icons only: `ArrowLeft` (back), `Send` (Telegram CTA). That's it.
 
 ### Files touched
-- `src/pages/VerifyCertificate.tsx`
-- `src/components/verify/VerificationResultCard.tsx`
-- `src/components/AboutBlurb.tsx`
-- `src/pages/About.tsx`
-- `src/i18n/locales/{en,tr,ru,ar}.json`
+- `src/pages/projects/TonRaPage.tsx` — single-file refactor.
+- No i18n changes, no new components, no asset changes, no dependency changes.
 
-No business logic, schema, or dependency changes.
+### Out of scope
+- Translation copy stays as-is (en/tr/ru/ar).
+- No changes to `Navbar`, `Footer`, `BackgroundGrid`, `GlassCard`, or any shared component.
+- No backend / Supabase / edge function changes.
