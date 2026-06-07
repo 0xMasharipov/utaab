@@ -1053,37 +1053,52 @@ const Metrics = () => {
   const { t } = useTranslation();
   const { tier } = useSplash();
   const loop = tier === 'full';
-  const allCoins = [
+  // Lightweight loop on reduced (mobile) tier — smaller amplitude, longer dur.
+  const softLoop = tier === 'reduced';
+  // Desktop-only coins (hidden on phones).
+  const desktopCoins = [
     { src: utaabCoinAsset.url, cls: 'hidden md:block -left-12 top-1/2 -translate-y-1/2 w-44', glow: 'rgba(37,99,235,0.4)', dur: 9, delay: 0 },
     { src: goldBarAsset.url, cls: 'hidden md:block -right-10 top-12 w-36', glow: 'rgba(202,138,4,0.45)', dur: 11, delay: 0.3 },
     { src: titaniumBarAsset.url, cls: 'hidden md:block right-20 top-2 w-24', glow: 'rgba(148,163,184,0.45)', dur: 10, delay: 1.1 },
     { src: silverBarAsset.url, cls: 'hidden md:block left-24 bottom-4 w-24', glow: 'rgba(148,163,184,0.45)', dur: 12, delay: 0.6 },
     { src: ethCoinAsset.url, cls: 'hidden md:block right-12 bottom-10 w-24', glow: 'rgba(100,116,139,0.4)', dur: 10, delay: 0.7 },
-    { src: btcCoinAsset.url, cls: 'hidden sm:block absolute left-2 md:left-1/3 -top-2 md:top-4 w-14 md:w-20', glow: 'rgba(202,138,4,0.45)', dur: 9, delay: 0.4 },
-    { src: tonCoinAsset.url, cls: 'hidden sm:block absolute right-2 md:right-1/3 -top-2 md:top-6 w-14 md:w-20', glow: 'rgba(37,99,235,0.5)', dur: 11, delay: 0.9 },
     { src: usdtAngleAsset.url, cls: 'hidden md:block left-1/4 bottom-2 w-24', glow: 'rgba(16,185,129,0.45)', dur: 10, delay: 1.4 },
     { src: tryAngleAsset.url, cls: 'hidden md:block right-1/4 top-1/3 w-24', glow: 'rgba(220,38,38,0.4)', dur: 12, delay: 0.2 },
-    { src: goldCoinAsset.url, cls: 'hidden sm:block absolute right-4 md:left-10 bottom-2 md:bottom-16 w-12 md:w-20', glow: 'rgba(202,138,4,0.5)', dur: 10, delay: 0.5 },
     { src: steamAsset.url, cls: 'hidden md:block right-8 top-8 w-24', glow: 'rgba(37,99,235,0.45)', dur: 11, delay: 1.6 },
-    { src: gamepadAsset.url, cls: 'hidden sm:block absolute left-2 md:left-1/4 bottom-2 md:bottom-10 w-20 md:w-32', glow: 'rgba(96,165,250,0.4)', dur: 9, delay: 0.8 },
   ];
-  const coins = tier === 'minimal' ? [] : tier === 'reduced' ? allCoins.slice(0, 3) : allCoins;
+  // Mobile-safe coins — visible from base, repositioned to corners so they
+  // don't overlap the metric grid. Sized small on phones, larger on md+.
+  const responsiveCoins = [
+    { src: btcCoinAsset.url, cls: 'left-2 top-2 w-12 sm:w-16 md:left-1/3 md:top-4 md:w-20', glow: 'rgba(202,138,4,0.45)', dur: 9, delay: 0.4 },
+    { src: tonCoinAsset.url, cls: 'right-2 top-2 w-12 sm:w-16 md:right-1/3 md:top-6 md:w-20', glow: 'rgba(37,99,235,0.5)', dur: 11, delay: 0.9 },
+    { src: goldCoinAsset.url, cls: 'right-3 bottom-3 w-12 sm:w-16 md:left-10 md:right-auto md:bottom-16 md:w-20', glow: 'rgba(202,138,4,0.5)', dur: 10, delay: 0.5 },
+    { src: gamepadAsset.url, cls: 'left-2 bottom-3 w-14 sm:w-20 md:left-1/4 md:bottom-10 md:w-32', glow: 'rgba(96,165,250,0.4)', dur: 9, delay: 0.8 },
+  ];
+  const coins = tier === 'minimal' ? [] : [...responsiveCoins, ...desktopCoins];
   return (
     <section id="rewards" className="relative py-16 sm:py-24 md:py-32 bg-gradient-to-b from-white to-blue-50/50 overflow-hidden">
-      {coins.map((c, i) => (
-        <motion.img
-          key={i}
-          src={c.src}
-          alt=""
-          aria-hidden
-          loading="lazy"
-          decoding="async"
-          className={`absolute ${c.cls} pointer-events-none select-none`}
-          style={{ filter: `drop-shadow(0 18px 32px ${c.glow})` }}
-          animate={loop ? { y: [0, i % 2 === 0 ? -16 : 16, 0], rotateZ: [0, i % 2 === 0 ? 8 : -8, 0] } : undefined}
-          transition={{ duration: c.dur, repeat: Infinity, ease: 'easeInOut', delay: c.delay }}
-        />
-      ))}
+      {coins.map((c, i) => {
+        const animate = loop
+          ? { y: [0, i % 2 === 0 ? -16 : 16, 0], rotateZ: [0, i % 2 === 0 ? 8 : -8, 0] }
+          : softLoop
+          ? { y: [0, i % 2 === 0 ? -6 : 6, 0] }
+          : undefined;
+        const duration = softLoop ? c.dur + 4 : c.dur;
+        return (
+          <motion.img
+            key={i}
+            src={c.src}
+            alt=""
+            aria-hidden
+            loading="lazy"
+            decoding="async"
+            className={`absolute ${c.cls} pointer-events-none select-none`}
+            style={{ filter: `drop-shadow(0 18px 32px ${c.glow})` }}
+            animate={animate}
+            transition={{ duration, repeat: Infinity, ease: 'easeInOut', delay: c.delay }}
+          />
+        );
+      })}
       <div className="max-w-6xl mx-auto px-5 sm:px-6 relative">
         <div className="text-center mb-10 sm:mb-14">
           <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
