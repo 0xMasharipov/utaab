@@ -279,8 +279,8 @@ const FloatingDevice = () => {
           <motion.div
             key={i}
             className={`absolute ${c.cls}`}
-            initial={{ opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
-            animate={ready ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
+            initial={{ opacity: 0, scale: 0.2 }}
+            animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.2 }}
             transition={splashTransition(i + 2)}
           >
             <motion.img
@@ -316,10 +316,10 @@ const FloatingDevice = () => {
 
       <motion.div
         className="absolute left-0 sm:-left-4 md:-left-12 top-8 sm:top-12 backdrop-blur-xl bg-white/80 border border-blue-100 rounded-2xl px-3 py-2 sm:px-3.5 sm:py-2.5 shadow-xl flex items-center gap-2"
-        initial={{ opacity: 0, scale: 0.3, filter: 'blur(8px)', y: 0 }}
+        initial={{ opacity: 0, scale: 0.3, y: 0 }}
         animate={ready
-          ? { opacity: 1, scale: 1, filter: 'blur(0px)', y: [0, -8, 0] }
-          : { opacity: 0, scale: 0.3, filter: 'blur(8px)', y: 0 }}
+          ? { opacity: 1, scale: 1, y: [0, -8, 0] }
+          : { opacity: 0, scale: 0.3, y: 0 }}
         transition={ready
           ? {
               opacity: splashTransition(9),
@@ -340,10 +340,10 @@ const FloatingDevice = () => {
 
       <motion.div
         className="absolute right-0 sm:-right-2 md:-right-10 bottom-20 sm:bottom-24 backdrop-blur-xl bg-white/80 border border-blue-100 rounded-2xl px-3 py-2 sm:px-3.5 sm:py-2.5 shadow-xl flex items-center gap-2"
-        initial={{ opacity: 0, scale: 0.3, filter: 'blur(8px)', y: 0 }}
+        initial={{ opacity: 0, scale: 0.3, y: 0 }}
         animate={ready
-          ? { opacity: 1, scale: 1, filter: 'blur(0px)', y: [0, 10, 0] }
-          : { opacity: 0, scale: 0.3, filter: 'blur(8px)', y: 0 }}
+          ? { opacity: 1, scale: 1, y: [0, 10, 0] }
+          : { opacity: 0, scale: 0.3, y: 0 }}
         transition={ready
           ? {
               opacity: splashTransition(10),
@@ -364,8 +364,8 @@ const FloatingDevice = () => {
 
       <motion.div
         className="absolute -left-6 sm:-left-10 md:-left-20 bottom-2 sm:bottom-4 w-16 sm:w-24 md:w-32 pointer-events-none"
-        initial={{ opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
-        animate={ready ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
+        initial={{ opacity: 0, scale: 0.2 }}
+        animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.2 }}
         transition={splashTransition(0)}
       >
         <motion.img
@@ -379,8 +379,8 @@ const FloatingDevice = () => {
       </motion.div>
       <motion.div
         className="absolute -right-3 sm:-right-6 md:-right-12 top-2 sm:top-4 w-14 sm:w-20 md:w-28 pointer-events-none"
-        initial={{ opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
-        animate={ready ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
+        initial={{ opacity: 0, scale: 0.2 }}
+        animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.2 }}
         transition={splashTransition(1)}
       >
         <motion.img
@@ -394,8 +394,8 @@ const FloatingDevice = () => {
       </motion.div>
       <motion.div
         className="absolute -right-3 sm:-right-6 md:-right-14 bottom-1 sm:bottom-2 md:bottom-6 w-10 sm:w-14 md:w-20 pointer-events-none"
-        initial={{ opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
-        animate={ready ? { opacity: 1, scale: 1, filter: 'blur(0px)' } : { opacity: 0, scale: 0.2, filter: 'blur(8px)' }}
+        initial={{ opacity: 0, scale: 0.2 }}
+        animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.2 }}
         transition={splashTransition(11)}
       >
         <motion.img
