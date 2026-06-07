@@ -1198,6 +1198,7 @@ const UBpointPageInner = () => {
     return false;
   })();
   const [ready, setReady] = useState(initialReady);
+  const tier = usePerfGuard();
 
   // Lock html/body background to opaque white so the global dark theme can
   // never bleed through during paint gaps or splash fade-out.
