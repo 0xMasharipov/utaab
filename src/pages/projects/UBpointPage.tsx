@@ -237,7 +237,7 @@ const LightFooter = () => {
   );
 };
 
-/* ---------- Decorative background ---------- */
+/* ---------- Decorative background (lightweight, no looped animations) ---------- */
 const HeroBackground = () => (
   <div aria-hidden className="absolute inset-0 overflow-hidden pointer-events-none">
     <div className="absolute inset-0 bg-gradient-to-b from-white via-blue-50/60 to-white" />
@@ -251,33 +251,8 @@ const HeroBackground = () => (
           'radial-gradient(ellipse at center, rgba(0,0,0,0.9), transparent 75%)',
       }}
     />
-    <motion.div
-      className="absolute -top-32 -left-24 w-[420px] h-[420px] rounded-full bg-blue-400/30 blur-3xl"
-      animate={{ y: [0, 30, 0], x: [0, 20, 0] }}
-      transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-    />
-    <motion.div
-      className="absolute top-1/3 -right-32 w-[480px] h-[480px] rounded-full bg-blue-500/20 blur-3xl"
-      animate={{ y: [0, -40, 0], x: [0, -25, 0] }}
-      transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
-    />
-    <motion.div
-      className="absolute bottom-0 left-1/3 w-[360px] h-[360px] rounded-full bg-blue-300/30 blur-3xl"
-      animate={{ y: [0, -20, 0] }}
-      transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-    />
-    {Array.from({ length: 18 }).map((_, i) => (
-      <motion.span
-        key={i}
-        className="absolute w-1.5 h-1.5 rounded-full bg-blue-500/40"
-        style={{
-          left: `${(i * 53) % 100}%`,
-          top: `${(i * 37) % 100}%`,
-        }}
-        animate={{ y: [0, -20, 0], opacity: [0.2, 0.8, 0.2] }}
-        transition={{ duration: 4 + (i % 5), repeat: Infinity, delay: i * 0.2 }}
-      />
-    ))}
+    {/* Single static blurred blob — keep visual identity, drop GPU cost */}
+    <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[520px] h-[520px] rounded-full bg-blue-400/20 blur-3xl" />
   </div>
 );
 
