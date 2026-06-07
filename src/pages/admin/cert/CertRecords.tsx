@@ -51,7 +51,9 @@ export default function CertRecords() {
   const [revokeReason, setRevokeReason] = useState('');
   const [fallbackHolder, setFallbackHolder] = useState('');
   const [issuing, setIssuing] = useState(false);
-  const [issueResults, setIssueResults] = useState<Array<{ serial: string; name: string; ok: boolean; reason?: string }>>([]);
+  const [issueResults, setIssueResults] = useState<
+    Array<{ serial: string; name: string; ok: boolean; reason?: string; attempts?: number }>
+  >([]);
 
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
