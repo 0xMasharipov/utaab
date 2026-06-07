@@ -274,20 +274,37 @@ export default function CertRecords() {
         )}
       </Card>
 
-      <Dialog open={issueOpen} onOpenChange={setIssueOpen}>
+      <Dialog open={issueOpen} onOpenChange={(o) => { setIssueOpen(o); if (!o) setIssueResults([]); }}>
         <DialogContent>
-          <DialogHeader><DialogTitle>Issue {selectedRows.length} certificate(s) on-chain</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>Sign vouchers for {selectedRows.length} certificate(s)</DialogTitle></DialogHeader>
           <div className="space-y-3 text-sm">
-            <p className="text-muted-foreground">This will submit a transaction on Sepolia. Only hashes are written on-chain; no PII.</p>
-            {!isConnected && <WalletConnectButton />}
-            {isConnected && <p>Wallet: <span className="font-mono">{address?.slice(0, 6)}…{address?.slice(-4)}</span></p>}
-            {txHash && <BlockchainTxLink hash={txHash} />}
-            {txPending && <p className="text-muted-foreground">Waiting for confirmation…</p>}
-            {txOk && <p className="text-green-500">Confirmed</p>}
+            <p className="text-muted-foreground">
+              The server will sign an EIP-712 voucher per certificate on {NETWORK_LABEL}. Recipients then claim with their own wallet (they pay the gas). No transaction is sent from your wallet.
+            </p>
+            <div className="space-y-1">
+              <Label htmlFor="fallback-holder">Fallback holder wallet (used if a record has no holder)</Label>
+              <Input
+                id="fallback-holder"
+                placeholder="0x…"
+                value={fallbackHolder}
+                onChange={(e) => setFallbackHolder(e.target.value.trim())}
+              />
+              <p className="text-xs text-muted-foreground">Optional. Rows that already have <code>holder_address</code> use that instead.</p>
+            </div>
+            {issueResults.length > 0 && (
+              <div className="max-h-48 overflow-y-auto border border-white/10 rounded p-2 space-y-1">
+                {issueResults.map((r) => (
+                  <div key={r.serial} className="flex items-center justify-between text-xs font-mono">
+                    <span>{r.serial} — {r.name}</span>
+                    <span className={r.ok ? 'text-green-500' : 'text-destructive'}>{r.ok ? 'issued' : (r.reason || 'failed')}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setIssueOpen(false)}>Close</Button>
-            <Button onClick={issue} disabled={isPending || !isConnected}>{isPending ? 'Submitting…' : 'Issue on-chain'}</Button>
+            <Button onClick={issue} disabled={issuing}>{issuing ? 'Signing…' : 'Sign vouchers'}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
