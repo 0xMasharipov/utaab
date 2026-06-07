@@ -63,7 +63,7 @@ async function main() {
   await client.connect();
   let rows;
   try {
-    const res = await client.query(SQL, [RISKY_GRANTEES]);
+    const res = await client.query(SQL);
     rows = res.rows;
   } finally {
     await client.end();
