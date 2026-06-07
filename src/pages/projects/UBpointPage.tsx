@@ -406,7 +406,7 @@ const FloatingDevice = () => {
       <motion.div
         className="absolute -left-6 sm:-left-10 md:-left-20 bottom-2 sm:bottom-4 w-24 sm:w-36 md:w-48 pointer-events-none z-0"
         initial={{ opacity: 0, scale: 0.35, x: 160, y: -80, rotate: -10 }}
-        animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: 160, y: -80, rotate: -10 }}
+        animate={spreadActive ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: 160, y: -80, rotate: -10 }}
         transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.22 }}
       >
         <motion.img
@@ -414,14 +414,14 @@ const FloatingDevice = () => {
           alt=""
           aria-hidden
           className="w-full drop-shadow-[0_20px_40px_rgba(37,99,235,0.35)]"
-          animate={ready && loop ? { y: [0, -12, 0], rotateZ: [-6, 6, -6] } : undefined}
+          animate={spreadActive && loop ? { y: [0, -12, 0], rotateZ: [-6, 6, -6] } : undefined}
           transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
         />
       </motion.div>
       <motion.div
         className="absolute -right-3 sm:-right-6 md:-right-12 top-2 sm:top-4 w-20 sm:w-28 md:w-40 pointer-events-none z-0"
         initial={{ opacity: 0, scale: 0.35, x: -160, y: 100, rotate: 10 }}
-        animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: -160, y: 100, rotate: 10 }}
+        animate={spreadActive ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: -160, y: 100, rotate: 10 }}
         transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
       >
         <motion.img
@@ -429,14 +429,14 @@ const FloatingDevice = () => {
           alt=""
           aria-hidden
           className="w-full drop-shadow-[0_15px_30px_rgba(37,99,235,0.45)]"
-          animate={ready && loop ? { y: [0, 10, 0], rotateZ: [4, -4, 4] } : undefined}
+          animate={spreadActive && loop ? { y: [0, 10, 0], rotateZ: [4, -4, 4] } : undefined}
           transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
         />
       </motion.div>
       <motion.div
         className="absolute -right-3 sm:-right-6 md:-right-14 bottom-1 sm:bottom-2 md:bottom-6 w-14 sm:w-20 md:w-28 pointer-events-none z-0"
         initial={{ opacity: 0, scale: 0.35, x: -150, y: -80, rotate: 10 }}
-        animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: -150, y: -80, rotate: 10 }}
+        animate={spreadActive ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: -150, y: -80, rotate: 10 }}
         transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.78 }}
       >
         <motion.img
@@ -444,10 +444,11 @@ const FloatingDevice = () => {
           alt=""
           aria-hidden
           className="w-full drop-shadow-[0_15px_30px_rgba(202,138,4,0.4)]"
-          animate={ready && loop ? { y: [0, -10, 0], rotateZ: [-5, 5, -5] } : undefined}
+          animate={spreadActive && loop ? { y: [0, -10, 0], rotateZ: [-5, 5, -5] } : undefined}
           transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1.2 }}
         />
       </motion.div>
+
     </div>
   );
 };
