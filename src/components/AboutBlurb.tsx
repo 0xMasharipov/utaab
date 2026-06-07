@@ -50,6 +50,17 @@ export const AboutBlurb = () => {
           <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
             {t('about.blurb')}
           </p>
+          <p className="mt-4 text-sm sm:text-base text-muted-foreground leading-relaxed">
+            {t('about.officialCommunity.text')}{' '}
+            <a
+              href={t('about.officialCommunity.url')}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent hover:underline font-medium"
+            >
+              {t('about.officialCommunity.linkLabel')}
+            </a>
+          </p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 mb-10">

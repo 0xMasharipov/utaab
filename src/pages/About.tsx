@@ -108,6 +108,35 @@ const About = () => {
         </motion.div>
       </GlassSectionWrapper>
 
+      {/* Official University Community */}
+      <GlassSectionWrapper>
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="max-w-3xl mx-auto"
+        >
+          <GlassCard hover className="p-8 sm:p-10 text-center border-t-2 border-t-accent/30">
+            <h2 className={getTransitionClasses("text-2xl sm:text-3xl font-bold mb-4 text-foreground")}>
+              {t('aboutPage.officialCommunity.title')}
+            </h2>
+            <p className={getTransitionClasses("text-muted-foreground text-base sm:text-lg leading-relaxed mb-6")}>
+              {t('aboutPage.officialCommunity.body')}
+            </p>
+            <a
+              href={t('aboutPage.officialCommunity.url')}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold text-accent border border-accent/30 hover:bg-accent/10 transition-colors"
+            >
+              {t('aboutPage.officialCommunity.linkLabel')}
+              <NavArrowRight className="h-4 w-4" strokeWidth={1.5} />
+            </a>
+          </GlassCard>
+        </motion.div>
+      </GlassSectionWrapper>
+
       {/* 3. Mission & Vision */}
       <GlassSectionWrapper>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
