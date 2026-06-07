@@ -21,8 +21,21 @@ import { certificateRegistryAbi } from '@/lib/web3/abi';
 import { fromDbHex } from '@/lib/certHash';
 import { generateCertificatePdf } from '@/lib/pdf/generateCertificatePdf';
 import { Input } from '@/components/ui/input';
-import { isAddress } from 'viem';
+import { getAddress, isAddress } from 'viem';
+import { z } from 'zod';
 import { Download, FileText, Send, XCircle, AlertTriangle } from 'lucide-react';
+
+const MAX_BATCH = 50;
+const SERIAL_HASH_RE = /^0x[0-9a-f]{64}$/;
+
+const IssueRowSchema = z.object({
+  serial_hash: z.string().regex(SERIAL_HASH_RE, 'bad serial_hash'),
+  holder: z.string().refine(isAddress, 'bad holder address'),
+  chain_id: z.number().int(),
+  status: z.literal('draft'),
+});
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export default function CertRecords() {
   const { data: events } = useCertEvents();
