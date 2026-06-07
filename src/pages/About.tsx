@@ -51,9 +51,25 @@ const About = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SEO
-        title="About UTAAB — Our Mission in Blockchain Education"
-        description="UTAAB is a student-led Web3 ecosystem advancing blockchain education, real-world projects, and cross-border collaboration."
+        title="About UTAAB — Student Blockchain & Web3 Community"
+        description="What is UTAAB? A student-led Web3 ecosystem advancing blockchain education, real-world crypto projects, and global collaboration. Learn our mission, team and impact."
         path="/about"
+        jsonLd={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'AboutPage',
+            name: 'About UTAAB',
+            url: 'https://utaab.org/about',
+            description: 'About the UTAAB student-led Web3 ecosystem — mission, projects and community.',
+            mainEntity: {
+              '@type': 'Organization',
+              name: 'UTAAB',
+              url: 'https://utaab.org',
+              logo: 'https://utaab.org/favicon.png',
+              description: 'UTAAB is a student-led Web3 ecosystem for blockchain education, real projects, and cross-border collaboration.',
+            },
+          },
+        ]}
       />
       <AnimatedBlobBackground />
       <Navbar />
