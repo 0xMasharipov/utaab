@@ -328,7 +328,7 @@ const FloatingDevice = () => {
                 alt=""
                 className="w-full select-none"
                 style={{ filter: `drop-shadow(0 14px 26px ${c.glow})` }}
-                animate={ready && loop ? { y: [0, -10, 0], rotateZ: [-5, 5, -5] } : undefined}
+                animate={spreadActive && loop ? { y: [0, -10, 0], rotateZ: [-5, 5, -5] } : undefined}
                 transition={{ duration: c.dur, repeat: Infinity, ease: 'easeInOut', delay: c.delay }}
               />
             </motion.div>
