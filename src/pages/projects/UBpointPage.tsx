@@ -208,7 +208,7 @@ const LightFooter = () => {
               { href: 'https://www.linkedin.com/company/utaa-blockchain/', icon: Linkedin },
               { href: 'https://t.me/utaa_blockchain', icon: Send },
               { href: 'https://x.com/utaa_blockchain?s=11', icon: Twitter },
-              { href: 'mailto:info@utaab.org', icon: Mail },
+              { href: 'mailto:contact@utaab.org', icon: Mail },
             ].map((s, i) => (
               <a
                 key={i}
