@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FileText, BookOpen, Coins, Newspaper, HelpCircle, Code2, ArrowRight, ExternalLink, Github } from 'lucide-react';
+import { ArrowRight, ExternalLink } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
@@ -13,7 +13,6 @@ import { Button } from '@/components/ui/button';
 
 interface ResourceItem {
   id: string;
-  icon: React.ElementType;
   title: string;
   description: string;
   cta: string;
