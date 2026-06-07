@@ -373,7 +373,10 @@ export default function CertRecords() {
                 {issueResults.map((r) => (
                   <div key={r.serial} className="flex items-center justify-between text-xs font-mono">
                     <span>{r.serial} — {r.name}</span>
-                    <span className={r.ok ? 'text-green-500' : 'text-destructive'}>{r.ok ? 'issued' : (r.reason || 'failed')}</span>
+                    <span className={r.ok ? 'text-green-500' : 'text-destructive'}>
+                      {r.ok ? 'issued' : (r.reason || 'failed')}
+                      {r.attempts && r.attempts > 1 ? ` (${r.attempts} attempts)` : ''}
+                    </span>
                   </div>
                 ))}
               </div>
