@@ -2,9 +2,10 @@ import { createContext, useContext, useEffect, useMemo, useRef, useState, forwar
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { usePerfGuard, type PerfTier } from '@/hooks/usePerfGuard';
 
-/* ---------- Splash intro context ---------- */
-const SplashContext = createContext<{ ready: boolean }>({ ready: true });
+/* ---------- Splash intro + perf-tier context ---------- */
+const SplashContext = createContext<{ ready: boolean; tier: PerfTier }>({ ready: true, tier: 'full' });
 const useSplash = () => useContext(SplashContext);
 const splashTransition = (i: number) => ({
   delay: 0.25 + i * 0.13,
@@ -258,8 +259,9 @@ const HeroBackground = () => (
 
 /* ---------- Floating iPhone device ---------- */
 const FloatingDevice = () => {
-  const { ready } = useSplash();
-  const backCoins = [
+  const { ready, tier } = useSplash();
+  const loop = tier === 'full';
+  const allBackCoins = [
     { src: usdtAngleAsset.url, cls: 'top-2 -left-2 sm:-left-4 md:-left-10 w-12 sm:w-16 md:w-24', glow: 'rgba(16,185,129,0.45)', dur: 9, delay: 0 },
     { src: tryAngleAsset.url, cls: 'top-10 -right-2 sm:-right-6 md:-right-14 w-12 sm:w-16 md:w-24', glow: 'rgba(220,38,38,0.4)', dur: 10, delay: 0.4 },
     { src: ethCoinAsset.url, cls: 'top-1/2 -left-4 sm:-left-10 md:-left-20 w-10 sm:w-14 md:w-20', glow: 'rgba(100,116,139,0.45)', dur: 11, delay: 0.8 },
@@ -268,6 +270,7 @@ const FloatingDevice = () => {
     { src: steamAsset.url, cls: 'top-4 -left-3 sm:-left-8 md:-left-16 w-12 sm:w-16 md:w-24', glow: 'rgba(37,99,235,0.45)', dur: 10, delay: 1.3 },
     { src: gamepadAsset.url, cls: 'bottom-8 -right-4 sm:-right-10 md:-right-20 w-14 sm:w-20 md:w-28', glow: 'rgba(96,165,250,0.4)', dur: 11, delay: 0.6 },
   ];
+  const backCoins = tier === 'minimal' ? [] : tier === 'reduced' ? allBackCoins.slice(0, 3) : allBackCoins;
   const { t } = useTranslation();
 
   return (
@@ -288,7 +291,7 @@ const FloatingDevice = () => {
               alt=""
               className="w-full select-none"
               style={{ filter: `drop-shadow(0 14px 26px ${c.glow})` }}
-              animate={ready ? { y: [0, -10, 0], rotateZ: [-5, 5, -5] } : undefined}
+              animate={ready && loop ? { y: [0, -10, 0], rotateZ: [-5, 5, -5] } : undefined}
               transition={{ duration: c.dur, repeat: Infinity, ease: 'easeInOut', delay: c.delay }}
             />
           </motion.div>
@@ -302,7 +305,7 @@ const FloatingDevice = () => {
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       >
         <motion.div
-          animate={ready ? { y: [0, -14, 0], rotateZ: [-1.5, 1.5, -1.5] } : undefined}
+          animate={ready && loop ? { y: [0, -14, 0], rotateZ: [-1.5, 1.5, -1.5] } : undefined}
           transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
         >
           <img
@@ -318,9 +321,9 @@ const FloatingDevice = () => {
         className="absolute left-0 sm:-left-4 md:-left-12 top-8 sm:top-12 backdrop-blur-xl bg-white/80 border border-blue-100 rounded-2xl px-3 py-2 sm:px-3.5 sm:py-2.5 shadow-xl flex items-center gap-2"
         initial={{ opacity: 0, scale: 0.3, y: 0 }}
         animate={ready
-          ? { opacity: 1, scale: 1, y: [0, -8, 0] }
+          ? (loop ? { opacity: 1, scale: 1, y: [0, -8, 0] } : { opacity: 1, scale: 1, y: 0 })
           : { opacity: 0, scale: 0.3, y: 0 }}
-        transition={ready
+        transition={ready && loop
           ? {
               opacity: splashTransition(9),
               scale: splashTransition(9),
@@ -342,9 +345,9 @@ const FloatingDevice = () => {
         className="absolute right-0 sm:-right-2 md:-right-10 bottom-20 sm:bottom-24 backdrop-blur-xl bg-white/80 border border-blue-100 rounded-2xl px-3 py-2 sm:px-3.5 sm:py-2.5 shadow-xl flex items-center gap-2"
         initial={{ opacity: 0, scale: 0.3, y: 0 }}
         animate={ready
-          ? { opacity: 1, scale: 1, y: [0, 10, 0] }
+          ? (loop ? { opacity: 1, scale: 1, y: [0, 10, 0] } : { opacity: 1, scale: 1, y: 0 })
           : { opacity: 0, scale: 0.3, y: 0 }}
-        transition={ready
+        transition={ready && loop
           ? {
               opacity: splashTransition(10),
               scale: splashTransition(10),
@@ -373,7 +376,7 @@ const FloatingDevice = () => {
           alt=""
           aria-hidden
           className="w-full drop-shadow-[0_20px_40px_rgba(37,99,235,0.35)]"
-          animate={ready ? { y: [0, -12, 0], rotateZ: [-6, 6, -6] } : undefined}
+          animate={ready && loop ? { y: [0, -12, 0], rotateZ: [-6, 6, -6] } : undefined}
           transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
         />
       </motion.div>
@@ -388,7 +391,7 @@ const FloatingDevice = () => {
           alt=""
           aria-hidden
           className="w-full drop-shadow-[0_15px_30px_rgba(37,99,235,0.45)]"
-          animate={ready ? { y: [0, 10, 0], rotateZ: [4, -4, 4] } : undefined}
+          animate={ready && loop ? { y: [0, 10, 0], rotateZ: [4, -4, 4] } : undefined}
           transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
         />
       </motion.div>
@@ -403,7 +406,7 @@ const FloatingDevice = () => {
           alt=""
           aria-hidden
           className="w-full drop-shadow-[0_15px_30px_rgba(202,138,4,0.4)]"
-          animate={ready ? { y: [0, -10, 0], rotateZ: [-5, 5, -5] } : undefined}
+          animate={ready && loop ? { y: [0, -10, 0], rotateZ: [-5, 5, -5] } : undefined}
           transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1.2 }}
         />
       </motion.div>
@@ -904,17 +907,23 @@ const sponsorTaskDefs = [
 
 const Sponsors = () => {
   const { t } = useTranslation();
+  const { tier } = useSplash();
+  const loop = tier === 'full';
   const list = t('projects.ubpointPage.sponsors.list', { returnObjects: true }) as string[];
   return (
     <section id="sponsors" className="relative py-16 sm:py-24 md:py-32 bg-white overflow-hidden">
-      <motion.img
-        src={goldCoinAsset.url}
-        alt=""
-        aria-hidden
-        className="hidden md:block absolute -left-10 bottom-10 w-32 opacity-70 drop-shadow-[0_20px_40px_rgba(202,138,4,0.35)] pointer-events-none"
-        animate={{ y: [0, -14, 0], rotateZ: [-6, 6, -6] }}
-        transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
-      />
+      {tier !== 'minimal' && (
+        <motion.img
+          src={goldCoinAsset.url}
+          alt=""
+          aria-hidden
+          loading="lazy"
+          decoding="async"
+          className="hidden md:block absolute -left-10 bottom-10 w-32 opacity-70 drop-shadow-[0_20px_40px_rgba(202,138,4,0.35)] pointer-events-none"
+          animate={loop ? { y: [0, -14, 0], rotateZ: [-6, 6, -6] } : undefined}
+          transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      )}
       <div className="max-w-7xl mx-auto px-5 sm:px-6 grid md:grid-cols-2 gap-10 sm:gap-12 items-center">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -1021,30 +1030,36 @@ const CountUp: React.FC<{ to: number; suffix?: string }> = ({ to, suffix = '' })
 
 const Metrics = () => {
   const { t } = useTranslation();
+  const { tier } = useSplash();
+  const loop = tier === 'full';
+  const allCoins = [
+    { src: utaabCoinAsset.url, cls: 'hidden md:block -left-12 top-1/2 -translate-y-1/2 w-44', glow: 'rgba(37,99,235,0.4)', dur: 9, delay: 0 },
+    { src: goldBarAsset.url, cls: 'hidden md:block -right-10 top-12 w-36', glow: 'rgba(202,138,4,0.45)', dur: 11, delay: 0.3 },
+    { src: titaniumBarAsset.url, cls: 'hidden md:block right-20 top-2 w-24', glow: 'rgba(148,163,184,0.45)', dur: 10, delay: 1.1 },
+    { src: silverBarAsset.url, cls: 'hidden md:block left-24 bottom-4 w-24', glow: 'rgba(148,163,184,0.45)', dur: 12, delay: 0.6 },
+    { src: ethCoinAsset.url, cls: 'hidden md:block right-12 bottom-10 w-24', glow: 'rgba(100,116,139,0.4)', dur: 10, delay: 0.7 },
+    { src: btcCoinAsset.url, cls: 'hidden sm:block absolute left-2 md:left-1/3 -top-2 md:top-4 w-14 md:w-20', glow: 'rgba(202,138,4,0.45)', dur: 9, delay: 0.4 },
+    { src: tonCoinAsset.url, cls: 'hidden sm:block absolute right-2 md:right-1/3 -top-2 md:top-6 w-14 md:w-20', glow: 'rgba(37,99,235,0.5)', dur: 11, delay: 0.9 },
+    { src: usdtAngleAsset.url, cls: 'hidden md:block left-1/4 bottom-2 w-24', glow: 'rgba(16,185,129,0.45)', dur: 10, delay: 1.4 },
+    { src: tryAngleAsset.url, cls: 'hidden md:block right-1/4 top-1/3 w-24', glow: 'rgba(220,38,38,0.4)', dur: 12, delay: 0.2 },
+    { src: goldCoinAsset.url, cls: 'hidden sm:block absolute right-4 md:left-10 bottom-2 md:bottom-16 w-12 md:w-20', glow: 'rgba(202,138,4,0.5)', dur: 10, delay: 0.5 },
+    { src: steamAsset.url, cls: 'hidden md:block right-8 top-8 w-24', glow: 'rgba(37,99,235,0.45)', dur: 11, delay: 1.6 },
+    { src: gamepadAsset.url, cls: 'hidden sm:block absolute left-2 md:left-1/4 bottom-2 md:bottom-10 w-20 md:w-32', glow: 'rgba(96,165,250,0.4)', dur: 9, delay: 0.8 },
+  ];
+  const coins = tier === 'minimal' ? [] : tier === 'reduced' ? allCoins.slice(0, 3) : allCoins;
   return (
     <section id="rewards" className="relative py-16 sm:py-24 md:py-32 bg-gradient-to-b from-white to-blue-50/50 overflow-hidden">
-      {[
-        { src: utaabCoinAsset.url, cls: 'hidden md:block -left-12 top-1/2 -translate-y-1/2 w-44', glow: 'rgba(37,99,235,0.4)', dur: 9, delay: 0 },
-        { src: goldBarAsset.url, cls: 'hidden md:block -right-10 top-12 w-36', glow: 'rgba(202,138,4,0.45)', dur: 11, delay: 0.3 },
-        { src: titaniumBarAsset.url, cls: 'hidden md:block right-20 top-2 w-24', glow: 'rgba(148,163,184,0.45)', dur: 10, delay: 1.1 },
-        { src: silverBarAsset.url, cls: 'hidden md:block left-24 bottom-4 w-24', glow: 'rgba(148,163,184,0.45)', dur: 12, delay: 0.6 },
-        { src: ethCoinAsset.url, cls: 'hidden md:block right-12 bottom-10 w-24', glow: 'rgba(100,116,139,0.4)', dur: 10, delay: 0.7 },
-        { src: btcCoinAsset.url, cls: 'hidden sm:block absolute left-2 md:left-1/3 -top-2 md:top-4 w-14 md:w-20', glow: 'rgba(202,138,4,0.45)', dur: 9, delay: 0.4 },
-        { src: tonCoinAsset.url, cls: 'hidden sm:block absolute right-2 md:right-1/3 -top-2 md:top-6 w-14 md:w-20', glow: 'rgba(37,99,235,0.5)', dur: 11, delay: 0.9 },
-        { src: usdtAngleAsset.url, cls: 'hidden md:block left-1/4 bottom-2 w-24', glow: 'rgba(16,185,129,0.45)', dur: 10, delay: 1.4 },
-        { src: tryAngleAsset.url, cls: 'hidden md:block right-1/4 top-1/3 w-24', glow: 'rgba(220,38,38,0.4)', dur: 12, delay: 0.2 },
-        { src: goldCoinAsset.url, cls: 'hidden sm:block absolute right-4 md:left-10 bottom-2 md:bottom-16 w-12 md:w-20', glow: 'rgba(202,138,4,0.5)', dur: 10, delay: 0.5 },
-        { src: steamAsset.url, cls: 'hidden md:block right-8 top-8 w-24', glow: 'rgba(37,99,235,0.45)', dur: 11, delay: 1.6 },
-        { src: gamepadAsset.url, cls: 'hidden sm:block absolute left-2 md:left-1/4 bottom-2 md:bottom-10 w-20 md:w-32', glow: 'rgba(96,165,250,0.4)', dur: 9, delay: 0.8 },
-      ].map((c, i) => (
+      {coins.map((c, i) => (
         <motion.img
           key={i}
           src={c.src}
           alt=""
           aria-hidden
+          loading="lazy"
+          decoding="async"
           className={`absolute ${c.cls} pointer-events-none select-none`}
           style={{ filter: `drop-shadow(0 18px 32px ${c.glow})` }}
-          animate={{ y: [0, i % 2 === 0 ? -16 : 16, 0], rotateZ: [0, i % 2 === 0 ? 8 : -8, 0] }}
+          animate={loop ? { y: [0, i % 2 === 0 ? -16 : 16, 0], rotateZ: [0, i % 2 === 0 ? 8 : -8, 0] } : undefined}
           transition={{ duration: c.dur, repeat: Infinity, ease: 'easeInOut', delay: c.delay }}
         />
       ))}
@@ -1183,6 +1198,7 @@ const UBpointPageInner = () => {
     return false;
   })();
   const [ready, setReady] = useState(initialReady);
+  const tier = usePerfGuard();
 
   // Lock html/body background to opaque white so the global dark theme can
   // never bleed through during paint gaps or splash fade-out.
@@ -1274,7 +1290,7 @@ const UBpointPageInner = () => {
   }, [ready]);
 
   return (
-    <SplashContext.Provider value={{ ready }}>
+    <SplashContext.Provider value={{ ready, tier }}>
       <div className="min-h-screen bg-white text-slate-900 font-sans">
         <LightNavbar />
         <main>
