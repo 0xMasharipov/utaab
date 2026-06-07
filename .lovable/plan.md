@@ -1,49 +1,28 @@
-# Goal
+## Problem
 
-Strengthen structured data for Q&A content, ship a complete `sitemap.xml`, and confirm `robots.txt` is correctly indexable.
+In `src/pages/projects/UBpointPage.tsx` → `Metrics` section ("A growing on-chain economy"), the decorative coin assets disappear on mobile and never animate. Two causes:
 
-## Current state (already in place)
+1. **Visibility classes hide them on mobile.** When `usePerfGuard` returns `'reduced'` (which it does on every coarse-pointer device ≤768 px wide), the section uses `allCoins.slice(0, 3)` — but those first 3 coins are all tagged `hidden md:block`, so on a phone (current viewport 692 px) **zero coins render**. The remaining `hidden sm:block` coins are also excluded by the slice.
+2. **Animations are gated on `tier === 'full'`.** `loop` is `false` on mobile, so even if a coin rendered, the float/rotate animation would not run.
 
-- `src/pages/FAQ.tsx` — already emits `FAQPage` JSON-LD with all 10 Q&As ✅
-- `public/sitemap.xml` — already lists `/`, `/about`, `/team`, `/faq`, `/blog`, `/learn*`, `/projects/tonra`, `/projects/ubpoint`, `/education*`, plus legal pages ✅
-- `public/robots.txt` — already `Allow: /` for all major bots + `Sitemap: https://utaab.org/sitemap.xml` ✅
+## Fix
 
-What's missing: **dynamic `/blog/:slug` URLs are not in the sitemap**, and the TonRa / UBpoint project pages don't expose their built-in Q-style content as `FAQPage` schema even though both have question-shaped sections in their i18n copy.
+Scope: visual-only change inside the `Metrics` component. No business logic, no asset re-uploads — all coin assets already exist and load fine in the hero on the same page.
 
-## Plan
+1. **Re-pick a mobile-safe coin subset.** Replace the current `tier === 'reduced' ? allCoins.slice(0, 3)` with an explicit array of 3–4 coins that are visible on phones (use `sm:` or no breakpoint prefix, with smaller `w-` sizes and safer positions so they don't overlap the metric cards). Use the existing `btcCoinAsset`, `tonCoinAsset`, `goldCoinAsset`, `gamepadAsset` (all already imported, already light, already proven to render on mobile in other sections).
+2. **Remove `hidden md:block` from the chosen mobile coins** and give them mobile-first positions (corners of the section, behind the cards) with `w-12`/`w-14` sizes plus `md:w-20`+ for desktop.
+3. **Enable a lightweight loop on `reduced` tier** for this section only: keep the same `loop` flag for `full`, but on `reduced` add a slower (12–14 s), smaller-amplitude (`y: [0,-6,0]`) animation so mobile sees gentle motion without taxing the GPU. `minimal` tier (and `prefers-reduced-motion`) stays static — no change there.
+4. **Keep the desktop layout untouched** — the `hidden md:block` coins continue to render as today on ≥768 px.
 
-### 1. FAQPage structured data — extend beyond `/faq`
-- **`/faq`** — no change; already correct.
-- **`/projects/tonra`** — add a small `FAQPage` JSON-LD block with 4–5 user-intent questions pulled from the page's existing copy (e.g. *"What is TonRa?"*, *"Is TonRa free?"*, *"Does TonRa store my wallet keys?"*, *"How do I verify a TON token?"*, *"What chains does TonRa support?"*). Stacked alongside the existing `SoftwareApplication` schema via the `jsonLd` array of `<SEO>`.
-- **`/projects/ubpoint`** — same treatment: 4–5 questions (e.g. *"What is UBpoint?"*, *"How do I earn UBP?"*, *"Is UBP a cryptocurrency?"*, *"What can I do with UBP?"*). Stacked alongside the `Product` schema.
-- **`/about`** — add 3 short "about UTAAB" questions as a secondary `FAQPage` block (*"What is UTAAB?"*, *"Who runs UTAAB?"*, *"Is UTAAB free to join?"*) — these are the exact phrasings users type into Google and ChatGPT.
+## Out of scope
 
-No visible UI changes; this is metadata only.
+- No changes to hero/FloatingDevice (already works on mobile).
+- No new image assets; no edge-function or data changes.
+- No changes to copy or i18n.
+- No changes to perf-guard thresholds.
 
-### 2. Sitemap — make it complete (including dynamic blog posts)
+## Verify
 
-The current `public/sitemap.xml` is a hand-edited static file. To include every published blog post (currently `/blog/:slug` URLs are missing), we'll migrate to a **build-time generator script**:
-
-- Create `scripts/generate-sitemap.ts` that:
-  - Outputs all 19 static routes already in the current sitemap (verbatim, same priorities/changefreq).
-  - Connects to Lovable Cloud (Supabase) with the public anon key and pulls all `blog_posts` rows where `status = 'published'`, appending each as `/blog/<slug>` with `lastmod = updated_at` and `changefreq = monthly`.
-  - Writes `public/sitemap.xml`.
-- Add `predev` and `prebuild` npm scripts to `package.json` so it runs automatically before dev and production builds:
-  - `"predev": "bunx tsx scripts/generate-sitemap.ts"`
-  - `"prebuild": "bunx tsx scripts/generate-sitemap.ts"`
-- The generated file keeps `BASE_URL = "https://utaab.org"`.
-
-If the DB fetch fails at build time (network/auth), the script falls back to writing the static route list only, so a flaky build never produces an empty sitemap.
-
-### 3. Robots.txt — verify and leave as is
-- `public/robots.txt` already allows Googlebot, Bingbot, Twitterbot, facebookexternalhit, and `*`, and points to `https://utaab.org/sitemap.xml`. **No change needed.**
-
-## Out of scope (not requested)
-
-- Per-language `hreflang` tags (the site is i18n but pages share one URL).
-- Generating Open Graph images per blog post.
-- Adding `BreadcrumbList` schema (could be a follow-up).
-
-## One question before I implement
-
-Migrating the sitemap from a hand-edited file to an auto-generator is the only way to keep `/blog/:slug` URLs in sync. **OK to do that?** If you'd rather keep the file hand-edited, I'll just add the currently-published blog slugs once and you'll need to ping me whenever you publish a new post.
+- Resize preview to 375 px and 692 px: 3–4 coins visible around the metric grid, gently floating.
+- Resize to ≥768 px: identical to today (full coin spread + full animation).
+- With `prefers-reduced-motion: reduce`: coins visible but static.
