@@ -259,8 +259,9 @@ const HeroBackground = () => (
 
 /* ---------- Floating iPhone device ---------- */
 const FloatingDevice = () => {
-  const { ready } = useSplash();
-  const backCoins = [
+  const { ready, tier } = useSplash();
+  const loop = tier === 'full';
+  const allBackCoins = [
     { src: usdtAngleAsset.url, cls: 'top-2 -left-2 sm:-left-4 md:-left-10 w-12 sm:w-16 md:w-24', glow: 'rgba(16,185,129,0.45)', dur: 9, delay: 0 },
     { src: tryAngleAsset.url, cls: 'top-10 -right-2 sm:-right-6 md:-right-14 w-12 sm:w-16 md:w-24', glow: 'rgba(220,38,38,0.4)', dur: 10, delay: 0.4 },
     { src: ethCoinAsset.url, cls: 'top-1/2 -left-4 sm:-left-10 md:-left-20 w-10 sm:w-14 md:w-20', glow: 'rgba(100,116,139,0.45)', dur: 11, delay: 0.8 },
@@ -269,6 +270,7 @@ const FloatingDevice = () => {
     { src: steamAsset.url, cls: 'top-4 -left-3 sm:-left-8 md:-left-16 w-12 sm:w-16 md:w-24', glow: 'rgba(37,99,235,0.45)', dur: 10, delay: 1.3 },
     { src: gamepadAsset.url, cls: 'bottom-8 -right-4 sm:-right-10 md:-right-20 w-14 sm:w-20 md:w-28', glow: 'rgba(96,165,250,0.4)', dur: 11, delay: 0.6 },
   ];
+  const backCoins = tier === 'minimal' ? [] : tier === 'reduced' ? allBackCoins.slice(0, 3) : allBackCoins;
   const { t } = useTranslation();
 
   return (
