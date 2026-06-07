@@ -1,17 +1,35 @@
-import { createContext, useContext, useEffect, useMemo, useRef, useState, forwardRef } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, forwardRef } from 'react';
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePerfGuard, type PerfTier } from '@/hooks/usePerfGuard';
 
 /* ---------- Splash intro + perf-tier context ---------- */
-const SplashContext = createContext<{ ready: boolean; tier: PerfTier }>({ ready: true, tier: 'full' });
+interface SplashContextValue {
+  ready: boolean;
+  heroReady: boolean;
+  tier: PerfTier;
+  replayKey: number;
+  setTierOverride: (t: PerfTier | null) => void;
+  tierOverride: PerfTier | null;
+  replaySpread: () => void;
+}
+const SplashContext = createContext<SplashContextValue>({
+  ready: true,
+  heroReady: true,
+  tier: 'full',
+  replayKey: 0,
+  setTierOverride: () => {},
+  tierOverride: null,
+  replaySpread: () => {},
+});
 const useSplash = () => useContext(SplashContext);
 const splashTransition = (i: number) => ({
   delay: 0.25 + i * 0.13,
   duration: 0.75,
   ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
 });
+
 
 import {
   ArrowRight,
@@ -259,17 +277,35 @@ const HeroBackground = () => (
 
 /* ---------- Floating iPhone device ---------- */
 const FloatingDevice = () => {
-  const { ready, tier } = useSplash();
+  const { ready, heroReady, tier, replayKey } = useSplash();
   const loop = tier === 'full';
-  const allBackCoins = [
+
+  // Latch: once the spread has started, never reset on re-renders.
+  // Only an explicit replayKey bump (from the debug panel) triggers a re-run.
+  const [spreadActive, setSpreadActive] = useState(false);
+  const startedKeyRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (!heroReady) return;
+    if (startedKeyRef.current === replayKey) return;
+    startedKeyRef.current = replayKey;
+    setSpreadActive(false);
+    const t = window.setTimeout(() => setSpreadActive(true), 30);
+    return () => window.clearTimeout(t);
+  }, [heroReady, replayKey]);
+
+  const allBackCoins = useMemo(() => ([
     { src: usdtAngleAsset.url, cls: 'top-2 -left-2 sm:-left-4 md:-left-10 w-16 sm:w-24 md:w-36', glow: 'rgba(16,185,129,0.45)', dur: 9, delay: 0, from: { x: 140, y: 40 } },
     { src: tryAngleAsset.url, cls: 'top-10 -right-2 sm:-right-6 md:-right-14 w-16 sm:w-24 md:w-36', glow: 'rgba(220,38,38,0.4)', dur: 10, delay: 0.4, from: { x: -140, y: 30 } },
     { src: ethCoinAsset.url, cls: 'top-1/2 -left-4 sm:-left-10 md:-left-20 w-14 sm:w-20 md:w-32', glow: 'rgba(100,116,139,0.45)', dur: 11, delay: 0.8, from: { x: 160, y: 0 } },
     { src: goldCoinAsset.url, cls: 'bottom-12 -right-3 sm:-right-8 md:-right-16 w-14 sm:w-20 md:w-32', glow: 'rgba(202,138,4,0.5)', dur: 12, delay: 0.2, from: { x: -150, y: -20 } },
     { src: silverBarAsset.url, cls: 'bottom-2 left-2 sm:left-6 md:left-2 w-16 sm:w-24 md:w-32', glow: 'rgba(148,163,184,0.5)', dur: 13, delay: 1, from: { x: 100, y: -80 } },
     { src: steamAsset.url, cls: 'top-4 -left-3 sm:-left-8 md:-left-16 w-16 sm:w-24 md:w-36', glow: 'rgba(37,99,235,0.45)', dur: 10, delay: 1.3, from: { x: 140, y: 60 } },
-  ];
-  const backCoins = tier === 'minimal' ? [] : tier === 'reduced' ? allBackCoins.slice(0, 3) : allBackCoins;
+  ]), []);
+  const backCoins = useMemo(
+    () => (tier === 'minimal' ? [] : tier === 'reduced' ? allBackCoins.slice(0, 3) : allBackCoins),
+    [tier, allBackCoins],
+  );
+
   const { t } = useTranslation();
 
   return (
@@ -284,7 +320,7 @@ const FloatingDevice = () => {
               key={i}
               className={`absolute ${c.cls}`}
               initial={{ opacity: 0, scale: 0.35, x: c.from.x, y: c.from.y, rotate: initRot }}
-              animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: c.from.x, y: c.from.y, rotate: initRot }}
+              animate={spreadActive ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: c.from.x, y: c.from.y, rotate: initRot }}
               transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.15 + i * 0.14 }}
             >
               <motion.img
@@ -292,7 +328,7 @@ const FloatingDevice = () => {
                 alt=""
                 className="w-full select-none"
                 style={{ filter: `drop-shadow(0 14px 26px ${c.glow})` }}
-                animate={ready && loop ? { y: [0, -10, 0], rotateZ: [-5, 5, -5] } : undefined}
+                animate={spreadActive && loop ? { y: [0, -10, 0], rotateZ: [-5, 5, -5] } : undefined}
                 transition={{ duration: c.dur, repeat: Infinity, ease: 'easeInOut', delay: c.delay }}
               />
             </motion.div>
@@ -370,7 +406,7 @@ const FloatingDevice = () => {
       <motion.div
         className="absolute -left-6 sm:-left-10 md:-left-20 bottom-2 sm:bottom-4 w-24 sm:w-36 md:w-48 pointer-events-none z-0"
         initial={{ opacity: 0, scale: 0.35, x: 160, y: -80, rotate: -10 }}
-        animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: 160, y: -80, rotate: -10 }}
+        animate={spreadActive ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: 160, y: -80, rotate: -10 }}
         transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.22 }}
       >
         <motion.img
@@ -378,14 +414,14 @@ const FloatingDevice = () => {
           alt=""
           aria-hidden
           className="w-full drop-shadow-[0_20px_40px_rgba(37,99,235,0.35)]"
-          animate={ready && loop ? { y: [0, -12, 0], rotateZ: [-6, 6, -6] } : undefined}
+          animate={spreadActive && loop ? { y: [0, -12, 0], rotateZ: [-6, 6, -6] } : undefined}
           transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
         />
       </motion.div>
       <motion.div
         className="absolute -right-3 sm:-right-6 md:-right-12 top-2 sm:top-4 w-20 sm:w-28 md:w-40 pointer-events-none z-0"
         initial={{ opacity: 0, scale: 0.35, x: -160, y: 100, rotate: 10 }}
-        animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: -160, y: 100, rotate: 10 }}
+        animate={spreadActive ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: -160, y: 100, rotate: 10 }}
         transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
       >
         <motion.img
@@ -393,14 +429,14 @@ const FloatingDevice = () => {
           alt=""
           aria-hidden
           className="w-full drop-shadow-[0_15px_30px_rgba(37,99,235,0.45)]"
-          animate={ready && loop ? { y: [0, 10, 0], rotateZ: [4, -4, 4] } : undefined}
+          animate={spreadActive && loop ? { y: [0, 10, 0], rotateZ: [4, -4, 4] } : undefined}
           transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
         />
       </motion.div>
       <motion.div
         className="absolute -right-3 sm:-right-6 md:-right-14 bottom-1 sm:bottom-2 md:bottom-6 w-14 sm:w-20 md:w-28 pointer-events-none z-0"
         initial={{ opacity: 0, scale: 0.35, x: -150, y: -80, rotate: 10 }}
-        animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: -150, y: -80, rotate: 10 }}
+        animate={spreadActive ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: -150, y: -80, rotate: 10 }}
         transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.78 }}
       >
         <motion.img
@@ -408,10 +444,11 @@ const FloatingDevice = () => {
           alt=""
           aria-hidden
           className="w-full drop-shadow-[0_15px_30px_rgba(202,138,4,0.4)]"
-          animate={ready && loop ? { y: [0, -10, 0], rotateZ: [-5, 5, -5] } : undefined}
+          animate={spreadActive && loop ? { y: [0, -10, 0], rotateZ: [-5, 5, -5] } : undefined}
           transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1.2 }}
         />
       </motion.div>
+
     </div>
   );
 };
@@ -1183,7 +1220,101 @@ class UBpointErrorBoundary extends Component<{ children: ReactNode }, { hasError
   }
 }
 
-/* ---------- Page ---------- */
+/* ---------- Perf-tier debug panel (no console required) ---------- */
+const PerfDebugPanel = () => {
+  const { tier, tierOverride, setTierOverride, replaySpread, heroReady, ready } = useSplash();
+  const [enabled, setEnabled] = useState(false);
+
+  useEffect(() => {
+    try {
+      const fromQuery = new URLSearchParams(window.location.search).get('perf-debug') === '1';
+      const fromStorage = localStorage.getItem('ubpoint-perf-debug') === '1';
+      if (fromQuery || fromStorage) setEnabled(true);
+    } catch {}
+    const onKey = (e: KeyboardEvent) => {
+      if (e.shiftKey && (e.key === 'P' || e.key === 'p') && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        const target = e.target as HTMLElement | null;
+        if (target && /input|textarea|select/i.test(target.tagName)) return;
+        setEnabled((v) => {
+          const next = !v;
+          try { localStorage.setItem('ubpoint-perf-debug', next ? '1' : '0'); } catch {}
+          return next;
+        });
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  if (!enabled) return null;
+
+  const tiers: PerfTier[] = ['full', 'reduced', 'minimal'];
+  return (
+    <div
+      role="region"
+      aria-label="UBpoint performance debug panel"
+      className="fixed bottom-4 right-4 z-[70] w-[240px] rounded-2xl border border-blue-100 bg-white/95 backdrop-blur-xl shadow-2xl p-3 text-slate-900"
+    >
+      <div className="flex items-center justify-between mb-2">
+        <div className="text-[11px] font-extrabold uppercase tracking-wider text-blue-700">Perf debug</div>
+        <button
+          type="button"
+          onClick={() => {
+            setEnabled(false);
+            try { localStorage.setItem('ubpoint-perf-debug', '0'); } catch {}
+          }}
+          className="text-slate-400 hover:text-slate-700 text-xs"
+          aria-label="Close"
+        >
+          ✕
+        </button>
+      </div>
+      <div className="text-[11px] text-slate-500 mb-2">
+        Tier <span className="font-bold text-slate-900">{tier}</span>
+        {tierOverride && <span className="ml-1 text-blue-600">(override)</span>}
+        <span className="ml-2">· ready {ready ? '✓' : '…'} · hero {heroReady ? '✓' : '…'}</span>
+      </div>
+      <div className="grid grid-cols-3 gap-1.5 mb-2">
+        {tiers.map((tt) => {
+          const active = tierOverride === tt;
+          return (
+            <button
+              key={tt}
+              type="button"
+              onClick={() => setTierOverride(tt)}
+              className={`px-2 py-1.5 rounded-lg text-[11px] font-semibold border transition-colors ${
+                active
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white text-slate-700 border-blue-100 hover:bg-blue-50'
+              }`}
+            >
+              {tt}
+            </button>
+          );
+        })}
+      </div>
+      <div className="flex gap-1.5">
+        <button
+          type="button"
+          onClick={() => setTierOverride(null)}
+          className="flex-1 px-2 py-1.5 rounded-lg text-[11px] font-semibold bg-white border border-blue-100 text-slate-700 hover:bg-blue-50"
+        >
+          Auto
+        </button>
+        <button
+          type="button"
+          onClick={replaySpread}
+          className="flex-1 px-2 py-1.5 rounded-lg text-[11px] font-semibold bg-blue-50 border border-blue-100 text-blue-700 hover:bg-blue-100"
+        >
+          Replay
+        </button>
+      </div>
+      <div className="mt-2 text-[10px] text-slate-400">Toggle with Shift + P</div>
+    </div>
+  );
+};
+
+
 const UBpointPageInner = () => {
   const { t } = useTranslation();
 
@@ -1200,7 +1331,42 @@ const UBpointPageInner = () => {
     return false;
   })();
   const [ready, setReady] = useState(initialReady);
-  const tier = usePerfGuard();
+  const autoTier = usePerfGuard();
+  const [tierOverride, setTierOverride] = useState<PerfTier | null>(null);
+  const tier = tierOverride ?? autoTier;
+  const [mockupDecoded, setMockupDecoded] = useState(false);
+  const [fontsReady, setFontsReady] = useState(false);
+  const [replayKey, setReplayKey] = useState(0);
+  const heroReady = ready && mockupDecoded && fontsReady;
+
+  // Mockup decode — independent of splash so heroReady can latch precisely.
+  useEffect(() => {
+    let cancelled = false;
+    const img = new Image();
+    img.src = mockupAsset.url;
+    img.decode().then(() => { if (!cancelled) setMockupDecoded(true); })
+      .catch(() => { if (!cancelled) setMockupDecoded(true); });
+    const fallback = window.setTimeout(() => { if (!cancelled) setMockupDecoded(true); }, 2500);
+    return () => { cancelled = true; window.clearTimeout(fallback); };
+  }, []);
+
+  // Wait for web fonts so coin entrance lines up with final hero typography.
+  useEffect(() => {
+    let cancelled = false;
+    const fallback = window.setTimeout(() => { if (!cancelled) setFontsReady(true); }, 1200);
+    const fonts = (document as any).fonts;
+    if (fonts?.ready?.then) {
+      fonts.ready.then(() => { if (!cancelled) setFontsReady(true); }).catch(() => {});
+    } else {
+      setFontsReady(true);
+    }
+    return () => { cancelled = true; window.clearTimeout(fallback); };
+  }, []);
+
+  const replaySpread = useCallback(() => {
+    setReplayKey((k) => k + 1);
+  }, []);
+
 
   // Lock html/body background to opaque white so the global dark theme can
   // never bleed through during paint gaps or splash fade-out.
@@ -1292,7 +1458,7 @@ const UBpointPageInner = () => {
   }, [ready]);
 
   return (
-    <SplashContext.Provider value={{ ready, tier }}>
+    <SplashContext.Provider value={{ ready, heroReady, tier, replayKey, setTierOverride, tierOverride, replaySpread }}>
       <div className="min-h-screen bg-white text-slate-900 font-sans">
         <LightNavbar />
         <main>
@@ -1306,6 +1472,9 @@ const UBpointPageInner = () => {
           <FinalCTA />
         </main>
         <LightFooter />
+
+        <PerfDebugPanel />
+
 
         <AnimatePresence>
           {!ready && (
