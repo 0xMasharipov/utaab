@@ -1490,8 +1490,25 @@ const UBpointPageInner = () => {
   );
 };
 
+import SEO from '@/components/SEO';
+
 const UBpointPage = () => (
   <UBpointErrorBoundary>
+    <SEO
+      title="UBpoint — Community Rewards Token by UTAAB"
+      description="UBpoint (UBP) is UTAAB's community rewards token — earn points for learning Web3, contributing to projects, and engaging with the student blockchain community."
+      path="/projects/ubpoint"
+      ogType="website"
+      image="https://utaab.org/og-image.png"
+      jsonLd={{
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: 'UBpoint (UBP)',
+        description: 'Community rewards token by UTAAB for Web3 learning, contributions and engagement.',
+        url: 'https://utaab.org/projects/ubpoint',
+        brand: { '@type': 'Organization', name: 'UTAAB', url: 'https://utaab.org' },
+      }}
+    />
     <UBpointPageInner />
   </UBpointErrorBoundary>
 );

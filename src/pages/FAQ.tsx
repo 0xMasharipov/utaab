@@ -78,8 +78,8 @@ const FAQ = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SEO
-        title="UTAAB FAQ — Web3, Membership & Getting Started"
-        description="Answers to common questions about UTAAB, joining the community, learning Web3, and contributing to projects."
+        title="UTAAB FAQ — What is UTAAB, How to Join & Web3 Basics"
+        description="UTAAB blockchain community FAQ — what is UTAAB, is it free to join, do I need crypto, wallets, certificates, contributing, and how to follow updates."
         path="/faq"
         jsonLd={faqJsonLd}
       />

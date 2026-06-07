@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Search, Calendar } from 'iconoir-react';
@@ -18,6 +18,7 @@ import { PrivacyPopup } from '@/components/PrivacyPopup';
 import { PrivacyCenter } from '@/components/PrivacyCenter';
 import { FloatingPrivacyButton } from '@/components/FloatingPrivacyButton';
 import { useQuery } from '@tanstack/react-query';
+import SEO from '@/components/SEO';
 
 const POSTS_PER_PAGE = 12;
 
@@ -28,10 +29,6 @@ const Blog = () => {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [page, setPage] = useState(0);
   const [isPrivacyCenterOpen, setIsPrivacyCenterOpen] = useState(false);
-
-  useEffect(() => {
-    document.title = 'UTAAB Blog - Insights, Updates & Web3 Innovations';
-  }, []);
 
   const { data: posts = [], isLoading: loading } = useQuery({
     queryKey: ['blog-posts'],
@@ -67,6 +64,19 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SEO
+        title="UTAAB Blog — Web3, Blockchain & Student Innovation Insights"
+        description="Read the UTAAB blog for blockchain education, Web3 articles, project updates, and student-led crypto community news from utaab.org."
+        path="/blog"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'Blog',
+          name: 'UTAAB Blog',
+          url: 'https://utaab.org/blog',
+          publisher: { '@type': 'Organization', name: 'UTAAB', url: 'https://utaab.org' },
+          inLanguage: ['en', 'tr', 'ru', 'ar'],
+        }}
+      />
       <AnimatedBlobBackground />
       <Navbar />
 

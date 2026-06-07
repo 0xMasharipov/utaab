@@ -169,8 +169,17 @@ const BlogPost = () => {
     image: post.cover_image || undefined,
     datePublished: post.publish_date || post.created_at || undefined,
     dateModified: post.updated_at || post.publish_date || undefined,
-    author: post.author_name ? { '@type': 'Person', name: post.author_name } : undefined,
+    author: post.author_name
+      ? { '@type': 'Person', name: post.author_name }
+      : { '@type': 'Organization', name: 'UTAAB', url: 'https://utaab.org' },
+    publisher: {
+      '@type': 'Organization',
+      name: 'UTAAB',
+      url: 'https://utaab.org',
+      logo: { '@type': 'ImageObject', url: 'https://utaab.org/favicon.png' },
+    },
     mainEntityOfPage: `https://utaab.org/blog/${post.slug}`,
+    inLanguage: lang,
   };
 
   return (
