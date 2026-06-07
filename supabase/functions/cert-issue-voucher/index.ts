@@ -102,6 +102,8 @@ Deno.serve(async (req) => {
     }
 
     const { serial_hash, token_uri } = parsed.data;
+    // DB stores serial_hash as 64 hex chars without the 0x prefix.
+    const serialHashDb = serial_hash.slice(2);
 
     logStage('request', {
       attempt_id: attemptId,
