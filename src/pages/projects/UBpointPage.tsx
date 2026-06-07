@@ -262,13 +262,12 @@ const FloatingDevice = () => {
   const { ready, tier } = useSplash();
   const loop = tier === 'full';
   const allBackCoins = [
-    { src: usdtAngleAsset.url, cls: 'top-2 -left-2 sm:-left-4 md:-left-10 w-12 sm:w-16 md:w-24', glow: 'rgba(16,185,129,0.45)', dur: 9, delay: 0 },
-    { src: tryAngleAsset.url, cls: 'top-10 -right-2 sm:-right-6 md:-right-14 w-12 sm:w-16 md:w-24', glow: 'rgba(220,38,38,0.4)', dur: 10, delay: 0.4 },
-    { src: ethCoinAsset.url, cls: 'top-1/2 -left-4 sm:-left-10 md:-left-20 w-10 sm:w-14 md:w-20', glow: 'rgba(100,116,139,0.45)', dur: 11, delay: 0.8 },
-    { src: goldCoinAsset.url, cls: 'bottom-12 -right-3 sm:-right-8 md:-right-16 w-10 sm:w-14 md:w-20', glow: 'rgba(202,138,4,0.5)', dur: 12, delay: 0.2 },
-    { src: silverBarAsset.url, cls: 'bottom-2 left-2 sm:left-6 md:left-2 w-12 sm:w-16 md:w-20', glow: 'rgba(148,163,184,0.5)', dur: 13, delay: 1 },
-    { src: steamAsset.url, cls: 'top-4 -left-3 sm:-left-8 md:-left-16 w-12 sm:w-16 md:w-24', glow: 'rgba(37,99,235,0.45)', dur: 10, delay: 1.3 },
-    { src: gamepadAsset.url, cls: 'bottom-8 -right-4 sm:-right-10 md:-right-20 w-14 sm:w-20 md:w-28', glow: 'rgba(96,165,250,0.4)', dur: 11, delay: 0.6 },
+    { src: usdtAngleAsset.url, cls: 'top-2 -left-2 sm:-left-4 md:-left-10 w-16 sm:w-24 md:w-36', glow: 'rgba(16,185,129,0.45)', dur: 9, delay: 0, from: { x: 140, y: 40 } },
+    { src: tryAngleAsset.url, cls: 'top-10 -right-2 sm:-right-6 md:-right-14 w-16 sm:w-24 md:w-36', glow: 'rgba(220,38,38,0.4)', dur: 10, delay: 0.4, from: { x: -140, y: 30 } },
+    { src: ethCoinAsset.url, cls: 'top-1/2 -left-4 sm:-left-10 md:-left-20 w-14 sm:w-20 md:w-32', glow: 'rgba(100,116,139,0.45)', dur: 11, delay: 0.8, from: { x: 160, y: 0 } },
+    { src: goldCoinAsset.url, cls: 'bottom-12 -right-3 sm:-right-8 md:-right-16 w-14 sm:w-20 md:w-32', glow: 'rgba(202,138,4,0.5)', dur: 12, delay: 0.2, from: { x: -150, y: -20 } },
+    { src: silverBarAsset.url, cls: 'bottom-2 left-2 sm:left-6 md:left-2 w-16 sm:w-24 md:w-32', glow: 'rgba(148,163,184,0.5)', dur: 13, delay: 1, from: { x: 100, y: -80 } },
+    { src: steamAsset.url, cls: 'top-4 -left-3 sm:-left-8 md:-left-16 w-16 sm:w-24 md:w-36', glow: 'rgba(37,99,235,0.45)', dur: 10, delay: 1.3, from: { x: 140, y: 60 } },
   ];
   const backCoins = tier === 'minimal' ? [] : tier === 'reduced' ? allBackCoins.slice(0, 3) : allBackCoins;
   const { t } = useTranslation();
@@ -277,14 +276,14 @@ const FloatingDevice = () => {
     <div className="relative w-full max-w-[280px] sm:max-w-[340px] md:max-w-[420px] mx-auto px-2 sm:px-0">
       <div className="absolute inset-0 -m-6 sm:-m-10 bg-gradient-to-br from-blue-400/40 via-blue-500/30 to-blue-600/20 blur-3xl rounded-full" />
 
-      <div aria-hidden className="absolute inset-0 -m-8 sm:-m-12 md:-m-24 pointer-events-none">
+      <div aria-hidden className="absolute inset-0 -m-8 sm:-m-12 md:-m-24 pointer-events-none z-0">
         {backCoins.map((c, i) => (
           <motion.div
             key={i}
             className={`absolute ${c.cls}`}
-            initial={{ opacity: 0, scale: 0.2 }}
-            animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.2 }}
-            transition={splashTransition(i + 2)}
+            initial={{ opacity: 0, scale: 0.35, x: c.from.x, y: c.from.y }}
+            animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0 } : { opacity: 0, scale: 0.35, x: c.from.x, y: c.from.y }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 + i * 0.08 }}
           >
             <motion.img
               src={c.src}
@@ -366,10 +365,10 @@ const FloatingDevice = () => {
       </motion.div>
 
       <motion.div
-        className="absolute -left-6 sm:-left-10 md:-left-20 bottom-2 sm:bottom-4 w-16 sm:w-24 md:w-32 pointer-events-none"
-        initial={{ opacity: 0, scale: 0.2 }}
-        animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.2 }}
-        transition={splashTransition(0)}
+        className="absolute -left-6 sm:-left-10 md:-left-20 bottom-2 sm:bottom-4 w-24 sm:w-36 md:w-48 pointer-events-none z-0"
+        initial={{ opacity: 0, scale: 0.35, x: 160, y: -80 }}
+        animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0 } : { opacity: 0, scale: 0.35, x: 160, y: -80 }}
+        transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
       >
         <motion.img
           src={utaabCoinAsset.url}
@@ -381,10 +380,10 @@ const FloatingDevice = () => {
         />
       </motion.div>
       <motion.div
-        className="absolute -right-3 sm:-right-6 md:-right-12 top-2 sm:top-4 w-14 sm:w-20 md:w-28 pointer-events-none"
-        initial={{ opacity: 0, scale: 0.2 }}
-        animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.2 }}
-        transition={splashTransition(1)}
+        className="absolute -right-3 sm:-right-6 md:-right-12 top-2 sm:top-4 w-20 sm:w-28 md:w-40 pointer-events-none z-0"
+        initial={{ opacity: 0, scale: 0.35, x: -160, y: 100 }}
+        animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0 } : { opacity: 0, scale: 0.35, x: -160, y: 100 }}
+        transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
       >
         <motion.img
           src={tonCoinAsset.url}
@@ -396,10 +395,10 @@ const FloatingDevice = () => {
         />
       </motion.div>
       <motion.div
-        className="absolute -right-3 sm:-right-6 md:-right-14 bottom-1 sm:bottom-2 md:bottom-6 w-10 sm:w-14 md:w-20 pointer-events-none"
-        initial={{ opacity: 0, scale: 0.2 }}
-        animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.2 }}
-        transition={splashTransition(11)}
+        className="absolute -right-3 sm:-right-6 md:-right-14 bottom-1 sm:bottom-2 md:bottom-6 w-14 sm:w-20 md:w-28 pointer-events-none z-0"
+        initial={{ opacity: 0, scale: 0.35, x: -150, y: -80 }}
+        animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0 } : { opacity: 0, scale: 0.35, x: -150, y: -80 }}
+        transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
       >
         <motion.img
           src={btcCoinAsset.url}
