@@ -86,9 +86,12 @@ export const certificateRegistryAbi = [
     ],
     outputs: [],
   },
-  // --- Legacy registry surface (kept so existing admin pages compile;
-  //     against the new Base contract these calls will revert — issuance
-  //     should go through the cert-issue-voucher edge function + claim). ---
+  // --- Legacy registry surface (DEPRECATED).
+  //     These entries exist only so older code compiles. Calling them against
+  //     the live UtaabCertificate contract on Base will REVERT — issuance must
+  //     go through the cert-issue-voucher edge function and `claim()`, and
+  //     revocation must use `revoke(serialHash, reason)`.
+  //     @deprecated do not call: issueCertificate, issueBatchCertificates, revokeCertificate ---
   {
     type: 'function',
     name: 'issueCertificate',

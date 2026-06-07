@@ -1,41 +1,46 @@
-# Fix admin "Issue selected" certificate flow
+# Retry-safe voucher issue flow + validation + debug logging
 
-## Root cause
+## Context
 
-The deployed contract on Base is the new `UtaabCertificate` (soulbound, voucher-based). It does **not** expose `issueBatchCertificates` / `issueCertificate` / `revokeCertificate`. Those legacy entries still sit in the ABI only to keep old admin pages compiling — calling them on the live contract reverts with the generic "Unexpected error" you see.
+`IssueBatchCertificates` is no longer used — the active admin path is the voucher flow (`cert-issue-voucher` edge function → `ClaimOnBase`). All requirements will be applied there.
 
-The admin **Certificates → Issue selected** button in `src/pages/admin/cert/CertRecords.tsx` still calls `writeContractAsync({ functionName: 'issueBatchCertificates' })`, which is why every attempt reverts. The same applies to **Revoke** which calls `revokeCertificate` instead of the new `revoke(serialHash, reason)`.
+## Changes
 
-In the new model, the admin doesn't pay gas or mint anything. The admin just signs an EIP-712 voucher (via the existing `cert-issue-voucher` edge function), which:
-- marks the DB row as `status='issued'`
-- stores the voucher + signature on the row
-- lets the holder later `claim()` from their own wallet on Base (handled by `ClaimOnBase`)
+### 1. Client validation (`src/pages/admin/cert/CertRecords.tsx`)
+Zod schema gate before any network call:
+- `serial_hash`: `^0x[0-9a-f]{64}$` (lowercased)
+- `holder`: viem `isAddress` + `getAddress` checksum normalization
+- `row.chain_id === CHAIN_ID` (skip mismatched rows)
+- `status === 'draft'`
+- batch size ≤ 50
+Failures surface in the results panel; never hit the server.
 
-## What I'll change
+### 2. Retry-safe issuance with re-sign
+Per-row loop, up to **3 attempts**, exponential backoff (300 / 900 / 2700 ms). Each retry re-invokes `cert-issue-voucher` so a fresh `issuedAt` + new signature are produced. Retry only on network / 5xx / "voucher failed". Terminal on 400 and 409. Results panel shows attempt count.
 
-Only the admin UI under `src/pages/admin/cert/CertRecords.tsx`. No contract, no schema, no edge-function changes.
+### 3. Retry on student claim (`src/components/cert/ClaimOnBase.tsx`)
+Wrap `claim()` with the same 3-attempt + re-fetch-voucher pattern (wagmi handles gas estimation each send). Terminal on user-rejection.
 
-1. **Issue flow** — replace the on-chain batch write with a per-row call to the `cert-issue-voucher` edge function:
-   - For each selected draft, require `holder_address` (either already on the row, or pulled from the participant record). If a row has no holder, skip it and surface a clear toast listing the missing names.
-   - `await supabase.functions.invoke('cert-issue-voucher', { body: { serial_hash, holder, token_uri? } })` per row.
-   - On success, the edge function already updates `cert_records` (status=issued, voucher, signature, chain_id, contract_address, holder_address, issued_at), so the UI just invalidates queries.
-   - Drop wallet / network / `writeContractAsync` requirements from this dialog — issuance is now a signed-server action, no admin wallet needed.
+### 4. Backend hardening (`supabase/functions/cert-issue-voucher/index.ts`)
+- Lowercase `serial_hash` before lookup
+- `getAddress(holder)` (400 on bad checksum)
+- 409 if `row.status === 'issued'` (in addition to existing 'revoked')
+- Require `https://` on `token_uri`
+- Verify `row.chain_id ?? CHAIN_ID === CHAIN_ID`
+- Keep generic 4xx/500 bodies (no error leakage)
 
-2. **Revoke flow** — switch from the old `revokeCertificate(serialHash)` to the new `revoke(serialHash, reason)` ABI call (still admin-wallet on-chain because revoke is `onlyRole(ADMIN_ROLE)`). Keep the existing DB update.
-   - Use `ACTIVE_CHAIN` + `CHAIN_ID` from `src/lib/web3/wagmi.ts` instead of hard-coded `sepolia`, so it works against Base / Base Sepolia.
+### 5. Debug logging
+Client: `console.debug('[cert-issue]', { attempt, serial, holder, chainId, batchSize })` and per-result entries.
+Edge function: structured `console.log('[voucher]', { attempt_id, serial_hash, holder, chain_id, contract, row_status })` and `[voucher:signed]` / `[voucher:error]` with stage codes only.
 
-3. **Issue dialog UX** — remove "submit a transaction on Sepolia" copy; explain that the admin is signing a voucher and the recipient will claim on Base. Show a per-row result list (issued / skipped-missing-holder / failed).
-
-4. Keep all PDF generation and selection logic untouched.
+### 6. ABI markers (`src/lib/web3/abi.ts`)
+JSDoc `@deprecated` on `issueBatchCertificates` / `issueCertificate` / `revokeCertificate` to prevent accidental reuse.
 
 ## Out of scope
+Contract, DB schema, PDF generation, list/filter UI.
 
-- ABI cleanup of the legacy `issueCertificate` / `issueBatchCertificates` / `revokeCertificate` entries — leaving them avoids churn elsewhere this turn. Can be removed later.
-- No changes to `cert-issue-voucher`, `ClaimOnBase`, contracts, or DB schema.
-- No copy/branding changes outside the issue & revoke dialogs.
-
-## Technical notes
-
-- `cert-issue-voucher` returns 503 if `UTAAB_ISSUER_PRIVATE_KEY` / `CERT_CONTRACT_ADDRESS` aren't configured; the new UI will surface that as an actionable error toast.
-- Holder lookup priority: `cert_records.holder_address` → `participants.wallet_address` (if present in `partsById`) → skip with reason "no wallet on file".
-- Revoke uses `useWriteContract` against `ACTIVE_CHAIN` (Base / Base Sepolia depending on `CERT_CHAIN_ID`); it requires the connected wallet to hold `ADMIN_ROLE` on the contract.
+## Files touched
+- `src/pages/admin/cert/CertRecords.tsx`
+- `src/components/cert/ClaimOnBase.tsx`
+- `supabase/functions/cert-issue-voucher/index.ts`
+- `src/lib/web3/abi.ts`

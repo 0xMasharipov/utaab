@@ -41,57 +41,86 @@ export function ClaimOnBase({ serialHash, voucher, signature }: Props) {
     );
   }
 
+  async function fetchFreshVoucher() {
+    const startedAt = Date.now();
+    const { data, error } = await supabase.functions.invoke('cert-issue-voucher', {
+      body: { serial_hash: serialHash, holder: address },
+    });
+    console.debug('[claim:voucher]', {
+      serial: serialHash,
+      holder: address,
+      ok: !error,
+      durationMs: Date.now() - startedAt,
+    });
+    if (error) throw new Error(error.message);
+    return { v: (data as any).voucher, sig: (data as any).signature };
+  }
+
   async function handleClaim() {
+    setBusy(true);
     try {
-      setBusy(true);
-
-      let v = voucher;
-      let sig = signature;
-
-      if (!v || !sig) {
-        const { data, error } = await supabase.functions.invoke('cert-issue-voucher', {
-          body: { serial_hash: serialHash, holder: address },
-        });
-        if (error) throw new Error(error.message);
-        v = (data as any).voucher;
-        sig = (data as any).signature;
-      }
-
       if (chainId !== ACTIVE_CHAIN.id) {
         await switchChainAsync({ chainId: ACTIVE_CHAIN.id });
       }
 
-      const hash = await writeContractAsync({
-        account: address!,
-        chain: ACTIVE_CHAIN,
-        address: CONTRACT_ADDRESS as `0x${string}`,
-        abi: certificateRegistryAbi,
-        functionName: 'claim',
-        args: [
-          {
-            serialHash: v!.serialHash,
-            eventHash: v!.eventHash,
-            issuedByHash: v!.issuedByHash,
-            holder: v!.holder,
-            issuedAt: BigInt(v!.issuedAt),
-            tokenURI: v!.tokenURI,
-          },
-          sig as `0x${string}`,
-        ],
-      });
+      let lastErr: any = null;
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        const startedAt = Date.now();
+        try {
+          // Re-fetch a fresh voucher each retry so issuedAt + signature are new.
+          const { v, sig } = (voucher && signature && attempt === 1)
+            ? { v: voucher, sig: signature }
+            : await fetchFreshVoucher();
 
-      setTxHash(hash);
+          console.debug('[claim]', {
+            attempt,
+            serial: serialHash,
+            holder: address,
+            chainId: ACTIVE_CHAIN.id,
+          });
 
-      // Best-effort: persist receipt to DB. Failures here are non-fatal.
-      supabase.functions
-        .invoke('cert-record-claim', {
-          body: { serial_hash: serialHash, tx_hash: hash, holder: address },
-        })
-        .catch(() => undefined);
+          const hash = await writeContractAsync({
+            account: address!,
+            chain: ACTIVE_CHAIN,
+            address: CONTRACT_ADDRESS as `0x${string}`,
+            abi: certificateRegistryAbi,
+            functionName: 'claim',
+            args: [
+              {
+                serialHash: v!.serialHash,
+                eventHash: v!.eventHash,
+                issuedByHash: v!.issuedByHash,
+                holder: v!.holder,
+                issuedAt: BigInt(v!.issuedAt),
+                tokenURI: v!.tokenURI,
+              },
+              sig as `0x${string}`,
+            ],
+          });
 
-      toast.success(`Claim submitted on ${NETWORK_LABEL}.`);
-    } catch (err: any) {
-      toast.error(err?.shortMessage || err?.message || 'Claim failed.');
+          setTxHash(hash);
+          console.debug('[claim:result]', { attempt, ok: true, hash, durationMs: Date.now() - startedAt });
+
+          // Best-effort persistence
+          supabase.functions
+            .invoke('cert-record-claim', {
+              body: { serial_hash: serialHash, tx_hash: hash, holder: address },
+            })
+            .catch(() => undefined);
+
+          toast.success(`Claim submitted on ${NETWORK_LABEL}.`);
+          return;
+        } catch (err: any) {
+          lastErr = err;
+          const code = err?.code ?? err?.cause?.code;
+          const msg = err?.shortMessage || err?.message || '';
+          console.debug('[claim:result]', { attempt, ok: false, code, msg, durationMs: Date.now() - startedAt });
+          // Terminal: user rejected
+          if (code === 4001 || /reject/i.test(msg)) break;
+          if (attempt < 3) await new Promise((r) => setTimeout(r, 300 * Math.pow(3, attempt - 1)));
+        }
+      }
+      toast.error(lastErr?.shortMessage || lastErr?.message || 'Claim failed.');
     } finally {
       setBusy(false);
     }
