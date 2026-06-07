@@ -29,6 +29,35 @@ const Index = () => {
   const [isPrivacyCenterOpen, setIsPrivacyCenterOpen] = useState(false);
   const [showDeferred, setShowDeferred] = useState(false);
   const [showBelowFold, setShowBelowFold] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Handle cross-route section scroll requests from the navbar.
+  // The Navbar passes { state: { scrollTo: id } } when the user clicks an
+  // Ecosystem/Join link from a non-home page.
+  useEffect(() => {
+    const targetId = (location.state as any)?.scrollTo as string | undefined;
+    if (!targetId) return;
+    if (!showBelowFold) return;
+
+    let attempts = 0;
+    const maxAttempts = 30; // ~3s at 100ms
+    const tryScroll = () => {
+      const el = document.getElementById(targetId);
+      if (el) {
+        const navbarHeight = 100;
+        const top = el.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        window.scrollTo({ top, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+        // Clear the state so a refresh doesn't re-trigger
+        navigate(location.pathname, { replace: true, state: {} });
+        return;
+      }
+      if (++attempts < maxAttempts) setTimeout(tryScroll, 100);
+    };
+    tryScroll();
+  }, [showBelowFold, location.state, location.pathname, navigate]);
+
 
   useEffect(() => {
     // Load deferred CSS for below-fold components
