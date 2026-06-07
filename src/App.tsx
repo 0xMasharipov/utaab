@@ -8,6 +8,7 @@ import { LanguageTransitionProvider } from "@/contexts/LanguageTransitionContext
 import { ADMIN_ROUTES } from "@/config/routes";
 import { usePageViewTracker } from "@/hooks/usePageViewTracker";
 import { Web3Providers } from "@/lib/web3/Web3Providers";
+import ScrollToTop from "@/components/ScrollToTop";
 
 // Lazy load all route components for better code splitting
 const Index = lazy(() => import("./pages/Index"));
