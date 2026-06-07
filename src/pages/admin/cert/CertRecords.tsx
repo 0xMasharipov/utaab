@@ -16,11 +16,12 @@ import { CertificateStatusBadge } from '@/components/cert/CertificateStatusBadge
 import { BlockchainTxLink } from '@/components/cert/BlockchainTxLink';
 import { WalletConnectButton } from '@/components/cert/WalletConnectButton';
 import { useAccount, useChainId, useSwitchChain, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { sepolia } from 'wagmi/chains';
-import { CONTRACT_ADDRESS, CHAIN_ID, isContractConfigured } from '@/lib/web3/wagmi';
+import { ACTIVE_CHAIN, CONTRACT_ADDRESS, CHAIN_ID, NETWORK_LABEL, isContractConfigured } from '@/lib/web3/wagmi';
 import { certificateRegistryAbi } from '@/lib/web3/abi';
-import { hashEvent, hashIssuedBy, fromDbHex } from '@/lib/certHash';
+import { fromDbHex } from '@/lib/certHash';
 import { generateCertificatePdf } from '@/lib/pdf/generateCertificatePdf';
+import { Input } from '@/components/ui/input';
+import { isAddress } from 'viem';
 import { Download, FileText, Send, XCircle, AlertTriangle } from 'lucide-react';
 
 export default function CertRecords() {
