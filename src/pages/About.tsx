@@ -9,6 +9,8 @@ import { PrivacyPopup } from '@/components/PrivacyPopup';
 import { PrivacyCenter } from '@/components/PrivacyCenter';
 import { FloatingPrivacyButton } from '@/components/FloatingPrivacyButton';
 import GlassCard from '@/components/glass/GlassCard';
+import AnimatedImage from '@/components/common/AnimatedImage';
+import utaaCommunityAsset from '@/assets/utaa-community.avif.asset.json';
 import GlassSectionWrapper from '@/components/glass/GlassSectionWrapper';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 import { Button } from '@/components/ui/button';
