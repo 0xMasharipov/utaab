@@ -68,52 +68,44 @@ export default function CertRecords() {
   const wrongNetwork = isConnected && chainId !== CHAIN_ID;
 
   const issue = async () => {
-    if (!isContractConfigured) { toast.error('Contract address not configured'); return; }
-    if (!isConnected) { toast.error('Connect your wallet'); return; }
-    if (wrongNetwork) { toast.error('Switch to Sepolia'); switchChain?.({ chainId: sepolia.id }); return; }
     if (selectedRows.length === 0) { toast.error('No drafts selected'); return; }
-    // Group by event (one tx per event)
-    const byEvent = new Map<string, any[]>();
-    selectedRows.forEach((r: any) => {
-      const arr = byEvent.get(r.event_id) ?? [];
-      arr.push(r); byEvent.set(r.event_id, arr);
-    });
+    if (fallbackHolder && !isAddress(fallbackHolder)) {
+      toast.error('Fallback holder is not a valid wallet address');
+      return;
+    }
+    setIssuing(true);
+    setIssueResults([]);
+    const results: Array<{ serial: string; name: string; ok: boolean; reason?: string }> = [];
     try {
-      for (const [eid, rows] of byEvent) {
-        const ev = eventsById.get(eid);
-        if (!ev) continue;
-        const event_hash = hashEvent(ev.event_name, ev.event_date ?? '', ev.speaker_name ?? '');
-        const issued_by_hash = hashIssuedBy(ev.issued_by);
-        const serialHashes = rows.map((r) => fromDbHex(r.serial_hash));
-        const hash = await writeContractAsync({
-          address: CONTRACT_ADDRESS,
-          abi: certificateRegistryAbi,
-          functionName: 'issueBatchCertificates',
-          account: address,
-          chain: sepolia,
-          args: [serialHashes, event_hash, issued_by_hash],
-        });
-        setTxHash(hash);
-        toast.info('Tx submitted, waiting for confirmation…');
-        // Optimistically update DB after submission
-        const issuedAt = new Date().toISOString();
-        for (const r of rows) {
-          await supabase.from('cert_records').update({
-            status: 'issued',
-            issued_at: issuedAt,
-            blockchain_tx_hash: hash,
-            contract_address: CONTRACT_ADDRESS,
-            chain_id: CHAIN_ID,
-          }).eq('id', r.id);
+      for (const r of selectedRows) {
+        const p = r.participant_id ? partsById.get(r.participant_id) : null;
+        const name = p?.full_name ?? '—';
+        const holder = r.holder_address || fallbackHolder;
+        if (!holder || !isAddress(holder)) {
+          results.push({ serial: r.serial_number, name, ok: false, reason: 'no wallet on file' });
+          continue;
+        }
+        try {
+          const { data, error } = await supabase.functions.invoke('cert-issue-voucher', {
+            body: { serial_hash: r.serial_hash, holder },
+          });
+          if (error || !data) throw new Error(error?.message || 'voucher failed');
+          results.push({ serial: r.serial_number, name, ok: true });
+        } catch (err: any) {
+          results.push({ serial: r.serial_number, name, ok: false, reason: err?.message || 'failed' });
         }
       }
-      toast.success('Certificates issued on-chain');
+      setIssueResults(results);
+      const okCount = results.filter((x) => x.ok).length;
+      if (okCount > 0) toast.success(`Signed voucher for ${okCount} certificate(s)`);
+      if (okCount < results.length) toast.error(`${results.length - okCount} skipped or failed`);
       qc.invalidateQueries({ queryKey: ['cert_records'] });
       qc.invalidateQueries({ queryKey: ['cert_stats'] });
-      setSelected(new Set());
-      setIssueOpen(false);
-    } catch (e: any) {
-      toast.error(e.shortMessage || e.message || 'Issuance failed');
+      if (okCount === results.length) {
+        setSelected(new Set());
+      }
+    } finally {
+      setIssuing(false);
     }
   };
 
@@ -121,15 +113,15 @@ export default function CertRecords() {
     if (!revokeRow) return;
     if (!isContractConfigured) { toast.error('Contract not configured'); return; }
     if (!isConnected) { toast.error('Connect wallet'); return; }
-    if (wrongNetwork) { toast.error('Switch to Sepolia'); return; }
+    if (wrongNetwork) { toast.error(`Switch to ${NETWORK_LABEL}`); switchChain?.({ chainId: CHAIN_ID }); return; }
     try {
       const hash = await writeContractAsync({
         address: CONTRACT_ADDRESS,
         abi: certificateRegistryAbi,
-        functionName: 'revokeCertificate',
+        functionName: 'revoke',
         account: address,
-        chain: sepolia,
-        args: [fromDbHex(revokeRow.serial_hash)],
+        chain: ACTIVE_CHAIN,
+        args: [fromDbHex(revokeRow.serial_hash), revokeReason || ''],
       });
       setTxHash(hash);
       await supabase.from('cert_records').update({
