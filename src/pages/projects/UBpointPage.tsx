@@ -850,16 +850,6 @@ const MockScreen: React.FC<{ kind: typeof showcaseDefs[number]['kind'] }> = ({ k
 const Showcase = () => {
   const { t } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
-  const x = useTransform(scrollYProgress, [0, 1], ['5%', '-30%']);
-  const [isDesktop, setIsDesktop] = useState(false);
-  useEffect(() => {
-    const mql = window.matchMedia('(min-width: 768px)');
-    const update = () => setIsDesktop(mql.matches);
-    update();
-    mql.addEventListener('change', update);
-    return () => mql.removeEventListener('change', update);
-  }, []);
 
   return (
     <section id="showcase" className="relative py-16 sm:py-24 md:py-32 bg-gradient-to-b from-white via-blue-50/40 to-white overflow-hidden">
@@ -871,9 +861,8 @@ const Showcase = () => {
           {t('projects.ubpointPage.showcase.title')}
         </h2>
       </div>
-      <div ref={ref} className={isDesktop ? 'overflow-hidden' : 'overflow-x-auto snap-x snap-mandatory scrollbar-hide'}>
-        <motion.div
-          style={isDesktop ? { x } : undefined}
+      <div ref={ref} className="overflow-x-auto snap-x snap-mandatory scrollbar-hide">
+        <div
           className="flex gap-8 md:gap-16 px-5 sm:px-6 pt-6 pb-10"
         >
           {showcaseDefs.map((s, i) => (
