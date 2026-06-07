@@ -1,28 +1,38 @@
-## Problem
+## Scope
+`src/pages/projects/UBpointPage.tsx` only.
 
-In `src/pages/projects/UBpointPage.tsx` → `Metrics` section ("A growing on-chain economy"), the decorative coin assets disappear on mobile and never animate. Two causes:
+## Audit
+All 12 coin asset pointers in the Metrics section already exist (`utaab-coin`, `gold-bar`, `titanium-bar`, `silver-bar`, `eth`, `btc`, `ton`, `ubp-usdt-angle`, `ubp-try-angle`, `gold-coin`, `steam`, `gamepad`). No new `.asset.json` files needed — the prior "missing" behaviour was caused by `hidden md:block` classes hiding everything on phones, not by 404s.
 
-1. **Visibility classes hide them on mobile.** When `usePerfGuard` returns `'reduced'` (which it does on every coarse-pointer device ≤768 px wide), the section uses `allCoins.slice(0, 3)` — but those first 3 coins are all tagged `hidden md:block`, so on a phone (current viewport 692 px) **zero coins render**. The remaining `hidden sm:block` coins are also excluded by the slice.
-2. **Animations are gated on `tier === 'full'`.** `loop` is `false` on mobile, so even if a coin rendered, the float/rotate animation would not run.
+## Changes
 
-## Fix
+1. **New helper `SafeCoinImg`** (inside `UBpointPage.tsx`):
+   - Tracks `loaded` / `errored` state.
+   - Only starts animating once the image has loaded (or once the fallback has mounted) — guarantees we never animate a zero-size `<img>`.
+   - On `error`, renders a same-sized blue-gradient placeholder div with the same position classes and glow shadow, so the floating layout slot is preserved.
+   - Adds `fetchpriority="low"` to keep decorative coins from competing with the hero on mobile.
+   - Accepts a `sizes` prop.
 
-Scope: visual-only change inside the `Metrics` component. No business logic, no asset re-uploads — all coin assets already exist and load fine in the hero on the same page.
+2. **Responsive `sizes` (proper-srcSet equivalent):**
+   The Lovable CDN at `/__l5e/assets-v1/...` does not transform images, so width-descriptor `srcSet` URLs would 404. Instead, set explicit `sizes` matching the Tailwind width classes so the browser picks the right intrinsic resolution. Desktop-only coins get `(min-width: 768px) Npx, 0px` so mobile browsers don't reserve bandwidth. Mobile coins get the full 3-step cascade.
+   Leave a TODO comment that, if multi-resolution variants are later uploaded via `lovable-assets`, they should be wired into a real `srcSet`.
 
-1. **Re-pick a mobile-safe coin subset.** Replace the current `tier === 'reduced' ? allCoins.slice(0, 3)` with an explicit array of 3–4 coins that are visible on phones (use `sm:` or no breakpoint prefix, with smaller `w-` sizes and safer positions so they don't overlap the metric cards). Use the existing `btcCoinAsset`, `tonCoinAsset`, `goldCoinAsset`, `gamepadAsset` (all already imported, already light, already proven to render on mobile in other sections).
-2. **Remove `hidden md:block` from the chosen mobile coins** and give them mobile-first positions (corners of the section, behind the cards) with `w-12`/`w-14` sizes plus `md:w-20`+ for desktop.
-3. **Enable a lightweight loop on `reduced` tier** for this section only: keep the same `loop` flag for `full`, but on `reduced` add a slower (12–14 s), smaller-amplitude (`y: [0,-6,0]`) animation so mobile sees gentle motion without taxing the GPU. `minimal` tier (and `prefers-reduced-motion`) stays static — no change there.
-4. **Keep the desktop layout untouched** — the `hidden md:block` coins continue to render as today on ≥768 px.
+3. **Gated animations:**
+   - `tier === 'full'` → full y + rotateZ keyframes (unchanged).
+   - `tier === 'reduced'` (mobile) → small-amplitude y only, slower (unchanged from previous turn).
+   - `tier === 'minimal'` or `prefers-reduced-motion` → no animation, static placeholder.
+   - In all tiers, animation only starts once the asset is present.
+
+4. **Mobile coin set & positions** stay as set in the previous turn (4 coins around the metric grid).
 
 ## Out of scope
-
-- No changes to hero/FloatingDevice (already works on mobile).
-- No new image assets; no edge-function or data changes.
-- No changes to copy or i18n.
-- No changes to perf-guard thresholds.
+- No new physical image variants uploaded to the CDN (would require per-file `lovable-assets` runs; defer until requested).
+- No edge-function or data changes.
+- No copy / i18n changes.
+- No hero/FloatingDevice changes.
 
 ## Verify
-
-- Resize preview to 375 px and 692 px: 3–4 coins visible around the metric grid, gently floating.
-- Resize to ≥768 px: identical to today (full coin spread + full animation).
-- With `prefers-reduced-motion: reduce`: coins visible but static.
+- 375 px & 692 px: 4 coins (or fallback discs) render around the metric grid with a gentle float; cards never reflow.
+- ≥768 px: full coin spread + full animation (unchanged).
+- Force a coin URL to 404 in DevTools → blue gradient disc appears in the same slot, still floats.
+- `prefers-reduced-motion: reduce` → coins/placeholders visible but static.
