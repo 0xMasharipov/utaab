@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, XCircle, AlertTriangle, FileText, Download } from 'lucide-react';
@@ -30,14 +31,16 @@ export type VerificationState =
     };
 
 export function VerificationResultCard({ state }: { state: VerificationState }) {
+  const { t } = useTranslation();
   if (state.kind === 'idle') return null;
+  const empty = t('verifyCertificate.result.empty');
 
   if (state.kind === 'loading') {
     return (
       <Card className="glass-card">
         <CardContent className="p-8 text-center">
           <div className="w-10 h-10 mx-auto border-4 border-primary border-t-transparent rounded-full animate-spin" />
-          <p className="mt-4 text-muted-foreground">Checking blockchain & registry…</p>
+          <p className="mt-4 text-muted-foreground">{t('verifyCertificate.result.loading')}</p>
         </CardContent>
       </Card>
     );
@@ -48,10 +51,8 @@ export function VerificationResultCard({ state }: { state: VerificationState }) 
       <Card className="glass-card border-orange-500/30">
         <CardContent className="p-8 text-center space-y-3">
           <XCircle className="h-12 w-12 mx-auto text-orange-400" />
-          <h3 className="text-2xl font-extrabold">Certificate not found</h3>
-          <p className="text-muted-foreground">
-            No certificate found for this serial number. Please double-check and try again.
-          </p>
+          <h3 className="text-2xl font-extrabold">{t('verifyCertificate.result.notFoundTitle')}</h3>
+          <p className="text-muted-foreground">{t('verifyCertificate.result.notFoundDesc')}</p>
         </CardContent>
       </Card>
     );
@@ -62,7 +63,7 @@ export function VerificationResultCard({ state }: { state: VerificationState }) 
       <Card className="glass-card border-red-500/30">
         <CardContent className="p-8 text-center space-y-3">
           <AlertTriangle className="h-12 w-12 mx-auto text-red-400" />
-          <h3 className="text-2xl font-extrabold">Verification error</h3>
+          <h3 className="text-2xl font-extrabold">{t('verifyCertificate.result.errorTitle')}</h3>
           <p className="text-muted-foreground">{state.message}</p>
         </CardContent>
       </Card>
@@ -82,55 +83,61 @@ export function VerificationResultCard({ state }: { state: VerificationState }) 
           )}
           <div>
             <h3 className="text-2xl font-extrabold">
-              {valid ? 'Certificate is valid' : 'Certificate has been revoked'}
+              {valid
+                ? t('verifyCertificate.result.validTitle')
+                : t('verifyCertificate.result.revokedTitle')}
             </h3>
             <p className="text-sm text-muted-foreground">
               {valid
-                ? 'This certificate was officially issued by UTAAB and recorded on the blockchain.'
-                : 'This certificate was issued but later revoked by UTAAB.'}
+                ? t('verifyCertificate.result.validDesc')
+                : t('verifyCertificate.result.revokedDesc')}
             </p>
           </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-x-8 gap-y-4">
-          <Field label="Participant" value={state.participantName || '—'} strong />
-          <Field label={state.certificateTitle || 'Certificate title'} value={state.eventName} strong />
-          <Field label="Speaker / Instructor" value={state.speakerName || '—'} />
+          <Field label={t('verifyCertificate.result.participant')} value={state.participantName || empty} strong />
           <Field
-            label="Event date"
-            value={state.eventDate ? format(new Date(state.eventDate), 'PPP') : '—'}
+            label={state.certificateTitle || t('verifyCertificate.result.certificateTitle')}
+            value={state.eventName}
+            strong
           />
-          <Field label="Location" value={state.location || '—'} />
-          <Field label="Issued by" value={state.issuedBy} />
-          {state.partners && state.partners.length > 0 && (
-            <Field label="Partners" value={state.partners.join(', ')} />
-          )}
-          <Field label="Serial number" value={state.serialNumber} mono />
+          <Field label={t('verifyCertificate.result.speaker')} value={state.speakerName || empty} />
           <Field
-            label="Issued on"
-            value={state.issuedAt ? format(new Date(state.issuedAt), 'PPp') : '—'}
+            label={t('verifyCertificate.result.eventDate')}
+            value={state.eventDate ? format(new Date(state.eventDate), 'PPP') : empty}
+          />
+          <Field label={t('verifyCertificate.result.location')} value={state.location || empty} />
+          <Field label={t('verifyCertificate.result.issuedBy')} value={state.issuedBy} />
+          {state.partners && state.partners.length > 0 && (
+            <Field label={t('verifyCertificate.result.partners')} value={state.partners.join(', ')} />
+          )}
+          <Field label={t('verifyCertificate.result.serial')} value={state.serialNumber} mono />
+          <Field
+            label={t('verifyCertificate.result.issuedOn')}
+            value={state.issuedAt ? format(new Date(state.issuedAt), 'PPp') : empty}
           />
           {!valid && (
             <>
               <Field
-                label="Revoked on"
-                value={state.revokedAt ? format(new Date(state.revokedAt), 'PPp') : '—'}
+                label={t('verifyCertificate.result.revokedOn')}
+                value={state.revokedAt ? format(new Date(state.revokedAt), 'PPp') : empty}
               />
               {state.revocationReason && (
-                <Field label="Revocation reason" value={state.revocationReason} />
+                <Field label={t('verifyCertificate.result.revocationReason')} value={state.revocationReason} />
               )}
             </>
           )}
-          <Field label="Network" value="Sepolia Testnet" />
+          <Field label={t('verifyCertificate.result.network')} value={t('verifyCertificate.result.networkValue')} />
           {state.txHash && (
             <div>
-              <p className="text-xs text-muted-foreground mb-1">Transaction</p>
+              <p className="text-xs text-muted-foreground mb-1">{t('verifyCertificate.result.transaction')}</p>
               <BlockchainTxLink hash={state.txHash} />
             </div>
           )}
           {state.contractAddress && (
             <div>
-              <p className="text-xs text-muted-foreground mb-1">Contract</p>
+              <p className="text-xs text-muted-foreground mb-1">{t('verifyCertificate.result.contract')}</p>
               <ContractAddressLink address={state.contractAddress} />
             </div>
           )}
@@ -140,12 +147,12 @@ export function VerificationResultCard({ state }: { state: VerificationState }) 
           <div className="pt-4 border-t border-white/10 flex flex-wrap gap-3">
             <Button asChild variant="default">
               <a href={state.pdfUrl} target="_blank" rel="noopener noreferrer">
-                <FileText className="h-4 w-4 mr-2" /> View PDF
+                <FileText className="h-4 w-4 mr-2" /> {t('verifyCertificate.result.viewPdf')}
               </a>
             </Button>
             <Button asChild variant="outline">
               <a href={state.pdfUrl} download>
-                <Download className="h-4 w-4 mr-2" /> Download
+                <Download className="h-4 w-4 mr-2" /> {t('verifyCertificate.result.download')}
               </a>
             </Button>
           </div>
