@@ -887,7 +887,7 @@ const Showcase = () => {
             </motion.div>
           ))}
           <div className="shrink-0 w-6 sm:w-12" />
-        </motion.div>
+        </div>
 
       </div>
     </section>
