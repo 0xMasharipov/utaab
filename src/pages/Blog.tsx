@@ -64,6 +64,19 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SEO
+        title="UTAAB Blog — Web3, Blockchain & Student Innovation Insights"
+        description="Read the UTAAB blog for blockchain education, Web3 articles, project updates, and student-led crypto community news from utaab.org."
+        path="/blog"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'Blog',
+          name: 'UTAAB Blog',
+          url: 'https://utaab.org/blog',
+          publisher: { '@type': 'Organization', name: 'UTAAB', url: 'https://utaab.org' },
+          inLanguage: ['en', 'tr', 'ru', 'ar'],
+        }}
+      />
       <AnimatedBlobBackground />
       <Navbar />
 
