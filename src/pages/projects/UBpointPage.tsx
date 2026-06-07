@@ -277,24 +277,27 @@ const FloatingDevice = () => {
       <div className="absolute inset-0 -m-6 sm:-m-10 bg-gradient-to-br from-blue-400/40 via-blue-500/30 to-blue-600/20 blur-3xl rounded-full" />
 
       <div aria-hidden className="absolute inset-0 -m-8 sm:-m-12 md:-m-24 pointer-events-none z-0">
-        {backCoins.map((c, i) => (
-          <motion.div
-            key={i}
-            className={`absolute ${c.cls}`}
-            initial={{ opacity: 0, scale: 0.35, x: c.from.x, y: c.from.y }}
-            animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0 } : { opacity: 0, scale: 0.35, x: c.from.x, y: c.from.y }}
-            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 + i * 0.08 }}
-          >
-            <motion.img
-              src={c.src}
-              alt=""
-              className="w-full select-none"
-              style={{ filter: `drop-shadow(0 14px 26px ${c.glow})` }}
-              animate={ready && loop ? { y: [0, -10, 0], rotateZ: [-5, 5, -5] } : undefined}
-              transition={{ duration: c.dur, repeat: Infinity, ease: 'easeInOut', delay: c.delay }}
-            />
-          </motion.div>
-        ))}
+        {backCoins.map((c, i) => {
+          const initRot = c.from.x > 0 ? -12 : 12;
+          return (
+            <motion.div
+              key={i}
+              className={`absolute ${c.cls}`}
+              initial={{ opacity: 0, scale: 0.35, x: c.from.x, y: c.from.y, rotate: initRot }}
+              animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: c.from.x, y: c.from.y, rotate: initRot }}
+              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.15 + i * 0.14 }}
+            >
+              <motion.img
+                src={c.src}
+                alt=""
+                className="w-full select-none"
+                style={{ filter: `drop-shadow(0 14px 26px ${c.glow})` }}
+                animate={ready && loop ? { y: [0, -10, 0], rotateZ: [-5, 5, -5] } : undefined}
+                transition={{ duration: c.dur, repeat: Infinity, ease: 'easeInOut', delay: c.delay }}
+              />
+            </motion.div>
+          );
+        })}
       </div>
 
       <motion.div
@@ -366,9 +369,9 @@ const FloatingDevice = () => {
 
       <motion.div
         className="absolute -left-6 sm:-left-10 md:-left-20 bottom-2 sm:bottom-4 w-24 sm:w-36 md:w-48 pointer-events-none z-0"
-        initial={{ opacity: 0, scale: 0.35, x: 160, y: -80 }}
-        animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0 } : { opacity: 0, scale: 0.35, x: 160, y: -80 }}
-        transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+        initial={{ opacity: 0, scale: 0.35, x: 160, y: -80, rotate: -10 }}
+        animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: 160, y: -80, rotate: -10 }}
+        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.22 }}
       >
         <motion.img
           src={utaabCoinAsset.url}
@@ -381,9 +384,9 @@ const FloatingDevice = () => {
       </motion.div>
       <motion.div
         className="absolute -right-3 sm:-right-6 md:-right-12 top-2 sm:top-4 w-20 sm:w-28 md:w-40 pointer-events-none z-0"
-        initial={{ opacity: 0, scale: 0.35, x: -160, y: 100 }}
-        animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0 } : { opacity: 0, scale: 0.35, x: -160, y: 100 }}
-        transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
+        initial={{ opacity: 0, scale: 0.35, x: -160, y: 100, rotate: 10 }}
+        animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: -160, y: 100, rotate: 10 }}
+        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
       >
         <motion.img
           src={tonCoinAsset.url}
@@ -396,9 +399,9 @@ const FloatingDevice = () => {
       </motion.div>
       <motion.div
         className="absolute -right-3 sm:-right-6 md:-right-14 bottom-1 sm:bottom-2 md:bottom-6 w-14 sm:w-20 md:w-28 pointer-events-none z-0"
-        initial={{ opacity: 0, scale: 0.35, x: -150, y: -80 }}
-        animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0 } : { opacity: 0, scale: 0.35, x: -150, y: -80 }}
-        transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
+        initial={{ opacity: 0, scale: 0.35, x: -150, y: -80, rotate: 10 }}
+        animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: -150, y: -80, rotate: 10 }}
+        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.78 }}
       >
         <motion.img
           src={btcCoinAsset.url}
