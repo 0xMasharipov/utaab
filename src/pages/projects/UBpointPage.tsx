@@ -1,17 +1,35 @@
-import { createContext, useContext, useEffect, useMemo, useRef, useState, forwardRef } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, forwardRef } from 'react';
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePerfGuard, type PerfTier } from '@/hooks/usePerfGuard';
 
 /* ---------- Splash intro + perf-tier context ---------- */
-const SplashContext = createContext<{ ready: boolean; tier: PerfTier }>({ ready: true, tier: 'full' });
+interface SplashContextValue {
+  ready: boolean;
+  heroReady: boolean;
+  tier: PerfTier;
+  replayKey: number;
+  setTierOverride: (t: PerfTier | null) => void;
+  tierOverride: PerfTier | null;
+  replaySpread: () => void;
+}
+const SplashContext = createContext<SplashContextValue>({
+  ready: true,
+  heroReady: true,
+  tier: 'full',
+  replayKey: 0,
+  setTierOverride: () => {},
+  tierOverride: null,
+  replaySpread: () => {},
+});
 const useSplash = () => useContext(SplashContext);
 const splashTransition = (i: number) => ({
   delay: 0.25 + i * 0.13,
   duration: 0.75,
   ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
 });
+
 
 import {
   ArrowRight,
