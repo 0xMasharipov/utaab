@@ -16,11 +16,12 @@ import { CertificateStatusBadge } from '@/components/cert/CertificateStatusBadge
 import { BlockchainTxLink } from '@/components/cert/BlockchainTxLink';
 import { WalletConnectButton } from '@/components/cert/WalletConnectButton';
 import { useAccount, useChainId, useSwitchChain, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { sepolia } from 'wagmi/chains';
-import { CONTRACT_ADDRESS, CHAIN_ID, isContractConfigured } from '@/lib/web3/wagmi';
+import { ACTIVE_CHAIN, CONTRACT_ADDRESS, CHAIN_ID, NETWORK_LABEL, isContractConfigured } from '@/lib/web3/wagmi';
 import { certificateRegistryAbi } from '@/lib/web3/abi';
-import { hashEvent, hashIssuedBy, fromDbHex } from '@/lib/certHash';
+import { fromDbHex } from '@/lib/certHash';
 import { generateCertificatePdf } from '@/lib/pdf/generateCertificatePdf';
+import { Input } from '@/components/ui/input';
+import { isAddress } from 'viem';
 import { Download, FileText, Send, XCircle, AlertTriangle } from 'lucide-react';
 
 export default function CertRecords() {
@@ -35,6 +36,9 @@ export default function CertRecords() {
   const [revokeOpen, setRevokeOpen] = useState(false);
   const [revokeRow, setRevokeRow] = useState<any>(null);
   const [revokeReason, setRevokeReason] = useState('');
+  const [fallbackHolder, setFallbackHolder] = useState('');
+  const [issuing, setIssuing] = useState(false);
+  const [issueResults, setIssueResults] = useState<Array<{ serial: string; name: string; ok: boolean; reason?: string }>>([]);
 
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
@@ -64,52 +68,44 @@ export default function CertRecords() {
   const wrongNetwork = isConnected && chainId !== CHAIN_ID;
 
   const issue = async () => {
-    if (!isContractConfigured) { toast.error('Contract address not configured'); return; }
-    if (!isConnected) { toast.error('Connect your wallet'); return; }
-    if (wrongNetwork) { toast.error('Switch to Sepolia'); switchChain?.({ chainId: sepolia.id }); return; }
     if (selectedRows.length === 0) { toast.error('No drafts selected'); return; }
-    // Group by event (one tx per event)
-    const byEvent = new Map<string, any[]>();
-    selectedRows.forEach((r: any) => {
-      const arr = byEvent.get(r.event_id) ?? [];
-      arr.push(r); byEvent.set(r.event_id, arr);
-    });
+    if (fallbackHolder && !isAddress(fallbackHolder)) {
+      toast.error('Fallback holder is not a valid wallet address');
+      return;
+    }
+    setIssuing(true);
+    setIssueResults([]);
+    const results: Array<{ serial: string; name: string; ok: boolean; reason?: string }> = [];
     try {
-      for (const [eid, rows] of byEvent) {
-        const ev = eventsById.get(eid);
-        if (!ev) continue;
-        const event_hash = hashEvent(ev.event_name, ev.event_date ?? '', ev.speaker_name ?? '');
-        const issued_by_hash = hashIssuedBy(ev.issued_by);
-        const serialHashes = rows.map((r) => fromDbHex(r.serial_hash));
-        const hash = await writeContractAsync({
-          address: CONTRACT_ADDRESS,
-          abi: certificateRegistryAbi,
-          functionName: 'issueBatchCertificates',
-          account: address,
-          chain: sepolia,
-          args: [serialHashes, event_hash, issued_by_hash],
-        });
-        setTxHash(hash);
-        toast.info('Tx submitted, waiting for confirmation…');
-        // Optimistically update DB after submission
-        const issuedAt = new Date().toISOString();
-        for (const r of rows) {
-          await supabase.from('cert_records').update({
-            status: 'issued',
-            issued_at: issuedAt,
-            blockchain_tx_hash: hash,
-            contract_address: CONTRACT_ADDRESS,
-            chain_id: CHAIN_ID,
-          }).eq('id', r.id);
+      for (const r of selectedRows) {
+        const p = r.participant_id ? partsById.get(r.participant_id) : null;
+        const name = p?.full_name ?? '—';
+        const holder = r.holder_address || fallbackHolder;
+        if (!holder || !isAddress(holder)) {
+          results.push({ serial: r.serial_number, name, ok: false, reason: 'no wallet on file' });
+          continue;
+        }
+        try {
+          const { data, error } = await supabase.functions.invoke('cert-issue-voucher', {
+            body: { serial_hash: r.serial_hash, holder },
+          });
+          if (error || !data) throw new Error(error?.message || 'voucher failed');
+          results.push({ serial: r.serial_number, name, ok: true });
+        } catch (err: any) {
+          results.push({ serial: r.serial_number, name, ok: false, reason: err?.message || 'failed' });
         }
       }
-      toast.success('Certificates issued on-chain');
+      setIssueResults(results);
+      const okCount = results.filter((x) => x.ok).length;
+      if (okCount > 0) toast.success(`Signed voucher for ${okCount} certificate(s)`);
+      if (okCount < results.length) toast.error(`${results.length - okCount} skipped or failed`);
       qc.invalidateQueries({ queryKey: ['cert_records'] });
       qc.invalidateQueries({ queryKey: ['cert_stats'] });
-      setSelected(new Set());
-      setIssueOpen(false);
-    } catch (e: any) {
-      toast.error(e.shortMessage || e.message || 'Issuance failed');
+      if (okCount === results.length) {
+        setSelected(new Set());
+      }
+    } finally {
+      setIssuing(false);
     }
   };
 
@@ -117,15 +113,15 @@ export default function CertRecords() {
     if (!revokeRow) return;
     if (!isContractConfigured) { toast.error('Contract not configured'); return; }
     if (!isConnected) { toast.error('Connect wallet'); return; }
-    if (wrongNetwork) { toast.error('Switch to Sepolia'); return; }
+    if (wrongNetwork) { toast.error(`Switch to ${NETWORK_LABEL}`); switchChain?.({ chainId: CHAIN_ID }); return; }
     try {
       const hash = await writeContractAsync({
         address: CONTRACT_ADDRESS,
         abi: certificateRegistryAbi,
-        functionName: 'revokeCertificate',
+        functionName: 'revoke',
         account: address,
-        chain: sepolia,
-        args: [fromDbHex(revokeRow.serial_hash)],
+        chain: ACTIVE_CHAIN,
+        args: [fromDbHex(revokeRow.serial_hash), revokeReason || ''],
       });
       setTxHash(hash);
       await supabase.from('cert_records').update({
@@ -213,7 +209,7 @@ export default function CertRecords() {
       {wrongNetwork && (
         <Alert>
           <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>Wallet is on chain {chainId}. <Button size="sm" variant="link" onClick={() => switchChain?.({ chainId: sepolia.id })}>Switch to Sepolia</Button></AlertDescription>
+          <AlertDescription>Wallet is on chain {chainId}. <Button size="sm" variant="link" onClick={() => switchChain?.({ chainId: CHAIN_ID })}>Switch to {NETWORK_LABEL}</Button></AlertDescription>
         </Alert>
       )}
 
@@ -278,20 +274,37 @@ export default function CertRecords() {
         )}
       </Card>
 
-      <Dialog open={issueOpen} onOpenChange={setIssueOpen}>
+      <Dialog open={issueOpen} onOpenChange={(o) => { setIssueOpen(o); if (!o) setIssueResults([]); }}>
         <DialogContent>
-          <DialogHeader><DialogTitle>Issue {selectedRows.length} certificate(s) on-chain</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>Sign vouchers for {selectedRows.length} certificate(s)</DialogTitle></DialogHeader>
           <div className="space-y-3 text-sm">
-            <p className="text-muted-foreground">This will submit a transaction on Sepolia. Only hashes are written on-chain; no PII.</p>
-            {!isConnected && <WalletConnectButton />}
-            {isConnected && <p>Wallet: <span className="font-mono">{address?.slice(0, 6)}…{address?.slice(-4)}</span></p>}
-            {txHash && <BlockchainTxLink hash={txHash} />}
-            {txPending && <p className="text-muted-foreground">Waiting for confirmation…</p>}
-            {txOk && <p className="text-green-500">Confirmed</p>}
+            <p className="text-muted-foreground">
+              The server will sign an EIP-712 voucher per certificate on {NETWORK_LABEL}. Recipients then claim with their own wallet (they pay the gas). No transaction is sent from your wallet.
+            </p>
+            <div className="space-y-1">
+              <Label htmlFor="fallback-holder">Fallback holder wallet (used if a record has no holder)</Label>
+              <Input
+                id="fallback-holder"
+                placeholder="0x…"
+                value={fallbackHolder}
+                onChange={(e) => setFallbackHolder(e.target.value.trim())}
+              />
+              <p className="text-xs text-muted-foreground">Optional. Rows that already have <code>holder_address</code> use that instead.</p>
+            </div>
+            {issueResults.length > 0 && (
+              <div className="max-h-48 overflow-y-auto border border-white/10 rounded p-2 space-y-1">
+                {issueResults.map((r) => (
+                  <div key={r.serial} className="flex items-center justify-between text-xs font-mono">
+                    <span>{r.serial} — {r.name}</span>
+                    <span className={r.ok ? 'text-green-500' : 'text-destructive'}>{r.ok ? 'issued' : (r.reason || 'failed')}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setIssueOpen(false)}>Close</Button>
-            <Button onClick={issue} disabled={isPending || !isConnected}>{isPending ? 'Submitting…' : 'Issue on-chain'}</Button>
+            <Button onClick={issue} disabled={issuing}>{issuing ? 'Signing…' : 'Sign vouchers'}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
