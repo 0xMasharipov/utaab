@@ -120,6 +120,10 @@ export const Navbar = () => {
 
   const scrollToSection = (id: string) => {
     closeMenu();
+    if (window.location.pathname !== '/') {
+      setTimeout(() => navigate('/', { state: { scrollTo: id } }), prefersReducedMotion ? 0 : 200);
+      return;
+    }
     setTimeout(() => {
       const element = document.getElementById(id);
       if (element) {

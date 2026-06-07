@@ -1,18 +1,21 @@
 ## Problem
-On mobile (and sometimes desktop), navigating between routes lands you scrolled to the bottom near the footer. React Router does not reset scroll on navigation, so the new page inherits the previous page's scroll position.
+In the navbar mega menu, the Ecosystem column (Community, Learn, Events, Projects) and the Join button use `scrollToSection(id)`, which only calls `document.getElementById` on the current page. When the user is on a non-home route (e.g. `/blog`, `/team`, `/about`), those sections don't exist on the current page, so clicking them does nothing.
 
 ## Fix
-Add a small `ScrollToTop` component that scrolls to the top whenever the pathname changes, and mount it inside `BrowserRouter` in `src/App.tsx`.
+Make `scrollToSection` route-aware:
+- If `window.location.pathname === '/'`: behave as today (close menu, then smooth-scroll to the in-page element).
+- Otherwise: close menu, then `navigate('/', { state: { scrollTo: id } })`.
+
+Then on the home page, read that location state and perform the scroll after mount.
 
 ### Files
-1. **New** `src/components/ScrollToTop.tsx`
-   - Listens to `useLocation().pathname` and calls `window.scrollTo({ top: 0, left: 0 })` in an effect.
-   - Skips scroll reset when the URL has a hash (`#projects`, etc.) so in-page anchor links still work.
-   - Returns `null`.
+1. **Edit** `src/components/Navbar.tsx`
+   - Update `scrollToSection` to navigate to `/` with `state: { scrollTo: id }` when not already on `/`.
+   - Keep existing close + delay behavior for in-page scrolls.
 
-2. **Edit** `src/App.tsx`
-   - Import and render `<ScrollToTop />` as the first child inside `<BrowserRouter>`, before `<Routes>`.
+2. **Edit** `src/pages/Index.tsx`
+   - Add a `useEffect` that reads `useLocation().state?.scrollTo`, and after `showBelowFold` is true and the target element exists, smooth-scrolls to it with the same `navbarHeight` offset (100) used in the navbar.
+   - Use a small `MutationObserver` or `setTimeout` retry (up to ~1.5s) because below-fold sections mount lazily after idle. Clear the state via `navigate(pathname, { replace: true, state: {} })` after scrolling so refresh doesn't re-trigger.
 
 ## Out of scope
-- No changes to per-page layouts, admin panel, or styling.
-- No changes to hash-anchor scroll behavior on the home page.
+- No styling changes, no admin changes, no changes to page-route links (Blog/Team/About already work via `handleNavigate`).
