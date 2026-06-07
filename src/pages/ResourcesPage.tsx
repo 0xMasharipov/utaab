@@ -29,7 +29,7 @@ const ResourcesPage = () => {
   const resources: ResourceItem[] = [
     {
       id: 'whitepaper',
-      icon: FileText,
+
       title: t('resourcesPage.items.whitepaper.title', 'Whitepaper'),
       description: t('resourcesPage.items.whitepaper.description', 'A visual summary of UTAAB\u2019s vision, the technology behind our work, and the roadmap that guides what we build next.'),
       cta: t('resourcesPage.items.whitepaper.cta', 'Read whitepaper'),
@@ -37,7 +37,7 @@ const ResourcesPage = () => {
     },
     {
       id: 'guides',
-      icon: BookOpen,
+
       title: t('resourcesPage.items.guides.title', 'Documentation & Guides'),
       description: t('resourcesPage.items.guides.description', 'Beginner-friendly articles covering blockchain basics, wallets, smart contracts, and more — written by our team.'),
       cta: t('resourcesPage.items.guides.cta', 'Open guides'),
@@ -45,7 +45,7 @@ const ResourcesPage = () => {
     },
     {
       id: 'tokenomics',
-      icon: Coins,
+
       title: t('resourcesPage.items.tokenomics.title', 'Tokenomics'),
       description: t('resourcesPage.items.tokenomics.description', 'A detailed token model is in active design. We\u2019ll publish the full breakdown here as soon as it\u2019s reviewed and finalized.'),
       cta: t('resourcesPage.items.tokenomics.cta', 'Coming soon'),
@@ -54,7 +54,7 @@ const ResourcesPage = () => {
     },
     {
       id: 'blog',
-      icon: Newspaper,
+
       title: t('resourcesPage.items.blog.title', 'Blog & Updates'),
       description: t('resourcesPage.items.blog.description', 'Latest announcements, project updates, event recaps, and educational deep-dives from the UTAAB community.'),
       cta: t('resourcesPage.items.blog.cta', 'Read the blog'),
@@ -62,7 +62,7 @@ const ResourcesPage = () => {
     },
     {
       id: 'faq',
-      icon: HelpCircle,
+
       title: t('resourcesPage.items.faq.title', 'Frequently Asked Questions'),
       description: t('resourcesPage.items.faq.description', 'Honest answers to the most common questions about UTAAB, our community, and getting started in Web3.'),
       cta: t('resourcesPage.items.faq.cta', 'See FAQs'),
@@ -70,7 +70,7 @@ const ResourcesPage = () => {
     },
     {
       id: 'developers',
-      icon: Code2,
+
       title: t('resourcesPage.items.developers.title', 'Developer Resources'),
       description: t('resourcesPage.items.developers.description', 'Open-source code, contribution guides, and technical references for developers building on or with UTAAB.'),
       cta: t('resourcesPage.items.developers.cta', 'Visit GitHub'),

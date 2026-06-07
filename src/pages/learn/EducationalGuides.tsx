@@ -4,7 +4,7 @@ import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { BookOpen, Clock, ChevronRight, ExternalLink, Layers, Shield, Code, Globe, Wallet, FileText, Cpu, Network, Boxes, Zap } from 'lucide-react';
+import { Clock, ChevronRight, ExternalLink } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
@@ -21,7 +21,6 @@ const fadeUp = {
 interface GuideCard {
   titleKey: string;
   descriptionKey: string;
-  icon: React.ElementType;
   difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
   readTime: string;
 }
@@ -82,30 +81,30 @@ const Section = ({ id, title, subtitle, cards, t }: { id: string; title: string;
 };
 
 const startHereCards: GuideCard[] = [
-  { titleKey: 'learn.guidesPage.cards.whatIsBlockchain.title', descriptionKey: 'learn.guidesPage.cards.whatIsBlockchain.description', icon: Layers, difficulty: 'Beginner', readTime: '5 min' },
-  { titleKey: 'learn.guidesPage.cards.howBlockchainWorks.title', descriptionKey: 'learn.guidesPage.cards.howBlockchainWorks.description', icon: Cpu, difficulty: 'Beginner', readTime: '7 min' },
-  { titleKey: 'learn.guidesPage.cards.whatIsWeb3.title', descriptionKey: 'learn.guidesPage.cards.whatIsWeb3.description', icon: Globe, difficulty: 'Beginner', readTime: '4 min' },
-  { titleKey: 'learn.guidesPage.cards.walletsTokens.title', descriptionKey: 'learn.guidesPage.cards.walletsTokens.description', icon: Wallet, difficulty: 'Beginner', readTime: '6 min' },
-  { titleKey: 'learn.guidesPage.cards.publicPrivateKeys.title', descriptionKey: 'learn.guidesPage.cards.publicPrivateKeys.description', icon: Shield, difficulty: 'Beginner', readTime: '4 min' },
-  { titleKey: 'learn.guidesPage.cards.commonTerms.title', descriptionKey: 'learn.guidesPage.cards.commonTerms.description', icon: FileText, difficulty: 'Beginner', readTime: '5 min' },
+  { titleKey: 'learn.guidesPage.cards.whatIsBlockchain.title', descriptionKey: 'learn.guidesPage.cards.whatIsBlockchain.description', difficulty: 'Beginner', readTime: '5 min' },
+  { titleKey: 'learn.guidesPage.cards.howBlockchainWorks.title', descriptionKey: 'learn.guidesPage.cards.howBlockchainWorks.description', difficulty: 'Beginner', readTime: '7 min' },
+  { titleKey: 'learn.guidesPage.cards.whatIsWeb3.title', descriptionKey: 'learn.guidesPage.cards.whatIsWeb3.description', difficulty: 'Beginner', readTime: '4 min' },
+  { titleKey: 'learn.guidesPage.cards.walletsTokens.title', descriptionKey: 'learn.guidesPage.cards.walletsTokens.description', difficulty: 'Beginner', readTime: '6 min' },
+  { titleKey: 'learn.guidesPage.cards.publicPrivateKeys.title', descriptionKey: 'learn.guidesPage.cards.publicPrivateKeys.description', difficulty: 'Beginner', readTime: '4 min' },
+  { titleKey: 'learn.guidesPage.cards.commonTerms.title', descriptionKey: 'learn.guidesPage.cards.commonTerms.description', difficulty: 'Beginner', readTime: '5 min' },
 ];
 
 const ethereumCards: GuideCard[] = [
-  { titleKey: 'learn.guidesPage.cards.whatIsEthereum.title', descriptionKey: 'learn.guidesPage.cards.whatIsEthereum.description', icon: Layers, difficulty: 'Intermediate', readTime: '6 min' },
-  { titleKey: 'learn.guidesPage.cards.ethereumVsBitcoin.title', descriptionKey: 'learn.guidesPage.cards.ethereumVsBitcoin.description', icon: Boxes, difficulty: 'Intermediate', readTime: '5 min' },
-  { titleKey: 'learn.guidesPage.cards.smartContracts.title', descriptionKey: 'learn.guidesPage.cards.smartContracts.description', icon: Code, difficulty: 'Intermediate', readTime: '7 min' },
-  { titleKey: 'learn.guidesPage.cards.gasFees.title', descriptionKey: 'learn.guidesPage.cards.gasFees.description', icon: Zap, difficulty: 'Intermediate', readTime: '5 min' },
-  { titleKey: 'learn.guidesPage.cards.ethereumAccounts.title', descriptionKey: 'learn.guidesPage.cards.ethereumAccounts.description', icon: Wallet, difficulty: 'Intermediate', readTime: '6 min' },
-  { titleKey: 'learn.guidesPage.cards.introEthDev.title', descriptionKey: 'learn.guidesPage.cards.introEthDev.description', icon: Code, difficulty: 'Intermediate', readTime: '8 min' },
+  { titleKey: 'learn.guidesPage.cards.whatIsEthereum.title', descriptionKey: 'learn.guidesPage.cards.whatIsEthereum.description', difficulty: 'Intermediate', readTime: '6 min' },
+  { titleKey: 'learn.guidesPage.cards.ethereumVsBitcoin.title', descriptionKey: 'learn.guidesPage.cards.ethereumVsBitcoin.description', difficulty: 'Intermediate', readTime: '5 min' },
+  { titleKey: 'learn.guidesPage.cards.smartContracts.title', descriptionKey: 'learn.guidesPage.cards.smartContracts.description', difficulty: 'Intermediate', readTime: '7 min' },
+  { titleKey: 'learn.guidesPage.cards.gasFees.title', descriptionKey: 'learn.guidesPage.cards.gasFees.description', difficulty: 'Intermediate', readTime: '5 min' },
+  { titleKey: 'learn.guidesPage.cards.ethereumAccounts.title', descriptionKey: 'learn.guidesPage.cards.ethereumAccounts.description', difficulty: 'Intermediate', readTime: '6 min' },
+  { titleKey: 'learn.guidesPage.cards.introEthDev.title', descriptionKey: 'learn.guidesPage.cards.introEthDev.description', difficulty: 'Intermediate', readTime: '8 min' },
 ];
 
 const buildCards: GuideCard[] = [
-  { titleKey: 'learn.guidesPage.cards.introDapps.title', descriptionKey: 'learn.guidesPage.cards.introDapps.description', icon: Globe, difficulty: 'Intermediate', readTime: '6 min' },
-  { titleKey: 'learn.guidesPage.cards.whatAreDaos.title', descriptionKey: 'learn.guidesPage.cards.whatAreDaos.description', icon: Network, difficulty: 'Intermediate', readTime: '5 min' },
-  { titleKey: 'learn.guidesPage.cards.web2VsWeb3.title', descriptionKey: 'learn.guidesPage.cards.web2VsWeb3.description', icon: Boxes, difficulty: 'Beginner', readTime: '4 min' },
-  { titleKey: 'learn.guidesPage.cards.testnets.title', descriptionKey: 'learn.guidesPage.cards.testnets.description', icon: Cpu, difficulty: 'Advanced', readTime: '7 min' },
-  { titleKey: 'learn.guidesPage.cards.devTooling.title', descriptionKey: 'learn.guidesPage.cards.devTooling.description', icon: Code, difficulty: 'Advanced', readTime: '8 min' },
-  { titleKey: 'learn.guidesPage.cards.securityBasics.title', descriptionKey: 'learn.guidesPage.cards.securityBasics.description', icon: Shield, difficulty: 'Advanced', readTime: '7 min' },
+  { titleKey: 'learn.guidesPage.cards.introDapps.title', descriptionKey: 'learn.guidesPage.cards.introDapps.description', difficulty: 'Intermediate', readTime: '6 min' },
+  { titleKey: 'learn.guidesPage.cards.whatAreDaos.title', descriptionKey: 'learn.guidesPage.cards.whatAreDaos.description', difficulty: 'Intermediate', readTime: '5 min' },
+  { titleKey: 'learn.guidesPage.cards.web2VsWeb3.title', descriptionKey: 'learn.guidesPage.cards.web2VsWeb3.description', difficulty: 'Beginner', readTime: '4 min' },
+  { titleKey: 'learn.guidesPage.cards.testnets.title', descriptionKey: 'learn.guidesPage.cards.testnets.description', difficulty: 'Advanced', readTime: '7 min' },
+  { titleKey: 'learn.guidesPage.cards.devTooling.title', descriptionKey: 'learn.guidesPage.cards.devTooling.description', difficulty: 'Advanced', readTime: '8 min' },
+  { titleKey: 'learn.guidesPage.cards.securityBasics.title', descriptionKey: 'learn.guidesPage.cards.securityBasics.description', difficulty: 'Advanced', readTime: '7 min' },
 ];
 
 const ecosystemResources = [
