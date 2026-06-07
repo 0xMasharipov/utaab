@@ -112,7 +112,8 @@ export default function CertRecords() {
         const p = r.participant_id ? partsById.get(r.participant_id) : null;
         const name = p?.full_name ?? '—';
         const rawHolder = r.holder_address || fallbackChecksummed || fallbackHolder;
-        const serialLower = (r.serial_hash || '').toLowerCase();
+        const rawSerial = (r.serial_hash || '').toLowerCase();
+        const serialLower = rawSerial ? (rawSerial.startsWith('0x') ? rawSerial : `0x${rawSerial}`) : '';
 
         // Client-side payload validation (Zod) — never round-trip bad data.
         const candidate = {
