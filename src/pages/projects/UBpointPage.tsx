@@ -1237,7 +1237,42 @@ const UBpointPageInner = () => {
     return false;
   })();
   const [ready, setReady] = useState(initialReady);
-  const tier = usePerfGuard();
+  const autoTier = usePerfGuard();
+  const [tierOverride, setTierOverride] = useState<PerfTier | null>(null);
+  const tier = tierOverride ?? autoTier;
+  const [mockupDecoded, setMockupDecoded] = useState(false);
+  const [fontsReady, setFontsReady] = useState(false);
+  const [replayKey, setReplayKey] = useState(0);
+  const heroReady = ready && mockupDecoded && fontsReady;
+
+  // Mockup decode — independent of splash so heroReady can latch precisely.
+  useEffect(() => {
+    let cancelled = false;
+    const img = new Image();
+    img.src = mockupAsset.url;
+    img.decode().then(() => { if (!cancelled) setMockupDecoded(true); })
+      .catch(() => { if (!cancelled) setMockupDecoded(true); });
+    const fallback = window.setTimeout(() => { if (!cancelled) setMockupDecoded(true); }, 2500);
+    return () => { cancelled = true; window.clearTimeout(fallback); };
+  }, []);
+
+  // Wait for web fonts so coin entrance lines up with final hero typography.
+  useEffect(() => {
+    let cancelled = false;
+    const fallback = window.setTimeout(() => { if (!cancelled) setFontsReady(true); }, 1200);
+    const fonts = (document as any).fonts;
+    if (fonts?.ready?.then) {
+      fonts.ready.then(() => { if (!cancelled) setFontsReady(true); }).catch(() => {});
+    } else {
+      setFontsReady(true);
+    }
+    return () => { cancelled = true; window.clearTimeout(fallback); };
+  }, []);
+
+  const replaySpread = useCallback(() => {
+    setReplayKey((k) => k + 1);
+  }, []);
+
 
   // Lock html/body background to opaque white so the global dark theme can
   // never bleed through during paint gaps or splash fade-out.
