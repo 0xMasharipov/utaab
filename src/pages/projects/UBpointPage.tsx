@@ -470,10 +470,6 @@ const Hero = () => {
             alt="UBpoint"
             className="h-12 sm:h-16 md:h-20 w-auto mb-5 sm:mb-6 drop-shadow-[0_10px_30px_rgba(37,99,235,0.3)]"
           />
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold mb-6">
-            <CircleDot className="w-3.5 h-3.5" />
-            {t('projects.ubpointPage.hero.kicker')}
-          </div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.05] text-balance">
             {t('projects.ubpointPage.hero.titleStart')}{' '}
             <span className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
@@ -500,16 +496,6 @@ const Hero = () => {
             </a>
           </div>
 
-          <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-500">
-            <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              {t('projects.ubpointPage.hero.liveOnBase')}
-            </div>
-            <div className="flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-blue-500" />
-              {t('projects.ubpointPage.hero.onChainVerified')}
-            </div>
-          </div>
         </motion.div>
 
         <motion.div
@@ -605,13 +591,9 @@ const VerifiedOnChain = () => {
           transition={{ duration: 0.6 }}
           className="text-center max-w-2xl mx-auto mb-12"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-4">
-            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            {t('projects.ubpointPage.verified.eyebrow')}
-          </div>
           <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight flex items-center justify-center gap-3">
-            <ShieldCheck className="w-8 h-8 md:w-10 md:h-10 text-blue-600" />
             {t('projects.ubpointPage.verified.title')}
+            <CheckCircle2 className="w-8 h-8 md:w-10 md:h-10 text-blue-600" />
           </h2>
           <p className="mt-4 text-slate-600 md:text-lg leading-relaxed">
             {t('projects.ubpointPage.verified.subtitle')}
