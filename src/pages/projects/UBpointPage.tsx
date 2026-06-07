@@ -320,7 +320,7 @@ const FloatingDevice = () => {
               key={i}
               className={`absolute ${c.cls}`}
               initial={{ opacity: 0, scale: 0.35, x: c.from.x, y: c.from.y, rotate: initRot }}
-              animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: c.from.x, y: c.from.y, rotate: initRot }}
+              animate={spreadActive ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: c.from.x, y: c.from.y, rotate: initRot }}
               transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.15 + i * 0.14 }}
             >
               <motion.img
