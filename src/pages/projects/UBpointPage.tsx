@@ -2,9 +2,10 @@ import { createContext, useContext, useEffect, useMemo, useRef, useState, forwar
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { usePerfGuard, type PerfTier } from '@/hooks/usePerfGuard';
 
-/* ---------- Splash intro context ---------- */
-const SplashContext = createContext<{ ready: boolean }>({ ready: true });
+/* ---------- Splash intro + perf-tier context ---------- */
+const SplashContext = createContext<{ ready: boolean; tier: PerfTier }>({ ready: true, tier: 'full' });
 const useSplash = () => useContext(SplashContext);
 const splashTransition = (i: number) => ({
   delay: 0.25 + i * 0.13,
