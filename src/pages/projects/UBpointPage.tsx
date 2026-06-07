@@ -1364,7 +1364,7 @@ const UBpointPageInner = () => {
   }, [ready]);
 
   return (
-    <SplashContext.Provider value={{ ready, tier }}>
+    <SplashContext.Provider value={{ ready, heroReady, tier, replayKey, setTierOverride, tierOverride, replaySpread }}>
       <div className="min-h-screen bg-white text-slate-900 font-sans">
         <LightNavbar />
         <main>
