@@ -75,7 +75,7 @@ import usdtAngleAsset from '@/assets/coins/ubp-usdt-angle.png.asset.json';
 import tryAngleAsset from '@/assets/coins/ubp-try-angle.png.asset.json';
 
 const WHATSAPP_URL = 'https://chat.whatsapp.com/HnTcuJYiKAiDpLPnG33mEr';
-const SPONSOR_EMAIL = 'mailto:info@utaab.org?subject=UBpoint%20Sponsor%20Inquiry';
+const SPONSOR_EMAIL = 'mailto:contact@utaab.org?subject=UBpoint%20Sponsor%20Inquiry';
 const UBPOINT_APP_URL = 'https://ubpoint.app/';
 
 /* ---------- Asset preload registry ---------- */
