@@ -1049,30 +1049,82 @@ const CountUp: React.FC<{ to: number; suffix?: string }> = ({ to, suffix = '' })
   return <span ref={ref}>{val}{suffix}</span>;
 };
 
+/**
+ * SafeCoinImg — decorative coin renderer with graceful degradation:
+ *  - Only starts animating after the image successfully loads.
+ *  - On load error, renders a same-sized blue gradient placeholder so the
+ *    floating layout slot is preserved and the section never reflows.
+ *  - Sets `sizes` so the browser picks the right intrinsic resolution; we
+ *    don't generate width-descriptor srcSet because the Lovable CDN
+ *    (/__l5e/assets-v1/...) does not transform images. TODO: if multi-size
+ *    variants are uploaded later via `lovable-assets`, wire them into srcSet.
+ */
+interface SafeCoinImgProps {
+  src: string;
+  positionClass: string;
+  glow: string;
+  animate?: { y: number[]; rotateZ?: number[] };
+  duration: number;
+  delay: number;
+  sizes?: string;
+}
+const SafeCoinImg = ({ src, positionClass, glow, animate, duration, delay, sizes }: SafeCoinImgProps) => {
+  const [loaded, setLoaded] = useState(false);
+  const [errored, setErrored] = useState(false);
+  const safeAnimate = (loaded || errored) ? animate : undefined;
+
+  if (errored) {
+    return (
+      <motion.div
+        aria-hidden
+        className={`absolute ${positionClass} pointer-events-none select-none rounded-full bg-gradient-to-br from-blue-200/70 via-blue-300/50 to-blue-100/40 ring-1 ring-blue-200/60`}
+        style={{ aspectRatio: '1 / 1', filter: `drop-shadow(0 18px 32px ${glow})` }}
+        animate={safeAnimate}
+        transition={{ duration, repeat: Infinity, ease: 'easeInOut', delay }}
+      />
+    );
+  }
+
+  return (
+    <motion.img
+      src={src}
+      sizes={sizes}
+      alt=""
+      aria-hidden
+      loading="lazy"
+      decoding="async"
+      // @ts-expect-error fetchPriority is valid HTML; TS lib lag
+      fetchpriority="low"
+      onLoad={() => setLoaded(true)}
+      onError={() => setErrored(true)}
+      className={`absolute ${positionClass} pointer-events-none select-none transition-opacity duration-500`}
+      style={{ filter: `drop-shadow(0 18px 32px ${glow})`, opacity: loaded ? 1 : 0 }}
+      animate={safeAnimate}
+      transition={{ duration, repeat: Infinity, ease: 'easeInOut', delay }}
+    />
+  );
+};
+
 const Metrics = () => {
   const { t } = useTranslation();
   const { tier } = useSplash();
   const loop = tier === 'full';
-  // Lightweight loop on reduced (mobile) tier — smaller amplitude, longer dur.
   const softLoop = tier === 'reduced';
-  // Desktop-only coins (hidden on phones).
   const desktopCoins = [
-    { src: utaabCoinAsset.url, cls: 'hidden md:block -left-12 top-1/2 -translate-y-1/2 w-44', glow: 'rgba(37,99,235,0.4)', dur: 9, delay: 0 },
-    { src: goldBarAsset.url, cls: 'hidden md:block -right-10 top-12 w-36', glow: 'rgba(202,138,4,0.45)', dur: 11, delay: 0.3 },
-    { src: titaniumBarAsset.url, cls: 'hidden md:block right-20 top-2 w-24', glow: 'rgba(148,163,184,0.45)', dur: 10, delay: 1.1 },
-    { src: silverBarAsset.url, cls: 'hidden md:block left-24 bottom-4 w-24', glow: 'rgba(148,163,184,0.45)', dur: 12, delay: 0.6 },
-    { src: ethCoinAsset.url, cls: 'hidden md:block right-12 bottom-10 w-24', glow: 'rgba(100,116,139,0.4)', dur: 10, delay: 0.7 },
-    { src: usdtAngleAsset.url, cls: 'hidden md:block left-1/4 bottom-2 w-24', glow: 'rgba(16,185,129,0.45)', dur: 10, delay: 1.4 },
-    { src: tryAngleAsset.url, cls: 'hidden md:block right-1/4 top-1/3 w-24', glow: 'rgba(220,38,38,0.4)', dur: 12, delay: 0.2 },
-    { src: steamAsset.url, cls: 'hidden md:block right-8 top-8 w-24', glow: 'rgba(37,99,235,0.45)', dur: 11, delay: 1.6 },
+    { src: utaabCoinAsset.url, cls: 'hidden md:block -left-12 top-1/2 -translate-y-1/2 w-44', glow: 'rgba(37,99,235,0.4)', dur: 9, delay: 0, sizes: '(min-width: 768px) 176px, 0px' },
+    { src: goldBarAsset.url, cls: 'hidden md:block -right-10 top-12 w-36', glow: 'rgba(202,138,4,0.45)', dur: 11, delay: 0.3, sizes: '(min-width: 768px) 144px, 0px' },
+    { src: titaniumBarAsset.url, cls: 'hidden md:block right-20 top-2 w-24', glow: 'rgba(148,163,184,0.45)', dur: 10, delay: 1.1, sizes: '(min-width: 768px) 96px, 0px' },
+    { src: silverBarAsset.url, cls: 'hidden md:block left-24 bottom-4 w-24', glow: 'rgba(148,163,184,0.45)', dur: 12, delay: 0.6, sizes: '(min-width: 768px) 96px, 0px' },
+    { src: ethCoinAsset.url, cls: 'hidden md:block right-12 bottom-10 w-24', glow: 'rgba(100,116,139,0.4)', dur: 10, delay: 0.7, sizes: '(min-width: 768px) 96px, 0px' },
+    { src: usdtAngleAsset.url, cls: 'hidden md:block left-1/4 bottom-2 w-24', glow: 'rgba(16,185,129,0.45)', dur: 10, delay: 1.4, sizes: '(min-width: 768px) 96px, 0px' },
+    { src: tryAngleAsset.url, cls: 'hidden md:block right-1/4 top-1/3 w-24', glow: 'rgba(220,38,38,0.4)', dur: 12, delay: 0.2, sizes: '(min-width: 768px) 96px, 0px' },
+    { src: steamAsset.url, cls: 'hidden md:block right-8 top-8 w-24', glow: 'rgba(37,99,235,0.45)', dur: 11, delay: 1.6, sizes: '(min-width: 768px) 96px, 0px' },
   ];
-  // Mobile-safe coins — visible from base, repositioned to corners so they
-  // don't overlap the metric grid. Sized small on phones, larger on md+.
   const responsiveCoins = [
-    { src: btcCoinAsset.url, cls: 'left-2 top-2 w-12 sm:w-16 md:left-1/3 md:top-4 md:w-20', glow: 'rgba(202,138,4,0.45)', dur: 9, delay: 0.4 },
-    { src: tonCoinAsset.url, cls: 'right-2 top-2 w-12 sm:w-16 md:right-1/3 md:top-6 md:w-20', glow: 'rgba(37,99,235,0.5)', dur: 11, delay: 0.9 },
-    { src: goldCoinAsset.url, cls: 'right-3 bottom-3 w-12 sm:w-16 md:left-10 md:right-auto md:bottom-16 md:w-20', glow: 'rgba(202,138,4,0.5)', dur: 10, delay: 0.5 },
-    { src: gamepadAsset.url, cls: 'left-2 bottom-3 w-14 sm:w-20 md:left-1/4 md:bottom-10 md:w-32', glow: 'rgba(96,165,250,0.4)', dur: 9, delay: 0.8 },
+    { src: btcCoinAsset.url, cls: 'left-2 top-2 w-12 sm:w-16 md:left-1/3 md:top-4 md:w-20', glow: 'rgba(202,138,4,0.45)', dur: 9, delay: 0.4, sizes: '(min-width: 768px) 80px, (min-width: 640px) 64px, 48px' },
+    { src: tonCoinAsset.url, cls: 'right-2 top-2 w-12 sm:w-16 md:right-1/3 md:top-6 md:w-20', glow: 'rgba(37,99,235,0.5)', dur: 11, delay: 0.9, sizes: '(min-width: 768px) 80px, (min-width: 640px) 64px, 48px' },
+    { src: goldCoinAsset.url, cls: 'right-3 bottom-3 w-12 sm:w-16 md:left-10 md:right-auto md:bottom-16 md:w-20', glow: 'rgba(202,138,4,0.5)', dur: 10, delay: 0.5, sizes: '(min-width: 768px) 80px, (min-width: 640px) 64px, 48px' },
+    { src: gamepadAsset.url, cls: 'left-2 bottom-3 w-14 sm:w-20 md:left-1/4 md:bottom-10 md:w-32', glow: 'rgba(96,165,250,0.4)', dur: 9, delay: 0.8, sizes: '(min-width: 768px) 128px, (min-width: 640px) 80px, 56px' },
   ];
   const coins = tier === 'minimal' ? [] : [...responsiveCoins, ...desktopCoins];
   return (
@@ -1085,17 +1137,15 @@ const Metrics = () => {
           : undefined;
         const duration = softLoop ? c.dur + 4 : c.dur;
         return (
-          <motion.img
+          <SafeCoinImg
             key={i}
             src={c.src}
-            alt=""
-            aria-hidden
-            loading="lazy"
-            decoding="async"
-            className={`absolute ${c.cls} pointer-events-none select-none`}
-            style={{ filter: `drop-shadow(0 18px 32px ${c.glow})` }}
+            positionClass={c.cls}
+            glow={c.glow}
             animate={animate}
-            transition={{ duration, repeat: Infinity, ease: 'easeInOut', delay: c.delay }}
+            duration={duration}
+            delay={c.delay}
+            sizes={c.sizes}
           />
         );
       })}
