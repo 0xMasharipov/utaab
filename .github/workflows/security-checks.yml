@@ -19,10 +19,15 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install pg client
-        run: npm install --no-save pg@8
+      - name: Install pg client (isolated)
+        run: |
+          mkdir -p "$RUNNER_TEMP/pgdeps"
+          cd "$RUNNER_TEMP/pgdeps"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund --silent pg@8
 
       - name: Check definer grants
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          NODE_PATH: ${{ runner.temp }}/pgdeps/node_modules
         run: node scripts/security/check-definer-grants.mjs
