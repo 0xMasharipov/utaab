@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { HelpCircle, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
