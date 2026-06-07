@@ -365,10 +365,10 @@ const FloatingDevice = () => {
       </motion.div>
 
       <motion.div
-        className="absolute -left-6 sm:-left-10 md:-left-20 bottom-2 sm:bottom-4 w-16 sm:w-24 md:w-32 pointer-events-none"
-        initial={{ opacity: 0, scale: 0.2 }}
-        animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.2 }}
-        transition={splashTransition(0)}
+        className="absolute -left-6 sm:-left-10 md:-left-20 bottom-2 sm:bottom-4 w-24 sm:w-36 md:w-48 pointer-events-none z-0"
+        initial={{ opacity: 0, scale: 0.35, x: 160, y: -80 }}
+        animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0 } : { opacity: 0, scale: 0.35, x: 160, y: -80 }}
+        transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
       >
         <motion.img
           src={utaabCoinAsset.url}
@@ -380,10 +380,10 @@ const FloatingDevice = () => {
         />
       </motion.div>
       <motion.div
-        className="absolute -right-3 sm:-right-6 md:-right-12 top-2 sm:top-4 w-14 sm:w-20 md:w-28 pointer-events-none"
-        initial={{ opacity: 0, scale: 0.2 }}
-        animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.2 }}
-        transition={splashTransition(1)}
+        className="absolute -right-3 sm:-right-6 md:-right-12 top-2 sm:top-4 w-20 sm:w-28 md:w-40 pointer-events-none z-0"
+        initial={{ opacity: 0, scale: 0.35, x: -160, y: 100 }}
+        animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0 } : { opacity: 0, scale: 0.35, x: -160, y: 100 }}
+        transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
       >
         <motion.img
           src={tonCoinAsset.url}
@@ -395,10 +395,10 @@ const FloatingDevice = () => {
         />
       </motion.div>
       <motion.div
-        className="absolute -right-3 sm:-right-6 md:-right-14 bottom-1 sm:bottom-2 md:bottom-6 w-10 sm:w-14 md:w-20 pointer-events-none"
-        initial={{ opacity: 0, scale: 0.2 }}
-        animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.2 }}
-        transition={splashTransition(11)}
+        className="absolute -right-3 sm:-right-6 md:-right-14 bottom-1 sm:bottom-2 md:bottom-6 w-14 sm:w-20 md:w-28 pointer-events-none z-0"
+        initial={{ opacity: 0, scale: 0.35, x: -150, y: -80 }}
+        animate={ready ? { opacity: 1, scale: 1, x: 0, y: 0 } : { opacity: 0, scale: 0.35, x: -150, y: -80 }}
+        transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
       >
         <motion.img
           src={btcCoinAsset.url}
