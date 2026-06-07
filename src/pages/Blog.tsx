@@ -18,6 +18,7 @@ import { PrivacyPopup } from '@/components/PrivacyPopup';
 import { PrivacyCenter } from '@/components/PrivacyCenter';
 import { FloatingPrivacyButton } from '@/components/FloatingPrivacyButton';
 import { useQuery } from '@tanstack/react-query';
+import SEO from '@/components/SEO';
 
 const POSTS_PER_PAGE = 12;
 
@@ -28,10 +29,6 @@ const Blog = () => {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [page, setPage] = useState(0);
   const [isPrivacyCenterOpen, setIsPrivacyCenterOpen] = useState(false);
-
-  useEffect(() => {
-    document.title = 'UTAAB Blog - Insights, Updates & Web3 Innovations';
-  }, []);
 
   const { data: posts = [], isLoading: loading } = useQuery({
     queryKey: ['blog-posts'],
