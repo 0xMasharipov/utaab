@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FileText, Target, Cpu, Map, Download, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Download, ArrowRight, AlertCircle } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
@@ -75,8 +75,7 @@ const Whitepaper = () => {
       <section className="pt-32 pb-16 md:pt-40 md:pb-20">
         <div className="section-container text-center max-w-3xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-accent text-sm font-medium mb-6">
-              <FileText className="h-4 w-4" />
+            <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-medium mb-5">
               {t('whitepaper.hero.badge', 'Whitepaper')}
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-5 leading-tight">
@@ -103,19 +102,15 @@ const Whitepaper = () => {
       <section className="pb-12 md:pb-16">
         <div className="section-container max-w-4xl mx-auto">
           <GlassCard className="p-8 md:p-10">
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-10 h-10 rounded-xl bg-primary/15 border border-accent/20 flex items-center justify-center text-accent">
-                <Target className="h-5 w-5" />
-              </div>
-              <h2 className="text-2xl md:text-3xl font-bold">{t('whitepaper.vision.title', 'Vision')}</h2>
-            </div>
+            <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-medium mb-3">01 — Vision</div>
+            <h2 className="text-2xl md:text-3xl font-bold mb-5">{t('whitepaper.vision.title', 'Vision')}</h2>
             <p className="text-muted-foreground leading-relaxed mb-6">
               {t('whitepaper.vision.intro', 'UTAAB exists to make blockchain understandable, useful, and open to everyone. We believe Web3 should not be locked behind jargon, paywalls, or insider networks.')}
             </p>
             <ul className="space-y-3">
               {visionPoints.map((point, i) => (
                 <li key={i} className="flex items-start gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                  <span className="text-accent mt-1.5 leading-none">—</span>
                   <span className="text-muted-foreground">{point}</span>
                 </li>
               ))}
@@ -128,18 +123,15 @@ const Whitepaper = () => {
       <section className="pb-12 md:pb-16">
         <div className="section-container max-w-4xl mx-auto">
           <GlassCard className="p-8 md:p-10">
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-10 h-10 rounded-xl bg-primary/15 border border-accent/20 flex items-center justify-center text-accent">
-                <Cpu className="h-5 w-5" />
-              </div>
-              <h2 className="text-2xl md:text-3xl font-bold">{t('whitepaper.tech.title', 'Technology')}</h2>
-            </div>
+            <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-medium mb-3">02 — Technology</div>
+            <h2 className="text-2xl md:text-3xl font-bold mb-5">{t('whitepaper.tech.title', 'Technology')}</h2>
             <p className="text-muted-foreground leading-relaxed mb-6">
               {t('whitepaper.tech.intro', 'Our approach is intentionally pragmatic. We use technology that is open, well-understood, and battle-tested — and we explain everything we use.')}
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {technology.map((tech, i) => (
                 <div key={i} className="p-5 rounded-xl bg-white/[0.04] border border-white/[0.08]">
+                  <div className="text-xs font-extralight text-foreground/30 tabular-nums mb-2">{String(i + 1).padStart(2, '0')}</div>
                   <h3 className="font-semibold mb-2">{tech.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{tech.description}</p>
                 </div>
@@ -153,12 +145,8 @@ const Whitepaper = () => {
       <section className="pb-16 md:pb-20">
         <div className="section-container max-w-4xl mx-auto">
           <GlassCard className="p-8 md:p-10">
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-10 h-10 rounded-xl bg-primary/15 border border-accent/20 flex items-center justify-center text-accent">
-                <Map className="h-5 w-5" />
-              </div>
-              <h2 className="text-2xl md:text-3xl font-bold">{t('whitepaper.roadmap.title', 'Roadmap')}</h2>
-            </div>
+            <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-medium mb-3">03 — Roadmap</div>
+            <h2 className="text-2xl md:text-3xl font-bold mb-5">{t('whitepaper.roadmap.title', 'Roadmap')}</h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
               {t('whitepaper.roadmap.intro', 'Three phases. We move on once the previous one is real, not just announced.')}
             </p>

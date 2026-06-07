@@ -1,58 +1,66 @@
-## TonRa: SEO + mobile polish + token alignment
+## Goal
 
-Single-file refactor of `src/pages/projects/TonRaPage.tsx`. No new components, no i18n changes, no asset additions beyond reusing the existing `/og-image.png`.
+Bring the rest of the site up to the editorial quality of the new TonRa page: shared typography rhythm, consistent section spacing, removal of decorative "AI-smell" icon grids, and targeted layout fixes where sections currently feel weak — without touching any admin business logic.
 
-### 1. SEO + social preview metadata
+## Design system (applied everywhere)
 
-Replace the inline `useEffect(document.title = ...)` with the existing `<SEO>` component (same pattern About uses, via `react-helmet-async` already wired in `main.tsx`).
+Define a small set of shared utility constants/classes used by all public pages so future drift stops:
 
-```tsx
-<SEO
-  title="TonRa — Telegram Security Bot for TON | UTAAB"
-  description="TonRa is UTAAB's beta Telegram security bot for the TON ecosystem — verify wallets, tokens, projects and airdrops before you interact."
-  path="/projects/tonra"
-  ogType="website"
-  image="https://utaab.org/og-image.png"
-  jsonLd={{
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "TonRa",
-    applicationCategory: "SecurityApplication",
-    operatingSystem: "Telegram",
-    url: "https://utaab.org/projects/tonra",
-    publisher: { "@type": "Organization", name: "UTAAB", url: "https://utaab.org" }
-  }}
-/>
-```
+- `EYEBROW` — `text-xs uppercase tracking-[0.2em] text-muted-foreground`
+- `SECTION_TITLE` — `text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight`
+- `SECTION_SUBTITLE` — `text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl`
+- `SECTION_PAD` — `py-16 md:py-24`
+- Section dividers: `border-t border-white/[0.06]` between major bands
+- Hero H1 reserved for top-of-page: `text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight`
 
-- Drops the `useEffect` title swap (SEO component owns title + canonical + og:* + twitter:* + JSON-LD).
-- Reuses the existing project-wide social card at `public/og-image.png` — no new asset, no AI-feel TonRa-specific banner.
-- Canonical `https://utaab.org/projects/tonra` matches the route already mounted in `App.tsx`.
+These will live in a tiny `src/lib/designTokens.ts` (string constants) so components import the same values rather than re-typing classes. No Tailwind config changes, no new colors. Montserrat + Web3 navy/blue palette preserved per memory.
 
-### 2. Mobile reflow — capabilities list + pull-quote
+## Icon policy (strict)
 
-Current problems on ≤640 px:
-- Capabilities numerals (`w-12` rail + `gap-6`) eat ~30% of width, squeezing titles/descriptions into 2-line ladders.
-- Pull-quote `text-3xl font-light leading-snug` wraps awkwardly with the centered hairline rule and the giant `“` glyph stacked above.
-- Section padding (`py-24 md:py-32`) is too tall on phones — leaves big empty gaps between blocks.
+Keep only **functional** icons: nav arrows, send, external-link, social brand marks, close/menu, status badges (check/x in cert flow), play, and admin sidebar icons. Remove decorative Lucide icons used as "feature bullets" (Sparkles, Rocket, Zap, Shield-as-decor, Globe, Layers, Star, Lightbulb, etc.). Replace icon-card grids with numbered editorial lists (matching TonRa's `01–06` pattern) or hairline-divided text blocks.
 
-Fixes:
-- **Capabilities rows**: shrink numeral rail on mobile (`w-8 text-3xl`) and bump on desktop (`md:w-12 md:text-4xl`); reduce gap (`gap-4 md:gap-6`); tighten vertical padding (`py-5 md:py-7`). Wrap text in `min-w-0` so long titles don't blow out the row.
-- **Pull-quote**: scale quote glyph (`text-6xl md:text-8xl`) and body (`text-xl md:text-3xl`); reduce attribution rule width on mobile (`w-6 md:w-8`); section padding `py-16 md:py-32`.
-- **All sections**: standardize to `py-16 md:py-24` (was `py-20 md:py-28`/`py-24 md:py-32` mixed). One rhythm across the page.
+## Per-page polish (targeted layout)
 
-### 3. Typography + spacing tokens aligned with other pages
+Each item is a focused pass, not a rewrite.
 
-Audit reference: `UBpointPage.tsx`, `About.tsx`. Standardize TonRa to match.
+1. **Home (`Index.tsx` and its sections)** — `Hero`, `AboutBlurb`, `Stats`, `Projects`, `Learn`, `Resources`, `Events`, `Community`, `Team`, `BlogSection`, `Join`, `Footer`:
+   - Normalize section padding via `SECTION_PAD`.
+   - Standardize eyebrow + title + subtitle headers across all sections.
+   - `Projects`, `Resources`, `Learn`: strip decorative icons from cards; switch to clean type-led cards with hairline borders and a single arrow affordance.
+   - `Stats`: reduce visual weight; remove icon chrome behind numerals.
+   - `Community`: tighten card density on mobile.
+2. **About (`About.tsx` + `AboutBlurb.tsx`)** — apply 12-col editorial layout pattern (left rail eyebrow, right body), keep the new UTAA/THK mention.
+3. **Projects pages** — `UBpointPage.tsx`: align to the TonRa typography/spacing tokens; remove any remaining icon-grid noise; keep brand visuals.
+4. **TeamPage / Team component** — keep grid, refine card chrome (hairline border, subtle hover), remove decorative icons.
+5. **FAQ** — editorial accordion: thinner dividers, larger question type, calmer answer body.
+6. **Blog + BlogPost** — header eyebrow/title rhythm, tighter meta row, hairline dividers; cards lose decorative icons.
+7. **ResourcesPage / Whitepaper / LearnHub / EducationalGuides / Workshops** — apply tokens, kill icon-grids, replace with numbered lists or simple cards.
+8. **ContributorMatch + contributor components** — clean hero, restrained archetype cards (no glowing icon badges), keep the assessment flow intact.
+9. **VerifyCertificate** — already localized; apply tokens for header and result card spacing only.
+10. **Auth / legal: PrivacyPolicy, TermsOfService, KVKKRequest, Unsubscribe, NotFound** — typography + spacing tokens, single-column readable max-width, hairline section breaks.
+11. **Education hub (public-facing)** — `EducationHome`, `CourseCatalog`, `CourseDetail`, `CourseLearn`, `BlockchainAndMoney`, `EducationRegister`, `EducationSignIn`, `InstructorProfile`, `UserProfile`: token pass, restrained card chrome, remove decorative icons from feature strips. Keep all data flow, video player, quiz, and certificate logic untouched.
+12. **Navbar / Footer** — keep brand sizing per memory; only tighten spacing and align link typography.
 
-- **Headings**: section titles → `text-3xl sm:text-4xl md:text-5xl font-bold leading-tight` (currently `text-3xl sm:text-4xl font-extrabold` — too small, too heavy vs. siblings). Hero H1 stays `text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight`.
-- **Eyebrows**: keep uppercase tracking pattern but normalize to `text-xs uppercase tracking-[0.2em] text-muted-foreground` (currently a mix of `0.18em` / `0.22em`).
-- **Body**: paragraphs → `text-base sm:text-lg text-muted-foreground leading-relaxed` (matches TonRa "What is" intro paragraph used by other project pages).
-- **Dividers**: keep `border-t border-white/[0.06]` between sections; add the same hairline above the Footer so the page closes cleanly like UBpoint.
-- **Container**: every section uses `section-container` (already true) with consistent inner `max-w-*` only on text-heavy blocks (quote `max-w-3xl`, CTA `max-w-2xl`).
+## Admin (visual-only)
 
-### Out of scope
-- No new og-image generation (reuses brand `/og-image.png`).
-- No translation copy changes.
-- No `<Navbar>`, `<Footer>`, `BackgroundGrid`, or shared component edits.
-- No backend / sitemap edits (route already in `sitemap.xml` or can be added later in a separate pass if missing).
+- `AdminLayout.tsx`: keep sidebar icons (they're functional navigation), align typography to tokens, soften active-state colors, tighten paddings. No changes to auth checks, route list, or sign-out logic.
+- Admin page bodies: only `className` adjustments on headings/cards to match tokens. **No** changes to forms, dialogs, queries, mutations, edge function calls, or state.
+- Skip entirely: `cert/*` admin tables (functional density is correct as-is) beyond header typography.
+
+## Out of scope
+
+- No backend/edge function changes.
+- No i18n key additions (copy unchanged).
+- No new dependencies, no new assets, no Tailwind config or `index.css` token changes beyond the constants file.
+- No changes to: `src/integrations/supabase/*`, routing, auth, RLS, security components, captcha, video player, quiz, certificate generation/verification logic.
+
+## Technical notes
+
+- Create `src/lib/designTokens.ts` exporting class-name constants.
+- Edits are mostly `className` swaps and small JSX restructures (replace icon-card grids with numbered `<ol>` blocks).
+- After each batch, spot-check the preview at mobile (375), tablet (768), desktop (1280) breakpoints.
+- Work in batches by area (home → about/projects → team/blog → resources/learn → legal → education → admin shell) so a single failure doesn't cascade.
+
+## Deliverable
+
+A single coherent visual pass across all public pages plus a visual-only admin shell refinement, with shared tokens preventing future drift. No feature regressions; admin functionality fully preserved.

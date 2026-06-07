@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { GitMerge, ArrowDown } from 'iconoir-react';
+import { ArrowDown } from 'iconoir-react';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
 
@@ -25,10 +25,9 @@ const ContributorHero = ({ onStartAssessment, onLearnMore }: ContributorHeroProp
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.06] backdrop-blur-xl border border-white/[0.12] mb-8"
+          className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-medium mb-8"
         >
-          <GitMerge className="w-4 h-4 text-secondary" strokeWidth={1.5} />
-          <span className="text-sm text-muted-foreground tracking-wide">{t('contributor.hero.badge')}</span>
+          {t('contributor.hero.badge')}
         </motion.div>
 
         <motion.h1

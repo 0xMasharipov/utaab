@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { GraduationCap, Wrench, Network, Heart, Rocket, Globe, GraphUp, NavArrowRight, Group } from 'iconoir-react';
+import { NavArrowRight } from 'iconoir-react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
@@ -27,16 +27,16 @@ const About = () => {
   const { getTransitionClasses } = useLanguageTransition();
 
   const whatWeDo = [
-    { icon: GraduationCap, titleKey: 'aboutPage.whatWeDo.educate.title', descKey: 'aboutPage.whatWeDo.educate.description' },
-    { icon: Wrench, titleKey: 'aboutPage.whatWeDo.build.title', descKey: 'aboutPage.whatWeDo.build.description' },
-    { icon: Network, titleKey: 'aboutPage.whatWeDo.connect.title', descKey: 'aboutPage.whatWeDo.connect.description' },
-    { icon: Heart, titleKey: 'aboutPage.whatWeDo.support.title', descKey: 'aboutPage.whatWeDo.support.description' },
+    { titleKey: 'aboutPage.whatWeDo.educate.title', descKey: 'aboutPage.whatWeDo.educate.description' },
+    { titleKey: 'aboutPage.whatWeDo.build.title', descKey: 'aboutPage.whatWeDo.build.description' },
+    { titleKey: 'aboutPage.whatWeDo.connect.title', descKey: 'aboutPage.whatWeDo.connect.description' },
+    { titleKey: 'aboutPage.whatWeDo.support.title', descKey: 'aboutPage.whatWeDo.support.description' },
   ];
 
   const impact = [
-    { icon: Rocket, titleKey: 'aboutPage.impact.projects.title', descKey: 'aboutPage.impact.projects.description' },
-    { icon: Globe, titleKey: 'aboutPage.impact.initiatives.title', descKey: 'aboutPage.impact.initiatives.description' },
-    { icon: GraphUp, titleKey: 'aboutPage.impact.outcomes.title', descKey: 'aboutPage.impact.outcomes.description' },
+    { titleKey: 'aboutPage.impact.projects.title', descKey: 'aboutPage.impact.projects.description' },
+    { titleKey: 'aboutPage.impact.initiatives.title', descKey: 'aboutPage.impact.initiatives.description' },
+    { titleKey: 'aboutPage.impact.outcomes.title', descKey: 'aboutPage.impact.outcomes.description' },
   ];
 
   const whyItems = [
@@ -173,21 +173,21 @@ const About = () => {
         >
           {t('aboutPage.whatWeDo.title')}
         </motion.h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto">
           {whatWeDo.map((item, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.1 }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
             >
-              <GlassCard hover glow className="p-6 sm:p-8 text-center h-full group">
-                <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-5">
-                  <item.icon className="h-8 w-8 text-accent group-hover:scale-110 transition-transform icon-glow" strokeWidth={1.5} />
+              <GlassCard variant="subtle" hover className="p-6 sm:p-7 h-full">
+                <div className="text-2xl font-extralight text-foreground/25 tabular-nums mb-4">
+                  {String(i + 1).padStart(2, '0')}
                 </div>
-                <h3 className={getTransitionClasses("text-lg font-bold text-foreground mb-2")}>{t(item.titleKey)}</h3>
-                <p className={getTransitionClasses("text-muted-foreground text-sm leading-relaxed")}>{t(item.descKey)}</p>
+                <h3 className={getTransitionClasses('text-lg font-bold text-foreground mb-2')}>{t(item.titleKey)}</h3>
+                <p className={getTransitionClasses('text-muted-foreground text-sm leading-relaxed')}>{t(item.descKey)}</p>
               </GlassCard>
             </motion.div>
           ))}
@@ -215,23 +215,21 @@ const About = () => {
             {t('aboutPage.impact.subtitle')}
           </motion.p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
           {impact.map((item, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.12 }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
             >
-              <GlassCard hover className="p-8 text-center h-full group">
-                <div className="w-20 h-20 mx-auto mb-5 rounded-full p-[2px] bg-gradient-to-br from-accent/30 via-primary/20 to-accent/15">
-                  <div className="w-full h-full rounded-full bg-background/40 flex items-center justify-center">
-                    <item.icon className="h-10 w-10 text-accent group-hover:scale-110 transition-transform icon-glow" strokeWidth={1.5} />
-                  </div>
+              <GlassCard variant="subtle" hover className="p-7 h-full">
+                <div className="text-2xl font-extralight text-foreground/25 tabular-nums mb-4">
+                  {String(i + 1).padStart(2, '0')}
                 </div>
-                <h3 className={getTransitionClasses("text-xl font-bold text-foreground mb-3")}>{t(item.titleKey)}</h3>
-                <p className={getTransitionClasses("text-muted-foreground leading-relaxed")}>{t(item.descKey)}</p>
+                <h3 className={getTransitionClasses('text-xl font-bold text-foreground mb-3')}>{t(item.titleKey)}</h3>
+                <p className={getTransitionClasses('text-muted-foreground leading-relaxed')}>{t(item.descKey)}</p>
               </GlassCard>
             </motion.div>
           ))}
@@ -252,7 +250,6 @@ const About = () => {
             <div className="w-[500px] h-[300px] bg-accent/[0.06] rounded-full blur-3xl" />
           </div>
           <GlassCard variant="strong" className="relative p-10 sm:p-16 text-center max-w-3xl mx-auto">
-            <Group className="h-12 w-12 text-accent mx-auto mb-6" strokeWidth={1.5} />
             <h2 className={getTransitionClasses("text-3xl sm:text-4xl font-bold text-foreground mb-6")}>
               {t('aboutPage.cta.title')}
             </h2>

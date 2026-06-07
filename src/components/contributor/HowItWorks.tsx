@@ -1,54 +1,50 @@
 import { motion } from 'framer-motion';
-import { ClipboardCheck, Brain, Archery } from 'iconoir-react';
-import GlassCard from '@/components/glass/GlassCard';
 import { useTranslation } from 'react-i18next';
-
-const icons = [ClipboardCheck, Brain, Archery];
+import { EYEBROW, SECTION_TITLE, SECTION_SUBTITLE } from '@/lib/designTokens';
 
 const HowItWorks = () => {
   const { t } = useTranslation();
 
   const steps = [
-    { icon: icons[0], title: t('contributor.howItWorks.step1Title'), description: t('contributor.howItWorks.step1Desc') },
-    { icon: icons[1], title: t('contributor.howItWorks.step2Title'), description: t('contributor.howItWorks.step2Desc') },
-    { icon: icons[2], title: t('contributor.howItWorks.step3Title'), description: t('contributor.howItWorks.step3Desc') },
+    { title: t('contributor.howItWorks.step1Title'), description: t('contributor.howItWorks.step1Desc') },
+    { title: t('contributor.howItWorks.step2Title'), description: t('contributor.howItWorks.step2Desc') },
+    { title: t('contributor.howItWorks.step3Title'), description: t('contributor.howItWorks.step3Desc') },
   ];
 
   return (
-    <section className="py-20 px-4">
+    <section className="py-20 md:py-24 px-4">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-14"
+          className="text-center mb-14 max-w-2xl mx-auto"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-            {t('contributor.howItWorks.title')}
-          </h2>
-          <p className="text-muted-foreground text-lg max-w-xl mx-auto">{t('contributor.howItWorks.subtitle')}</p>
+          <div className={`${EYEBROW} mb-4`}>01 — {t('contributor.howItWorks.step')}</div>
+          <h2 className={SECTION_TITLE}>{t('contributor.howItWorks.title')}</h2>
+          <p className={`${SECTION_SUBTITLE} mt-4`}>{t('contributor.howItWorks.subtitle')}</p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <ol className="divide-y divide-white/[0.06] border-y border-white/[0.06]">
           {steps.map((step, i) => (
-            <motion.div
+            <motion.li
               key={i}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.15 }}
+              transition={{ delay: i * 0.08 }}
+              className="grid grid-cols-[auto_1fr] gap-5 md:gap-8 py-7 md:py-9"
             >
-              <GlassCard hover glow className="p-8 h-full text-center">
-                <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center mx-auto mb-5">
-                  <step.icon className="w-7 h-7 text-secondary" strokeWidth={1.5} />
-                </div>
-                <div className="text-sm font-semibold text-secondary mb-2 tracking-wider uppercase">{t('contributor.howItWorks.step')} {i + 1}</div>
-                <h3 className="text-xl font-bold text-foreground mb-3">{step.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{step.description}</p>
-              </GlassCard>
-            </motion.div>
+              <span className="text-3xl md:text-4xl font-extralight text-foreground/20 tabular-nums leading-none w-10 md:w-14">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <div className="min-w-0">
+                <h3 className="text-lg md:text-xl font-bold text-foreground mb-2">{step.title}</h3>
+                <p className="text-muted-foreground leading-relaxed">{step.description}</p>
+              </div>
+            </motion.li>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
   );

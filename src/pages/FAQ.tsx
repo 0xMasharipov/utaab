@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { HelpCircle, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
@@ -90,8 +90,7 @@ const FAQ = () => {
       <section className="pt-32 pb-12 md:pt-40 md:pb-16">
         <div className="section-container text-center max-w-3xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-accent text-sm font-medium mb-6">
-              <HelpCircle className="h-4 w-4" />
+            <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-medium mb-5">
               {t('faqPage.hero.badge', 'FAQ')}
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-5 leading-tight">

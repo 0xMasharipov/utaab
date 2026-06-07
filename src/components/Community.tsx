@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { NavArrowRight, Rocket, Journal } from 'iconoir-react';
+import { NavArrowRight } from 'iconoir-react';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 import { Link } from 'react-router-dom';
 
@@ -18,7 +18,7 @@ export const Community = () => {
   };
 
   return (
-    <section id="community" className="relative py-24 md:py-36 overflow-hidden" ref={ref}>
+    <section id="community" className="relative py-20 md:py-28 overflow-hidden" ref={ref}>
       {/* Subtle radial glow background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,hsl(var(--accent)/0.08),transparent_70%)]" />
 
@@ -47,8 +47,8 @@ export const Community = () => {
             onClick={() => scrollToSection('join')}
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-accent/20 border border-accent/30 text-accent font-semibold backdrop-blur-sm hover:bg-accent/30 hover:border-accent/50 hover:shadow-[0_0_30px_hsl(var(--accent)/0.25)] transition-all duration-300"
           >
-            <NavArrowRight className="h-5 w-5" strokeWidth={1.5} />
             <span className={getTransitionClasses()}>{t('community.cta.joinBtn')}</span>
+            <NavArrowRight className="h-4 w-4" strokeWidth={1.5} />
           </button>
 
           {/* Secondary CTA */}
@@ -56,7 +56,6 @@ export const Community = () => {
             onClick={() => scrollToSection('projects')}
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full border border-border/40 text-foreground font-semibold backdrop-blur-sm hover:bg-white/[0.06] hover:border-border/60 transition-all duration-300"
           >
-            <Rocket className="h-5 w-5" strokeWidth={1.5} />
             <span className={getTransitionClasses()}>{t('community.cta.projectsBtn')}</span>
           </button>
 
@@ -65,7 +64,6 @@ export const Community = () => {
             to="/blog"
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-muted-foreground font-semibold hover:text-foreground hover:bg-white/[0.04] transition-all duration-300"
           >
-            <Journal className="h-5 w-5" strokeWidth={1.5} />
             <span className={getTransitionClasses()}>{t('community.cta.updatesBtn')}</span>
           </Link>
         </motion.div>

@@ -4,7 +4,7 @@ import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { BookOpen, Clock, ChevronRight, ExternalLink, Layers, Shield, Code, Globe, Wallet, FileText, Cpu, Network, Boxes, Zap } from 'lucide-react';
+import { Clock, ChevronRight, ExternalLink } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
@@ -21,7 +21,6 @@ const fadeUp = {
 interface GuideCard {
   titleKey: string;
   descriptionKey: string;
-  icon: React.ElementType;
   difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
   readTime: string;
 }
@@ -54,19 +53,19 @@ const Section = ({ id, title, subtitle, cards, t }: { id: string; title: string;
             animate={isInView ? 'visible' : 'hidden'}
             variants={fadeUp}
             custom={i + 1}
-            className="glass rounded-2xl p-6 hover:bg-white/[0.08] hover:-translate-y-1 transition-all duration-300 group flex flex-col"
+            className="glass rounded-2xl p-6 hover:bg-white/[0.06] hover:-translate-y-0.5 transition-all duration-300 group flex flex-col"
           >
-            <div className="flex items-start justify-between mb-4">
-              <div className="p-2.5 rounded-xl bg-primary/20 text-accent">
-                <card.icon className="h-5 w-5" />
-              </div>
+            <div className="flex items-baseline justify-between mb-4">
+              <span className="text-2xl font-extralight text-foreground/25 tabular-nums">
+                {String(i + 1).padStart(2, '0')}
+              </span>
               <Badge className={`${badgeColor(card.difficulty)} text-[10px] font-semibold border`}>
                 {t(difficultyKey(card.difficulty))}
               </Badge>
             </div>
             <h3 className="text-lg font-bold text-foreground mb-2">{t(card.titleKey)}</h3>
             <p className="text-sm text-muted-foreground mb-4 flex-1">{t(card.descriptionKey)}</p>
-            <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/[0.08]">
+            <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/[0.06]">
               <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Clock className="h-3.5 w-3.5" /> {card.readTime}
               </span>
@@ -82,30 +81,30 @@ const Section = ({ id, title, subtitle, cards, t }: { id: string; title: string;
 };
 
 const startHereCards: GuideCard[] = [
-  { titleKey: 'learn.guidesPage.cards.whatIsBlockchain.title', descriptionKey: 'learn.guidesPage.cards.whatIsBlockchain.description', icon: Layers, difficulty: 'Beginner', readTime: '5 min' },
-  { titleKey: 'learn.guidesPage.cards.howBlockchainWorks.title', descriptionKey: 'learn.guidesPage.cards.howBlockchainWorks.description', icon: Cpu, difficulty: 'Beginner', readTime: '7 min' },
-  { titleKey: 'learn.guidesPage.cards.whatIsWeb3.title', descriptionKey: 'learn.guidesPage.cards.whatIsWeb3.description', icon: Globe, difficulty: 'Beginner', readTime: '4 min' },
-  { titleKey: 'learn.guidesPage.cards.walletsTokens.title', descriptionKey: 'learn.guidesPage.cards.walletsTokens.description', icon: Wallet, difficulty: 'Beginner', readTime: '6 min' },
-  { titleKey: 'learn.guidesPage.cards.publicPrivateKeys.title', descriptionKey: 'learn.guidesPage.cards.publicPrivateKeys.description', icon: Shield, difficulty: 'Beginner', readTime: '4 min' },
-  { titleKey: 'learn.guidesPage.cards.commonTerms.title', descriptionKey: 'learn.guidesPage.cards.commonTerms.description', icon: FileText, difficulty: 'Beginner', readTime: '5 min' },
+  { titleKey: 'learn.guidesPage.cards.whatIsBlockchain.title', descriptionKey: 'learn.guidesPage.cards.whatIsBlockchain.description', difficulty: 'Beginner', readTime: '5 min' },
+  { titleKey: 'learn.guidesPage.cards.howBlockchainWorks.title', descriptionKey: 'learn.guidesPage.cards.howBlockchainWorks.description', difficulty: 'Beginner', readTime: '7 min' },
+  { titleKey: 'learn.guidesPage.cards.whatIsWeb3.title', descriptionKey: 'learn.guidesPage.cards.whatIsWeb3.description', difficulty: 'Beginner', readTime: '4 min' },
+  { titleKey: 'learn.guidesPage.cards.walletsTokens.title', descriptionKey: 'learn.guidesPage.cards.walletsTokens.description', difficulty: 'Beginner', readTime: '6 min' },
+  { titleKey: 'learn.guidesPage.cards.publicPrivateKeys.title', descriptionKey: 'learn.guidesPage.cards.publicPrivateKeys.description', difficulty: 'Beginner', readTime: '4 min' },
+  { titleKey: 'learn.guidesPage.cards.commonTerms.title', descriptionKey: 'learn.guidesPage.cards.commonTerms.description', difficulty: 'Beginner', readTime: '5 min' },
 ];
 
 const ethereumCards: GuideCard[] = [
-  { titleKey: 'learn.guidesPage.cards.whatIsEthereum.title', descriptionKey: 'learn.guidesPage.cards.whatIsEthereum.description', icon: Layers, difficulty: 'Intermediate', readTime: '6 min' },
-  { titleKey: 'learn.guidesPage.cards.ethereumVsBitcoin.title', descriptionKey: 'learn.guidesPage.cards.ethereumVsBitcoin.description', icon: Boxes, difficulty: 'Intermediate', readTime: '5 min' },
-  { titleKey: 'learn.guidesPage.cards.smartContracts.title', descriptionKey: 'learn.guidesPage.cards.smartContracts.description', icon: Code, difficulty: 'Intermediate', readTime: '7 min' },
-  { titleKey: 'learn.guidesPage.cards.gasFees.title', descriptionKey: 'learn.guidesPage.cards.gasFees.description', icon: Zap, difficulty: 'Intermediate', readTime: '5 min' },
-  { titleKey: 'learn.guidesPage.cards.ethereumAccounts.title', descriptionKey: 'learn.guidesPage.cards.ethereumAccounts.description', icon: Wallet, difficulty: 'Intermediate', readTime: '6 min' },
-  { titleKey: 'learn.guidesPage.cards.introEthDev.title', descriptionKey: 'learn.guidesPage.cards.introEthDev.description', icon: Code, difficulty: 'Intermediate', readTime: '8 min' },
+  { titleKey: 'learn.guidesPage.cards.whatIsEthereum.title', descriptionKey: 'learn.guidesPage.cards.whatIsEthereum.description', difficulty: 'Intermediate', readTime: '6 min' },
+  { titleKey: 'learn.guidesPage.cards.ethereumVsBitcoin.title', descriptionKey: 'learn.guidesPage.cards.ethereumVsBitcoin.description', difficulty: 'Intermediate', readTime: '5 min' },
+  { titleKey: 'learn.guidesPage.cards.smartContracts.title', descriptionKey: 'learn.guidesPage.cards.smartContracts.description', difficulty: 'Intermediate', readTime: '7 min' },
+  { titleKey: 'learn.guidesPage.cards.gasFees.title', descriptionKey: 'learn.guidesPage.cards.gasFees.description', difficulty: 'Intermediate', readTime: '5 min' },
+  { titleKey: 'learn.guidesPage.cards.ethereumAccounts.title', descriptionKey: 'learn.guidesPage.cards.ethereumAccounts.description', difficulty: 'Intermediate', readTime: '6 min' },
+  { titleKey: 'learn.guidesPage.cards.introEthDev.title', descriptionKey: 'learn.guidesPage.cards.introEthDev.description', difficulty: 'Intermediate', readTime: '8 min' },
 ];
 
 const buildCards: GuideCard[] = [
-  { titleKey: 'learn.guidesPage.cards.introDapps.title', descriptionKey: 'learn.guidesPage.cards.introDapps.description', icon: Globe, difficulty: 'Intermediate', readTime: '6 min' },
-  { titleKey: 'learn.guidesPage.cards.whatAreDaos.title', descriptionKey: 'learn.guidesPage.cards.whatAreDaos.description', icon: Network, difficulty: 'Intermediate', readTime: '5 min' },
-  { titleKey: 'learn.guidesPage.cards.web2VsWeb3.title', descriptionKey: 'learn.guidesPage.cards.web2VsWeb3.description', icon: Boxes, difficulty: 'Beginner', readTime: '4 min' },
-  { titleKey: 'learn.guidesPage.cards.testnets.title', descriptionKey: 'learn.guidesPage.cards.testnets.description', icon: Cpu, difficulty: 'Advanced', readTime: '7 min' },
-  { titleKey: 'learn.guidesPage.cards.devTooling.title', descriptionKey: 'learn.guidesPage.cards.devTooling.description', icon: Code, difficulty: 'Advanced', readTime: '8 min' },
-  { titleKey: 'learn.guidesPage.cards.securityBasics.title', descriptionKey: 'learn.guidesPage.cards.securityBasics.description', icon: Shield, difficulty: 'Advanced', readTime: '7 min' },
+  { titleKey: 'learn.guidesPage.cards.introDapps.title', descriptionKey: 'learn.guidesPage.cards.introDapps.description', difficulty: 'Intermediate', readTime: '6 min' },
+  { titleKey: 'learn.guidesPage.cards.whatAreDaos.title', descriptionKey: 'learn.guidesPage.cards.whatAreDaos.description', difficulty: 'Intermediate', readTime: '5 min' },
+  { titleKey: 'learn.guidesPage.cards.web2VsWeb3.title', descriptionKey: 'learn.guidesPage.cards.web2VsWeb3.description', difficulty: 'Beginner', readTime: '4 min' },
+  { titleKey: 'learn.guidesPage.cards.testnets.title', descriptionKey: 'learn.guidesPage.cards.testnets.description', difficulty: 'Advanced', readTime: '7 min' },
+  { titleKey: 'learn.guidesPage.cards.devTooling.title', descriptionKey: 'learn.guidesPage.cards.devTooling.description', difficulty: 'Advanced', readTime: '8 min' },
+  { titleKey: 'learn.guidesPage.cards.securityBasics.title', descriptionKey: 'learn.guidesPage.cards.securityBasics.description', difficulty: 'Advanced', readTime: '7 min' },
 ];
 
 const ecosystemResources = [
@@ -132,8 +131,8 @@ const EducationalGuides = () => {
       <section className="pt-32 pb-16 md:pt-40 md:pb-20">
         <div className="section-container text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-accent text-sm font-medium mb-6">
-              <BookOpen className="h-4 w-4" /> {t('learn.guidesPage.heroBadge')}
+            <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-medium mb-5">
+              {t('learn.guidesPage.heroBadge')}
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-5 text-foreground">
               {t('learn.guidesPage.heroTitle')}<span className="text-accent">{t('learn.guidesPage.heroTitleAccent')}</span>
