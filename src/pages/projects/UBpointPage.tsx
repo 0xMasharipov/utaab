@@ -321,9 +321,9 @@ const FloatingDevice = () => {
         className="absolute left-0 sm:-left-4 md:-left-12 top-8 sm:top-12 backdrop-blur-xl bg-white/80 border border-blue-100 rounded-2xl px-3 py-2 sm:px-3.5 sm:py-2.5 shadow-xl flex items-center gap-2"
         initial={{ opacity: 0, scale: 0.3, y: 0 }}
         animate={ready
-          ? { opacity: 1, scale: 1, y: [0, -8, 0] }
+          ? (loop ? { opacity: 1, scale: 1, y: [0, -8, 0] } : { opacity: 1, scale: 1, y: 0 })
           : { opacity: 0, scale: 0.3, y: 0 }}
-        transition={ready
+        transition={ready && loop
           ? {
               opacity: splashTransition(9),
               scale: splashTransition(9),
