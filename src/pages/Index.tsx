@@ -1,4 +1,5 @@
 import { useState, lazy, Suspense, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Navbar } from '@/components/Navbar';
 import { Hero } from '@/components/Hero';
 import { HeroCarousel } from '@/components/HeroCarousel';
