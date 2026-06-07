@@ -1803,6 +1803,11 @@
         "title": "Поддержка",
         "description": "Финансовый, ментальный и профессиональный рост."
       }
+    },
+    "officialCommunity": {
+      "text": "Наше официальное студенческое сообщество базируется в Университете Турецкого Авиационного Общества (UTAA), Анкара, Турция.",
+      "linkLabel": "Перейти на официальную страницу UTAA Blockchain Community →",
+      "url": "https://www.thk.edu.tr/tr/student-clubs/turk-hava-kurumu-universitesi-blockchain-toplulugu"
     }
   },
   "aboutPage": {
@@ -1864,6 +1869,12 @@
       "title": "Станьте частью будущего, которое мы строим",
       "joinButton": "Присоединиться",
       "exploreButton": "Исследовать проекты"
+    },
+    "officialCommunity": {
+      "title": "Официальное университетское сообщество",
+      "body": "UTAAB размещает своё официальное студенческое сообщество в Университете Турецкого Авиационного Общества (UTAA) в Анкаре, Турция.",
+      "linkLabel": "Открыть на thk.edu.tr",
+      "url": "https://www.thk.edu.tr/tr/student-clubs/turk-hava-kurumu-universitesi-blockchain-toplulugu"
     }
   },
   "learnHub": {
@@ -2083,6 +2094,56 @@
       "subtitle": "Напишите нам на contact@utaab.org или присоединяйтесь к сообществу — мы читаем каждое сообщение.",
       "button": "Присоединиться к сообществу",
       "email": "Написать нам"
+    }
+  },
+  "verifyCertificate": {
+    "pageTitle": "Проверка сертификата в Base — UTAAB",
+    "backHome": "На главную",
+    "badge": "Проверка сертификата",
+    "headingPrefix": "Проверка в",
+    "headingNetwork": "Base",
+    "subtitle": "Подтвердите, что сертификат UTAAB был официально выпущен и записан в блокчейн {{network}} как непередаваемый soulbound-токен.",
+    "placeholder": "UTAAB-BB-2026-0001",
+    "submit": "Проверить",
+    "notConfigured": "Реестр в блокчейне ещё не настроен — проверка выполняется только по защищённому реестру.",
+    "networkError": "Не удалось подключиться к {{network}}. Повторите попытку позже.",
+    "unknownEvent": "Неизвестное мероприятие",
+    "defaultTitle": "Сертификат участника",
+    "trust": {
+      "onChainTitle": "В блокчейне {{network}}",
+      "onChainDesc": "Каждый сертификат записан как soulbound-токен.",
+      "tamperTitle": "Защищён от подделки",
+      "tamperDesc": "Криптографический хеш серийного номера, проверяемый через публичный RPC.",
+      "publicTitle": "Публичная проверка",
+      "publicDesc": "Любой может проверить — без аккаунта и API-ключа."
+    },
+    "result": {
+      "loading": "Проверяем блокчейн и реестр…",
+      "notFoundTitle": "Сертификат не найден",
+      "notFoundDesc": "По этому серийному номеру сертификат не найден. Проверьте номер и попробуйте снова.",
+      "errorTitle": "Ошибка проверки",
+      "validTitle": "Сертификат действителен",
+      "revokedTitle": "Сертификат отозван",
+      "validDesc": "Этот сертификат официально выпущен UTAAB и записан в блокчейн.",
+      "revokedDesc": "Этот сертификат был выпущен, но затем отозван UTAAB.",
+      "participant": "Участник",
+      "certificateTitle": "Название сертификата",
+      "speaker": "Спикер / Преподаватель",
+      "eventDate": "Дата мероприятия",
+      "location": "Место",
+      "issuedBy": "Выдан",
+      "partners": "Партнёры",
+      "serial": "Серийный номер",
+      "issuedOn": "Дата выпуска",
+      "revokedOn": "Дата отзыва",
+      "revocationReason": "Причина отзыва",
+      "network": "Сеть",
+      "networkValue": "Sepolia Testnet",
+      "transaction": "Транзакция",
+      "contract": "Контракт",
+      "viewPdf": "Открыть PDF",
+      "download": "Скачать",
+      "empty": "—"
     }
   }
 }
