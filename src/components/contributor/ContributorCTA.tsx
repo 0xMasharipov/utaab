@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { NavArrowRight, ChatBubble } from 'iconoir-react';
+import { NavArrowRight } from 'iconoir-react';
 import { useTranslation } from 'react-i18next';
 
 interface ContributorCTAProps {
@@ -41,7 +41,6 @@ const ContributorCTA = ({ onStartAssessment }: ContributorCTAProps) => {
             asChild
           >
             <a href="https://wa.me/message/UTAAB" target="_blank" rel="noopener noreferrer">
-              <ChatBubble className="w-5 h-5 mr-2" strokeWidth={1.5} />
               {t('contributor.cta.contactUtaab')}
             </a>
           </Button>
