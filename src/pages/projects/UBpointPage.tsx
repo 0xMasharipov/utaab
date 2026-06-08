@@ -346,7 +346,7 @@ const FloatingDevice = () => {
           animate={ready && loop ? { y: [0, -14, 0], rotateZ: [-1.5, 1.5, -1.5] } : undefined}
           transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <img
+          <FadeImg
             src={mockupAsset.url}
             alt="UBpoint mobile app interface"
             className="w-full h-auto drop-shadow-[0_30px_60px_rgba(37,99,235,0.35)]"
