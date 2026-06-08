@@ -1537,7 +1537,7 @@ const UBpointPageInner = () => {
               style={{ touchAction: 'none' }}
             >
               <div className="absolute inset-0 flex items-center justify-center">
-                <img src={logoAsset.url} alt="UBpoint" className="h-14 w-auto opacity-90" />
+                <FadeImg src={logoAsset.url} alt="UBpoint" className="h-14 w-auto opacity-90" />
               </div>
               <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
                 <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-blue-100 shadow-lg">
