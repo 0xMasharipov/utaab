@@ -1243,7 +1243,7 @@ class UBpointErrorBoundary extends Component<{ children: ReactNode }, { hasError
     if (!this.state.hasError) return this.props.children;
     return (
       <div className="min-h-screen bg-white text-slate-900 flex flex-col items-center justify-center px-6 text-center">
-        <img src={logoAsset.url} alt="UBpoint" className="h-12 w-auto mb-5 drop-shadow-[0_10px_30px_rgba(37,99,235,0.3)]" />
+        <FadeImg src={logoAsset.url} alt="UBpoint" className="h-12 w-auto mb-5 drop-shadow-[0_10px_30px_rgba(37,99,235,0.3)]" />
         <h1 className="text-2xl font-extrabold mb-2">UBpoint hit a snag</h1>
         <p className="text-slate-600 max-w-md mb-6">
           Something went wrong rendering this page. Please reload — your session is safe.
