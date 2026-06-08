@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import templateAsset from '@/assets/utaab-certificate-template.png.asset.json';
 
 const TEMPLATE_URL = templateAsset.url;
