@@ -68,10 +68,12 @@ export default function Certificate3D() {
           <img
             src={TEMPLATE_URL}
             alt="UTAAB certificate"
-            className="w-full h-full object-contain select-none pointer-events-none bg-[#0b1a33]"
+            className="w-full h-full object-contain select-none pointer-events-none bg-[#0b1a33] transition-opacity duration-700 ease-out"
+            style={{ opacity: loaded ? 1 : 0 }}
             draggable={false}
             loading="eager"
             decoding="async"
+            onLoad={() => setLoaded(true)}
           />
           <div
             aria-hidden
