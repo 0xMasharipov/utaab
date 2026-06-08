@@ -1,42 +1,35 @@
-## Problem
+## Goal
+Replace remaining static `<img>` tags on the UBpoint page and the Certificate 3D display with a fade-in-on-load behavior so newly added images don't pop in abruptly.
 
-Issuing a cert fails with `bad serial_hash`. Root cause: `cert_records.serial_hash` is stored in the DB as 64 hex chars **without** the `0x` prefix (confirmed: `7c1d00cd…` length 64). But both the client validator in `CertRecords.tsx` and the Zod schema in the `cert-issue-voucher` edge function require the `0x` prefix (`/^0x[0-9a-f]{64}$/`). So every row trips client-side validation as "bad serial_hash" before the request is even sent.
+## Scope
+Frontend / presentation only. No business logic, no asset changes.
 
-## Fix (single-file, frontend-only)
+### 1. UBpoint page (`src/pages/projects/UBpointPage.tsx`)
+The file already defines a local `FadeImg` component (line ~98) that wraps `<img>` and fades it in once `onLoad` fires. Several images still use raw `<img>` and load statically.
 
-Edit `src/pages/admin/cert/CertRecords.tsx`:
+Convert these raw `<img>` usages to `FadeImg` (keeping all existing props/classNames/sizes intact):
+- L349 mockup image (`mockupAsset.url`)
+- L413 `utaabCoinAsset`
+- L428 `tonCoinAsset`
+- L443 `btcCoinAsset`
+- L469 logo image
+- L938 `goldCoinAsset`
+- L1090 generic `src` image in inner component
+- L1142 carousel `c.src`
+- L1246 footer-area logo
+- L1540 final logo
 
-1. Replace
-   ```ts
-   const serialLower = (r.serial_hash || '').toLowerCase();
-   ```
-   with a normalization step that adds `0x` if the DB value is the bare 64-char form:
-   ```ts
-   const raw = (r.serial_hash || '').toLowerCase();
-   const serialLower = raw.startsWith('0x') ? raw : raw ? `0x${raw}` : '';
-   ```
-   (Equivalent to using the existing `fromDbHex` helper — already imported.)
+(Lines already using `FadeImg` at 141, 200, 681, 765 are left untouched.)
 
-2. No schema change. No edge function change. The edge function already accepts `0x`-prefixed hashes and the DB lookup uses `.eq('serial_hash', serial_hash)` against the lowercased prefixed value — but the row stores it un-prefixed, so we also need the edge function to match. **Check:** the edge function does `.eq('serial_hash', serial_hash)` with the `0x`-prefixed value — that won't match the un-prefixed DB value either.
+### 2. Certificate 3D (`src/components/cert/Certificate3D.tsx`)
+Add a lightweight fade-in to the certificate template `<img>` (L67): start at `opacity-0`, transition to `opacity-100` on `onLoad`. This matches the UBpoint fade style without introducing a new dependency.
 
-## Edge function fix (`supabase/functions/cert-issue-voucher/index.ts`)
-
-After Zod parse, strip the prefix for the DB lookup, but keep the prefixed form for the EIP-712 voucher:
-
-```ts
-const serialHashDb = serial_hash.slice(2); // for .eq() against cert_records.serial_hash
-// ...
-.eq('serial_hash', serialHashDb)
-```
-
-Keep `voucher.serialHash = serial_hash as Hex` (prefixed) unchanged — the on-chain contract expects `bytes32` with `0x`.
-
-## Why this is the right fix
-
-- `src/lib/certHash.ts` already documents the convention: "we store hex without 0x", with `toDbHex` / `fromDbHex` helpers. The admin page and edge function simply weren't following it.
-- Keeps the contract call correct (needs `0x`) and the DB row matchable (no `0x`).
+## Technical notes
+- Use the existing `FadeImg` component in UBpoint — no new component file.
+- For Certificate3D, inline the same pattern (local `useState` for `loaded`, `transition-opacity duration-500`) to avoid coupling cert components to UBpoint internals.
+- No changes to `AnimatedImage` component or other pages.
 
 ## Out of scope
-
-- Migrating existing rows to add `0x` (not needed; the helpers already encode the convention).
-- Any changes to the contract, ABI, claim flow, or PDF generation.
+- Admin upload preview, blog gallery, team cards (not mentioned).
+- Any PDF/contract/voucher logic.
+- New animations beyond opacity fade (no scale/blur) to stay consistent with the page's existing `FadeImg`.

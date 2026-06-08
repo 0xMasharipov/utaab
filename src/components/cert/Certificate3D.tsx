@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import templateAsset from '@/assets/utaab-certificate-template.png.asset.json';
 
 const TEMPLATE_URL = templateAsset.url;
@@ -10,6 +10,7 @@ const TEMPLATE_URL = templateAsset.url;
  */
 export default function Certificate3D() {
   const ref = useRef<HTMLDivElement>(null);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const reduceMotion =
@@ -67,10 +68,12 @@ export default function Certificate3D() {
           <img
             src={TEMPLATE_URL}
             alt="UTAAB certificate"
-            className="w-full h-full object-contain select-none pointer-events-none bg-[#0b1a33]"
+            className="w-full h-full object-contain select-none pointer-events-none bg-[#0b1a33] transition-opacity duration-700 ease-out"
+            style={{ opacity: loaded ? 1 : 0 }}
             draggable={false}
             loading="eager"
             decoding="async"
+            onLoad={() => setLoaded(true)}
           />
           <div
             aria-hidden

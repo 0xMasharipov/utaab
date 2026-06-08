@@ -346,7 +346,7 @@ const FloatingDevice = () => {
           animate={ready && loop ? { y: [0, -14, 0], rotateZ: [-1.5, 1.5, -1.5] } : undefined}
           transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <img
+          <FadeImg
             src={mockupAsset.url}
             alt="UBpoint mobile app interface"
             className="w-full h-auto drop-shadow-[0_30px_60px_rgba(37,99,235,0.35)]"
@@ -1243,7 +1243,7 @@ class UBpointErrorBoundary extends Component<{ children: ReactNode }, { hasError
     if (!this.state.hasError) return this.props.children;
     return (
       <div className="min-h-screen bg-white text-slate-900 flex flex-col items-center justify-center px-6 text-center">
-        <img src={logoAsset.url} alt="UBpoint" className="h-12 w-auto mb-5 drop-shadow-[0_10px_30px_rgba(37,99,235,0.3)]" />
+        <FadeImg src={logoAsset.url} alt="UBpoint" className="h-12 w-auto mb-5 drop-shadow-[0_10px_30px_rgba(37,99,235,0.3)]" />
         <h1 className="text-2xl font-extrabold mb-2">UBpoint hit a snag</h1>
         <p className="text-slate-600 max-w-md mb-6">
           Something went wrong rendering this page. Please reload — your session is safe.
@@ -1537,7 +1537,7 @@ const UBpointPageInner = () => {
               style={{ touchAction: 'none' }}
             >
               <div className="absolute inset-0 flex items-center justify-center">
-                <img src={logoAsset.url} alt="UBpoint" className="h-14 w-auto opacity-90" />
+                <FadeImg src={logoAsset.url} alt="UBpoint" className="h-14 w-auto opacity-90" />
               </div>
               <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
                 <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-blue-100 shadow-lg">
