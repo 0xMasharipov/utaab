@@ -10,6 +10,7 @@ const TEMPLATE_URL = templateAsset.url;
  */
 export default function Certificate3D() {
   const ref = useRef<HTMLDivElement>(null);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const reduceMotion =
