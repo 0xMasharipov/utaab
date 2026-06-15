@@ -123,7 +123,7 @@ const TonRaPage = () => {
                 <div className={`flex items-center gap-3 mb-5 md:mb-6 ${EYEBROW}`}>
                   <span className="text-foreground/60">01</span>
                   <span className="h-px w-8 bg-white/20" />
-                  <span>{t('projects.status.underDevelopment')}</span>
+                  <span>{t('projects.status.beta')}</span>
                 </div>
 
                 <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-5 md:mb-6 leading-[1.02]">

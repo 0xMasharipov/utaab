@@ -260,7 +260,8 @@
     "status": {
       "active": "نشط",
       "planning": "قيد التخطيط",
-      "underDevelopment": "قيد التطوير"
+      "underDevelopment": "قيد التطوير",
+      "beta": "بيتا — مباشر"
     },
     "ubp": {
       "title": "UBpoint — نظام نقاط UTAA للبلوكشين",

@@ -260,7 +260,8 @@
     "status": {
       "active": "Active",
       "planning": "Planning",
-      "underDevelopment": "Under Development"
+      "underDevelopment": "Under Development",
+      "beta": "Beta — Live"
     },
     "ubp": {
       "title": "UBpoint — UTAA Blockchain Point System",
