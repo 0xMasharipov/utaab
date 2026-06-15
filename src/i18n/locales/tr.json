@@ -260,7 +260,8 @@
     "status": {
       "active": "Aktif",
       "planning": "Planlama",
-      "underDevelopment": "Geliştirme Aşamasında"
+      "underDevelopment": "Geliştirme Aşamasında",
+      "beta": "Beta — Yayında"
     },
     "ubp": {
       "title": "UBpoint — UTAA Blockchain Puan Sistemi",

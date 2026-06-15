@@ -260,7 +260,8 @@
     "status": {
       "active": "Активный",
       "planning": "Планирование",
-      "underDevelopment": "В разработке"
+      "underDevelopment": "В разработке",
+      "beta": "Бета — В сети"
     },
     "ubp": {
       "title": "UBpoint — Система баллов UTAA Blockchain",

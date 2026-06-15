@@ -7,7 +7,7 @@ import { ArrowUpRight } from 'lucide-react';
 import GlassCard from '@/components/glass/GlassCard';
 import AnimatedImage from '@/components/common/AnimatedImage';
 
-type ProjectStatus = 'underDevelopment' | 'planning';
+type ProjectStatus = 'underDevelopment' | 'planning' | 'beta';
 
 interface Project {
   titleKey: string;
@@ -28,7 +28,7 @@ export const Projects = () => {
       titleKey: 'projects.ubp.title',
       descriptionKey: 'projects.ubp.description',
       tags: ['projects.tags.rewards', 'projects.tags.community', 'projects.tags.engagement'],
-      status: 'underDevelopment',
+      status: 'beta',
       image: '/images/projects/UTAAB_UBP.webp',
       href: '/projects/ubpoint',
     },
@@ -36,7 +36,7 @@ export const Projects = () => {
       titleKey: 'projects.tonra.title',
       descriptionKey: 'projects.tonra.description',
       tags: ['projects.tags.ton', 'projects.tags.research', 'projects.tags.academic'],
-      status: 'underDevelopment',
+      status: 'beta',
       image: '/images/projects/UTAAB_TonRa.webp',
       href: '/projects/tonra',
     },
@@ -132,7 +132,9 @@ export const Projects = () => {
                   <div className="mb-3">
                     <span
                       className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-semibold ${
-                        project.status === 'underDevelopment'
+                        project.status === 'beta'
+                          ? 'bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/30'
+                          : project.status === 'underDevelopment'
                           ? 'bg-accent/15 text-accent'
                           : 'bg-muted/30 text-muted-foreground'
                       }`}
