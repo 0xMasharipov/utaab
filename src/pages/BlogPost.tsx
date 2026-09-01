@@ -22,7 +22,12 @@ import SEO from '@/components/SEO';
 interface ContentBlock {
   type: string;
   content?: string;
+  /** Some posts store the block body under `text` instead of `content`. */
+  text?: string;
   url?: string;
+  src?: string;
+  image?: string;
+  caption?: string;
   alt?: string;
   language?: string;
   level?: number;
@@ -30,33 +35,39 @@ interface ContentBlock {
 }
 
 const RenderBlock = ({ block, onImageClick }: { block: ContentBlock; onImageClick?: () => void }) => {
+  // Normalize alternate field names used by different editor versions
+  const body = block.content ?? block.text ?? '';
+  const src = block.url || block.src || block.image;
+  const caption = block.alt || block.caption;
+
   switch (block.type) {
     case 'heading':
       const HeadingTag = `h${block.level || 2}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
-      return <HeadingTag className="text-foreground font-bold mt-8 mb-4">{block.content}</HeadingTag>;
+      return <HeadingTag className="text-foreground font-bold mt-8 mb-4">{body}</HeadingTag>;
     case 'paragraph':
-      return <p className="text-muted-foreground leading-relaxed mb-4">{block.content}</p>;
+    case 'text':
+      return <p className="text-muted-foreground leading-relaxed mb-4">{body}</p>;
     case 'quote':
-      return <blockquote className="border-l-4 border-accent pl-4 py-2 my-6 italic text-muted-foreground">{block.content}</blockquote>;
+      return <blockquote className="border-l-4 border-accent pl-4 py-2 my-6 italic text-muted-foreground">{body}</blockquote>;
     case 'code':
-      return <pre className="bg-white/[0.03] border border-white/10 rounded-xl p-4 my-6 overflow-x-auto text-sm font-mono text-foreground"><code>{block.content}</code></pre>;
+      return <pre className="bg-white/[0.03] border border-white/10 rounded-xl p-4 my-6 overflow-x-auto text-sm font-mono text-foreground"><code>{body}</code></pre>;
     case 'image':
       return (
         <figure className="my-6 cursor-pointer" onClick={onImageClick}>
-          <AnimatedImage src={block.url} alt={block.alt || ''} className="w-full rounded-xl hover:scale-[1.01] transition-transform duration-300" loading="lazy" />
-          {block.alt && <figcaption className="text-center text-xs text-muted-foreground mt-2">{block.alt}</figcaption>}
+          <AnimatedImage src={src} alt={caption || ''} className="w-full rounded-xl hover:scale-[1.01] transition-transform duration-300" loading="lazy" />
+          {caption && <figcaption className="text-center text-xs text-muted-foreground mt-2">{caption}</figcaption>}
         </figure>
       );
     case 'video':
-      if (block.url?.includes('youtube') || block.url?.includes('youtu.be')) {
-        const vid = block.url.match(/(?:v=|youtu\.be\/)([^&]+)/)?.[1];
+      if (src?.includes('youtube') || src?.includes('youtu.be')) {
+        const vid = src.match(/(?:v=|youtu\.be\/)([^&]+)/)?.[1];
         return <div className="aspect-video my-6 rounded-xl overflow-hidden"><iframe src={`https://www.youtube.com/embed/${vid}`} className="w-full h-full" allowFullScreen title="Video" /></div>;
       }
-      return <video src={block.url} controls className="w-full rounded-xl my-6" />;
+      return <video src={src} controls className="w-full rounded-xl my-6" />;
     case 'list':
       return <ul className="list-disc list-inside space-y-1 text-muted-foreground mb-4">{block.items?.map((item, i) => <li key={i}>{item}</li>)}</ul>;
     default:
-      return null;
+      return body ? <p className="text-muted-foreground leading-relaxed mb-4">{body}</p> : null;
   }
 };
 
