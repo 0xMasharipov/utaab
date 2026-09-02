@@ -3,7 +3,6 @@ import { motion, useInView, useReducedMotion } from 'framer-motion';
 import { useRef, useState, KeyboardEvent } from 'react';
 import { NavArrowRight } from 'iconoir-react';
 import { Link } from 'react-router-dom';
-import { GraduationCap, Boxes, Network, HeartHandshake, LucideIcon } from 'lucide-react';
 import GlassCard from '@/components/glass/GlassCard';
 import AnimatedImage from '@/components/common/AnimatedImage';
 import { NUMERAL } from '@/lib/designTokens';
@@ -13,7 +12,6 @@ interface BuildCard {
   image: string;
   titleKey: string;
   descriptionKey: string;
-  Icon: LucideIcon;
 }
 
 const cards: BuildCard[] = [
@@ -21,25 +19,21 @@ const cards: BuildCard[] = [
     image: '/images/about/UTAAB_Education.webp',
     titleKey: 'about.cards.education.title',
     descriptionKey: 'about.cards.education.description',
-    Icon: GraduationCap,
   },
   {
     image: '/images/about/UTAAB_Projects_1.webp',
     titleKey: 'about.cards.projects.title',
     descriptionKey: 'about.cards.projects.description',
-    Icon: Boxes,
   },
   {
     image: '/images/about/UTAAB_Ecosystem.webp',
     titleKey: 'about.cards.ecosystem.title',
     descriptionKey: 'about.cards.ecosystem.description',
-    Icon: Network,
   },
   {
     image: '/images/about/UTAAB_Support.webp',
     titleKey: 'about.cards.support.title',
     descriptionKey: 'about.cards.support.description',
-    Icon: HeartHandshake,
   },
 ];
 
@@ -113,7 +107,6 @@ export const AboutBlurb = () => {
         >
           {cards.map((card, index) => {
             const isActive = index === activeIndex;
-            const { Icon } = card;
             return (
               <motion.div
                 key={card.titleKey}
@@ -204,27 +197,16 @@ export const AboutBlurb = () => {
 
                   {/* Content */}
                   <div className="absolute inset-x-0 bottom-0 z-30 p-5 lg:p-7">
-                    <div
-                      className={cn(
-                        'mb-3 inline-flex h-9 w-9 items-center justify-center rounded-xl border transition-colors duration-500',
-                        isActive
-                          ? 'bg-primary/20 border-accent/30 text-accent'
-                          : 'bg-white/[0.05] border-white/10 text-foreground/60'
-                      )}
-                    >
-                      <Icon className="h-[18px] w-[18px]" aria-hidden="true" />
-                    </div>
-
                     <motion.div
                       animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 8 }}
                       transition={{ duration: prefersReducedMotion ? 0 : 0.35, delay: isActive ? 0.08 : 0 }}
                       className={cn(!isActive && 'pointer-events-none h-0 overflow-hidden')}
                     >
-                      <h3 className="text-lg lg:text-xl font-bold text-foreground whitespace-nowrap">
+                      <h3 className="text-xl lg:text-3xl font-extrabold text-foreground whitespace-nowrap">
                         {t(card.titleKey)}
                       </h3>
-                      <div className="mt-2 mb-3 h-px w-12 bg-gradient-to-r from-accent/70 to-transparent" />
-                      <p className="text-sm text-muted-foreground leading-relaxed max-w-sm">
+                      <div className="mt-3 mb-4 h-px w-16 bg-gradient-to-r from-accent/70 to-transparent" />
+                      <p className="text-sm lg:text-base text-muted-foreground leading-relaxed max-w-[34rem]">
                         {t(card.descriptionKey)}
                       </p>
                     </motion.div>
@@ -237,9 +219,7 @@ export const AboutBlurb = () => {
 
         {/* Stack — mobile */}
         <div className="md:hidden flex flex-col gap-4 mb-10">
-          {cards.map((card, index) => {
-            const { Icon } = card;
-            return (
+          {cards.map((card, index) => (
               <motion.div
                 key={card.titleKey}
                 initial={{ opacity: 0, y: 20 }}
@@ -267,24 +247,18 @@ export const AboutBlurb = () => {
                     aria-hidden="true"
                   />
                   <div className="relative z-30 p-5">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-primary/20 border border-accent/30 text-accent">
-                        <Icon className="h-[18px] w-[18px]" aria-hidden="true" />
-                      </div>
-                      <span className={cn(NUMERAL, 'text-xl')} aria-hidden="true">
-                        {String(index + 1).padStart(2, '0')}
-                      </span>
-                    </div>
-                    <h3 className="text-lg font-bold text-foreground">{t(card.titleKey)}</h3>
+                    <span className={cn(NUMERAL, 'block mb-2 text-xl')} aria-hidden="true">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    <h3 className="text-xl font-bold text-foreground">{t(card.titleKey)}</h3>
                     <div className="mt-2 mb-2 h-px w-12 bg-gradient-to-r from-accent/70 to-transparent" />
-                    <p className="text-sm text-muted-foreground leading-relaxed max-w-[75%]">
+                    <p className="text-sm text-muted-foreground leading-relaxed max-w-[80%]">
                       {t(card.descriptionKey)}
                     </p>
                   </div>
                 </GlassCard>
               </motion.div>
-            );
-          })}
+          ))}
         </div>
 
         <motion.div
