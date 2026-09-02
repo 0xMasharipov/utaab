@@ -130,16 +130,18 @@ export const LanguageGrid = ({
   onSelect?: (code: string) => void;
 }) => {
   const { i18n } = useTranslation();
+  const activeCode = resolveLanguage(i18n.language).code;
 
   const changeLanguage = (code: string) => {
-    if (code !== i18n.language) void i18n.changeLanguage(code);
+    if (code !== activeCode) void i18n.changeLanguage(code);
     onSelect?.(code);
   };
 
   return (
     <div className={cn('grid grid-cols-2 gap-2', className)}>
       {LANGUAGES.map((lang) => {
-        const isActive = lang.code === i18n.language;
+        const isActive = lang.code === activeCode;
+
         return (
           <button
             key={lang.code}
