@@ -206,9 +206,17 @@ export const Events = () => {
               <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4 sm:mb-6 px-2">
                 {t('events.past')}
               </h3>
-              {pastEvents.length > 0 ? (
+              {pastBanners.length > 0 ? (
+                <CoverflowCarousel
+                  items={pastBanners.map((event, index) => renderPastBanner(event, index))}
+                  images={pastBanners.map((e) => e.cover_image as string)}
+                  cardAspectRatio={4 / 5}
+                  ariaLabel={t('events.past')}
+                  className="mt-2"
+                />
+              ) : pastSorted.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {pastEvents.map((event, index) => renderEventCard(event, index))}
+                  {pastSorted.map((event, index) => renderEventCard(event, index))}
                 </div>
               ) : (
                 <div className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-center">
@@ -216,6 +224,7 @@ export const Events = () => {
                 </div>
               )}
             </div>
+
           </>
         )}
       </div>
