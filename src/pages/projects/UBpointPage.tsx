@@ -532,7 +532,7 @@ const FeatureGrid = () => {
           transition={{ duration: 0.6 }}
           className="text-center max-w-2xl mx-auto mb-10 sm:mb-16"
         >
-          <div className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-4">
+          <div className="text-xs uppercase tracking-[0.2em] text-blue-700/80 font-semibold mb-4">
             {t('projects.ubpointPage.features.eyebrow')}
           </div>
           <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
@@ -681,7 +681,7 @@ const MockScreen: React.FC<{ kind: typeof showcaseDefs[number]['kind'] }> = ({ k
         <FadeImg src={logoAsset.url} alt="UBpoint" className="h-4 w-auto object-contain" />
         <span className="text-[11px] font-bold text-slate-900">UBpoint.</span>
       </div>
-      <div className="px-2 py-0.5 rounded-full bg-blue-50 text-[9px] font-bold text-blue-700">200 UBP</div>
+      <div className="text-[9px] font-bold text-blue-700">200 UBP</div>
     </div>
   );
 
@@ -878,7 +878,7 @@ const Showcase = () => {
   return (
     <section id="showcase" className="relative py-16 sm:py-24 md:py-32 bg-gradient-to-b from-white via-blue-50/40 to-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-5 sm:px-6 mb-10 sm:mb-14 text-center">
-        <div className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-4">
+        <div className="text-xs uppercase tracking-[0.2em] text-blue-700/80 font-semibold mb-4">
           {t('projects.ubpointPage.showcase.eyebrow')}
         </div>
         <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
@@ -952,7 +952,7 @@ const Sponsors = () => {
           viewport={{ once: true, amount: 0.05 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-5">
+          <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-blue-700/80 font-semibold mb-5">
             <Building2 className="w-3.5 h-3.5" />
             {t('projects.ubpointPage.sponsors.eyebrow')}
           </div>
