@@ -45,8 +45,9 @@ export const LanguageSelector = ({
   const isRTL = i18n.language === 'ar';
 
   const changeLanguage = (code: string) => {
-    if (code !== i18n.language) void i18n.changeLanguage(code);
+    if (code !== current.code) void i18n.changeLanguage(code);
   };
+
 
   return (
     <DropdownMenu>
