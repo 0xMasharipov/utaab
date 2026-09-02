@@ -190,14 +190,14 @@ export const CoverflowCarousel = ({
       const rotate = -clampedD * (maxRotationDegrees / 1.6);
       const depth = -Math.min(ad, 3) * (maxDepthPx / 1.6);
       const scale = Math.max(minScale, 1 - Math.min(ad, 3) * (1 - minScale) / 1.4);
-      const x = d * (cardWidthRef.current + cardGap);
+      const x = d * (cardWidthRef.current + gapRef.current);
       const opacity = ad > 3.2 ? 0 : clamp(1 - Math.max(0, ad - 1.4) * 0.42, 0, 1);
       node.style.transform = `translate3d(calc(-50% + ${x}px), 0, 0) perspective(1400px) rotateY(${rotate}deg) translateZ(${depth}px) scale(${scale})`;
       node.style.opacity = String(opacity);
       node.style.zIndex = String(100 - Math.round(ad * 10));
       node.style.pointerEvents = ad > 3.2 ? 'none' : 'auto';
     }
-  }, [cardGap, maxDepthPx, maxRotationDegrees, minScale]);
+  }, [maxDepthPx, maxRotationDegrees, minScale]);
 
   const setActive = useCallback(
     (idx: number) => {
