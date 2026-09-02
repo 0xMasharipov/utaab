@@ -356,7 +356,7 @@ const FloatingDevice = () => {
       </motion.div>
 
       <motion.div
-        className="absolute left-0 sm:-left-4 md:-left-12 top-8 sm:top-12 backdrop-blur-xl bg-white/80 border border-blue-100 rounded-2xl px-3 py-2 sm:px-3.5 sm:py-2.5 shadow-xl flex items-center gap-2"
+        className="absolute left-0 sm:-left-4 md:-left-12 top-8 sm:top-12 flex items-center gap-2 text-slate-700"
         initial={{ opacity: 0, scale: 0.3, y: 0 }}
         animate={ready
           ? (loop ? { opacity: 1, scale: 1, y: [0, -8, 0] } : { opacity: 1, scale: 1, y: 0 })
@@ -370,9 +370,7 @@ const FloatingDevice = () => {
             }
           : splashTransition(9)}
       >
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shrink-0">
-          <BadgeCheck className="w-4 h-4 text-white" />
-        </div>
+        <BadgeCheck className="w-4 h-4 text-blue-600 shrink-0" />
         <div className="text-left">
           <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">{t('projects.ubpointPage.hero.earned')}</div>
           <div className="text-sm font-bold text-slate-900">{t('projects.ubpointPage.hero.ubp50')}</div>
@@ -380,7 +378,7 @@ const FloatingDevice = () => {
       </motion.div>
 
       <motion.div
-        className="absolute right-0 sm:-right-2 md:-right-10 bottom-20 sm:bottom-24 backdrop-blur-xl bg-white/80 border border-blue-100 rounded-2xl px-3 py-2 sm:px-3.5 sm:py-2.5 shadow-xl flex items-center gap-2"
+        className="absolute right-0 sm:-right-2 md:-right-10 bottom-20 sm:bottom-24 flex items-center gap-2 text-slate-700"
         initial={{ opacity: 0, scale: 0.3, y: 0 }}
         animate={ready
           ? (loop ? { opacity: 1, scale: 1, y: [0, 10, 0] } : { opacity: 1, scale: 1, y: 0 })
@@ -394,9 +392,7 @@ const FloatingDevice = () => {
             }
           : splashTransition(10)}
       >
-        <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
-          <ShieldCheck className="w-4 h-4 text-blue-600" />
-        </div>
+        <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0" />
         <div className="text-left">
           <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">{t('projects.ubpointPage.hero.onChain')}</div>
           <div className="text-sm font-bold text-slate-900">{t('projects.ubpointPage.hero.verifiedBase')}</div>
