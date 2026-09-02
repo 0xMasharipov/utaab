@@ -105,18 +105,49 @@ export const BlockchainAndMoney = () => {
     const lecture = mitBlockchainLectures.find(l => l.id === id);
     if (lecture) {
       setCurrentLecture(lecture);
+      watchedSecondsRef.current = 0;
+      setStartAt(resumeSecondsFor(id));
       setSearchParams({ lecture: id.toString() });
       localStorage.setItem('mitocw-last-lecture', id.toString());
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
+  // Resume position for the lecture that is already selected (e.g. deep link).
+  useEffect(() => {
+    setStartAt(resumeSecondsFor(currentLecture.id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentLecture.id, resumeSecondsFor]);
+
+  const handleProgress = useCallback(
+    (percent: number, currentTime: number) => {
+      watchedSecondsRef.current = currentTime;
+
+      if (isSignedIn) {
+        saveProgress(currentLecture.id, percent, currentTime);
+        return;
+      }
+
+      // Anonymous viewers get a gentle prompt after a minute of watching.
+      if (authReady && !gateDismissed && currentTime >= GATE_AFTER_SECONDS) {
+        setGateDismissed(true);
+        setPauseSignal((n) => n + 1);
+        setGateOpen(true);
+      }
+    },
+    [isSignedIn, authReady, gateDismissed, saveProgress, currentLecture.id],
+  );
+
   const handleVideoEnd = () => {
+    if (isSignedIn) {
+      saveProgress(currentLecture.id, 100, watchedSecondsRef.current, true);
+    }
     const currentIndex = mitBlockchainLectures.findIndex(l => l.id === currentLecture.id);
     if (currentIndex < mitBlockchainLectures.length - 1) {
       handleLectureSelect(mitBlockchainLectures[currentIndex + 1].id);
     }
   };
+
 
   const goToPrevious = () => {
     const currentIndex = mitBlockchainLectures.findIndex(l => l.id === currentLecture.id);
