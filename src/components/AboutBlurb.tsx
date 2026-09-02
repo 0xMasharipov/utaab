@@ -226,37 +226,53 @@ export const AboutBlurb = () => {
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.5, delay: 0.15 + index * 0.08 }}
               >
-                <GlassCard className="relative overflow-hidden min-h-[180px] p-0">
-                  <div className="absolute inset-0 z-0 opacity-[0.05]" style={GRID_LAYER} aria-hidden="true" />
+                <GlassCard className="relative overflow-hidden h-[300px] p-0 border-white/20 shadow-[0_18px_60px_-20px_hsl(213_94%_68%/0.45)]">
+                  {/* Technical grid */}
+                  <div className="absolute inset-0 z-0 opacity-[0.07]" style={GRID_LAYER} aria-hidden="true" />
+
+                  {/* Accent wash */}
+                  <div
+                    className="absolute inset-0 z-[1]"
+                    style={{
+                      background:
+                        'radial-gradient(120% 90% at 50% 110%, hsl(213 94% 68% / 0.18) 0%, transparent 65%)',
+                    }}
+                    aria-hidden="true"
+                  />
+
+                  {/* Artwork */}
                   <AnimatedImage
                     src={card.image}
                     alt=""
                     aria-hidden="true"
                     loading="lazy"
-                    sizes="45vw"
-                    containerClassName="absolute right-0 bottom-0 w-[52%] h-[92%] z-10 opacity-70"
-                    className="w-full h-full object-contain object-right-bottom drop-shadow-[0_8px_24px_rgba(59,130,246,0.18)]"
+                    sizes="60vw"
+                    containerClassName="absolute z-10 right-[1%] bottom-[22%] w-[56%] h-[52%] opacity-95"
+                    className="w-full h-full object-contain object-right-bottom drop-shadow-[0_10px_30px_rgba(59,130,246,0.22)]"
                     placeholderClassName="opacity-0"
                   />
-                  <div
-                    className="absolute inset-0 z-20"
-                    style={{
-                      background:
-                        'linear-gradient(to right, hsl(217 50% 8% / 0.95) 30%, hsl(217 50% 8% / 0.55) 70%, transparent 100%)',
-                    }}
+
+                  {/* Bottom gradient */}
+                  <div className="absolute inset-0 z-20" style={{ background: OVERLAY }} aria-hidden="true" />
+
+                  {/* Index numeral */}
+                  <span
+                    className={cn(NUMERAL, 'absolute top-4 left-4 z-30 text-2xl text-foreground/40')}
                     aria-hidden="true"
-                  />
-                  <div className="relative z-30 p-5">
-                    <span className={cn(NUMERAL, 'block mb-2 text-xl')} aria-hidden="true">
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
-                    <h3 className="text-xl font-bold text-foreground">{t(card.titleKey)}</h3>
-                    <div className="mt-2 mb-2 h-px w-12 bg-gradient-to-r from-accent/70 to-transparent" />
-                    <p className="text-sm text-muted-foreground leading-relaxed max-w-[80%]">
+                  >
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+
+                  {/* Content */}
+                  <div className="absolute inset-x-0 bottom-0 z-30 p-5">
+                    <h3 className="text-xl font-extrabold text-foreground">{t(card.titleKey)}</h3>
+                    <div className="mt-3 mb-4 h-px w-16 bg-gradient-to-r from-accent/70 to-transparent" />
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       {t(card.descriptionKey)}
                     </p>
                   </div>
                 </GlassCard>
+
               </motion.div>
           ))}
         </div>
