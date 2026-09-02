@@ -144,14 +144,19 @@ export const CoverflowCarousel = ({
     if (!el) return;
     const measure = () => {
       const w = el.clientWidth;
-      const next = w < 640 ? Math.min(w - 64, 300) : clamp(w * 0.32, 280, 380);
+      const isMobile = w < 640;
+      const next = isMobile
+        ? clamp(w * 0.62, 200, 300)
+        : clamp(w * 0.32, 280, 380);
       setCardWidth(Math.round(next));
+      setEffectiveGap(isMobile ? Math.round(cardGap * 0.5) : cardGap);
     };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
-  }, []);
+  }, [cardGap]);
+
 
   // Dominant colours for the gradient backdrop.
   useEffect(() => {
