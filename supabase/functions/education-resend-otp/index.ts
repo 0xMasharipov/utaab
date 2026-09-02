@@ -2,7 +2,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { z } from 'https://esm.sh/zod@3.23.8';
 import { getCorsHeaders } from '../_shared/cors.ts';
-import { enqueueSignupEmail, resolveRedirect } from '../_shared/signup-email.ts';
+import { sendSignupEmail, resolveRedirect } from '../_shared/signup-email.ts';
 
 const BodySchema = z.object({
   email: z.string().trim().email().max(254),
@@ -65,7 +65,7 @@ serve(async (req) => {
     }
 
     const otp = link?.properties?.email_otp ?? null;
-    const emailSent = await enqueueSignupEmail(admin, email, actionLink, otp);
+    const emailSent = await sendSignupEmail(admin, email, actionLink, otp);
 
     return jsonResponse(req, {
       success: true,
