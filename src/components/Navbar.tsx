@@ -385,22 +385,10 @@ export const Navbar = () => {
                 </div>
 
                 {/* Right: Language selector */}
-                <div className="flex items-center gap-1 flex-wrap justify-center sm:justify-end">
-                  {languages.map((lang) => (
-                    <button
-                      key={lang.code}
-                      onClick={() => changeLanguage(lang.code)}
-                      className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full transition-all duration-200 text-xs ${
-                        i18n.language === lang.code
-                          ? 'bg-white/[0.12] text-white font-medium'
-                          : 'hover:bg-white/[0.06] text-white/50'
-                      }`}
-                    >
-                      <span>{lang.flag}</span>
-                      <span className="hidden md:inline">{lang.name}</span>
-                    </button>
-                  ))}
+                <div className="w-full sm:w-auto sm:max-w-[320px]">
+                  <LanguageGrid />
                 </div>
+
               </div>
             </div>
           </div>
