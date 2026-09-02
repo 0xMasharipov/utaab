@@ -144,7 +144,7 @@ export const Hero = () => {
                 textTransform: 'uppercase' as const,
               }}
             >
-              {t('hero.tagline')}
+              
             </span>
           </div>
 
