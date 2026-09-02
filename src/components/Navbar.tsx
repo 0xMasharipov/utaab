@@ -1,26 +1,15 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Xmark, Globe, NavArrowDown, User } from 'iconoir-react';
+import { Xmark, User } from 'iconoir-react';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 // framer-motion removed from critical path — CSS animations used instead
 import { cn } from '@/lib/utils';
 import logo from '@/assets/logo-new-small.webp';
 import { BrandText } from '@/components/common/BrandText';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
+import { LanguageSelector, LanguageGrid } from '@/components/common/LanguageSelector';
 
-const languages = [
-  { code: 'en', name: 'English', flag: '🇬🇧' },
-  { code: 'tr', name: 'Türkçe', flag: '🇹🇷' },
-  { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-  { code: 'ar', name: 'العربية', flag: '🇸🇦' },
-];
 
 export const Navbar = () => {
   const { t, i18n } = useTranslation();
