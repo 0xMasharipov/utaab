@@ -52,7 +52,7 @@ export const BlogCard = ({ post, index = 0, priority = false }: BlogCardProps) =
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 containerClassName="w-full h-full"
                 loading={priority ? 'eager' : 'lazy'}
-                fetchPriority={priority ? 'high' : 'auto'}
+                {...(priority ? { fetchpriority: 'high' } : {})}
                 sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
