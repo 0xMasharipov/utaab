@@ -52,8 +52,9 @@ export const BlogSection = () => {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {posts.map((post, i) => (
-                <BlogCard key={post.id} post={post} index={i} />
+                <BlogCard key={post.id} post={post} index={i} priority={i < 3} />
               ))}
+
             </div>
             <motion.div
               initial={{ opacity: 0, y: 10 }}
