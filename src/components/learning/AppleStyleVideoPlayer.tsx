@@ -12,6 +12,14 @@ interface AppleStyleVideoPlayerProps {
     ru?: string;
     ar?: string;
   };
+  /** Resume position in seconds, applied once metadata is loaded. */
+  startAt?: number;
+  /** Fired on every timeupdate with watched percentage and current time. */
+  onProgress?: (percent: number, currentTime: number) => void;
+  /** Fired when playback starts / stops. */
+  onPlayStateChange?: (playing: boolean) => void;
+  /** Increment this number to force the video to pause (e.g. to show a gate dialog). */
+  pauseSignal?: number;
 }
 
 export const AppleStyleVideoPlayer = ({ 
@@ -19,8 +27,13 @@ export const AppleStyleVideoPlayer = ({
   title, 
   onVideoEnd,
   autoplay = false,
-  subtitles
+  subtitles,
+  startAt,
+  onProgress,
+  onPlayStateChange,
+  pauseSignal
 }: AppleStyleVideoPlayerProps) => {
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
