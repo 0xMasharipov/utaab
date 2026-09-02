@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next';
 import { User, Linkedin, X } from 'lucide-react';
 import {
   Dialog,
@@ -6,17 +5,17 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import AnimatedImage from '@/components/common/AnimatedImage';
-import type { TeamMember } from './TeamOverlapCard';
+import type { TeamMemberView } from '@/hooks/useTeamMembers';
 
 interface TeamProfileModalProps {
-  member: TeamMember | null;
+  member: TeamMemberView | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
 const TeamProfileModal = ({ member, open, onOpenChange }: TeamProfileModalProps) => {
-  const { t } = useTranslation();
   if (!member) return null;
+  const showTag = member.tag.trim().toLowerCase() !== member.position.trim().toLowerCase();
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -27,7 +26,7 @@ const TeamProfileModal = ({ member, open, onOpenChange }: TeamProfileModalProps)
             {member.image ? (
               <AnimatedImage
                 src={member.image}
-                alt={t(`team.members.${member.key}.name`)}
+                alt={member.name}
                 className="w-full h-full object-cover"
                 containerClassName="w-full h-full"
               />
@@ -50,18 +49,18 @@ const TeamProfileModal = ({ member, open, onOpenChange }: TeamProfileModalProps)
 
           {/* Content */}
           <div className="p-6 sm:p-8">
-            <DialogTitle className="sr-only">{t(`team.members.${member.key}.name`)}</DialogTitle>
+            <DialogTitle className="sr-only">{member.name}</DialogTitle>
             <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary mb-2 block">
-              {member.tag}
+              {showTag && member.tag}
             </span>
             <h2 className="font-bold text-2xl mb-1" style={{ fontFamily: 'Montserrat, sans-serif', color: '#F8FAFC' }}>
-              {t(`team.members.${member.key}.name`)}
+              {member.name}
             </h2>
             <p className="text-sm font-semibold mb-4" style={{ color: '#93C5FD' }}>
-              {t(`team.members.${member.key}.position`)}
+              {member.position}
             </p>
             <p className="text-sm leading-relaxed mb-6" style={{ color: 'rgba(226,232,240,0.78)' }}>
-              {t(`team.members.${member.key}.description`)}
+              {member.description}
             </p>
             {member.linkedin && (
               <a
@@ -69,7 +68,7 @@ const TeamProfileModal = ({ member, open, onOpenChange }: TeamProfileModalProps)
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/[0.06] border border-white/[0.1] hover:border-primary/30 hover:bg-white/[0.12] transition-all text-sm text-muted-foreground hover:text-primary"
-                aria-label={`View ${t(`team.members.${member.key}.name`)}'s LinkedIn profile`}
+                aria-label={`View ${member.name}'s LinkedIn profile`}
               >
                 <Linkedin className="h-4 w-4" />
                 LinkedIn

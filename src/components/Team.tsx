@@ -4,32 +4,7 @@ import { User } from 'iconoir-react';
 import GlassCard from '@/components/glass/GlassCard';
 import GlassSectionWrapper from '@/components/glass/GlassSectionWrapper';
 import AnimatedImage from '@/components/common/AnimatedImage';
-
-import zinurbekImg from '@/assets/team/zinurbek.png';
-import umutImg from '@/assets/team/umut.png';
-import abdullaImg from '@/assets/team/abdulla.png';
-import yunusImg from '@/assets/team/yunus.png';
-import abdulbakiImg from '@/assets/team/abdulbaki.png';
-import yanaImg from '@/assets/team/yana.png';
-import shuaybImg from '@/assets/team/shuayb.png';
-import ibrahimImg from '@/assets/team/ibrahim.png';
-import burakImg from '@/assets/team/burak.png';
-import anarImg from '@/assets/team/anar.png';
-import mehmetBarukImg from '@/assets/team/mehmet-baruk.png';
-
-const teamMembers = [
-  { key: 'mehmetBaruk', image: mehmetBarukImg },
-  { key: 'zinurbek', image: zinurbekImg },
-  { key: 'yunus', image: yunusImg },
-  { key: 'abdulla', image: abdullaImg },
-  { key: 'abdulbaki', image: abdulbakiImg },
-  { key: 'umut', image: umutImg },
-  { key: 'anar', image: anarImg },
-  { key: 'burak', image: burakImg },
-  { key: 'yana', image: yanaImg },
-  { key: 'shuayb', image: shuaybImg },
-  { key: 'ibrahim', image: ibrahimImg },
-];
+import { useTeamMembers } from '@/hooks/useTeamMembers';
 
 const containerVariants = {
   hidden: {},
@@ -43,8 +18,10 @@ const cardVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' as const } },
 };
 
+
 export const Team = () => {
   const { t } = useTranslation();
+  const { members } = useTeamMembers();
 
   return (
     <GlassSectionWrapper id="team">
@@ -75,8 +52,8 @@ export const Team = () => {
         viewport={{ once: true, margin: '-50px' }}
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 sm:gap-6"
       >
-        {teamMembers.map((member) => (
-          <motion.div key={member.key} variants={cardVariants}>
+        {members.map((member) => (
+          <motion.div key={member.id} variants={cardVariants}>
             <GlassCard hover glow className="p-6 text-center group">
               <div className="w-20 h-20 mx-auto mb-4 rounded-full p-[2px] bg-gradient-to-br from-accent/30 via-primary/20 to-accent/15">
                 <div className="w-full h-full rounded-full overflow-hidden bg-muted/20 flex items-center justify-center">
@@ -94,13 +71,13 @@ export const Team = () => {
               </div>
 
               <h3 className="text-foreground font-semibold text-lg mb-1">
-                {t(`team.members.${member.key}.name`)}
+                {member.name}
               </h3>
               <p className="text-accent text-sm font-medium mb-3">
-                {t(`team.members.${member.key}.position`)}
+                {member.position}
               </p>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                {t(`team.members.${member.key}.description`)}
+                {member.description}
               </p>
             </GlassCard>
           </motion.div>

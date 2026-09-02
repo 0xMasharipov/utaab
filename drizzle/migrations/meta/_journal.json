@@ -36,6 +36,20 @@
       "when": 1788331846558,
       "tag": "0004_fix_courses_instructor_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1788370707271,
+      "tag": "0005_team_members_public_read",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1788370719701,
+      "tag": "0006_team_public_view_hides_contact",
+      "breakpoints": true
     }
   ]
 }

@@ -33,6 +33,7 @@ const AdminAuditLog = lazy(() => import("./pages/education/admin/AdminAuditLog")
 const AdminSecurity = lazy(() => import("./pages/education/admin/AdminSecurity").then(m => ({ default: m.AdminSecurity })));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 const AdminEvents = lazy(() => import("./pages/admin/AdminEvents"));
+const AdminTeam = lazy(() => import("./pages/admin/AdminTeam"));
 const AdminSiteContent = lazy(() => import("./pages/admin/AdminSiteContent"));
 const AdminUsersNew = lazy(() => import("./pages/admin/AdminUsers"));
 const AdminCommunities = lazy(() => import("./pages/admin/AdminCommunities"));
@@ -125,6 +126,7 @@ function App() {
               <Route path="q7w" element={<AdminUsersNew />} />
               <Route path="r2f" element={<AdminCommunities />} />
               <Route path="r2f/:id" element={<AdminCommunityDetail />} />
+              <Route path="n6t" element={<AdminTeam />} />
               <Route path="t5j" element={<AdminEvents />} />
               <Route path="s6c" element={<AdminSiteContent />} />
               <Route path="m4b" element={<AdminBlog />} />

@@ -1,14 +1,10 @@
-import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { User } from 'lucide-react';
 import AnimatedImage from '@/components/common/AnimatedImage';
 
-export interface TeamMember {
-  key: string;
-  image?: string;
-  tag: string;
-  linkedin?: string;
-}
+import type { TeamMemberView } from '@/hooks/useTeamMembers';
+
+export type TeamMember = TeamMemberView;
 
 interface TeamOverlapCardProps {
   member: TeamMember;
@@ -21,7 +17,6 @@ const cardVariants = {
 };
 
 const TeamOverlapCard = ({ member, onClick }: TeamOverlapCardProps) => {
-  const { t } = useTranslation();
 
   return (
     <motion.div
@@ -31,14 +26,14 @@ const TeamOverlapCard = ({ member, onClick }: TeamOverlapCardProps) => {
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && onClick()}
-      aria-label={t(`team.members.${member.key}.name`)}
+      aria-label={member.name}
     >
       {/* Image Card */}
       <div className="relative aspect-[4/5] rounded-[28px] overflow-hidden border border-white/[0.08] shadow-lg transition-all duration-[240ms] motion-safe:group-hover:border-white/[0.16]">
         {member.image ? (
           <AnimatedImage
             src={member.image}
-            alt={t(`team.members.${member.key}.name`)}
+            alt={member.name}
             className="w-full h-full object-cover transition-transform duration-500 ease-out motion-safe:group-hover:scale-[1.02]"
             containerClassName="w-full h-full"
             loading="lazy"
@@ -70,7 +65,7 @@ const TeamOverlapCard = ({ member, onClick }: TeamOverlapCardProps) => {
         >
           {/* Tag */}
           <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.12em] text-[#93C5FD] mb-0.5 block">
-            {member.tag}
+            {member.tag.trim().toLowerCase() === member.position.trim().toLowerCase() ? '' : member.tag}
           </span>
 
           {/* Name */}
@@ -78,12 +73,12 @@ const TeamOverlapCard = ({ member, onClick }: TeamOverlapCardProps) => {
             className="font-bold text-[16px] sm:text-[18px] lg:text-[20px] leading-tight mb-0.5 line-clamp-1"
             style={{ color: '#F8FAFC', fontFamily: 'Montserrat, sans-serif' }}
           >
-            {t(`team.members.${member.key}.name`)}
+            {member.name}
           </h3>
 
           {/* Role */}
           <p className="text-[12px] sm:text-[13px] font-semibold mb-1" style={{ color: '#93C5FD' }}>
-            {t(`team.members.${member.key}.position`)}
+            {member.position}
           </p>
 
           {/* Bio */}
@@ -91,7 +86,7 @@ const TeamOverlapCard = ({ member, onClick }: TeamOverlapCardProps) => {
             className="text-[12px] leading-relaxed line-clamp-2"
             style={{ color: 'rgba(226,232,240,0.78)' }}
           >
-            {t(`team.members.${member.key}.description`)}
+            {member.description}
           </p>
         </div>
       </div>
