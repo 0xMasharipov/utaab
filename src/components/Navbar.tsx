@@ -1,26 +1,15 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Xmark, Globe, NavArrowDown, User } from 'iconoir-react';
+import { Xmark, User } from 'iconoir-react';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 // framer-motion removed from critical path — CSS animations used instead
 import { cn } from '@/lib/utils';
 import logo from '@/assets/logo-new-small.webp';
 import { BrandText } from '@/components/common/BrandText';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
+import { LanguageSelector, LanguageGrid } from '@/components/common/LanguageSelector';
 
-const languages = [
-  { code: 'en', name: 'English', flag: '🇬🇧' },
-  { code: 'tr', name: 'Türkçe', flag: '🇹🇷' },
-  { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-  { code: 'ar', name: 'العربية', flag: '🇸🇦' },
-];
 
 export const Navbar = () => {
   const { t, i18n } = useTranslation();
@@ -36,13 +25,13 @@ export const Navbar = () => {
   const [panelTop, setPanelTop] = useState(68);
   const [pillRect, setPillRect] = useState({ left: 0, width: 0 });
 
-  const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
   const isRTL = i18n.language === 'ar';
+
   const [prefersReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const { getTransitionClasses } = useLanguageTransition();
 
 
-  const changeLanguage = (lng: string) => i18n.changeLanguage(lng);
+  
 
   const closeMenu = useCallback(() => {
     setIsMenuOpen(false);
@@ -210,26 +199,8 @@ export const Navbar = () => {
             {/* Right: Globe + MENU */}
             <div className={cn("sm:flex-1 flex justify-end items-center gap-3 sm:gap-4", isRTL && "flex-row-reverse")} style={{ transform: 'translateZ(0)' }}>
               {/* Language Selector */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="glass hover:bg-white/10 rounded-full px-3 min-w-[52px] justify-center" aria-label="Select language">
-                    <Globe className="h-4 w-4 sm:mr-2" strokeWidth={1.5} />
-                    <span className="hidden sm:inline">{currentLanguage.flag}</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align={isRTL ? "start" : "end"} className="glass-strong border-white/20 backdrop-blur-2xl rounded-2xl min-w-[180px] z-[100]">
-                  {languages.map((lang) => (
-                    <DropdownMenuItem
-                      key={lang.code}
-                      onClick={() => changeLanguage(lang.code)}
-                      className={`cursor-pointer px-4 py-2 rounded-xl ${i18n.language === lang.code ? 'bg-accent/20 text-accent-foreground' : 'hover:bg-white/10'}`}
-                    >
-                      <span className={isRTL ? "ml-2" : "mr-2"}>{lang.flag}</span>
-                      <span>{lang.name}</span>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <LanguageSelector sideOffset={22} />
+
 
               {/* MENU text button */}
               <button
@@ -396,22 +367,10 @@ export const Navbar = () => {
                 </div>
 
                 {/* Right: Language selector */}
-                <div className="flex items-center gap-1 flex-wrap justify-center sm:justify-end">
-                  {languages.map((lang) => (
-                    <button
-                      key={lang.code}
-                      onClick={() => changeLanguage(lang.code)}
-                      className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full transition-all duration-200 text-xs ${
-                        i18n.language === lang.code
-                          ? 'bg-white/[0.12] text-white font-medium'
-                          : 'hover:bg-white/[0.06] text-white/50'
-                      }`}
-                    >
-                      <span>{lang.flag}</span>
-                      <span className="hidden md:inline">{lang.name}</span>
-                    </button>
-                  ))}
+                <div className="w-full sm:w-auto sm:max-w-[320px]">
+                  <LanguageGrid />
                 </div>
+
               </div>
             </div>
           </div>

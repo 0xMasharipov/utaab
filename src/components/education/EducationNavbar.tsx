@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Menu, Xmark, Globe, User, LogOut } from 'iconoir-react';
+import { Menu, Xmark, User, LogOut } from 'iconoir-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -16,13 +16,8 @@ import { supabase } from '@/integrations/supabase/client';
 import logo from '@/assets/logo-new.webp';
 import { BrandText } from '@/components/common/BrandText';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
+import { LanguageSelector, LanguageGrid } from '@/components/common/LanguageSelector';
 
-const languages = [
-  { code: 'en', name: 'English', flag: '🇬🇧' },
-  { code: 'tr', name: 'Türkçe', flag: '🇹🇷' },
-  { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-  { code: 'ar', name: 'العربية', flag: '🇸🇦' },
-];
 
 export const EducationNavbar = () => {
   const { t, i18n } = useTranslation();
@@ -39,8 +34,8 @@ export const EducationNavbar = () => {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
 
-  const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
   const isRTL = i18n.language === 'ar';
+
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const { getTransitionClasses } = useLanguageTransition();
 
@@ -132,9 +127,6 @@ export const EducationNavbar = () => {
       });
   }, [user?.id]);
 
-  const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
-  };
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
@@ -262,38 +254,8 @@ export const EducationNavbar = () => {
             </Button>
 
             {/* Language Selector */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="glass hover:bg-white/10 rounded-full px-3 min-w-[52px] justify-center"
-                  aria-label="Select language"
-                >
-                  <Globe className="h-4 w-4 sm:mr-2" strokeWidth={1.5} />
-                  <span className="hidden sm:inline">{currentLanguage.flag}</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align={isRTL ? 'start' : 'end'}
-                className="glass-strong border-white/20 backdrop-blur-2xl rounded-2xl min-w-[180px] z-[100]"
-              >
-                {languages.map((lang) => (
-                  <DropdownMenuItem
-                    key={lang.code}
-                    onClick={() => changeLanguage(lang.code)}
-                    className={`cursor-pointer px-4 py-2 rounded-xl ${
-                      i18n.language === lang.code
-                        ? 'bg-accent/20 text-accent-foreground'
-                        : 'hover:bg-white/10'
-                    }`}
-                  >
-                    <span className={isRTL ? 'ml-2' : 'mr-2'}>{lang.flag}</span>
-                    <span>{lang.name}</span>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <LanguageSelector sideOffset={18} />
+
 
             {/* User Menu or Register Button */}
             {user ? (
@@ -494,23 +456,9 @@ export const EducationNavbar = () => {
                   {/* Language Switcher */}
                   <div className="mt-4 pt-4 border-t border-white/20">
                     <p className="text-xs text-white/70 mb-3 px-4">{t('nav.language')}</p>
-                    <div className="grid grid-cols-2 gap-2">
-                      {languages.map((lang) => (
-                        <button
-                          key={lang.code}
-                          onClick={() => changeLanguage(lang.code)}
-                          className={`flex items-center gap-2 px-4 py-3 rounded-xl min-h-[44px] transition-all ${
-                            i18n.language === lang.code
-                              ? 'bg-accent/30 text-white font-medium'
-                              : 'hover:bg-white/15 text-white'
-                          }`}
-                        >
-                          <span className="text-xl">{lang.flag}</span>
-                          <span className="text-sm">{lang.name}</span>
-                        </button>
-                      ))}
-                    </div>
+                    <LanguageGrid />
                   </div>
+
                 </nav>
               </motion.div>
             </>
