@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import GlassCard from '@/components/glass/GlassCard';
 import AnimatedImage from '@/components/common/AnimatedImage';
+import CoverflowCarousel from '@/components/carousel/CoverflowCarousel';
+
 
 type ProjectStatus = 'underDevelopment' | 'planning' | 'beta';
 
@@ -87,10 +89,23 @@ export const Projects = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {projects.map((project, index) => {
+        <CoverflowCarousel
+          ariaLabel={t('projects.title')}
+          images={projects.map((p) => p.image)}
+          cardAspectRatio={4 / 5}
+          maxRotationDegrees={28}
+          maxDepthPx={140}
+          minScale={0.92}
+          cardGap={28}
+          frictionFactor={0.9}
+          wheelSensitivity={0.6}
+          dragSensitivity={1.0}
+          backgroundBlur={24}
+          gradientSize={0.65}
+          gradientIntensity={0.22}
+          items={projects.map((project, index) => {
             const cardInner = (
-              <GlassCard className="relative overflow-hidden min-h-[260px] p-0 group flex flex-col h-full">
+              <GlassCard className="relative overflow-hidden h-full p-0 group flex flex-col">
                 {/* Layer 1: Grid background */}
                 <div
                   className="absolute inset-0 z-0 opacity-[0.05]"
@@ -147,7 +162,7 @@ export const Projects = () => {
                     {t(project.titleKey)}
                   </h3>
 
-                  <p className="text-sm text-muted-foreground mb-4 flex-grow line-clamp-3 break-words overflow-hidden">
+                  <p className="text-sm text-muted-foreground mb-4 line-clamp-4 break-words overflow-hidden">
                     {t(project.descriptionKey)}
                   </p>
 
@@ -163,28 +178,22 @@ export const Projects = () => {
               </GlassCard>
             );
 
-            return (
-              <motion.div
+            return project.href ? (
+              <Link
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                transition={{ duration: 0.5, delay: 0.15 + index * 0.07 }}
+                to={project.href}
+                draggable={false}
+                className="block h-full rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                aria-label={t(project.titleKey)}
               >
-                {project.href ? (
-                  <Link
-                    to={project.href}
-                    className="block h-full rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                    aria-label={t(project.titleKey)}
-                  >
-                    {cardInner}
-                  </Link>
-                ) : (
-                  cardInner
-                )}
-              </motion.div>
+                {cardInner}
+              </Link>
+            ) : (
+              cardInner
             );
           })}
-        </div>
+        />
+
       </div>
     </section>
   );
