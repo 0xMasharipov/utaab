@@ -2,7 +2,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { z } from 'https://esm.sh/zod@3.23.8';
 import { getCorsHeaders } from '../_shared/cors.ts';
-import { enqueueSignupEmail, resolveRedirect } from '../_shared/signup-email.ts';
+import { sendSignupEmail, resolveRedirect } from '../_shared/signup-email.ts';
 
 const FocusArea = z.string().min(1).max(80);
 
@@ -142,7 +142,7 @@ serve(async (req) => {
       const confirmation = await generateConfirmation(admin, email, data.password, redirectTo);
       if (confirmation) {
         hasCode = !!confirmation.otp;
-        emailSent = await enqueueSignupEmail(admin, email, confirmation.url, confirmation.otp);
+        emailSent = await sendSignupEmail(admin, email, confirmation.url, confirmation.otp);
       }
     }
 
