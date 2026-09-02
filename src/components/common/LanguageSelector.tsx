@@ -77,14 +77,22 @@ export const LanguageSelector = ({
         collisionPadding={12}
         className={cn(
           'z-[120] min-w-[200px] rounded-2xl p-1.5',
-          'border border-white/15 bg-white/[0.07] text-foreground',
+          'border border-white/15 text-foreground',
           'backdrop-blur-2xl backdrop-saturate-150',
-          'shadow-[0_20px_50px_-18px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.10)]',
         )}
-        style={{ willChange: 'transform, opacity' }}
+        style={{
+          background:
+            'linear-gradient(135deg, hsl(222 47% 8% / 0.92) 0%, hsl(220 45% 11% / 0.88) 100%)',
+          backdropFilter: 'blur(24px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+          boxShadow:
+            '0 20px 50px -18px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.10)',
+          willChange: 'transform, opacity',
+        }}
       >
         {LANGUAGES.map((lang) => {
-          const isActive = lang.code === i18n.language;
+          const isActive = lang.code === current.code;
+
           return (
             <DropdownMenuItem
               key={lang.code}
