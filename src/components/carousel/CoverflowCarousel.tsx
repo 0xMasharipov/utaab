@@ -316,7 +316,9 @@ export const CoverflowCarousel = ({
       moved: 0,
     };
     (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+    wake();
   };
+
 
   const onPointerMove = (e: React.PointerEvent) => {
     if (!draggingRef.current) return;
