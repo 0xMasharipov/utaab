@@ -171,10 +171,10 @@ export const AboutBlurb = () => {
                     containerClassName={cn(
                       'absolute z-10 transition-all duration-500 ease-out',
                       isActive
-                        ? 'inset-x-[12%] bottom-[26%] top-[10%] opacity-95'
-                        : 'inset-x-[-18%] bottom-[30%] top-[24%] opacity-40'
+                        ? 'right-[1%] bottom-[18%] w-[46%] h-[62%] opacity-95'
+                        : 'right-0 bottom-[30%] w-full h-[42%] opacity-40'
                     )}
-                    className="w-full h-full object-contain drop-shadow-[0_10px_30px_rgba(59,130,246,0.22)] transition-transform duration-500 group-hover:scale-[1.04]"
+                    className="w-full h-full object-contain object-right-bottom drop-shadow-[0_10px_30px_rgba(59,130,246,0.22)] transition-transform duration-500 group-hover:scale-[1.04]"
                     placeholderClassName="opacity-0"
                   />
 
@@ -254,8 +254,8 @@ export const AboutBlurb = () => {
                     aria-hidden="true"
                     loading="lazy"
                     sizes="45vw"
-                    containerClassName="absolute right-[-6%] bottom-0 top-[12%] w-[46%] z-10 opacity-70"
-                    className="w-full h-full object-contain object-bottom drop-shadow-[0_8px_24px_rgba(59,130,246,0.18)]"
+                    containerClassName="absolute right-0 bottom-0 w-[52%] h-[92%] z-10 opacity-70"
+                    className="w-full h-full object-contain object-right-bottom drop-shadow-[0_8px_24px_rgba(59,130,246,0.18)]"
                     placeholderClassName="opacity-0"
                   />
                   <div
