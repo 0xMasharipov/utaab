@@ -28,6 +28,7 @@ const sidebarItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: ADMIN_ROUTES.DASHBOARD },
   { icon: Users, label: 'Users & Roles', path: ADMIN_ROUTES.USERS },
   { icon: Users, label: 'Communities', path: ADMIN_ROUTES.COMMUNITIES },
+  { icon: Users, label: 'Team Members', path: ADMIN_ROUTES.TEAM },
   { icon: Calendar, label: 'Events', path: ADMIN_ROUTES.EVENTS },
   { icon: BookOpen, label: 'Courses', path: ADMIN_ROUTES.COURSES },
   { icon: Award, label: 'Certificates', path: ADMIN_ROUTES.CERT_DASHBOARD },
