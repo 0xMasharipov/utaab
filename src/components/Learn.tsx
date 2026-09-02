@@ -34,7 +34,7 @@ export const Learn = () => {
   ];
 
   return (
-    <section id="learn" className="py-16 md:py-24 relative cv-auto" ref={ref}>
+    <section id="learn" className="py-16 md:py-24 relative" ref={ref}>
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

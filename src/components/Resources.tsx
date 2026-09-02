@@ -62,7 +62,7 @@ export const Resources = () => {
   };
 
   return (
-    <section id="resources" className="py-16 md:py-24 relative cv-auto" ref={ref}>
+    <section id="resources" className="py-16 md:py-24 relative" ref={ref}>
       <div className="section-container">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
