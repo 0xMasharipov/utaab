@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import GlassCard from '@/components/glass/GlassCard';
 import AnimatedImage from '@/components/common/AnimatedImage';
+import CoverflowCarousel from '@/components/carousel/CoverflowCarousel';
+
 
 type ProjectStatus = 'underDevelopment' | 'planning' | 'beta';
 
