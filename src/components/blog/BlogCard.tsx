@@ -51,11 +51,14 @@ export const BlogCard = ({ post, index = 0, priority = false }: BlogCardProps) =
                 alt={title}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 containerClassName="w-full h-full"
-                loading="lazy"
+                loading={priority ? 'eager' : 'lazy'}
+                fetchPriority={priority ? 'high' : 'auto'}
+                sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
             </div>
           )}
+
           <div className="p-5">
             {post.tags && post.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-3 text-xs text-accent/90">
