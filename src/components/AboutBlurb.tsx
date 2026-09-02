@@ -218,7 +218,7 @@ export const AboutBlurb = () => {
                     <motion.div
                       animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 8 }}
                       transition={{ duration: prefersReducedMotion ? 0 : 0.35, delay: isActive ? 0.08 : 0 }}
-                      className={cn(!isActive && 'pointer-events-none')}
+                      className={cn(!isActive && 'pointer-events-none h-0 overflow-hidden')}
                     >
                       <h3 className="text-lg lg:text-xl font-bold text-foreground whitespace-nowrap">
                         {t(card.titleKey)}
