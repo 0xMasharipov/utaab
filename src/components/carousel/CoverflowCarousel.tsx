@@ -289,7 +289,9 @@ export const CoverflowCarousel = ({
     targetRef.current = null;
     velocityRef.current += (dy / (step * 6)) * wheelSensitivity;
     velocityRef.current = clamp(velocityRef.current, -0.35, 0.35);
+    wake();
   };
+
 
   useEffect(() => {
     const el = viewportRef.current;
