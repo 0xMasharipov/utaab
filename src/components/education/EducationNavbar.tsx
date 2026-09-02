@@ -127,9 +127,6 @@ export const EducationNavbar = () => {
       });
   }, [user?.id]);
 
-  const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
-  };
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
