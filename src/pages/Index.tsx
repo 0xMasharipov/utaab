@@ -1,9 +1,12 @@
 import { useState, lazy, Suspense, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 import { Navbar } from '@/components/Navbar';
 import { Hero } from '@/components/Hero';
 import { HeroCarousel } from '@/components/HeroCarousel';
 import BackgroundGrid from '@/components/BackgroundGrid';
+
 
 // Lazy load decorative background (causes forced reflow, not critical for FCP)
 const AnimatedBlobBackground = lazy(() => import('@/components/AnimatedBlobBackground'));
@@ -31,6 +34,35 @@ const Index = () => {
   const [showBelowFold, setShowBelowFold] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  // Warm the blog data during the idle window so the blog section already has
+  // its posts (and cover images) by the time the user scrolls down to it.
+  useEffect(() => {
+    const prefetch = () =>
+      queryClient.prefetchQuery({
+        queryKey: ['homepage-blog'],
+        staleTime: 30 * 1000,
+        queryFn: async () => {
+          const { data, error } = await supabase
+            .from('blog_posts')
+            .select('*')
+            .eq('status', 'published')
+            .order('publish_date', { ascending: false, nullsFirst: false })
+            .limit(6);
+          if (error) throw error;
+          return data;
+        },
+      });
+    const id = 'requestIdleCallback' in window
+      ? (window as any).requestIdleCallback(prefetch, { timeout: 2000 })
+      : setTimeout(prefetch, 600);
+    return () => {
+      if ('requestIdleCallback' in window) (window as any).cancelIdleCallback(id);
+      else clearTimeout(id);
+    };
+  }, [queryClient]);
+
 
   // Handle cross-route section scroll requests from the navbar.
   // The Navbar passes { state: { scrollTo: id } } when the user clicks an

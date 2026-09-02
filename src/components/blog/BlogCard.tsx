@@ -23,14 +23,17 @@ interface BlogCardProps {
     gallery?: any | null;
   };
   index?: number;
+  /** Eager-load the cover image (use for the first visible row). */
+  priority?: boolean;
 }
 
-export const BlogCard = ({ post, index = 0 }: BlogCardProps) => {
+export const BlogCard = ({ post, index = 0, priority = false }: BlogCardProps) => {
   const { i18n, t } = useTranslation();
   const lang = i18n.language as 'en' | 'tr' | 'ru' | 'ar';
 
   const title = (post as any)[`title_${lang}`] || post.title_en;
   const excerpt = (post as any)[`excerpt_${lang}`] || post.excerpt_en;
+
 
   return (
     <motion.div
@@ -48,11 +51,14 @@ export const BlogCard = ({ post, index = 0 }: BlogCardProps) => {
                 alt={title}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 containerClassName="w-full h-full"
-                loading="lazy"
+                loading={priority ? 'eager' : 'lazy'}
+                {...(priority ? { fetchpriority: 'high' } : {})}
+                sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
             </div>
           )}
+
           <div className="p-5">
             {post.tags && post.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-3 text-xs text-accent/90">

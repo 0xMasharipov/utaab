@@ -191,7 +191,7 @@ export const EducationNavbar = () => {
                 className={`h-8 sm:h-10 w-auto mix-blend-lighten brightness-110 transition-opacity duration-500 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
                 width="40"
                 height="40"
-                fetchPriority="high"
+                {...{ fetchpriority: "high" }}
                 decoding="async"
                 onLoad={() => setLogoLoaded(true)}
               />

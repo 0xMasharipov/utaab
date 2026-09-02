@@ -125,6 +125,10 @@ export const CoverflowCarousel = ({
   const activeRef = useRef(activeIndex);
   const cardWidthRef = useRef(cardWidth);
   cardWidthRef.current = cardWidth;
+  const inViewRef = useRef(true);
+  const runningRef = useRef(false);
+  const [inView, setInView] = useState(true);
+
 
   useEffect(() => {
     const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -194,40 +198,70 @@ export const CoverflowCarousel = ({
     [onCardChange]
   );
 
-  // Main animation loop: velocity + friction, snapping to the nearest card.
+  // Visibility gate — never burn frames while the carousel is off-screen.
   useEffect(() => {
-    if (reducedMotion) {
-      applyTransforms();
+    const el = viewportRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        inViewRef.current = entry.isIntersecting;
+        setInView(entry.isIntersecting);
+      },
+      { rootMargin: '200px' }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  // Main animation step: velocity + friction, snapping to the nearest card.
+  // Kept in a ref so the loop never closes over stale state, and it stops
+  // itself once the carousel settles (no idle rAF churn while scrolling).
+  const stepLoop = useRef<() => void>(() => {});
+  stepLoop.current = () => {
+    const maxIdx = Math.max(count - 1, 0);
+    let idle = false;
+    if (!draggingRef.current) {
+      if (targetRef.current !== null) {
+        const diff = targetRef.current - offsetRef.current;
+        offsetRef.current += diff * 0.16;
+        if (Math.abs(diff) < 0.001) {
+          offsetRef.current = targetRef.current;
+          targetRef.current = null;
+        }
+      } else if (Math.abs(velocityRef.current) > 0.0005) {
+        offsetRef.current += velocityRef.current;
+        velocityRef.current *= frictionFactor;
+        offsetRef.current = clamp(offsetRef.current, -0.4, maxIdx + 0.4);
+      } else if (velocityRef.current !== 0) {
+        velocityRef.current = 0;
+        targetRef.current = clamp(Math.round(offsetRef.current), 0, maxIdx);
+      } else {
+        idle = true;
+      }
+    }
+    applyTransforms();
+    setActive(clamp(Math.round(offsetRef.current), 0, maxIdx));
+    if (idle) {
+      runningRef.current = false;
       return;
     }
-    const tick = () => {
-      const maxIdx = Math.max(count - 1, 0);
-      if (!draggingRef.current) {
-        if (targetRef.current !== null) {
-          const diff = targetRef.current - offsetRef.current;
-          offsetRef.current += diff * 0.16;
-          if (Math.abs(diff) < 0.001) {
-            offsetRef.current = targetRef.current;
-            targetRef.current = null;
-          }
-        } else if (Math.abs(velocityRef.current) > 0.0005) {
-          offsetRef.current += velocityRef.current;
-          velocityRef.current *= frictionFactor;
-          offsetRef.current = clamp(offsetRef.current, -0.4, maxIdx + 0.4);
-        } else if (velocityRef.current !== 0) {
-          velocityRef.current = 0;
-          targetRef.current = clamp(Math.round(offsetRef.current), 0, maxIdx);
-        }
-      }
-      applyTransforms();
-      setActive(clamp(Math.round(offsetRef.current), 0, maxIdx));
-      rafRef.current = requestAnimationFrame(tick);
-    };
-    rafRef.current = requestAnimationFrame(tick);
+    rafRef.current = requestAnimationFrame(() => stepLoop.current());
+  };
+
+  const wake = useCallback(() => {
+    if (reducedMotion || runningRef.current || !inViewRef.current) return;
+    runningRef.current = true;
+    rafRef.current = requestAnimationFrame(() => stepLoop.current());
+  }, [reducedMotion]);
+
+  useEffect(() => {
+    if (reducedMotion || !inView) return;
+    wake();
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      runningRef.current = false;
     };
-  }, [applyTransforms, count, frictionFactor, reducedMotion, setActive]);
+  }, [inView, reducedMotion, wake]);
 
   useLayoutEffect(() => {
     applyTransforms();
@@ -238,9 +272,11 @@ export const CoverflowCarousel = ({
       const maxIdx = Math.max(count - 1, 0);
       velocityRef.current = 0;
       targetRef.current = clamp(idx, 0, maxIdx);
+      wake();
     },
-    [count]
+    [count, wake]
   );
+
 
   // Wheel: native non-passive listener (React's onWheel is passive).
   const wheelHandlerRef = useRef<(e: WheelEvent) => void>(() => {});
@@ -253,7 +289,9 @@ export const CoverflowCarousel = ({
     targetRef.current = null;
     velocityRef.current += (dy / (step * 6)) * wheelSensitivity;
     velocityRef.current = clamp(velocityRef.current, -0.35, 0.35);
+    wake();
   };
+
 
   useEffect(() => {
     const el = viewportRef.current;
@@ -278,7 +316,9 @@ export const CoverflowCarousel = ({
       moved: 0,
     };
     (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+    wake();
   };
+
 
   const onPointerMove = (e: React.PointerEvent) => {
     if (!draggingRef.current) return;
@@ -311,7 +351,9 @@ export const CoverflowCarousel = ({
         Math.max(count - 1, 0)
       );
     }
+    wake();
   };
+
 
   // Suppress the click that ends a drag so cards don't navigate accidentally.
   const onClickCapture = (e: React.MouseEvent) => {
@@ -356,26 +398,48 @@ export const CoverflowCarousel = ({
 
   if (reducedMotion) {
     return (
-      <div
-        className={cn(
-          'relative -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4',
-          className
-        )}
-        role="region"
-        aria-label={ariaLabel}
-      >
-        {items.map((item, i) => (
-          <div
-            key={i}
-            className="snap-center shrink-0"
-            style={{ width: cardWidth, height: cardHeight }}
-          >
-            {item}
-          </div>
-        ))}
+      <div className={cn('relative', className)}>
+        <div
+          className="-mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          role="region"
+          aria-roledescription="carousel"
+          aria-label={ariaLabel}
+          onScroll={(e) => {
+            const el = e.currentTarget;
+            const idx = clamp(
+              Math.round(el.scrollLeft / (cardWidth + 20)),
+              0,
+              Math.max(count - 1, 0)
+            );
+            setActive(idx);
+          }}
+        >
+          {items.map((item, i) => (
+            <div
+              key={i}
+              className="snap-center shrink-0"
+              style={{ width: cardWidth, height: cardHeight }}
+            >
+              {item}
+            </div>
+          ))}
+        </div>
+        <div className="mt-2 flex justify-center gap-2">
+          {items.map((_, i) => (
+            <span
+              key={i}
+              aria-hidden="true"
+              className={cn(
+                'h-1.5 rounded-full transition-all duration-300',
+                i === activeIndex ? 'w-6 bg-primary' : 'w-1.5 bg-foreground/25'
+              )}
+            />
+          ))}
+        </div>
       </div>
     );
   }
+
 
   return (
     <div className={cn('relative', className)}>

@@ -9,9 +9,12 @@ interface AnimatedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
 const AnimatedImage = forwardRef<HTMLImageElement, AnimatedImageProps>(
   ({ placeholderClassName, containerClassName, className, onLoad, loading, decoding, style, ...props }, ref) => {
     const [loaded, setLoaded] = useState(false);
-    const [inView, setInView] = useState(false);
+    // Eager images skip the viewport gate so their fade-in isn't held back
+    // by the IntersectionObserver callback.
+    const [inView, setInView] = useState(loading === 'eager');
     const [reducedMotion, setReducedMotion] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
+
 
     useEffect(() => {
       // Respect user accessibility preference — skip blur/scale/translate for reduced-motion users.
