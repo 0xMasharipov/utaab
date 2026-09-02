@@ -179,8 +179,9 @@ const Blog = () => {
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {paged.map((post, i) => (
-                  <BlogCard key={post.id} post={post} index={i} />
+                  <BlogCard key={post.id} post={post} index={i} priority={page === 0 && i < 3} />
                 ))}
+
               </div>
               {totalPages > 1 && (
                 <div className="flex justify-center gap-2 mt-10">
