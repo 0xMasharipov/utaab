@@ -489,23 +489,9 @@ export const EducationNavbar = () => {
                   {/* Language Switcher */}
                   <div className="mt-4 pt-4 border-t border-white/20">
                     <p className="text-xs text-white/70 mb-3 px-4">{t('nav.language')}</p>
-                    <div className="grid grid-cols-2 gap-2">
-                      {languages.map((lang) => (
-                        <button
-                          key={lang.code}
-                          onClick={() => changeLanguage(lang.code)}
-                          className={`flex items-center gap-2 px-4 py-3 rounded-xl min-h-[44px] transition-all ${
-                            i18n.language === lang.code
-                              ? 'bg-accent/30 text-white font-medium'
-                              : 'hover:bg-white/15 text-white'
-                          }`}
-                        >
-                          <span className="text-xl">{lang.flag}</span>
-                          <span className="text-sm">{lang.name}</span>
-                        </button>
-                      ))}
-                    </div>
+                    <LanguageGrid />
                   </div>
+
                 </nav>
               </motion.div>
             </>
