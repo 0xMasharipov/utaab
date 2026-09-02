@@ -1,4 +1,4 @@
-import { Play } from 'lucide-react';
+import { Play, Check } from 'lucide-react';
 import { MITLecture } from '@/data/mitOcwLectures';
 import { useTranslation } from 'react-i18next';
 
@@ -6,11 +6,14 @@ interface LecturePlaylistProps {
   lectures: MITLecture[];
   currentLectureId: number;
   onLectureSelect: (id: number) => void;
+  completedLectureIds?: number[];
 }
 
-export const LecturePlaylist = ({ lectures, currentLectureId, onLectureSelect }: LecturePlaylistProps) => {
+export const LecturePlaylist = ({ lectures, currentLectureId, onLectureSelect, completedLectureIds = [] }: LecturePlaylistProps) => {
   const { t } = useTranslation();
-  
+  const completedCount = completedLectureIds.length;
+  const percent = lectures.length ? Math.round((completedCount / lectures.length) * 100) : 0;
+
   return (
     <div className="glass rounded-2xl border border-white/10 overflow-hidden">
       <div className="p-4 border-b border-white/10">
@@ -20,13 +23,27 @@ export const LecturePlaylist = ({ lectures, currentLectureId, onLectureSelect }:
         <p className="text-muted-foreground text-sm mt-1">
           {lectures.length} {t('education.mitOcw.lectures').toLowerCase()}
         </p>
+
+        {completedCount > 0 && (
+          <div className="mt-3">
+            <div className="flex items-center justify-between text-xs font-montserrat text-muted-foreground mb-1">
+              <span>{t('education.mitOcw.progressTitle')}</span>
+              <span>{t('education.mitOcw.progressCount', { done: completedCount, total: lectures.length })}</span>
+            </div>
+            <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
+              <div className="h-full bg-accent transition-all duration-500" style={{ width: `${percent}%` }} />
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="max-h-[600px] overflow-y-auto custom-scrollbar">
         {lectures.map((lecture) => {
           const isActive = lecture.id === currentLectureId;
-          
+          const isCompleted = completedLectureIds.includes(lecture.id);
+
           return (
+
             <button
               key={lecture.id}
               onClick={() => onLectureSelect(lecture.id)}
