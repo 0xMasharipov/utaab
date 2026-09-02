@@ -77,7 +77,7 @@ const TeamPage = () => {
             transition={{ duration: 0.5 }}
             className="mb-5"
           >
-            <span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase bg-accent/10 text-accent border border-accent/20">
+            <span className="text-xs font-semibold tracking-widest uppercase text-accent">
               {t('team.badge', 'The People Behind UTAAB')}
             </span>
           </motion.div>
