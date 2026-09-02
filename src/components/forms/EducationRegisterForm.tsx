@@ -241,12 +241,12 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
 
       toast({
         title: t('education.registration.welcomeTitle'),
-        description: otpType === 'signup' 
+        description: mode === 'signup'
           ? t('education.registration.welcomeMessage')
           : t('education.registration.signInSuccess'),
       });
 
-      if (otpType === 'signup') {
+      if (mode === 'signup') {
         setCompleted(true);
       } else {
         navigate('/education');
