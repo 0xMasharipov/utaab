@@ -165,15 +165,14 @@ export const CourseLearn = () => {
     });
 
     if (allLessonsCompleted && enrollment?.progress === 100) {
-      const certNumber = await supabase.rpc('generate_certificate_number');
-      
-      const { error } = await supabase.from('certificates').insert({
-        user_id: user.id,
-        course_id: course.id,
-        certificate_number: certNumber.data
+      // Issuance is verified and performed server-side; clients cannot insert
+      // certificate rows directly.
+      const { data, error } = await supabase.functions.invoke('issue-course-certificate', {
+        body: { course_id: course.id },
       });
 
-      if (!error) {
+      if (!error && data?.issued) {
+        queryClient.invalidateQueries({ queryKey: ['certificate', course.id, user.id] });
         toast.success('Congratulations! Your certificate has been issued!');
         setActiveTab('certificate');
       }
