@@ -1,14 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { EducationNavbar } from '@/components/education/EducationNavbar';
 import { AppleStyleVideoPlayer } from '@/components/learning/AppleStyleVideoPlayer';
 import { LecturePlaylist } from '@/components/learning/LecturePlaylist';
+import { SignInToSaveDialog, CourseCompletedDialog } from '@/components/learning/LearningDialogs';
 import { mitBlockchainLectures, MITLecture } from '@/data/mitOcwLectures';
-import { Info, ChevronLeft, ChevronRight, Menu } from 'lucide-react';
+import { Info, ChevronLeft, ChevronRight, Menu, Award, Lock } from 'lucide-react';
 import mitLogo from '@/assets/MIT_UNI_LOGO.png';
 import { useSearchParams } from 'react-router-dom';
 import AnimatedImage from '@/components/common/AnimatedImage';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
+import { useCourseProgress } from '@/hooks/useCourseProgress';
+
+const COURSE_SLUG = 'mit-blockchain-and-money';
+const GATE_AFTER_SECONDS = 60;
 
 export const BlockchainAndMoney = () => {
   const { t, i18n } = useTranslation();
@@ -16,6 +21,24 @@ export const BlockchainAndMoney = () => {
   const [currentLecture, setCurrentLecture] = useState<MITLecture>(mitBlockchainLectures[0]);
   const [isPlaylistVisible, setIsPlaylistVisible] = useState(true);
   const [subtitlesFromDb, setSubtitlesFromDb] = useState<Record<number, { en?: string; tr?: string; ru?: string; ar?: string }>>({});
+
+  const {
+    isSignedIn,
+    authReady,
+    completedOrderIndexes,
+    resumeSecondsFor,
+    saveProgress,
+    courseCompleted,
+    justCompleted,
+    setJustCompleted,
+  } = useCourseProgress(COURSE_SLUG);
+
+  const [gateOpen, setGateOpen] = useState(false);
+  const [gateDismissed, setGateDismissed] = useState(false);
+  const [pauseSignal, setPauseSignal] = useState(0);
+  const watchedSecondsRef = useRef(0);
+  const [startAt, setStartAt] = useState(0);
+
 
   // Load subtitles from database
   useEffect(() => {
