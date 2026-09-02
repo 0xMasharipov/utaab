@@ -882,7 +882,20 @@
         "source": "Kaynak",
         "mitOcw": "MIT OpenCourseWare",
         "disclaimer": "UTAAB EDU bu içeriği ticari olmayan eğitim amaçlı olarak archive.org'dan doğrudan yayınlar. Tüm haklar MIT'ye aittir. Bu kurs, uygun atıfla ücretsiz kullanıma izin veren Creative Commons lisansı altında sunulmaktadır."
-      }
+      },
+      "progressTitle": "İlerlemeniz",
+      "progressCount": "{{total}} dersten {{done}} tanesi tamamlandı",
+      "notSaving": "Giriş yapmadınız — ilerlemeniz kaydedilmiyor.",
+      "signInToSave": "İlerlemeyi kaydetmek için giriş yapın",
+      "gateTitle": "İlerlemenizi kaydedin",
+      "gateBody": "İlerlemenizi kaydetmek ve kursu bitirdiğinizde sertifika almak için kayıt olun veya giriş yapın.",
+      "gateRegister": "Kayıt ol",
+      "gateSignIn": "Giriş yap",
+      "gateContinue": "Kaydetmeden devam et",
+      "completedTitle": "Kurs tamamlandı!",
+      "completedBody": "Sertifikanız yolda — hizmetlerimizi geliştirmek için üzerinde çalışıyoruz.",
+      "completedClose": "Harika",
+      "completedBanner": "Bu kursu tamamladınız. Sertifikanız yolda — hizmetlerimizi geliştirmek için üzerinde çalışıyoruz."
     },
     "catalog": {
       "title": "Kurs Kataloğu",

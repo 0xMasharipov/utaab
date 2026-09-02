@@ -12,6 +12,14 @@ interface AppleStyleVideoPlayerProps {
     ru?: string;
     ar?: string;
   };
+  /** Resume position in seconds, applied once metadata is loaded. */
+  startAt?: number;
+  /** Fired on every timeupdate with watched percentage and current time. */
+  onProgress?: (percent: number, currentTime: number) => void;
+  /** Fired when playback starts / stops. */
+  onPlayStateChange?: (playing: boolean) => void;
+  /** Increment this number to force the video to pause (e.g. to show a gate dialog). */
+  pauseSignal?: number;
 }
 
 export const AppleStyleVideoPlayer = ({ 
@@ -19,8 +27,13 @@ export const AppleStyleVideoPlayer = ({
   title, 
   onVideoEnd,
   autoplay = false,
-  subtitles
+  subtitles,
+  startAt,
+  onProgress,
+  onPlayStateChange,
+  pauseSignal
 }: AppleStyleVideoPlayerProps) => {
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -72,15 +85,22 @@ export const AppleStyleVideoPlayer = ({
 
     const handleTimeUpdate = () => {
       setCurrentTime(video.currentTime);
-      setProgress((video.currentTime / video.duration) * 100);
+      const pct = video.duration ? (video.currentTime / video.duration) * 100 : 0;
+      setProgress(pct);
+      onProgress?.(pct, video.currentTime);
     };
 
     const handleLoadedMetadata = () => {
       setDuration(video.duration);
+      if (startAt && startAt > 0 && startAt < video.duration - 5) {
+        video.currentTime = startAt;
+      }
     };
 
     const handleEnded = () => {
       setIsPlaying(false);
+      onPlayStateChange?.(false);
+      onProgress?.(100, video.duration || 0);
       onVideoEnd?.();
     };
 
@@ -92,7 +112,15 @@ export const AppleStyleVideoPlayer = ({
       setIsLoading(false);
     };
     const handleWaiting = () => setIsLoading(true);
-    const handlePlaying = () => setIsLoading(false);
+    const handlePlaying = () => {
+      setIsLoading(false);
+      setIsPlaying(true);
+      onPlayStateChange?.(true);
+    };
+    const handlePause = () => {
+      setIsPlaying(false);
+      onPlayStateChange?.(false);
+    };
 
     video.addEventListener('timeupdate', handleTimeUpdate);
     video.addEventListener('loadedmetadata', handleLoadedMetadata);
@@ -102,6 +130,7 @@ export const AppleStyleVideoPlayer = ({
     video.addEventListener('error', handleError);
     video.addEventListener('waiting', handleWaiting);
     video.addEventListener('playing', handlePlaying);
+    video.addEventListener('pause', handlePause);
 
     return () => {
       video.removeEventListener('timeupdate', handleTimeUpdate);
@@ -112,8 +141,17 @@ export const AppleStyleVideoPlayer = ({
       video.removeEventListener('error', handleError);
       video.removeEventListener('waiting', handleWaiting);
       video.removeEventListener('playing', handlePlaying);
+      video.removeEventListener('pause', handlePause);
     };
-  }, [onVideoEnd]);
+  }, [onVideoEnd, onProgress, onPlayStateChange, startAt]);
+
+  // External pause requests (e.g. sign-in gate dialog)
+  useEffect(() => {
+    if (!pauseSignal) return;
+    videoRef.current?.pause();
+    setIsPlaying(false);
+  }, [pauseSignal]);
+
 
   // Keyboard shortcuts
   useEffect(() => {

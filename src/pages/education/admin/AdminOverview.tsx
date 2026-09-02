@@ -24,6 +24,20 @@ export const AdminOverview = () => {
     },
   });
 
+  const { data: pendingCertificates = [] } = useQuery({
+    queryKey: ['admin-pending-certificate-requests'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('certificate_requests')
+        .select('id, user_email, requested_at, courses(title_en)')
+        .eq('status', 'pending')
+        .order('requested_at', { ascending: false })
+        .limit(20);
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
   const statCards = [
     {
       title: 'Total Courses',
@@ -104,6 +118,36 @@ export const AdminOverview = () => {
             <h3 className="font-semibold mb-1">Manage Users</h3>
             <p className="text-sm text-muted-foreground">View and edit user accounts</p>
           </button>
+        </CardContent>
+      </Card>
+
+      {/* Pending certificate requests */}
+      <Card className="glass">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Pending certificates</CardTitle>
+          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-accent/15 text-accent">
+            {pendingCertificates.length}
+          </span>
+        </CardHeader>
+        <CardContent>
+          {pendingCertificates.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No pending certificate requests.</p>
+          ) : (
+            <div className="space-y-3">
+              {pendingCertificates.map((req: any) => (
+                <div key={req.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-white/5 transition-all">
+                  <Award className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{req.user_email}</p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {req.courses?.title_en ?? 'Course'} ·{' '}
+                      {new Date(req.requested_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
 

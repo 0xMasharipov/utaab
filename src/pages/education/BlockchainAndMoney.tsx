@@ -1,14 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { EducationNavbar } from '@/components/education/EducationNavbar';
 import { AppleStyleVideoPlayer } from '@/components/learning/AppleStyleVideoPlayer';
 import { LecturePlaylist } from '@/components/learning/LecturePlaylist';
+import { SignInToSaveDialog, CourseCompletedDialog } from '@/components/learning/LearningDialogs';
 import { mitBlockchainLectures, MITLecture } from '@/data/mitOcwLectures';
-import { Info, ChevronLeft, ChevronRight, Menu } from 'lucide-react';
+import { Info, ChevronLeft, ChevronRight, Menu, Award, Lock } from 'lucide-react';
 import mitLogo from '@/assets/MIT_UNI_LOGO.png';
 import { useSearchParams } from 'react-router-dom';
 import AnimatedImage from '@/components/common/AnimatedImage';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
+import { useCourseProgress } from '@/hooks/useCourseProgress';
+
+const COURSE_SLUG = 'mit-blockchain-and-money';
+const GATE_AFTER_SECONDS = 60;
 
 export const BlockchainAndMoney = () => {
   const { t, i18n } = useTranslation();
@@ -16,6 +21,25 @@ export const BlockchainAndMoney = () => {
   const [currentLecture, setCurrentLecture] = useState<MITLecture>(mitBlockchainLectures[0]);
   const [isPlaylistVisible, setIsPlaylistVisible] = useState(true);
   const [subtitlesFromDb, setSubtitlesFromDb] = useState<Record<number, { en?: string; tr?: string; ru?: string; ar?: string }>>({});
+
+  const {
+    isSignedIn,
+    authReady,
+    completedOrderIndexes,
+    resumeSecondsFor,
+    saveProgress,
+    courseCompleted,
+    justCompleted,
+    setJustCompleted,
+  } = useCourseProgress(COURSE_SLUG);
+
+  const [gateOpen, setGateOpen] = useState(false);
+  const [gateDismissed, setGateDismissed] = useState(false);
+  const [pauseSignal, setPauseSignal] = useState(0);
+  const watchedSecondsRef = useRef(0);
+  const watchedPercentRef = useRef(0);
+  const [startAt, setStartAt] = useState(0);
+
 
   // Load subtitles from database
   useEffect(() => {
@@ -82,18 +106,50 @@ export const BlockchainAndMoney = () => {
     const lecture = mitBlockchainLectures.find(l => l.id === id);
     if (lecture) {
       setCurrentLecture(lecture);
+      watchedSecondsRef.current = 0;
+      setStartAt(resumeSecondsFor(id));
       setSearchParams({ lecture: id.toString() });
       localStorage.setItem('mitocw-last-lecture', id.toString());
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
+  // Resume position for the lecture that is already selected (e.g. deep link).
+  useEffect(() => {
+    setStartAt(resumeSecondsFor(currentLecture.id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentLecture.id, resumeSecondsFor]);
+
+  const handleProgress = useCallback(
+    (percent: number, currentTime: number) => {
+      watchedSecondsRef.current = currentTime;
+      watchedPercentRef.current = percent;
+
+      if (isSignedIn) {
+        saveProgress(currentLecture.id, percent, currentTime);
+        return;
+      }
+
+      // Anonymous viewers get a gentle prompt after a minute of watching.
+      if (authReady && !gateDismissed && currentTime >= GATE_AFTER_SECONDS) {
+        setGateDismissed(true);
+        setPauseSignal((n) => n + 1);
+        setGateOpen(true);
+      }
+    },
+    [isSignedIn, authReady, gateDismissed, saveProgress, currentLecture.id],
+  );
+
   const handleVideoEnd = () => {
+    if (isSignedIn) {
+      saveProgress(currentLecture.id, 100, watchedSecondsRef.current, true);
+    }
     const currentIndex = mitBlockchainLectures.findIndex(l => l.id === currentLecture.id);
     if (currentIndex < mitBlockchainLectures.length - 1) {
       handleLectureSelect(mitBlockchainLectures[currentIndex + 1].id);
     }
   };
+
 
   const goToPrevious = () => {
     const currentIndex = mitBlockchainLectures.findIndex(l => l.id === currentLecture.id);
@@ -199,13 +255,46 @@ export const BlockchainAndMoney = () => {
               </div>
             </div>
 
+            {/* Completion / sign-in status */}
+            {courseCompleted && (
+              <div className="glass rounded-2xl p-5 border border-emerald-500/30 flex items-start gap-3">
+                <Award className="h-5 w-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                <p className="font-montserrat text-sm text-foreground">
+                  {t('education.mitOcw.completedBanner')}
+                </p>
+              </div>
+            )}
+            {authReady && !isSignedIn && (
+              <div className="glass rounded-2xl p-5 border border-white/10 flex items-center justify-between gap-4 flex-wrap">
+                <span className="flex items-center gap-2 font-montserrat text-sm text-muted-foreground">
+                  <Lock className="h-4 w-4 text-accent" />
+                  {t('education.mitOcw.notSaving')}
+                </span>
+                <button
+                  onClick={() => setGateOpen(true)}
+                  className="px-4 py-2 rounded-xl bg-accent hover:bg-accent/90 transition-colors font-montserrat text-sm text-white"
+                >
+                  {t('education.mitOcw.signInToSave')}
+                </button>
+              </div>
+            )}
+
             {/* Video Player */}
               <AppleStyleVideoPlayer
                 videoUrl={currentLecture.videoUrl}
                 title={currentLecture.title}
                 onVideoEnd={handleVideoEnd}
                 subtitles={subtitlesFromDb[currentLecture.id] || currentLecture.subtitles}
+                startAt={startAt}
+                pauseSignal={pauseSignal}
+                onProgress={handleProgress}
+                onPlayStateChange={(playing) => {
+                  if (!playing && isSignedIn && watchedSecondsRef.current > 0) {
+                    saveProgress(currentLecture.id, watchedPercentRef.current, watchedSecondsRef.current, true);
+                  }
+                }}
               />
+
 
             {/* Navigation Buttons */}
             <div className="flex items-center justify-between gap-4">
@@ -235,6 +324,7 @@ export const BlockchainAndMoney = () => {
               lectures={mitBlockchainLectures}
               currentLectureId={currentLecture.id}
               onLectureSelect={handleLectureSelect}
+              completedLectureIds={completedOrderIndexes}
             />
           </div>
         </div>
@@ -280,6 +370,9 @@ export const BlockchainAndMoney = () => {
           </div>
         </div>
       </div>
+
+      <SignInToSaveDialog open={gateOpen} onOpenChange={setGateOpen} />
+      <CourseCompletedDialog open={justCompleted} onOpenChange={(o) => !o && setJustCompleted(false)} />
     </div>
   );
 };

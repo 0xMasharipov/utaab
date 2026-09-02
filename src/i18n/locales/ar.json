@@ -882,7 +882,20 @@
         "source": "المصدر",
         "mitOcw": "MIT OpenCourseWare",
         "disclaimer": "يقوم UTAAB EDU ببث هذا المحتوى مباشرة من archive.org لأغراض تعليمية غير تجارية. جميع الحقوق محفوظة لـ MIT. يتم توفير هذه الدورة بموجب ترخيص Creative Commons، الذي يسمح بالاستخدام المجاني مع الإسناد المناسب."
-      }
+      },
+      "progressTitle": "تقدمك",
+      "progressCount": "اكتملت {{done}} من {{total}} محاضرة",
+      "notSaving": "لم تقم بتسجيل الدخول — لا يتم حفظ تقدمك.",
+      "signInToSave": "سجّل الدخول لحفظ التقدم",
+      "gateTitle": "احفظ تقدمك",
+      "gateBody": "سجّل حساباً أو ادخل لحفظ تقدمك والحصول على شهادة عند إنهاء الدورة.",
+      "gateRegister": "إنشاء حساب",
+      "gateSignIn": "تسجيل الدخول",
+      "gateContinue": "المتابعة دون حفظ",
+      "completedTitle": "اكتملت الدورة!",
+      "completedBody": "شهادتك في الطريق — نعمل على تحسين خدماتنا.",
+      "completedClose": "رائع",
+      "completedBanner": "لقد أنهيت هذه الدورة. شهادتك في الطريق — نعمل على تحسين خدماتنا."
     },
     "catalog": {
       "title": "كتالوج الدورات",
