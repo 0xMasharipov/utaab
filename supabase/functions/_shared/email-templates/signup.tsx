@@ -26,6 +26,8 @@ interface SignupEmailProps {
   siteUrl: string
   recipient: string
   confirmationUrl: string
+  /** Optional 6-digit verification code shown as an alternative to the link. */
+  token?: string
 }
 
 export const SignupEmail = ({
@@ -33,6 +35,7 @@ export const SignupEmail = ({
   siteUrl,
   recipient,
   confirmationUrl,
+  token,
 }: SignupEmailProps) => {
   const brand = siteName || 'UTAAB'
   return (
@@ -67,6 +70,14 @@ export const SignupEmail = ({
               </Button>
             </Section>
 
+            {token ? (
+              <>
+                <Text style={codeIntro}>Or enter this verification code:</Text>
+                <Section style={codeBox}>
+                  <Text style={codeText}>{token}</Text>
+                </Section>
+              </>
+            ) : null}
 
             <Hr style={divider} />
 
@@ -157,6 +168,31 @@ const button: React.CSSProperties = {
 
 
 
+
+const codeIntro: React.CSSProperties = {
+  fontSize: '13px',
+  color: '#6b7280',
+  textAlign: 'center' as const,
+  margin: '0 0 12px',
+}
+
+const codeBox: React.CSSProperties = {
+  backgroundColor: '#081020',
+  borderRadius: '10px',
+  padding: '20px',
+  textAlign: 'center' as const,
+  margin: '0 0 8px',
+}
+
+const codeText: React.CSSProperties = {
+  fontSize: '30px',
+  letterSpacing: '10px',
+  color: '#ffffff',
+  fontWeight: 700,
+  margin: 0,
+  fontFamily:
+    "'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+}
 
 const divider: React.CSSProperties = {
   borderColor: '#e5e7eb',
