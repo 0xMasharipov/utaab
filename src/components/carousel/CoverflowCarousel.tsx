@@ -125,6 +125,10 @@ export const CoverflowCarousel = ({
   const activeRef = useRef(activeIndex);
   const cardWidthRef = useRef(cardWidth);
   cardWidthRef.current = cardWidth;
+  const inViewRef = useRef(true);
+  const runningRef = useRef(false);
+  const [inView, setInView] = useState(true);
+
 
   useEffect(() => {
     const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
