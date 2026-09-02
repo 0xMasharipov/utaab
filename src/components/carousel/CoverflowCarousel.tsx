@@ -276,7 +276,7 @@ export const CoverflowCarousel = ({
 
   useLayoutEffect(() => {
     applyTransforms();
-  }, [applyTransforms, cardWidth, count]);
+  }, [applyTransforms, cardWidth, effectiveGap, count]);
 
   const goTo = useCallback(
     (idx: number) => {
