@@ -25,8 +25,8 @@ export const Navbar = () => {
   const [panelTop, setPanelTop] = useState(68);
   const [pillRect, setPillRect] = useState({ left: 0, width: 0 });
 
-  const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
   const isRTL = i18n.language === 'ar';
+
   const [prefersReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const { getTransitionClasses } = useLanguageTransition();
 
