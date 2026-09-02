@@ -41,14 +41,14 @@ serve(async (req) => {
       { auth: { persistSession: false } },
     );
 
-    // Rate limit resends per email (server-side safety net).
-    const { data: allowed, error: rlErr } = await admin.rpc('log_security_event', {
+    // Audit trail for resend attempts.
+    const { error: logErr } = await admin.rpc('log_security_event', {
       _event_type: 'education_otp_resend',
       _severity: 'low',
       _endpoint: 'education-resend-otp',
       _details: { email },
     });
-    if (rlErr) console.error('resend logging failed', rlErr, allowed);
+    if (logErr) console.error('resend logging failed', logErr);
 
     // A magic link for an unconfirmed user both confirms the address and signs in.
     const { data: link, error: linkErr } = await admin.auth.admin.generateLink({
