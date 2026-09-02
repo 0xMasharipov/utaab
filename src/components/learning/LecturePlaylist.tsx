@@ -55,12 +55,15 @@ export const LecturePlaylist = ({ lectures, currentLectureId, onLectureSelect, c
             >
               {/* Lecture Number Badge */}
               <div className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center font-montserrat font-semibold transition-colors ${
-                isActive 
-                  ? 'bg-accent text-white' 
+                isCompleted
+                  ? 'bg-emerald-500/20 text-emerald-400'
+                  : isActive
+                  ? 'bg-accent text-white'
                   : 'bg-white/10 text-muted-foreground'
               }`}>
-                {lecture.id.toString().padStart(2, '0')}
+                {isCompleted ? <Check className="h-5 w-5" /> : lecture.id.toString().padStart(2, '0')}
               </div>
+
 
               {/* Lecture Info */}
               <div className="flex-1 text-left">
