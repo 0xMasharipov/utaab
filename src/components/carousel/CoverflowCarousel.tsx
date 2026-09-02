@@ -398,26 +398,48 @@ export const CoverflowCarousel = ({
 
   if (reducedMotion) {
     return (
-      <div
-        className={cn(
-          'relative -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4',
-          className
-        )}
-        role="region"
-        aria-label={ariaLabel}
-      >
-        {items.map((item, i) => (
-          <div
-            key={i}
-            className="snap-center shrink-0"
-            style={{ width: cardWidth, height: cardHeight }}
-          >
-            {item}
-          </div>
-        ))}
+      <div className={cn('relative', className)}>
+        <div
+          className="-mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          role="region"
+          aria-roledescription="carousel"
+          aria-label={ariaLabel}
+          onScroll={(e) => {
+            const el = e.currentTarget;
+            const idx = clamp(
+              Math.round(el.scrollLeft / (cardWidth + 20)),
+              0,
+              Math.max(count - 1, 0)
+            );
+            setActive(idx);
+          }}
+        >
+          {items.map((item, i) => (
+            <div
+              key={i}
+              className="snap-center shrink-0"
+              style={{ width: cardWidth, height: cardHeight }}
+            >
+              {item}
+            </div>
+          ))}
+        </div>
+        <div className="mt-2 flex justify-center gap-2">
+          {items.map((_, i) => (
+            <span
+              key={i}
+              aria-hidden="true"
+              className={cn(
+                'h-1.5 rounded-full transition-all duration-300',
+                i === activeIndex ? 'w-6 bg-primary' : 'w-1.5 bg-foreground/25'
+              )}
+            />
+          ))}
+        </div>
       </div>
     );
   }
+
 
   return (
     <div className={cn('relative', className)}>
