@@ -128,6 +128,43 @@ export const Events = () => {
     </motion.div>
   );
 
+  // Past events are shown newest first, as full posters.
+  const pastSorted = [...pastEvents].reverse();
+  const pastBanners = pastSorted.filter((e) => !!e.cover_image);
+  const lightboxImages = pastBanners.map((e) => ({
+    url: e.cover_image as string,
+    alt: getLocalizedTitle(e),
+  }));
+
+  const renderPastBanner = (event: any, index: number) => (
+    <div className="flex h-full w-full flex-col">
+      <button
+        type="button"
+        onClick={() => setLightboxIndex(index)}
+        aria-label={getLocalizedTitle(event)}
+        className="group relative block w-full flex-1 overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-[0_18px_50px_rgba(0,0,0,0.35)] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+      >
+        <AnimatedImage
+          src={event.cover_image}
+          alt={getLocalizedTitle(event)}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          placeholderClassName="rounded-2xl"
+        />
+      </button>
+      <div className="mt-3 px-1 text-center">
+        <p className="truncate text-sm font-bold text-foreground">
+          {getLocalizedTitle(event)}
+        </p>
+        <p className="mt-0.5 truncate text-xs text-muted-foreground">
+          {format(new Date(event.start_date), 'PPP')}
+          {event.location_address ? ` · ${event.location_address}` : ''}
+        </p>
+      </div>
+    </div>
+  );
+
+
+
   return (
     <section id="events" className="py-16 md:py-24 relative" ref={ref}>
       <div className="section-container">
