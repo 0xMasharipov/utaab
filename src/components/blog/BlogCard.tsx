@@ -23,14 +23,17 @@ interface BlogCardProps {
     gallery?: any | null;
   };
   index?: number;
+  /** Eager-load the cover image (use for the first visible row). */
+  priority?: boolean;
 }
 
-export const BlogCard = ({ post, index = 0 }: BlogCardProps) => {
+export const BlogCard = ({ post, index = 0, priority = false }: BlogCardProps) => {
   const { i18n, t } = useTranslation();
   const lang = i18n.language as 'en' | 'tr' | 'ru' | 'ar';
 
   const title = (post as any)[`title_${lang}`] || post.title_en;
   const excerpt = (post as any)[`excerpt_${lang}`] || post.excerpt_en;
+
 
   return (
     <motion.div
