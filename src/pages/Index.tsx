@@ -1,9 +1,12 @@
 import { useState, lazy, Suspense, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 import { Navbar } from '@/components/Navbar';
 import { Hero } from '@/components/Hero';
 import { HeroCarousel } from '@/components/HeroCarousel';
 import BackgroundGrid from '@/components/BackgroundGrid';
+
 
 // Lazy load decorative background (causes forced reflow, not critical for FCP)
 const AnimatedBlobBackground = lazy(() => import('@/components/AnimatedBlobBackground'));
