@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Calendar, MapPin, Group, Globe, OpenNewWindow } from 'iconoir-react';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,11 +9,15 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 import AnimatedImage from '@/components/common/AnimatedImage';
+import CoverflowCarousel from '@/components/carousel/CoverflowCarousel';
+import ImageLightbox from '@/components/blog/ImageLightbox';
 
 export const Events = () => {
   const { t, i18n } = useTranslation();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
 
   const { data: events, isLoading } = useQuery({
     queryKey: ['public-events'],
