@@ -194,40 +194,70 @@ export const CoverflowCarousel = ({
     [onCardChange]
   );
 
-  // Main animation loop: velocity + friction, snapping to the nearest card.
+  // Visibility gate — never burn frames while the carousel is off-screen.
   useEffect(() => {
-    if (reducedMotion) {
-      applyTransforms();
+    const el = viewportRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        inViewRef.current = entry.isIntersecting;
+        setInView(entry.isIntersecting);
+      },
+      { rootMargin: '200px' }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  // Main animation step: velocity + friction, snapping to the nearest card.
+  // Kept in a ref so the loop never closes over stale state, and it stops
+  // itself once the carousel settles (no idle rAF churn while scrolling).
+  const stepLoop = useRef<() => void>(() => {});
+  stepLoop.current = () => {
+    const maxIdx = Math.max(count - 1, 0);
+    let idle = false;
+    if (!draggingRef.current) {
+      if (targetRef.current !== null) {
+        const diff = targetRef.current - offsetRef.current;
+        offsetRef.current += diff * 0.16;
+        if (Math.abs(diff) < 0.001) {
+          offsetRef.current = targetRef.current;
+          targetRef.current = null;
+        }
+      } else if (Math.abs(velocityRef.current) > 0.0005) {
+        offsetRef.current += velocityRef.current;
+        velocityRef.current *= frictionFactor;
+        offsetRef.current = clamp(offsetRef.current, -0.4, maxIdx + 0.4);
+      } else if (velocityRef.current !== 0) {
+        velocityRef.current = 0;
+        targetRef.current = clamp(Math.round(offsetRef.current), 0, maxIdx);
+      } else {
+        idle = true;
+      }
+    }
+    applyTransforms();
+    setActive(clamp(Math.round(offsetRef.current), 0, maxIdx));
+    if (idle) {
+      runningRef.current = false;
       return;
     }
-    const tick = () => {
-      const maxIdx = Math.max(count - 1, 0);
-      if (!draggingRef.current) {
-        if (targetRef.current !== null) {
-          const diff = targetRef.current - offsetRef.current;
-          offsetRef.current += diff * 0.16;
-          if (Math.abs(diff) < 0.001) {
-            offsetRef.current = targetRef.current;
-            targetRef.current = null;
-          }
-        } else if (Math.abs(velocityRef.current) > 0.0005) {
-          offsetRef.current += velocityRef.current;
-          velocityRef.current *= frictionFactor;
-          offsetRef.current = clamp(offsetRef.current, -0.4, maxIdx + 0.4);
-        } else if (velocityRef.current !== 0) {
-          velocityRef.current = 0;
-          targetRef.current = clamp(Math.round(offsetRef.current), 0, maxIdx);
-        }
-      }
-      applyTransforms();
-      setActive(clamp(Math.round(offsetRef.current), 0, maxIdx));
-      rafRef.current = requestAnimationFrame(tick);
-    };
-    rafRef.current = requestAnimationFrame(tick);
+    rafRef.current = requestAnimationFrame(() => stepLoop.current());
+  };
+
+  const wake = useCallback(() => {
+    if (reducedMotion || runningRef.current || !inViewRef.current) return;
+    runningRef.current = true;
+    rafRef.current = requestAnimationFrame(() => stepLoop.current());
+  }, [reducedMotion]);
+
+  useEffect(() => {
+    if (reducedMotion || !inView) return;
+    wake();
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      runningRef.current = false;
     };
-  }, [applyTransforms, count, frictionFactor, reducedMotion, setActive]);
+  }, [inView, reducedMotion, wake]);
 
   useLayoutEffect(() => {
     applyTransforms();
@@ -238,9 +268,11 @@ export const CoverflowCarousel = ({
       const maxIdx = Math.max(count - 1, 0);
       velocityRef.current = 0;
       targetRef.current = clamp(idx, 0, maxIdx);
+      wake();
     },
-    [count]
+    [count, wake]
   );
+
 
   // Wheel: native non-passive listener (React's onWheel is passive).
   const wheelHandlerRef = useRef<(e: WheelEvent) => void>(() => {});
