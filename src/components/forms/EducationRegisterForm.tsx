@@ -241,12 +241,12 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
 
       toast({
         title: t('education.registration.welcomeTitle'),
-        description: otpType === 'signup' 
+        description: mode === 'signup'
           ? t('education.registration.welcomeMessage')
           : t('education.registration.signInSuccess'),
       });
 
-      if (otpType === 'signup') {
+      if (mode === 'signup') {
         setCompleted(true);
       } else {
         navigate('/education');
@@ -280,20 +280,27 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
     // Set cooldown immediately to block double-clicks even if request is slow
     setResendCooldown(60);
     try {
-      if (otpType === 'signup') {
-        const { error } = await supabase.auth.resend({
-          type: 'signup',
-          email: otpEmail,
-          options: { emailRedirectTo: `${window.location.origin}/education` },
-        });
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.auth.resend({ type: 'email_change', email: otpEmail });
-        if (error) throw error;
+      const { data: resendResp, error } = await supabase.functions.invoke(
+        'education-resend-otp',
+        {
+          body: {
+            email: otpEmail,
+            email_redirect_to: `${window.location.origin}/education`,
+          },
+        }
+      );
+      if (error) throw error;
+
+      if (resendResp?.confirmation_mode === 'code') {
+        setConfirmationMode('code');
+        setOtpType('email');
       }
+
       toast({
         title: 'Email sent',
-        description: `We sent a new confirmation email to ${otpEmail}.`,
+        description: resendResp?.email_sent
+          ? `We sent a new verification code to ${otpEmail}.`
+          : `We couldn't send a new email right now. Please try again shortly.`,
       });
     } catch (error: any) {
       toast({
@@ -369,15 +376,31 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
           
           // If email not confirmed, show confirmation screen (link-based)
           if (error.message?.includes('Email not confirmed')) {
-            setOtpEmail(formData.email.trim().toLowerCase());
-            setOtpType('signup');
-            setConfirmationMode('link');
+            const pendingEmail = formData.email.trim().toLowerCase();
+            setOtpEmail(pendingEmail);
+            setOtpType('email');
+            setConfirmationMode('code');
             setAwaitingOtp(true);
             // Use a long cooldown to respect the backend 60s safety window
             setResendCooldown(60);
+
+            // Send a fresh verification code so the student can finish here.
+            const { data: resendResp } = await supabase.functions.invoke(
+              'education-resend-otp',
+              {
+                body: {
+                  email: pendingEmail,
+                  email_redirect_to: `${window.location.origin}/education`,
+                },
+              }
+            );
+            if (resendResp?.confirmation_mode === 'link') {
+              setConfirmationMode('link');
+            }
+
             toast({
               title: 'Email not verified',
-              description: 'Please check your inbox and click the confirmation link we sent you.',
+              description: 'We sent a 6-digit verification code to your inbox.',
             });
             setIsSubmitting(false);
             return;
@@ -524,18 +547,18 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
         return;
       }
 
-      // Show "check your email" confirmation screen (link-based confirmation)
+      // Show verification screen — code-based when the backend delivered an OTP.
       setOtpEmail(normalizedEmail);
-      setOtpType('signup');
-      setConfirmationMode('link');
+      setOtpType('email');
+      setConfirmationMode(signupResp.confirmation_mode === 'code' ? 'code' : 'link');
       setAwaitingOtp(true);
       setResendCooldown(60);
 
       const description = !signupResp.email_sent
         ? `We couldn't send a new confirmation email right now. Please wait a minute, then use Resend.`
         : signupResp.already_existed
-        ? `An account for ${validatedData.email} already exists. We've re-sent the confirmation link — please check your inbox.`
-        : `We sent a confirmation link to ${validatedData.email}. Click it to activate your account.`;
+        ? `An account for ${validatedData.email} already exists. We've re-sent the verification code — please check your inbox.`
+        : `We sent a 6-digit verification code to ${validatedData.email}. Enter it below to activate your account.`;
 
       toast({
         title: signupResp.email_sent ? (signupResp.already_existed ? 'Account already exists' : 'Check your email') : 'Confirmation pending',
