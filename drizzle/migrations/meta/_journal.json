@@ -29,6 +29,13 @@
       "when": 1788315638822,
       "tag": "0003_create_certificate_requests",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1788331846558,
+      "tag": "0004_fix_courses_instructor_rls",
+      "breakpoints": true
     }
   ]
 }
