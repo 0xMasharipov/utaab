@@ -16,13 +16,8 @@ import { supabase } from '@/integrations/supabase/client';
 import logo from '@/assets/logo-new.webp';
 import { BrandText } from '@/components/common/BrandText';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
+import { LanguageSelector, LanguageGrid } from '@/components/common/LanguageSelector';
 
-const languages = [
-  { code: 'en', name: 'English', flag: '🇬🇧' },
-  { code: 'tr', name: 'Türkçe', flag: '🇹🇷' },
-  { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-  { code: 'ar', name: 'العربية', flag: '🇸🇦' },
-];
 
 export const EducationNavbar = () => {
   const { t, i18n } = useTranslation();
