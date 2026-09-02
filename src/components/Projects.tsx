@@ -122,10 +122,12 @@ export const Projects = () => {
                   alt=""
                   aria-hidden="true"
                   loading="lazy"
-                  containerClassName="absolute bottom-0 right-0 w-[55%] z-10 opacity-[0.85]"
-                  className="w-full h-full object-contain transition-[filter,transform] duration-500 group-hover:scale-105 pointer-events-none select-none drop-shadow-[0_8px_24px_rgba(59,130,246,0.18)] group-hover:drop-shadow-[0_12px_36px_rgba(59,130,246,0.32)]"
+                  sizes="(max-width: 639px) 72vw, 240px"
+                  containerClassName="absolute bottom-2 right-2 w-[72%] sm:w-[62%] md:w-[58%] h-[46%] z-10 opacity-[0.9]"
+                  className="w-full h-full object-contain object-bottom transition-[filter,transform] duration-500 group-hover:scale-105 pointer-events-none select-none drop-shadow-[0_8px_24px_rgba(59,130,246,0.18)] group-hover:drop-shadow-[0_12px_36px_rgba(59,130,246,0.32)]"
                   placeholderClassName="opacity-0"
                 />
+
 
                 {/* Layer 3: Dark gradient overlay */}
                 <div
