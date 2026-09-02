@@ -40,6 +40,7 @@ export const TEAM_PHOTO_BY_NAME: Record<string, string> = {
   yunus: yunusImg,
   abdulbaki: abdulbakiImg,
   yana: yanaImg,
+  yanina: yanaImg,
   shuayb: shuaybImg,
   ibrahim: ibrahimImg,
   burak: burakImg,
