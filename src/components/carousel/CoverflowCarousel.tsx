@@ -477,7 +477,7 @@ export const CoverflowCarousel = ({
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
         onClickCapture={onClickCapture}
-        className="relative z-10 w-full cursor-grab select-none overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-primary/50 active:cursor-grabbing"
+        className="relative z-10 -mx-4 w-[calc(100%+2rem)] cursor-grab select-none overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-primary/50 active:cursor-grabbing sm:mx-0 sm:w-full"
         style={{
           height: cardHeight + 48,
           perspective: '1400px',
