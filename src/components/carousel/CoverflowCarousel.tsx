@@ -127,6 +127,9 @@ export const CoverflowCarousel = ({
   const activeRef = useRef(activeIndex);
   const cardWidthRef = useRef(cardWidth);
   cardWidthRef.current = cardWidth;
+  const gapRef = useRef(effectiveGap);
+  gapRef.current = effectiveGap;
+
   const inViewRef = useRef(true);
   const runningRef = useRef(false);
   const [inView, setInView] = useState(true);
