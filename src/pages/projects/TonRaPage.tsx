@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Send } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import BackgroundGrid from '@/components/BackgroundGrid';
@@ -146,7 +146,6 @@ const TonRaPage = () => {
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground font-semibold text-sm shadow-[0_6px_20px_rgba(59,130,246,0.25)] hover:shadow-[0_8px_28px_rgba(59,130,246,0.4)] hover:-translate-y-0.5 transition-all"
                   >
-                    <Send className="w-4 h-4" />
                     {t('projects.tonraPage.hero.tryBeta')}
                   </a>
                   <Link
@@ -346,7 +345,6 @@ const TonRaPage = () => {
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-primary text-primary-foreground font-semibold text-sm shadow-[0_6px_20px_rgba(59,130,246,0.3)] hover:shadow-[0_10px_32px_rgba(59,130,246,0.45)] hover:-translate-y-0.5 transition-all"
               >
-                <Send className="w-4 h-4" />
                 {t('projects.tonraPage.cta.button')}
               </a>
               <p className="mt-5 text-xs text-muted-foreground">
