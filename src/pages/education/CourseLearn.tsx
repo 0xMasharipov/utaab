@@ -27,6 +27,8 @@ export const CourseLearn = () => {
     });
   }, []);
 
+  const queryClient = useQueryClient();
+
   const { data: course } = useQuery({
     queryKey: ['course', slug],
     queryFn: async () => {
