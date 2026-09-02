@@ -37,6 +37,7 @@ export const BlockchainAndMoney = () => {
   const [gateDismissed, setGateDismissed] = useState(false);
   const [pauseSignal, setPauseSignal] = useState(0);
   const watchedSecondsRef = useRef(0);
+  const watchedPercentRef = useRef(0);
   const [startAt, setStartAt] = useState(0);
 
 
@@ -122,6 +123,7 @@ export const BlockchainAndMoney = () => {
   const handleProgress = useCallback(
     (percent: number, currentTime: number) => {
       watchedSecondsRef.current = currentTime;
+      watchedPercentRef.current = percent;
 
       if (isSignedIn) {
         saveProgress(currentLecture.id, percent, currentTime);
@@ -288,7 +290,7 @@ export const BlockchainAndMoney = () => {
                 onProgress={handleProgress}
                 onPlayStateChange={(playing) => {
                   if (!playing && isSignedIn && watchedSecondsRef.current > 0) {
-                    saveProgress(currentLecture.id, 0, watchedSecondsRef.current, false);
+                    saveProgress(currentLecture.id, watchedPercentRef.current, watchedSecondsRef.current, true);
                   }
                 }}
               />
@@ -322,6 +324,7 @@ export const BlockchainAndMoney = () => {
               lectures={mitBlockchainLectures}
               currentLectureId={currentLecture.id}
               onLectureSelect={handleLectureSelect}
+              completedLectureIds={completedOrderIndexes}
             />
           </div>
         </div>
@@ -367,6 +370,9 @@ export const BlockchainAndMoney = () => {
           </div>
         </div>
       </div>
+
+      <SignInToSaveDialog open={gateOpen} onOpenChange={setGateOpen} />
+      <CourseCompletedDialog open={justCompleted} onOpenChange={(o) => !o && setJustCompleted(false)} />
     </div>
   );
 };
