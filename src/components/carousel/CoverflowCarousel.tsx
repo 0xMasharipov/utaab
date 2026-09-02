@@ -110,6 +110,8 @@ export const CoverflowCarousel = ({
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const [cardWidth, setCardWidth] = useState(300);
+  const [effectiveGap, setEffectiveGap] = useState(cardGap);
+
   const [activeIndex, setActiveIndex] = useState(
     clamp(initialIndex, 0, Math.max(count - 1, 0))
   );
