@@ -228,6 +228,14 @@ export const Events = () => {
           </>
         )}
       </div>
+
+      <ImageLightbox
+        images={lightboxImages}
+        initialIndex={lightboxIndex ?? 0}
+        open={lightboxIndex !== null}
+        onClose={() => setLightboxIndex(null)}
+      />
     </section>
+
   );
 };
