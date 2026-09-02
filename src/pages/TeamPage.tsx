@@ -91,8 +91,7 @@ const TeamPage = () => {
           <motion.div
             variants={containerVariants}
             initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-50px' }}
+            animate="visible"
             className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-7 sm:gap-8 lg:gap-10 max-w-6xl mx-auto"
           >
             {members.map((member) => {
