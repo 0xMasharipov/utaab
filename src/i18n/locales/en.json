@@ -882,7 +882,20 @@
         "source": "Source",
         "mitOcw": "MIT OpenCourseWare",
         "disclaimer": "UTAAB EDU streams this content directly from archive.org for non-commercial educational purposes. All rights remain with MIT. This course is made available under a Creative Commons license, which allows for free use with proper attribution."
-      }
+      },
+      "progressTitle": "Your progress",
+      "progressCount": "{{done}} of {{total}} lectures complete",
+      "notSaving": "You are not signed in — your progress is not being saved.",
+      "signInToSave": "Sign in to save progress",
+      "gateTitle": "Save your progress",
+      "gateBody": "Register or sign in to save your progress and get granted with a certificate when you finish the course.",
+      "gateRegister": "Register",
+      "gateSignIn": "Sign in",
+      "gateContinue": "Continue without saving",
+      "completedTitle": "Course completed!",
+      "completedBody": "Your certificate is on the way — we are working on it to improve our services.",
+      "completedClose": "Great",
+      "completedBanner": "You finished this course. Your certificate is on the way — we are working on it to improve our services."
     },
     "catalog": {
       "title": "Course Catalog",
