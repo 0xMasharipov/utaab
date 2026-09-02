@@ -110,6 +110,8 @@ export const CoverflowCarousel = ({
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const [cardWidth, setCardWidth] = useState(300);
+  const [effectiveGap, setEffectiveGap] = useState(cardGap);
+
   const [activeIndex, setActiveIndex] = useState(
     clamp(initialIndex, 0, Math.max(count - 1, 0))
   );
@@ -125,6 +127,9 @@ export const CoverflowCarousel = ({
   const activeRef = useRef(activeIndex);
   const cardWidthRef = useRef(cardWidth);
   cardWidthRef.current = cardWidth;
+  const gapRef = useRef(effectiveGap);
+  gapRef.current = effectiveGap;
+
   const inViewRef = useRef(true);
   const runningRef = useRef(false);
   const [inView, setInView] = useState(true);
@@ -144,14 +149,19 @@ export const CoverflowCarousel = ({
     if (!el) return;
     const measure = () => {
       const w = el.clientWidth;
-      const next = w < 640 ? Math.min(w - 64, 300) : clamp(w * 0.32, 280, 380);
+      const isMobile = w < 640;
+      const next = isMobile
+        ? clamp(w * 0.62, 200, 300)
+        : clamp(w * 0.32, 280, 380);
       setCardWidth(Math.round(next));
+      setEffectiveGap(isMobile ? Math.round(cardGap * 0.5) : cardGap);
     };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
-  }, []);
+  }, [cardGap]);
+
 
   // Dominant colours for the gradient backdrop.
   useEffect(() => {
@@ -166,7 +176,8 @@ export const CoverflowCarousel = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [images.join('|')]);
 
-  const step = cardWidth + cardGap;
+  const step = cardWidth + effectiveGap;
+
 
   const applyTransforms = useCallback(() => {
     const offset = offsetRef.current;
@@ -179,14 +190,14 @@ export const CoverflowCarousel = ({
       const rotate = -clampedD * (maxRotationDegrees / 1.6);
       const depth = -Math.min(ad, 3) * (maxDepthPx / 1.6);
       const scale = Math.max(minScale, 1 - Math.min(ad, 3) * (1 - minScale) / 1.4);
-      const x = d * (cardWidthRef.current + cardGap);
+      const x = d * (cardWidthRef.current + gapRef.current);
       const opacity = ad > 3.2 ? 0 : clamp(1 - Math.max(0, ad - 1.4) * 0.42, 0, 1);
       node.style.transform = `translate3d(calc(-50% + ${x}px), 0, 0) perspective(1400px) rotateY(${rotate}deg) translateZ(${depth}px) scale(${scale})`;
       node.style.opacity = String(opacity);
       node.style.zIndex = String(100 - Math.round(ad * 10));
       node.style.pointerEvents = ad > 3.2 ? 'none' : 'auto';
     }
-  }, [cardGap, maxDepthPx, maxRotationDegrees, minScale]);
+  }, [maxDepthPx, maxRotationDegrees, minScale]);
 
   const setActive = useCallback(
     (idx: number) => {
@@ -265,7 +276,7 @@ export const CoverflowCarousel = ({
 
   useLayoutEffect(() => {
     applyTransforms();
-  }, [applyTransforms, cardWidth, count]);
+  }, [applyTransforms, cardWidth, effectiveGap, count]);
 
   const goTo = useCallback(
     (idx: number) => {
@@ -466,7 +477,7 @@ export const CoverflowCarousel = ({
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
         onClickCapture={onClickCapture}
-        className="relative z-10 w-full cursor-grab select-none overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-primary/50 active:cursor-grabbing"
+        className="relative z-10 -mx-4 w-[calc(100%+2rem)] cursor-grab select-none overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-primary/50 active:cursor-grabbing sm:mx-0 sm:w-full"
         style={{
           height: cardHeight + 48,
           perspective: '1400px',
