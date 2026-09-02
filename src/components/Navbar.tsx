@@ -31,7 +31,7 @@ export const Navbar = () => {
   const { getTransitionClasses } = useLanguageTransition();
 
 
-  const changeLanguage = (lng: string) => i18n.changeLanguage(lng);
+  
 
   const closeMenu = useCallback(() => {
     setIsMenuOpen(false);
