@@ -253,13 +253,46 @@ export const BlockchainAndMoney = () => {
               </div>
             </div>
 
+            {/* Completion / sign-in status */}
+            {courseCompleted && (
+              <div className="glass rounded-2xl p-5 border border-emerald-500/30 flex items-start gap-3">
+                <Award className="h-5 w-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                <p className="font-montserrat text-sm text-foreground">
+                  {t('education.mitOcw.completedBanner')}
+                </p>
+              </div>
+            )}
+            {authReady && !isSignedIn && (
+              <div className="glass rounded-2xl p-5 border border-white/10 flex items-center justify-between gap-4 flex-wrap">
+                <span className="flex items-center gap-2 font-montserrat text-sm text-muted-foreground">
+                  <Lock className="h-4 w-4 text-accent" />
+                  {t('education.mitOcw.notSaving')}
+                </span>
+                <button
+                  onClick={() => setGateOpen(true)}
+                  className="px-4 py-2 rounded-xl bg-accent hover:bg-accent/90 transition-colors font-montserrat text-sm text-white"
+                >
+                  {t('education.mitOcw.signInToSave')}
+                </button>
+              </div>
+            )}
+
             {/* Video Player */}
               <AppleStyleVideoPlayer
                 videoUrl={currentLecture.videoUrl}
                 title={currentLecture.title}
                 onVideoEnd={handleVideoEnd}
                 subtitles={subtitlesFromDb[currentLecture.id] || currentLecture.subtitles}
+                startAt={startAt}
+                pauseSignal={pauseSignal}
+                onProgress={handleProgress}
+                onPlayStateChange={(playing) => {
+                  if (!playing && isSignedIn && watchedSecondsRef.current > 0) {
+                    saveProgress(currentLecture.id, 0, watchedSecondsRef.current, false);
+                  }
+                }}
               />
+
 
             {/* Navigation Buttons */}
             <div className="flex items-center justify-between gap-4">
