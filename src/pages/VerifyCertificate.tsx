@@ -161,7 +161,7 @@ export default function VerifyCertificate() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/15 text-primary text-xs font-semibold mb-4">
+                <div className="inline-flex items-center gap-2 text-primary text-xs font-semibold mb-4">
                   <ShieldCheck className="h-3.5 w-3.5" /> {t('verifyCertificate.badge')}
                 </div>
                 <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight mb-4 text-glow-soft">

@@ -356,7 +356,7 @@ const FloatingDevice = () => {
       </motion.div>
 
       <motion.div
-        className="absolute left-0 sm:-left-4 md:-left-12 top-8 sm:top-12 backdrop-blur-xl bg-white/80 border border-blue-100 rounded-2xl px-3 py-2 sm:px-3.5 sm:py-2.5 shadow-xl flex items-center gap-2"
+        className="absolute left-0 sm:-left-4 md:-left-12 top-8 sm:top-12 flex items-center gap-2 text-slate-700"
         initial={{ opacity: 0, scale: 0.3, y: 0 }}
         animate={ready
           ? (loop ? { opacity: 1, scale: 1, y: [0, -8, 0] } : { opacity: 1, scale: 1, y: 0 })
@@ -370,9 +370,7 @@ const FloatingDevice = () => {
             }
           : splashTransition(9)}
       >
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shrink-0">
-          <BadgeCheck className="w-4 h-4 text-white" />
-        </div>
+        <BadgeCheck className="w-4 h-4 text-blue-600 shrink-0" />
         <div className="text-left">
           <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">{t('projects.ubpointPage.hero.earned')}</div>
           <div className="text-sm font-bold text-slate-900">{t('projects.ubpointPage.hero.ubp50')}</div>
@@ -380,7 +378,7 @@ const FloatingDevice = () => {
       </motion.div>
 
       <motion.div
-        className="absolute right-0 sm:-right-2 md:-right-10 bottom-20 sm:bottom-24 backdrop-blur-xl bg-white/80 border border-blue-100 rounded-2xl px-3 py-2 sm:px-3.5 sm:py-2.5 shadow-xl flex items-center gap-2"
+        className="absolute right-0 sm:-right-2 md:-right-10 bottom-20 sm:bottom-24 flex items-center gap-2 text-slate-700"
         initial={{ opacity: 0, scale: 0.3, y: 0 }}
         animate={ready
           ? (loop ? { opacity: 1, scale: 1, y: [0, 10, 0] } : { opacity: 1, scale: 1, y: 0 })
@@ -394,9 +392,7 @@ const FloatingDevice = () => {
             }
           : splashTransition(10)}
       >
-        <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
-          <ShieldCheck className="w-4 h-4 text-blue-600" />
-        </div>
+        <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0" />
         <div className="text-left">
           <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">{t('projects.ubpointPage.hero.onChain')}</div>
           <div className="text-sm font-bold text-slate-900">{t('projects.ubpointPage.hero.verifiedBase')}</div>
@@ -532,7 +528,7 @@ const FeatureGrid = () => {
           transition={{ duration: 0.6 }}
           className="text-center max-w-2xl mx-auto mb-10 sm:mb-16"
         >
-          <div className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-4">
+          <div className="text-xs uppercase tracking-[0.2em] text-blue-700/80 font-semibold mb-4">
             {t('projects.ubpointPage.features.eyebrow')}
           </div>
           <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
@@ -681,7 +677,7 @@ const MockScreen: React.FC<{ kind: typeof showcaseDefs[number]['kind'] }> = ({ k
         <FadeImg src={logoAsset.url} alt="UBpoint" className="h-4 w-auto object-contain" />
         <span className="text-[11px] font-bold text-slate-900">UBpoint.</span>
       </div>
-      <div className="px-2 py-0.5 rounded-full bg-blue-50 text-[9px] font-bold text-blue-700">200 UBP</div>
+      <div className="text-[9px] font-bold text-blue-700">200 UBP</div>
     </div>
   );
 
@@ -878,7 +874,7 @@ const Showcase = () => {
   return (
     <section id="showcase" className="relative py-16 sm:py-24 md:py-32 bg-gradient-to-b from-white via-blue-50/40 to-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-5 sm:px-6 mb-10 sm:mb-14 text-center">
-        <div className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-4">
+        <div className="text-xs uppercase tracking-[0.2em] text-blue-700/80 font-semibold mb-4">
           {t('projects.ubpointPage.showcase.eyebrow')}
         </div>
         <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
@@ -952,7 +948,7 @@ const Sponsors = () => {
           viewport={{ once: true, amount: 0.05 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-5">
+          <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-blue-700/80 font-semibold mb-5">
             <Building2 className="w-3.5 h-3.5" />
             {t('projects.ubpointPage.sponsors.eyebrow')}
           </div>
@@ -1006,7 +1002,7 @@ const Sponsors = () => {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <div className="text-sm font-bold text-slate-900">{t(`projects.ubpointPage.sponsors.tasks.${tk.key}`)}</div>
-                  <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-blue-50 text-[10px] font-bold text-blue-700">
+                  <div className="inline-flex items-center gap-1 text-[10px] font-bold text-blue-700">
                     <ShieldCheck className="w-3 h-3" /> {t('projects.ubpointPage.sponsors.verified')}
                   </div>
                 </div>

@@ -157,12 +157,10 @@ const TonRaPage = () => {
                   </Link>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2">
-                  {['Beta', 'Telegram', 'TON'].map((chip) => (
-                    <span
-                      key={chip}
-                      className="px-3 py-1 rounded-full border border-white/10 bg-white/[0.02] text-[11px] uppercase tracking-[0.16em] text-muted-foreground"
-                    >
+                <div className="flex flex-wrap items-center gap-3 text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+                  {['Beta', 'Telegram', 'TON'].map((chip, i) => (
+                    <span key={chip}>
+                      {i > 0 && <span className="text-white/20 mr-2">•</span>}
                       {chip}
                     </span>
                   ))}

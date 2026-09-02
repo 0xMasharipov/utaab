@@ -131,12 +131,12 @@ export const Projects = () => {
                 <div className="relative z-30 p-5 sm:p-6 flex flex-col h-full">
                   <div className="mb-3">
                     <span
-                      className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-semibold ${
+                      className={`text-[11px] font-semibold ${
                         project.status === 'beta'
-                          ? 'bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/30'
+                          ? 'text-emerald-400'
                           : project.status === 'underDevelopment'
-                          ? 'bg-accent/15 text-accent'
-                          : 'bg-muted/30 text-muted-foreground'
+                          ? 'text-accent'
+                          : 'text-muted-foreground'
                       }`}
                     >
                       {t(`projects.status.${project.status}`)}
@@ -151,12 +151,10 @@ export const Projects = () => {
                     {t(project.descriptionKey)}
                   </p>
 
-                  <div className="flex flex-wrap gap-1.5 mt-auto">
+                  <div className="flex flex-wrap gap-2 mt-auto text-[11px] text-muted-foreground">
                     {project.tags.map((tag, tagIndex) => (
-                      <span
-                        key={tagIndex}
-                        className="px-2 py-0.5 rounded-full text-[11px] bg-white/[0.06] border border-white/[0.08] text-muted-foreground"
-                      >
+                      <span key={tagIndex}>
+                        {tagIndex > 0 && <span className="text-white/20 mr-1.5">•</span>}
                         {t(tag)}
                       </span>
                     ))}

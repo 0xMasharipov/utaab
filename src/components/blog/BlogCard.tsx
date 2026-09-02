@@ -55,9 +55,10 @@ export const BlogCard = ({ post, index = 0 }: BlogCardProps) => {
           )}
           <div className="p-5">
             {post.tags && post.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mb-3">
-                {post.tags.slice(0, 3).map(tag => (
-                  <span key={tag} className="text-xs px-2 py-0.5 rounded-full bg-accent/10 text-accent border border-accent/20">
+              <div className="flex flex-wrap gap-2 mb-3 text-xs text-accent/90">
+                {post.tags.slice(0, 3).map((tag, i) => (
+                  <span key={tag}>
+                    {i > 0 && <span className="text-accent/40 mr-2">•</span>}
                     {tag}
                   </span>
                 ))}

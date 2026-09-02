@@ -104,7 +104,7 @@ export const LessonNavigation = ({
                           <span>• {Math.round(lessonProgress.progress_percentage)}%</span>
                         )}
                         {lesson.is_free && (
-                          <span className="px-2 py-0.5 rounded bg-green-500/20 text-green-500">
+                          <span className="text-green-500">
                             Free
                           </span>
                         )}
