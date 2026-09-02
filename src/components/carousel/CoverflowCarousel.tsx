@@ -351,7 +351,9 @@ export const CoverflowCarousel = ({
         Math.max(count - 1, 0)
       );
     }
+    wake();
   };
+
 
   // Suppress the click that ends a drag so cards don't navigate accidentally.
   const onClickCapture = (e: React.MouseEvent) => {
