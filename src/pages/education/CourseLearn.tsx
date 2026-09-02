@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { EducationNavbar } from '@/components/education/EducationNavbar';
@@ -26,6 +26,8 @@ export const CourseLearn = () => {
       setUser(user);
     });
   }, []);
+
+  const queryClient = useQueryClient();
 
   const { data: course } = useQuery({
     queryKey: ['course', slug],
@@ -165,15 +167,14 @@ export const CourseLearn = () => {
     });
 
     if (allLessonsCompleted && enrollment?.progress === 100) {
-      const certNumber = await supabase.rpc('generate_certificate_number');
-      
-      const { error } = await supabase.from('certificates').insert({
-        user_id: user.id,
-        course_id: course.id,
-        certificate_number: certNumber.data
+      // Issuance is verified and performed server-side; clients cannot insert
+      // certificate rows directly.
+      const { data, error } = await supabase.functions.invoke('issue-course-certificate', {
+        body: { course_id: course.id },
       });
 
-      if (!error) {
+      if (!error && data?.issued) {
+        queryClient.invalidateQueries({ queryKey: ['certificate', course.id, user.id] });
         toast.success('Congratulations! Your certificate has been issued!');
         setActiveTab('certificate');
       }
