@@ -176,7 +176,8 @@ export const CoverflowCarousel = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [images.join('|')]);
 
-  const step = cardWidth + cardGap;
+  const step = cardWidth + effectiveGap;
+
 
   const applyTransforms = useCallback(() => {
     const offset = offsetRef.current;
