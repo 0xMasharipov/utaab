@@ -1,9 +1,14 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Upload, X, Loader2, Image, Video } from 'lucide-react';
+
+const PUBLIC_BUCKET = 'media';
+const PRIVATE_BUCKET = 'media-private';
+/** Stored value prefix for files kept in the private bucket. */
+const PRIVATE_PREFIX = 'private:';
 
 interface ImageUploadProps {
   value: string | null;
@@ -12,6 +17,12 @@ interface ImageUploadProps {
   folder?: string;
   label?: string;
   maxSizeMB?: number;
+  /**
+   * 'public'  — stored in the public media bucket, addressable by URL (site assets).
+   * 'private' — stored in the admin-only bucket; the value is a `private:<path>`
+   *             reference and previews use short-lived signed URLs.
+   */
+  visibility?: 'public' | 'private';
 }
 
 export function ImageUpload({
@@ -21,14 +32,38 @@ export function ImageUpload({
   folder = 'uploads',
   label = 'Upload file',
   maxSizeMB = 50,
+  visibility = 'public',
 }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const isVideo = accept.includes('video');
   const maxSizeBytes = maxSizeMB * 1024 * 1024;
+
+  // Private files are referenced by path, so resolve a short-lived signed URL.
+  useEffect(() => {
+    let cancelled = false;
+    if (!value) {
+      setPreviewUrl(null);
+      return;
+    }
+    if (!value.startsWith(PRIVATE_PREFIX)) {
+      setPreviewUrl(value);
+      return;
+    }
+    (async () => {
+      const { data } = await supabase.storage
+        .from(PRIVATE_BUCKET)
+        .createSignedUrl(value.slice(PRIVATE_PREFIX.length), 3600);
+      if (!cancelled) setPreviewUrl(data?.signedUrl ?? null);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [value]);
 
   const handleUpload = async (file: File) => {
     if (file.size > maxSizeBytes) {
@@ -42,6 +77,7 @@ export function ImageUpload({
     try {
       const ext = file.name.split('.').pop();
       const filename = `${folder}/${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`;
+      const bucket = visibility === 'private' ? PRIVATE_BUCKET : PUBLIC_BUCKET;
 
       // Simulate progress for better UX
       const progressInterval = setInterval(() => {
@@ -49,7 +85,7 @@ export function ImageUpload({
       }, 100);
 
       const { error: uploadError } = await supabase.storage
-        .from('media')
+        .from(bucket)
         .upload(filename, file, {
           cacheControl: '3600',
           upsert: false,
@@ -59,12 +95,14 @@ export function ImageUpload({
 
       if (uploadError) throw uploadError;
 
-      const { data: urlData } = supabase.storage
-        .from('media')
-        .getPublicUrl(filename);
-
       setProgress(100);
-      onChange(urlData.publicUrl);
+
+      if (visibility === 'private') {
+        onChange(`${PRIVATE_PREFIX}${filename}`);
+      } else {
+        const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(filename);
+        onChange(urlData.publicUrl);
+      }
       toast.success('File uploaded successfully');
     } catch (error: any) {
       console.error('Upload error:', error);
@@ -100,12 +138,18 @@ export function ImageUpload({
     if (!value) return;
 
     try {
-      // Extract the path from the URL
-      const url = new URL(value);
-      const pathParts = url.pathname.split('/storage/v1/object/public/media/');
-      if (pathParts.length > 1) {
-        const filePath = pathParts[1];
-        await supabase.storage.from('media').remove([filePath]);
+      if (value.startsWith(PRIVATE_PREFIX)) {
+        await supabase.storage
+          .from(PRIVATE_BUCKET)
+          .remove([value.slice(PRIVATE_PREFIX.length)]);
+      } else {
+        // Extract the path from the URL
+        const url = new URL(value);
+        const pathParts = url.pathname.split('/storage/v1/object/public/media/');
+        if (pathParts.length > 1) {
+          const filePath = pathParts[1];
+          await supabase.storage.from(PUBLIC_BUCKET).remove([filePath]);
+        }
       }
     } catch (error) {
       console.error('Failed to delete file from storage:', error);
@@ -114,18 +158,19 @@ export function ImageUpload({
     onChange(null);
   };
 
+
   if (value) {
     return (
       <div className="relative group">
         {isVideo ? (
           <video
-            src={value}
+            src={previewUrl ?? undefined}
             className="w-full h-40 object-cover rounded-lg border border-border"
             controls
           />
         ) : (
           <img
-            src={value}
+            src={previewUrl ?? undefined}
             alt="Uploaded file"
             className="w-full h-40 object-cover rounded-lg border border-border"
           />
