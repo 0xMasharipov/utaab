@@ -30,12 +30,24 @@ export default function AdminTeam() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('team_members')
-        .select('*')
+        .select(
+          'id, full_name, role_title, department, bio_en, bio_tr, bio_ru, bio_ar, image_url, linkedin_url, twitter_url, instagram_url, telegram_url, website_url, display_order, is_featured, is_published, created_at, updated_at'
+        )
         .order('display_order', { ascending: true });
       if (error) throw error;
-      return data ?? [];
+
+      // Contact details are admin-only and served through a role-checked function.
+      const { data: contacts } = await supabase.rpc('get_team_member_contacts');
+      const byId = new Map((contacts ?? []).map((c: any) => [c.id, c]));
+
+      return (data ?? []).map((m: any) => ({
+        ...m,
+        email: byId.get(m.id)?.email ?? null,
+        phone: byId.get(m.id)?.phone ?? null,
+      }));
     },
   });
+
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {

@@ -2781,6 +2781,14 @@ export type Database = {
           total_events: number
         }[]
       }
+      get_team_member_contacts: {
+        Args: never
+        Returns: {
+          email: string
+          id: string
+          phone: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
