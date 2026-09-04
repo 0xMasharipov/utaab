@@ -164,13 +164,13 @@ export function ImageUpload({
       <div className="relative group">
         {isVideo ? (
           <video
-            src={value}
+            src={previewUrl ?? undefined}
             className="w-full h-40 object-cover rounded-lg border border-border"
             controls
           />
         ) : (
           <img
-            src={value}
+            src={previewUrl ?? undefined}
             alt="Uploaded file"
             className="w-full h-40 object-cover rounded-lg border border-border"
           />
