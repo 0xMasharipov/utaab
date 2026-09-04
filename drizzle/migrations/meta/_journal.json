@@ -57,6 +57,13 @@
       "when": 1788543134832,
       "tag": "0007_grant_team_members_select_authenticated",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1788543849444,
+      "tag": "0008_team_view_security_invoker_and_admin_contacts",
+      "breakpoints": true
     }
   ]
 }
