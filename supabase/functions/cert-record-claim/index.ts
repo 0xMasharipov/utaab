@@ -11,6 +11,8 @@ const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const CHAIN_ID = Number(Deno.env.get('CERT_CHAIN_ID') || 84532);
 const CONTRACT = (Deno.env.get('CERT_CONTRACT_ADDRESS') ?? '').toLowerCase();
+// Dedicated Chainstack node (Base Sepolia). Falls back to the public endpoint.
+const RPC_URL = Deno.env.get('CERT_RPC_URL') || undefined;
 
 const BodySchema = z.object({
   serial_hash: z.string().regex(/^0x[0-9a-fA-F]{64}$/),
@@ -37,7 +39,7 @@ Deno.serve(async (req) => {
     const { serial_hash, tx_hash, holder } = parsed.data;
 
     const chain = CHAIN_ID === 8453 ? base : baseSepolia;
-    const client = createPublicClient({ chain, transport: http() });
+    const client = createPublicClient({ chain, transport: http(RPC_URL) });
     const receipt = await client.getTransactionReceipt({ hash: tx_hash as Hex });
     if (!receipt || receipt.status !== 'success') return fail(400);
     if (receipt.to?.toLowerCase() !== CONTRACT) return fail(400);

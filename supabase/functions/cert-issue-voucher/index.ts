@@ -18,6 +18,8 @@ const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const ISSUER_PK = Deno.env.get('UTAAB_ISSUER_PRIVATE_KEY') as Hex | undefined;
 const CHAIN_ID = Number(Deno.env.get('CERT_CHAIN_ID') || 84532);
 const CONTRACT = Deno.env.get('CERT_CONTRACT_ADDRESS') as Hex | undefined;
+// Dedicated Chainstack node (Base Sepolia). Falls back to the public endpoint.
+const RPC_URL = Deno.env.get('CERT_RPC_URL') || undefined;
 
 const BodySchema = z.object({
   serial_hash: z
@@ -139,7 +141,7 @@ Deno.serve(async (req) => {
 
     const account = privateKeyToAccount(ISSUER_PK);
     const chain = CHAIN_ID === 8453 ? base : baseSepolia;
-    const wallet = createWalletClient({ account, chain, transport: http() });
+    const wallet = createWalletClient({ account, chain, transport: http(RPC_URL) });
 
     const issuedAt = BigInt(Math.floor(Date.now() / 1000));
     const tokenURI =
