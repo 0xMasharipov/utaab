@@ -292,13 +292,15 @@ export const CoverflowCarousel = ({
   // Wheel: native non-passive listener (React's onWheel is passive).
   const wheelHandlerRef = useRef<(e: WheelEvent) => void>(() => {});
   wheelHandlerRef.current = (e: WheelEvent) => {
-    const dy =
-      (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY) *
-      (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 100 : 1);
-    if (Math.abs(dy) < 0.5) return;
+    const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 100 : 1;
+    const dx = e.deltaX * unit;
+    const dy = e.deltaY * unit;
+    // Only horizontal intent drives the carousel; vertical wheel keeps
+    // scrolling the page so visitors are never trapped in the section.
+    if (Math.abs(dx) <= Math.abs(dy) || Math.abs(dx) < 0.5) return;
     e.preventDefault();
     targetRef.current = null;
-    velocityRef.current += (dy / (step * 6)) * wheelSensitivity;
+    velocityRef.current += (dx / (step * 6)) * wheelSensitivity;
     velocityRef.current = clamp(velocityRef.current, -0.35, 0.35);
     wake();
   };
