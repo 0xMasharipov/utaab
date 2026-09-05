@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <style>
+    .piece {
+      fill: #fff;
+      opacity: 0;
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: assemble 680ms cubic-bezier(.22, 1, .36, 1) both;
+    }
+
+    .top {
+      --piece-x: 0px;
+      --piece-y: -15px;
+      --piece-rotation: -5deg;
+    }
+
+    .left {
+      --piece-x: -15px;
+      --piece-y: 0px;
+      --piece-rotation: -5deg;
+      animation-delay: 60ms;
+    }
+
+    .right {
+      --piece-x: 15px;
+      --piece-y: 0px;
+      --piece-rotation: 5deg;
+      animation-delay: 60ms;
+    }
+
+    .bottom {
+      --piece-x: 0px;
+      --piece-y: 15px;
+      --piece-rotation: 5deg;
+      animation-delay: 120ms;
+    }
+
+    @keyframes assemble {
+      0% {
+        opacity: 0;
+        transform: translate(var(--piece-x), var(--piece-y)) rotate(var(--piece-rotation)) scale(.9);
+      }
+      72% {
+        opacity: 1;
+        transform: translate(0, 0) rotate(0) scale(1.035);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(0, 0) rotate(0) scale(1);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .piece {
+        animation: none;
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+
+  <g class="piece top">
+    <rect x="43" y="14" width="34" height="34" rx="7" transform="rotate(45 60 31)" />
+  </g>
+  <g class="piece left">
+    <rect x="14" y="43" width="34" height="34" rx="7" transform="rotate(45 31 60)" />
+  </g>
+  <g class="piece right">
+    <rect x="72" y="43" width="34" height="34" rx="7" transform="rotate(45 89 60)" />
+  </g>
+  <g class="piece bottom">
+    <rect x="43" y="72" width="34" height="34" rx="7" transform="rotate(45 60 89)" />
+  </g>
+</svg>

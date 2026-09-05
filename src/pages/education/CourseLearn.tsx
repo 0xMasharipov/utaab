@@ -204,10 +204,10 @@ export const CourseLearn = () => {
 
   if (!course || !currentLessonId) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-[100dvh] bg-background">
         <EducationNavbar />
-        <div className="flex items-center justify-center h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        <div className="flex min-h-[100dvh] items-center justify-center pt-16">
+          <div className="h-12 w-12 animate-pulse rounded-xl bg-white/[0.06]" />
         </div>
       </div>
     );
@@ -217,10 +217,10 @@ export const CourseLearn = () => {
   const isEnrolled = !!enrollment;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-[100dvh] bg-background">
       <EducationNavbar />
       
-      <div className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 pb-28 pt-24 sm:pt-28">
         <div className="grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -305,7 +305,7 @@ export const CourseLearn = () => {
             />
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

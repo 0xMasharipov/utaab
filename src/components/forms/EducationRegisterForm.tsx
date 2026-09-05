@@ -587,7 +587,7 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
   if (awaitingOtp) {
     const isLink = confirmationMode === 'link';
     return (
-      <div className="glass rounded-3xl p-8 md:p-12 text-center">
+      <div className="glass rounded-2xl p-8 md:p-12 text-center">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -669,7 +669,7 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
 
   if (completed) {
     return (
-      <div className="glass rounded-3xl p-8 md:p-12 text-center">
+      <div className="glass rounded-2xl p-8 md:p-12 text-center">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -702,7 +702,7 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
   // Sign In Mode
   if (mode === 'signin') {
     return (
-      <div className="glass rounded-3xl p-6 md:p-12">
+      <div className="glass rounded-2xl p-6 md:p-12">
         <h3 className="text-2xl font-bold mb-6 text-foreground">
           {t('education.registration.signIn')}
         </h3>
@@ -785,7 +785,7 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
   }
 
   return (
-    <form onSubmit={handleSubmit} onKeyDown={handleKeyDown} className="glass rounded-3xl p-6 md:p-12">
+    <form onSubmit={handleSubmit} onKeyDown={handleKeyDown} className="glass rounded-2xl p-6 md:p-12">
       <HoneypotField value={honeypot} onChange={setHoneypot} />
       {/* Progress Indicator */}
       <div className="flex justify-between mb-8">

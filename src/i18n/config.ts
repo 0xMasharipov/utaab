@@ -27,17 +27,20 @@ i18n
     },
   });
 
-// Set HTML attributes for RTL support and language
-i18n.on('languageChanged', (lng) => {
+// Keep document language and direction in sync on first load and later changes.
+const applyDocumentLanguage = (lng: string) => {
   const htmlElement = document.documentElement;
   htmlElement.setAttribute('lang', lng);
-  
+
   // Set RTL for Arabic
   if (lng === 'ar') {
     htmlElement.setAttribute('dir', 'rtl');
   } else {
     htmlElement.setAttribute('dir', 'ltr');
   }
-});
+};
+
+i18n.on('languageChanged', applyDocumentLanguage);
+applyDocumentLanguage(i18n.resolvedLanguage ?? i18n.language ?? 'en');
 
 export default i18n;

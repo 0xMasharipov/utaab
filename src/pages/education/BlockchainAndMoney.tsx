@@ -170,11 +170,11 @@ export const BlockchainAndMoney = () => {
   const hasNext = currentIndex < mitBlockchainLectures.length - 1;
 
   return (
-    <div className="min-h-screen bg-background pt-24 md:pt-28">
+    <div className="min-h-[100dvh] bg-background pb-28 pt-20">
       <EducationNavbar />
       
       {/* Course Header */}
-      <div className="relative gradient-mesh py-16 md:py-20">
+      <div className="relative border-b border-white/10 py-16 md:py-20">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="animate-fade-in">
             <div className="flex items-center gap-3 mb-4">
@@ -189,7 +189,7 @@ export const BlockchainAndMoney = () => {
               </span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-montserrat font-bold text-foreground mb-4">
+            <h1 className="mb-5 max-w-[18ch] font-montserrat text-4xl font-extrabold tracking-[-0.05em] text-foreground md:text-6xl">
               {t('education.mitOcw.courseTitle')}
             </h1>
             

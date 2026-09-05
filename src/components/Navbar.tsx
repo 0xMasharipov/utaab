@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Xmark, User } from 'iconoir-react';
 import { Button } from '@/components/ui/button';
 // framer-motion removed from critical path — CSS animations used instead
@@ -13,8 +13,12 @@ import { LanguageSelector, LanguageGrid } from '@/components/common/LanguageSele
 
 export const Navbar = () => {
   const { t, i18n } = useTranslation();
+  const location = useLocation();
   const navigate = useNavigate();
-  const isScrolled = false;
+  const isHomepage = location.pathname === '/';
+  const [hasHomepageRevealed, setHasHomepageRevealed] = useState(
+    () => typeof window !== 'undefined' && window.scrollY > 24,
+  );
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMenuMounted, setIsMenuMounted] = useState(false);
   const [logoLoaded, setLogoLoaded] = useState(false);
@@ -29,9 +33,29 @@ export const Navbar = () => {
 
   const [prefersReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const { getTransitionClasses } = useLanguageTransition();
+  const shouldShowNavbar = !isHomepage || hasHomepageRevealed;
+  const isScrolled = isHomepage && hasHomepageRevealed;
 
+  // On the homepage, reveal once after the user's first intentional scroll.
+  // Other routes keep navigation available immediately.
+  useEffect(() => {
+    if (!isHomepage) return;
 
-  
+    if (window.scrollY > 24) {
+      setHasHomepageRevealed(true);
+      return;
+    }
+
+    setHasHomepageRevealed(false);
+    const handleScroll = () => {
+      if (window.scrollY <= 24) return;
+      setHasHomepageRevealed(true);
+      window.removeEventListener('scroll', handleScroll);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isHomepage]);
 
   const closeMenu = useCallback(() => {
     setIsMenuOpen(false);
@@ -74,9 +98,10 @@ export const Navbar = () => {
         const navEl = navRef.current;
         const pillEl = pillRef.current;
         // Read both rects together so the browser only flushes layout once
-        const navRect = navEl?.getBoundingClientRect();
         const pillRect = pillEl?.getBoundingClientRect();
-        if (navRect) setPanelTop(navRect.bottom + 2);
+        // offsetTop/offsetHeight ignore the entrance transform, so opening the
+        // menu immediately after reveal still places the panel correctly.
+        if (navEl) setPanelTop(navEl.offsetTop + navEl.offsetHeight + 2);
         if (pillRect) setPillRect({ left: pillRect.left, width: pillRect.width });
       });
     };
@@ -145,7 +170,26 @@ export const Navbar = () => {
 
   return (
     <>
-      <nav ref={navRef} className="fixed top-2 sm:top-4 left-1/2 -translate-x-1/2 z-50 w-[96%] sm:w-[95%] max-w-6xl transition-[transform,opacity] duration-300">
+      <nav
+        ref={navRef}
+        aria-hidden={!shouldShowNavbar}
+        className={cn(
+          'fixed top-2 sm:top-4 left-1/2 z-50 w-[96%] sm:w-[95%] max-w-6xl',
+          !shouldShowNavbar && 'pointer-events-none',
+        )}
+        style={{
+          transform: shouldShowNavbar
+            ? 'translate3d(-50%, 0, 0)'
+            : 'translate3d(-50%, calc(-100% - 24px), 0)',
+          opacity: shouldShowNavbar ? 1 : 0,
+          visibility: shouldShowNavbar ? 'visible' : 'hidden',
+          transition: prefersReducedMotion
+            ? 'none'
+            : shouldShowNavbar
+              ? 'transform 520ms cubic-bezier(0.22, 1, 0.36, 1), opacity 360ms ease-out, visibility 0s linear 0s'
+              : 'transform 520ms cubic-bezier(0.22, 1, 0.36, 1), opacity 280ms ease-in, visibility 0s linear 520ms',
+        }}
+      >
         <div
           ref={pillRef}
           className={`rounded-full px-4 sm:px-5 md:px-8 py-3 sm:py-4 border transition-all duration-300 ${
@@ -292,13 +336,13 @@ export const Navbar = () => {
                     ].map((item, i) => (
                   <button
                         key={item.key}
-                        onClick={() => (item as any).type === 'scroll' ? scrollToSection((item as any).id!) : handleNavigate((item as any).path!)}
+                        onClick={() => handleNavigate(item.path)}
                         className={getTransitionClasses(
                           "text-left text-lg font-semibold tracking-wide text-white/90 hover:text-white hover:bg-white/[0.08] transition-all duration-200 px-4 py-2.5 rounded-xl nav-menu-item"
                         )}
                         style={{ animationDelay: `${0.03 * (i + 4)}s` }}
                       >
-                        {t((item as any).label || `nav.${item.key}`)}
+                        {t('label' in item ? item.label : `nav.${item.key}`)}
                       </button>
                     ))}
                   </div>

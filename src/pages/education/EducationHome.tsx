@@ -1,55 +1,38 @@
 import { useState } from 'react';
+import { ArrowRight, Search, Star } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import {
-  Search, ArrowRight, BookMarked, GraduationCap, Star,
-  Boxes, Coins, Image as ImageIcon, Globe, FileCode2, ShieldCheck, TrendingUp, BookOpen,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 import { EducationNavbar } from '@/components/education/EducationNavbar';
 import { CutiiAIPanel } from '@/components/education/CutiiAIPanel';
 import { ExternalCourseCard } from '@/components/education/ExternalCourseCard';
 import { externalCourses } from '@/data/externalCourses';
 import AnimatedImage from '@/components/common/AnimatedImage';
-import GlassCard from '@/components/glass/GlassCard';
-import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
-import BottomGradientOverlay from '@/components/BottomGradientOverlay';
-
-const categoryIconFor = (slug?: string) => {
-  switch (slug) {
-    case 'blockchain': return Boxes;
-    case 'defi': return Coins;
-    case 'nft': return ImageIcon;
-    case 'web3': return Globe;
-    case 'smart-contracts': return FileCode2;
-    case 'security': return ShieldCheck;
-    case 'trading': return TrendingUp;
-    default: return BookOpen;
-  }
-};
 
 export const EducationHome = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
 
-  const { data: categories } = useQuery({
+  const {
+    data: categories,
+    isLoading: categoriesLoading,
+    isError: categoriesError,
+  } = useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('categories')
-        .select('*')
-        .order('name_en');
+      const { data, error } = await supabase.from('categories').select('*').order('name_en');
       if (error) throw error;
       return data;
     },
   });
 
-  const { data: featuredCourses } = useQuery({
+  const {
+    data: featuredCourses,
+    isLoading: coursesLoading,
+    isError: coursesError,
+  } = useQuery({
     queryKey: ['featured-courses'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -64,100 +47,72 @@ export const EducationHome = () => {
   });
 
   const handleSearch = () => {
-    if (searchQuery.trim()) {
-      navigate(`/education/courses?search=${encodeURIComponent(searchQuery)}`);
-    }
+    const query = searchQuery.trim();
+    navigate(query ? `/education/courses?search=${encodeURIComponent(query)}` : '/education/courses');
   };
 
-  const getCategoryName = (category: any) => {
-    const locale = i18n.language;
-    return category[`name_${locale}`] || category.name_en;
-  };
-
-  const getCourseTitle = (course: any) => {
-    const locale = i18n.language;
-    return course[`title_${locale}`] || course.title_en;
-  };
-
-  const getCourseSubtitle = (course: any) => {
-    const locale = i18n.language;
-    return course[`subtitle_${locale}`] || course.subtitle_en;
+  const localized = (record: Record<string, unknown> | null | undefined, field: string) => {
+    const locale = i18n.language.split('-')[0];
+    const value = record?.[`${field}_${locale}`] || record?.[`${field}_en`] || '';
+    return typeof value === 'string' ? value : String(value);
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground relative">
-      <AnimatedBlobBackground />
+    <div className="relative min-h-[100dvh] overflow-hidden bg-background text-foreground">
       <EducationNavbar />
       <CutiiAIPanel />
 
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-6">
-        <div className="section-container relative z-10">
-          <div className="text-center max-w-4xl mx-auto mb-12">
-            <Badge variant="outline" className="glass border-accent/30 text-accent mb-6 px-4 py-1.5 text-xs tracking-wider uppercase">
-              {t('education.home.hero_badge')}
-            </Badge>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 animate-fade-in">
+      <main className="relative z-10 px-5 pb-28 pt-28 sm:px-8 lg:pb-36 lg:pt-32">
+        <section className="mx-auto grid max-w-7xl items-end gap-12 border-b border-white/10 pb-20 lg:grid-cols-[1.25fr_0.75fr] lg:gap-20 lg:pb-24">
+          <div>
+            <p className="mb-5 text-sm font-semibold text-accent">{t('education.home.hero_badge')}</p>
+            <h1 className="max-w-[12ch] text-balance text-[clamp(3rem,7vw,6.9rem)] font-extrabold leading-[0.91] tracking-[-0.075em]">
               {t('education.home.hero_title')}
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          </div>
+          <div className="pb-1">
+            <p className="max-w-[36rem] text-pretty text-base font-medium leading-7 text-muted-foreground sm:text-lg sm:leading-8">
               {t('education.home.hero_subtitle')}
             </p>
-
-            {/* Search Bar */}
-            <div className="flex gap-2 max-w-2xl mx-auto animate-fade-in mb-8" style={{ animationDelay: '0.2s' }}>
-              <Input
-                type="text"
-                placeholder={t('education.home.search_placeholder')}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                className="glass h-14 text-lg"
-              />
-              <Button onClick={handleSearch} size="lg" className="btn-primary h-14 px-5" aria-label={t('education.home.search_placeholder')}>
-                <Search className="h-5 w-5" aria-hidden="true" />
-                <span className="sr-only">{t('education.home.search_placeholder')}</span>
-              </Button>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              <Button onClick={() => navigate('/education/courses')} size="lg" className="btn-primary rounded-full">
-                {t('education.home.cta')}
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-              <Button
-                onClick={() => navigate('/education/courses')}
-                size="lg"
-                variant="outline"
-                className="glass border-white/15 rounded-full"
+            <form
+              className="mt-8 flex max-w-xl flex-col items-stretch gap-3 border-b border-white/25 pb-3 focus-within:border-accent sm:flex-row sm:items-center sm:gap-0"
+              onSubmit={(event) => {
+                event.preventDefault();
+                handleSearch();
+              }}
+            >
+              <div className="flex min-w-0 flex-1 items-center">
+                <Search className="h-5 w-5 shrink-0 text-muted-foreground" aria-hidden="true" />
+                <input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  placeholder={t('education.home.search_placeholder')}
+                  className="min-h-12 min-w-0 flex-1 bg-transparent px-4 text-base text-foreground outline-none placeholder:text-muted-foreground"
+                />
+              </div>
+              <button
+                type="submit"
+                className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 self-stretch rounded-full bg-accent px-5 text-sm font-bold text-[#03101e] transition-transform hover:-translate-y-0.5 active:translate-y-px sm:self-auto"
               >
                 {t('education.home.browse_catalog')}
-              </Button>
-            </div>
+                <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden="true" />
+              </button>
+            </form>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Open Educational Resources Section */}
-      <section className="py-20 px-6">
-        <div className="section-container">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/15 border border-accent/20 text-accent mb-4">
-              <BookMarked className="h-5 w-5" />
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">
+        <section className="mx-auto max-w-7xl py-20 lg:py-28">
+          <div className="mb-10 max-w-2xl">
+            <h2 className="text-3xl font-extrabold tracking-[-0.045em] sm:text-5xl">
               {t('education.home.open_resources')}
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto mb-4">
+            <p className="mt-4 text-base leading-7 text-muted-foreground">
               {t('education.home.open_resources_subtitle')}
             </p>
-            <Badge variant="outline" className="glass border-accent/30 text-accent gap-1.5">
-              <GraduationCap className="h-4 w-4" />
-              {t('education.home.mit_partnership')}
-            </Badge>
+            <p className="mt-3 text-sm font-semibold text-accent">{t('education.home.mit_partnership')}</p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="max-w-4xl">
             {externalCourses.map((course) => (
               <ExternalCourseCard
                 key={course.id}
@@ -166,106 +121,119 @@ export const EducationHome = () => {
               />
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Categories Section */}
-      {categories && categories.length > 0 && (
-        <section className="py-20 px-6">
-          <div className="section-container">
-            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">{t('education.home.categories')}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {categories.map((category) => {
-                const Icon = categoryIconFor(category.slug);
-                return (
-                  <GlassCard
+        <section className="mx-auto grid max-w-7xl gap-10 border-t border-white/10 py-20 lg:grid-cols-[0.65fr_1.35fr] lg:gap-20 lg:py-28">
+          <div>
+            <h2 className="text-3xl font-extrabold tracking-[-0.045em] sm:text-5xl">
+              {t('education.home.categories')}
+            </h2>
+          </div>
+          <div>
+            {categoriesLoading && (
+              <div className="space-y-4" aria-label={t('common.loading', { defaultValue: 'Loading' })}>
+                {[0, 1, 2, 3].map((item) => <div key={item} className="h-16 animate-pulse rounded-xl bg-white/[0.045]" />)}
+              </div>
+            )}
+            {categoriesError && (
+              <p className="border-l-2 border-destructive pl-4 text-sm text-muted-foreground">
+                {t('education.home.categories_error', { defaultValue: 'Categories could not be loaded.' })}
+              </p>
+            )}
+            {!categoriesLoading && !categoriesError && (
+              <div className="grid sm:grid-cols-2">
+                {categories?.map((category, index) => (
+                  <button
                     key={category.id}
-                    hover
-                    className="cursor-pointer p-6 text-center"
+                    type="button"
                     onClick={() => navigate(`/education/courses?category=${category.slug}`)}
+                    className="group flex min-h-20 items-center justify-between border-b border-white/10 px-1 py-5 text-start sm:px-5 sm:first:pl-0"
                   >
-                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/15 border border-accent/20 text-accent mb-4">
-                      <Icon className="h-6 w-6" />
-                    </div>
-                    <h3 className="text-xl font-semibold">{getCategoryName(category)}</h3>
-                  </GlassCard>
-                );
-              })}
-            </div>
+                    <span className="flex items-baseline gap-4">
+                      <span className="text-xs text-muted-foreground">{String(index + 1).padStart(2, '0')}</span>
+                      <span className="text-lg font-bold text-foreground transition-colors group-hover:text-accent">
+                        {localized(category, 'name')}
+                      </span>
+                    </span>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-accent rtl:rotate-180 rtl:group-hover:-translate-x-1" />
+                  </button>
+                ))}
+                {!categories?.length && (
+                  <p className="text-sm text-muted-foreground">
+                    {t('education.home.no_categories', { defaultValue: 'New learning paths are being prepared.' })}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         </section>
-      )}
 
-      {/* Featured Courses Section */}
-      {featuredCourses && featuredCourses.length > 0 && (
-        <section className="py-20 px-6">
-          <div className="section-container">
-            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">{t('education.home.featured')}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <section className="mx-auto max-w-7xl border-t border-white/10 pt-20 lg:pt-28">
+          <div className="mb-12 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+            <h2 className="max-w-xl text-3xl font-extrabold tracking-[-0.045em] sm:text-5xl">
+              {t('education.home.featured')}
+            </h2>
+            <button
+              type="button"
+              onClick={() => navigate('/education/courses')}
+              className="inline-flex min-h-11 items-center gap-2 self-start text-sm font-bold text-accent"
+            >
+              {t('education.home.browse_catalog')}
+              <ArrowRight className="h-4 w-4 rtl:rotate-180" />
+            </button>
+          </div>
+
+          {coursesLoading && (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {[0, 1, 2].map((item) => <div key={item} className="aspect-[4/3] animate-pulse rounded-2xl bg-white/[0.045]" />)}
+            </div>
+          )}
+          {coursesError && (
+            <p className="border-l-2 border-destructive pl-4 text-sm text-muted-foreground">
+              {t('education.home.courses_error', { defaultValue: 'Featured courses could not be loaded.' })}
+            </p>
+          )}
+          {!coursesLoading && !coursesError && featuredCourses && featuredCourses.length > 0 && (
+            <div className="grid gap-x-6 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
               {featuredCourses.map((course) => (
-                <GlassCard
+                <article
                   key={course.id}
-                  hover
-                  className="cursor-pointer overflow-hidden p-0"
+                  className="group cursor-pointer"
                   onClick={() => navigate(`/education/course/${course.slug}`)}
                 >
-                  {course.hero_image && (
-                    <div className="aspect-video overflow-hidden">
+                  <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-[#101824]">
+                    {course.hero_image && (
                       <AnimatedImage
                         src={course.hero_image}
-                        alt={getCourseTitle(course)}
-                        className="w-full h-full object-cover"
-                        containerClassName="w-full h-full"
+                        alt={localized(course, 'title')}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.035]"
+                        containerClassName="h-full w-full"
                       />
-                    </div>
-                  )}
-                  <div className="p-6">
-                    <div className="flex items-center gap-2 mb-3">
-                      {course.categories && (
-                        <span className="text-xs px-2 py-1 rounded-full bg-primary/15 border border-accent/20 text-accent">
-                          {getCategoryName(course.categories)}
-                        </span>
-                      )}
-                      <span className="text-xs uppercase tracking-wider text-muted-foreground">
-                        {t(`education.levels.${course.level}`)}
-                      </span>
-                    </div>
-                    <h3 className="text-xl font-semibold mb-2">{getCourseTitle(course)}</h3>
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                      {getCourseSubtitle(course)}
-                    </p>
-                    {course.instructors && (
-                      <div
-                        className="flex items-center gap-2 text-sm mb-4 cursor-pointer hover:text-accent transition-colors"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(`/education/instructor/${course.instructors.id}`);
-                        }}
-                      >
-                        <div className="w-8 h-8 rounded-full bg-primary/15 border border-accent/20 text-accent flex items-center justify-center font-semibold">
-                          {course.instructors.name.charAt(0)}
-                        </div>
-                        <span className="text-muted-foreground hover:text-foreground">{course.instructors.name}</span>
-                      </div>
                     )}
-                    <div className="mt-4 flex items-center justify-between">
-                      <div className="flex items-center gap-1">
-                        <Star className="h-4 w-4 fill-accent text-accent" />
-                        <span className="text-sm font-semibold">{course.rating.toFixed(1)}</span>
-                      </div>
-                      <span className="text-lg font-bold text-accent">
-                        {course.is_free ? t('education.course.price_free') : `$${course.price}`}
-                      </span>
-                    </div>
                   </div>
-                </GlassCard>
+                  <div className="pt-5">
+                    <div className="flex items-center justify-between gap-4 text-xs text-muted-foreground">
+                      <span>{course.categories ? localized(course.categories, 'name') : t(`education.levels.${course.level}`)}</span>
+                      <span className="flex items-center gap-1"><Star className="h-3.5 w-3.5 text-accent" />{course.rating.toFixed(1)}</span>
+                    </div>
+                    <h3 className="mt-3 text-xl font-bold tracking-[-0.025em] transition-colors group-hover:text-accent">
+                      {localized(course, 'title')}
+                    </h3>
+                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">
+                      {localized(course, 'subtitle')}
+                    </p>
+                  </div>
+                </article>
               ))}
             </div>
-          </div>
+          )}
+          {!coursesLoading && !coursesError && !featuredCourses?.length && (
+            <p className="text-sm text-muted-foreground">
+              {t('education.home.no_featured', { defaultValue: 'Featured courses will appear here soon.' })}
+            </p>
+          )}
         </section>
-      )}
-
-      <BottomGradientOverlay />
+      </main>
     </div>
   );
 };

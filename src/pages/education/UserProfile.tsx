@@ -254,11 +254,11 @@ export const UserProfile = () => {
 
   if (!user || !profile) {
     return (
-      <div className="min-h-screen bg-background gradient-mesh">
+      <div className="min-h-[100dvh] bg-background">
         <EducationNavbar />
         <div className="flex items-center justify-center h-[80vh]">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <div className="mx-auto mb-4 h-12 w-12 animate-pulse rounded-xl bg-white/[0.06]" />
             <p className="text-muted-foreground">{t('education.profile.loading')}</p>
           </div>
         </div>
@@ -267,12 +267,12 @@ export const UserProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background gradient-mesh">
+    <div className="min-h-[100dvh] bg-background">
       <EducationNavbar />
       
-      <div className="section-container pt-24 md:pt-28 pb-8 md:pb-12">
+      <main className="section-container pb-28 pt-28 md:pt-32">
         {/* Profile Header */}
-        <div className="glass-strong rounded-3xl p-6 md:p-8 mb-6">
+        <div className="glass-strong mb-8 rounded-2xl p-6 md:p-8">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
             <Avatar className="h-24 w-24 border-4 border-primary/20">
               <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-bold">
@@ -281,7 +281,7 @@ export const UserProfile = () => {
             </Avatar>
 
             <div className="flex-1">
-              <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+              <h1 className="mb-2 text-4xl font-extrabold tracking-[-0.05em] text-foreground md:text-5xl">
                 {profile.full_name}
               </h1>
               <p className="text-muted-foreground mb-3">{user.email}</p>
@@ -848,7 +848,7 @@ export const UserProfile = () => {
             </Card>
           </TabsContent>
         </Tabs>
-      </div>
+      </main>
     </div>
   );
 };

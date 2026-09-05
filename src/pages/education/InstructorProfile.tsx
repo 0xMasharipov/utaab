@@ -58,10 +58,10 @@ export const InstructorProfile = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background pt-24">
+      <div className="min-h-[100dvh] bg-background pt-24">
         <EducationNavbar />
         <div className="flex items-center justify-center py-20">
-          <div className="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full" />
+          <div className="h-12 w-12 animate-pulse rounded-xl bg-white/[0.06]" />
         </div>
       </div>
     );
@@ -69,7 +69,7 @@ export const InstructorProfile = () => {
 
   if (!instructor) {
     return (
-      <div className="min-h-screen bg-background pt-24">
+      <div className="min-h-[100dvh] bg-background pt-24">
         <EducationNavbar />
         <div className="max-w-7xl mx-auto px-6 py-20 text-center">
           <h1 className="text-2xl font-bold mb-4">Instructor not found</h1>
@@ -79,19 +79,19 @@ export const InstructorProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background pt-24 pb-20">
+    <div className="min-h-[100dvh] bg-background pb-28 pt-28">
       <EducationNavbar />
       
       <div className="max-w-7xl mx-auto px-6">
         {/* Instructor Header */}
-        <Card className="glass mb-8">
+        <Card className="glass mb-14 rounded-2xl">
           <CardContent className="p-8">
             <div className="flex flex-col md:flex-row gap-6">
               <div className="w-32 h-32 rounded-full bg-primary/20 flex items-center justify-center text-5xl flex-shrink-0">
                 {instructor.name.charAt(0)}
               </div>
               <div className="flex-1">
-                <h1 className="text-3xl font-bold mb-2">{instructor.name}</h1>
+                <h1 className="mb-2 text-4xl font-extrabold tracking-[-0.05em] md:text-6xl">{instructor.name}</h1>
                 {instructor.title && (
                   <p className="text-xl text-muted-foreground mb-4">{instructor.title}</p>
                 )}
@@ -134,7 +134,7 @@ export const InstructorProfile = () => {
               {courses.map((course) => (
                 <Card
                   key={course.id}
-                  className="glass cursor-pointer transition-all hover:scale-105 hover:shadow-lg overflow-hidden"
+                  className="glass cursor-pointer overflow-hidden rounded-2xl transition-colors hover:border-accent/30"
                   onClick={() => navigate(`/education/course/${course.slug}`)}
                 >
                   {course.hero_image && (

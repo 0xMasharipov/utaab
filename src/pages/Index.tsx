@@ -4,7 +4,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Navbar } from '@/components/Navbar';
 import { Hero } from '@/components/Hero';
-import { HeroCarousel } from '@/components/HeroCarousel';
 import BackgroundGrid from '@/components/BackgroundGrid';
 
 
@@ -171,7 +170,6 @@ const Index = () => {
       <Suspense fallback={null}><AnimatedBlobBackground /></Suspense>
       <Navbar />
       <Hero />
-      <HeroCarousel />
       
       {showBelowFold && (
         <Suspense fallback={null}>

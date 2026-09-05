@@ -264,12 +264,12 @@
       "beta": "Beta — Yayında"
     },
     "ubp": {
-      "title": "UBpoint — UTAA Blockchain Puan Sistemi",
-      "description": "UTAAB ekosistemi içinde katkıları ve aktif katılımı ödüllendirmek için tasarlanmış blockchain tabanlı bir puan sistemi."
+      "title": "UBpoint — Katıldıkça kazan",
+      "description": "Etkinlikleri, öğrenmeyi ve topluluk katkılarını doğrulanabilir UBP'ye dönüştür; ardından UTAAB ekosistemindeki ödüllerin kilidini aç."
     },
     "tonra": {
-      "title": "TonRa — TON Araştırma Ağı",
-      "description": "Şeffaf işbirliği ve bilgi doğrulaması için TON tabanlı araştırma ağı."
+      "title": "TonRa — Güvenmeden önce TON'u kontrol et",
+      "description": "Etkileşime geçmeden önce cüzdanları, token'ları, projeleri ve airdrop'ları Telegram'da TonRa ile tara."
     },
     "asn": {
       "title": "ASN — Akademik Uzlaşma Ağı",
@@ -303,63 +303,116 @@
       "students": "Öğrenciler",
       "privacy": "Gizlilik",
       "layer2": "Katman 2",
+      "onChainRewards": "Zincir üstü ödüller",
+      "studentCommunity": "Öğrenci topluluğu",
+      "webAppLive": "Web uygulaması yayında",
+      "tonSecurity": "TON güvenliği",
+      "telegramBot": "Telegram botu",
+      "walletChecks": "Cüzdan kontrolleri",
       "governance": "Yönetişim",
       "dao": "DAO"
     },
     "tonraPage": {
+      "nav": {
+        "ariaLabel": "TonRa navigasyonu",
+        "mobileAriaLabel": "TonRa mobil navigasyonu",
+        "checks": "Neleri kontrol eder",
+        "workflow": "Nasıl çalışır",
+        "safety": "Güvenliğiniz",
+        "openTonra": "TonRa'yı Aç",
+        "toggleMenu": "Menüyü aç veya kapat"
+      },
       "hero": {
-        "tagline": "TON ekosistemini daha güvenle keşfedin.",
-        "intro": "TonRa, TON ekosistemindeki cüzdanları, tokenleri ve projeleri analiz etmenize yardımcı olan, güvenlik odaklı bir Telegram botudur. Şüpheli aktiviteleri, dolandırıcılık örüntülerini, sahte airdrop'ları ve diğer olası riskleri tarayarak; bir cüzdanla etkileşime geçmeden, bir token satın almadan veya yeni bir projeye güvenmeden önce size daha net bir görüntü sunar.",
-        "tryBeta": "Telegram'da Erken Beta'yı Dene",
-        "backToProjects": "Projelere Dön",
-        "devNote": "Bazı özellikler hâlâ geliştirme aşamasındadır."
+        "title": "Güvenmeden önce TON'u kontrol edin.",
+        "intro": "Etkileşime geçmeden önce cüzdanları, tokenleri, projeleri ve airdrop'ları Telegram içinden TonRa ile tarayın.",
+        "backToProjects": "Projelere Dön"
       },
-      "whatIs": {
-        "title": "TonRa nedir?",
-        "body": [
-          "TonRa, TON ekosistemi için geliştirilmiş Telegram tabanlı bir güvenlik ve araştırma botudur. Kullanıcıların cüzdanları, tokenleri ve projeleri etkileşime geçmeden önce hızlıca kontrol etmelerine yardımcı olur; olası riskleri, dolandırıcılıkları veya şüpheli aktiviteleri tespit etmeyi kolaylaştırır.",
-          "TON ekosistemi her geçen gün hızla büyüyor; her gün yeni tokenler, topluluklar, airdrop'lar ve projeler ortaya çıkıyor. Bu durum birçok fırsat yaratırken, hangi cüzdanların, tokenlerin veya projelerin güvenilir olduğunu anlamayı da zorlaştırıyor. TonRa bu süreci daha basit, hızlı ve güvenli hale getirmek için tasarlandı.",
-          "TonRa ile kullanıcılar TON ile ilgili bilgileri doğrudan Telegram üzerinden tarayabilir ve inceleyebilir. Bot; şüpheli cüzdan davranışları, riskli token aktiviteleri, sahte airdrop örüntüleri veya ekstra dikkat gerektiren projeler gibi uyarı işaretlerini öne çıkarır.",
-          "TonRa yalnızca bir tarayıcı değildir. TON kullanan herkes için pratik bir güvenlik asistanıdır. İster bir token'ı satın almadan önce kontrol edin, ister bir cüzdanı fon göndermeden önce inceleyin, ister bir airdrop'a katılmadan önce bir projeyi doğrulayın; TonRa daha iyi kararlar almanız için size daha net bilgiler sunar."
-        ]
+      "carousel": {
+        "ariaLabel": "TonRa telefon önizlemesi",
+        "tabsLabel": "TonRa kontrolleri",
+        "previous": "Önceki kontrol",
+        "next": "Sonraki kontrol",
+        "goTo": "{{number}}. kontrolü göster",
+        "wallets": {
+          "title": "Bir cüzdanı kontrol edin",
+          "body": "Fon göndermeden önce herkese açık cüzdan davranışını inceleyin."
+        },
+        "assets": {
+          "title": "Tokenleri ve projeleri inceleyin",
+          "body": "Bir token satın almadan veya projeye güvenmeden önce mevcut sinyalleri kontrol edin."
+        },
+        "airdrops": {
+          "title": "Riskli airdrop'ları fark edin",
+          "body": "Bağlantıları açmadan veya katılmadan önce şüpheli kampanya örüntülerini arayın."
+        }
       },
-      "usedFor": {
-        "title": "TonRa ne için kullanılır?",
-        "items": {
-          "wallet": {
-            "title": "TON cüzdanlarını kontrol edin",
-            "desc": "Fon göndermeden önce cüzdan davranışını inceleyin."
+      "checks": {
+        "title": "Önemli olanı tek yerden kontrol edin.",
+        "body": "TonRa, yaygın TON güvenlik kontrollerini tanıdık bir Telegram sohbetine taşır.",
+        "groups": {
+          "wallets": {
+            "title": "Cüzdan etkinliği",
+            "body": "Fon aktarmadan veya etkileşime geçmeden önce herkese açık cüzdan davranışını inceleyin."
           },
-          "token": {
-            "title": "Tokenleri inceleyin",
-            "desc": "Satın almadan veya etkileşime geçmeden önce tokenleri kontrol edin."
+          "assets": {
+            "title": "Tokenler ve projeler",
+            "body": "Bir token satın almadan veya yeni bir projeye güvenmeden önce mevcut sinyalleri inceleyin."
           },
-          "project": {
-            "title": "Riskli projeleri tespit edin",
-            "desc": "Şüpheli veya riskli proje davranışlarını erkenden fark edin."
-          },
-          "airdrop": {
-            "title": "Sahte airdrop'ları tespit edin",
-            "desc": "Olası dolandırıcılık kampanyalarını ve sahte airdrop'ları tanıyın."
-          },
-          "overview": {
-            "title": "Hızlı risk özeti",
-            "desc": "Doğrudan Telegram üzerinden hızlı bir risk özeti alın."
-          },
-          "decisions": {
-            "title": "Daha güvenli kararlar",
-            "desc": "TON'u keşfederken daha bilinçli seçimler yapın."
+          "campaigns": {
+            "title": "Airdrop kampanyaları",
+            "body": "Bir kampanya bağlantısını açmadan veya katılmadan önce şüpheli örüntüleri ortaya çıkarın."
           }
         }
       },
-      "why": {
-        "title": "TonRa neden önemli?",
-        "body": "Kripto kullanıcıları çoğu zaman hızlı kararlar vermek zorundadır, ancak dolandırıcı projeler ilk bakışta profesyonel ve güvenilir görünebilir. TonRa, kullanıcılara harekete geçmeden önce araştırma yapma imkânı sunarak bu belirsizliği azaltmaya yardımcı olur. Sadece sosyal medya paylaşımlarına, proje iddialarına veya topluluk hype'ına güvenmek yerine, kullanıcılar TonRa'yı ek bir koruma katmanı olarak kullanabilir. Bu, TON ekosistemine daha fazla şeffaflık kazandırır ve hem yeni başlayanlar hem de deneyimli kullanıcılar için daha güvenli katılımı destekler."
+      "workflow": {
+        "title": "Gönderin. İnceleyin. Karar verin.",
+        "body": "Güvenlik araştırması, ihtiyaç duyduğunuz ana uyum sağlamalıdır.",
+        "items": {
+          "send": {
+            "title": "Kontrol etmek istediğinizi gönderin",
+            "body": "Bir cüzdan adresini, tokeni, proje bağlantısını veya airdrop'u TonRa ile paylaşın."
+          },
+          "review": {
+            "title": "Sinyalleri inceleyin",
+            "body": "TonRa, mevcut risk göstergelerini kısa bir Telegram yanıtında düzenler."
+          },
+          "decide": {
+            "title": "Daha fazla bağlamla seçim yapın",
+            "body": "Harekete geçmeden önce sonucu ek bir güvenlik katmanı olarak kullanın."
+          }
+        }
+      },
+      "safety": {
+        "title": "Anahtarlarınız sizde kalır.",
+        "body": "TonRa herkese açık bilgilerle çalışır. Seed ifadenize veya özel anahtarlarınıza ihtiyaç duymaz.",
+        "points": {
+          "publicData": {
+            "title": "Yalnızca herkese açık veriler",
+            "body": "Kontroller, cüzdanınıza erişmeden incelenebilen bilgileri kullanır."
+          },
+          "noKeys": {
+            "title": "Gizli kimlik bilgisi yok",
+            "body": "Seed ifadenizi veya özel anahtarınızı asla TonRa ya da başka biriyle paylaşmayın."
+          },
+          "tonFocus": {
+            "title": "TON için geliştirildi",
+            "body": "TonRa araştırmasını TON ekosistemindeki cüzdanlara, varlıklara ve projelere odaklar."
+          }
+        }
       },
       "cta": {
-        "title": "TonRa'yı Telegram'da aç",
-        "button": "Erken Beta'yı Dene",
-        "note": "Bazı özellikler hâlâ geliştirme aşamasındadır."
+        "title": "Daha güvenli bir kontrol Telegram'da başlar.",
+        "body": "TonRa'yı açın ve etkileşime geçmeden önce araştırın.",
+        "note": "TonRa erken beta aşamasındadır. Bazı özellikler hâlâ geliştirilmektedir."
+      },
+      "footer": {
+        "tagline": "TON ekosistemi için bir Telegram güvenlik ve araştırma botu.",
+        "product": "Ürün",
+        "community": "Topluluk",
+        "utaabHome": "UTAAB ana sayfası",
+        "projects": "Tüm projeler",
+        "ecosystem": "TON ekosistemi için TonRa",
+        "rights": "Tüm hakları saklıdır."
       }
     },
     "ubpointPage": {
@@ -368,7 +421,44 @@
         "insideApp": "Uygulamanın içi",
         "sponsors": "Sponsorlar",
         "rewards": "Ödüller",
-        "openApp": "Uygulamayı Aç"
+        "openApp": "Web Uygulamasını Aç",
+        "story": "Nasıl çalışır",
+        "onChain": "Zincir üstü",
+        "download": "Uygulamayı edin",
+        "ariaLabel": "UBpoint navigasyonu",
+        "mobileAriaLabel": "UBpoint mobil navigasyonu",
+        "toggleMenu": "Menüyü aç veya kapat"
+      },
+      "story": {
+        "goTo": "{{number}}. hikâyeye git",
+        "participation": {
+          "title": "Katılımı Fırsata Dönüştürün",
+          "body": "Etkinliklere katılın, projelere katkıda bulunun ve yaptığınız çalışmalar karşılığında UBP kazanın.",
+          "cta": "Web Uygulamasını Aç"
+        },
+        "rewards": {
+          "title": "Puan Kazanın. Ödülleri Açın.",
+          "body": "Öğrenme ve topluluk katkılarınız birikirken UBP'nizi iş ortağı avantajları için kullanın."
+        },
+        "proof": {
+          "title": "Doğrulayabileceğiniz Kanıt",
+          "body": "UBpoint etkinlikleri Base üzerinde kaydedilir. Etkileşimden önce resmî tanımlayıcıları inceleyebilirsiniz.",
+          "cta": "Basescan'de Görüntüle"
+        },
+        "sponsors": {
+          "title": "Sponsorlar İçin Gerçek Etkileşim",
+          "body": "Doğrulanmış öğrenci faaliyetlerini destekleyin ve botlara ödeme yapmadan tamamlanan katılımı ölçün.",
+          "cta": "Sponsor Olun"
+        }
+      },
+      "availability": {
+        "title": "UBpoint, her yerde yanınızda.",
+        "body": "Web uygulamasını bugün kullanın. Yerel mobil uygulamalar yakında geliyor.",
+        "availableNow": "Şimdi kullanılabilir",
+        "comingSoon": "Yakında",
+        "webApp": "Web Uygulaması",
+        "ios": "iOS",
+        "android": "Android"
       },
       "hero": {
         "kicker": "UTAAB · Blockchain Katılım Platformu",
@@ -1832,9 +1922,9 @@
     "whyUtaab": {
       "title": "Neden UTAAB?",
       "item1": "Yeni nesil geliştiriciler için temel oluşturuyoruz.",
-      "item2": "UTAAB'de öğrencilere, büyümeye ve gerçek dünya geliştirmeye odaklanıyoruz — sadece teknik beceriler değil, aynı zamanda zihniyet, dayanıklılık ve vizyon.",
+      "item2": "UTAAB'de öğrencilere, büyümeye ve gerçek dünya geliştirmeye odaklanıyoruz: sadece teknik becerilere değil, aynı zamanda zihniyet, dayanıklılık ve vizyona.",
       "item3": "Bağlantının güç yarattığına inanıyoruz. İnsanları bir araya getirerek sadece maddi değil, zihinsel ve profesyonel destek sağlıyoruz.",
-      "item4": "Çünkü gelecek sadece ürün yaratmakla ilgili değil — nitelikli, sürdürülebilir ve sınırsız bir dünya şekillendirmekle ilgili."
+      "item4": "Çünkü gelecek sadece ürün yaratmakla ilgili değil. Nitelikli, sürdürülebilir ve sınırsız bir dünya şekillendirmekle ilgili."
     },
     "mission": {
       "title": "Misyonumuz",
@@ -1865,7 +1955,7 @@
     },
     "impact": {
       "title": "Gerçek Dünya Etkisi",
-      "subtitle": "Fikirleri eyleme dönüştürüyoruz — dijital alanın ötesinde gerçek etki yaratıyoruz.",
+      "subtitle": "Fikirleri eyleme dönüştürüyor, dijital alanın ötesinde gerçek etki yaratıyoruz.",
       "projects": {
         "title": "Projeler",
         "description": "DeFi araçlarından merkeziyetsiz kimlik çözümlerine kadar projelerimiz gerçek sorunları çözüyor."
@@ -1998,7 +2088,8 @@
       "title": "UTAAB Whitepaper",
       "subtitle": "UTAAB'ın ne olduğunun, neden var olduğunun ve bir sonraki adımda nereye gideceğinin açık ve dürüst bir özeti.",
       "download": "PDF İndir (yakında)",
-      "downloadHint": "PDF yakında"
+      "downloadHint": "PDF yakında",
+      "contents": "Whitepaper içeriği"
     },
     "vision": {
       "title": "Vizyon",
@@ -2006,6 +2097,26 @@
       "p1": "Geçmiş veya bütçe fark etmeksizin Web3 eğitimini herkes için erişilebilir kılmak.",
       "p2": "Üyelere üzerinde çalışabilecekleri gerçek projeler vererek öğrenme ve ürün geliştirme arasındaki boşluğu kapatmak.",
       "p3": "Öğrencilerin, geliştiricilerin ve mentorların eşit olarak işbirliği yaptığı sınırsız bir topluluk oluşturmak."
+    },
+    "ecosystem": {
+      "title": "İnşa Ettiğimiz Ekosistem",
+      "description": "UTAAB; öğrenme, katkı, araştırma ve gerçek projeleri meraktan anlamlı çalışmalara uzanan açık bir yolda birleştirir.",
+      "nodes": {
+        "education": "Eğitim",
+        "community": "Topluluk",
+        "projects": "Projeler",
+        "research": "Araştırma",
+        "contributors": "Katılımcılar",
+        "mentorship": "Mentorluk",
+        "partnerships": "Ortaklıklar",
+        "governance": "Yönetişim",
+        "credentials": "Yetkinlikler"
+      },
+      "states": {
+        "active": "Şimdi aktif",
+        "emerging": "Geliştiriliyor",
+        "planned": "Planlandı"
+      }
     },
     "tech": {
       "title": "Teknoloji",
@@ -2025,23 +2136,23 @@
     },
     "roadmap": {
       "title": "Yol Haritası",
-      "intro": "Üç aşama. Bir önceki aşama sadece duyurulmakla kalmayıp gerçeğe dönüştüğünde bir sonrakine geçiyoruz.",
+      "intro": "Bir sonraki aşamaya ancak önceki aşama gerçek, faydalı ve yeni adımları desteklemeye hazır olduğunda geçiyoruz.",
       "phase1": {
-        "phase": "Aşama 1 — Temel",
+        "phase": "Temel",
         "status": "Devam ediyor",
         "p1": "Çok dilli destekle (EN, TR, RU, AR) temel eğitim platformunu başlatmak.",
         "p2": "Başlangıçtan ileri seviyeye öğrenme rehberlerini ve resmi MIT \"Blockchain and Money\" kursunu yayınlamak.",
         "p3": "Öğrenci toplulukları ve çevrimiçi kanallar aracılığıyla küresel topluluğu büyütmek."
       },
       "phase2": {
-        "phase": "Aşama 2 — Geliştirici Ekosistemi",
+        "phase": "Geliştirici ekosistemi",
         "status": "Sıradaki",
         "p1": "Mentorluk, ücretli ödüller ve proje yolları ile katılımcı programını açmak.",
         "p2": "UTAAB destekli ilk açık kaynaklı Web3 projeleri grubunu hayata geçirmek.",
         "p3": "Topluluk kararları için şeffaf bir yönetişim modeli başlatmak."
       },
       "phase3": {
-        "phase": "Aşama 3 — Küresel Ağ",
+        "phase": "Küresel ağ",
         "status": "Planlandı",
         "p1": "Geniş ölçekte hackathon'lar, ortaklıklar ve sınır ötesi işbirlikleri.",
         "p2": "Tamamlanan programlar için zincir üstü kimlik bilgileri ve doğrulanabilir sertifikalar.",

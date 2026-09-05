@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { EducationNavbar } from '@/components/education/EducationNavbar';
 
 export const EducationRegister = () => {
   const { t } = useTranslation();
@@ -59,7 +60,8 @@ export const EducationRegister = () => {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen bg-background gradient-mesh pt-24 pb-20 px-6">
+    <div className="min-h-[100dvh] bg-background px-6 pb-28 pt-28">
+      <EducationNavbar />
       <div className="max-w-3xl mx-auto">
         <Button
           variant="ghost"
@@ -70,8 +72,8 @@ export const EducationRegister = () => {
           {t('educationNav.backToEducation')}
         </Button>
 
-        <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-glow">
+        <div className="mb-10 border-b border-white/10 pb-8 text-start">
+          <h1 className="mb-4 text-4xl font-extrabold tracking-[-0.05em] md:text-6xl">
             {t('education.registration.title')}
           </h1>
           <p className="text-lg text-muted-foreground">

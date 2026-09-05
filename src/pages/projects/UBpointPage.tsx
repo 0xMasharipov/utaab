@@ -1,1260 +1,503 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, forwardRef } from 'react';
-import { motion, AnimatePresence, useInView, useScroll, useTransform } from 'framer-motion';
+import {
+  Component,
+  type ErrorInfo,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import {
+  AnimatePresence,
+  motion,
+  type MotionValue,
+  useMotionValue,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { usePerfGuard, type PerfTier } from '@/hooks/usePerfGuard';
-
-/* ---------- Splash intro + perf-tier context ---------- */
-interface SplashContextValue {
-  ready: boolean;
-  heroReady: boolean;
-  tier: PerfTier;
-  replayKey: number;
-  setTierOverride: (t: PerfTier | null) => void;
-  tierOverride: PerfTier | null;
-  replaySpread: () => void;
-}
-const SplashContext = createContext<SplashContextValue>({
-  ready: true,
-  heroReady: true,
-  tier: 'full',
-  replayKey: 0,
-  setTierOverride: () => {},
-  tierOverride: null,
-  replaySpread: () => {},
-});
-const useSplash = () => useContext(SplashContext);
-const splashTransition = (i: number) => ({
-  delay: 0.25 + i * 0.13,
-  duration: 0.75,
-  ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
-});
-
-
 import {
+  Apple,
   ArrowRight,
-  ShieldCheck,
-  GraduationCap,
-  CheckCircle2,
-  Twitter,
-  Building2,
   ArrowUpRight,
-  ArrowDownLeft,
-  TrendingUp,
-  Menu,
-  X,
   Linkedin,
-  Send,
   Mail,
-  Copy,
-  ExternalLink,
-  BadgeCheck,
-  CircleDot,
-  Medal,
-  Compass,
-  Wallet,
-  Tag,
-  MessageSquare,
+  Menu,
+  MonitorSmartphone,
+  Send,
+  Smartphone,
+  Twitter,
+  X,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import SEO from '@/components/SEO';
 import logoAsset from '@/assets/ubpoint-logo.png.asset.json';
 
-import mockupAsset from '@/assets/ubpoint-mockup.png.asset.json';
-import utaabCoinAsset from '@/assets/coins/utaab-coin.png.asset.json';
-
-import tonCoinAsset from '@/assets/coins/ton.png.asset.json';
-import ethCoinAsset from '@/assets/coins/eth.png.asset.json';
-import btcCoinAsset from '@/assets/coins/btc.png.asset.json';
-import goldCoinAsset from '@/assets/coins/gold-coin.png.asset.json';
-import goldBarAsset from '@/assets/coins/gold-bar.png.asset.json';
-import steamAsset from '@/assets/coins/steam.png.asset.json';
-import titaniumBarAsset from '@/assets/coins/titanium-bar.png.asset.json';
-import silverBarAsset from '@/assets/coins/silver-bar.png.asset.json';
-import gamepadAsset from '@/assets/coins/gamepad.png.asset.json';
-import usdtAngleAsset from '@/assets/coins/ubp-usdt-angle.png.asset.json';
-import tryAngleAsset from '@/assets/coins/ubp-try-angle.png.asset.json';
-
+const UBPOINT_APP_URL = 'https://ubpoint.app/';
+const UBPOINT_LOGO_URL = `https://utaab.org${logoAsset.url}`;
 const WHATSAPP_URL = 'https://chat.whatsapp.com/HnTcuJYiKAiDpLPnG33mEr';
 const SPONSOR_EMAIL = 'mailto:contact@utaab.org?subject=UBpoint%20Sponsor%20Inquiry';
-const UBPOINT_APP_URL = 'https://ubpoint.app/';
+const BASE_WALLET = '0x4fF797906D7B56F9Bd2Db382BcB36C97d69A43A9';
+const BASESCAN_URL = `https://basescan.org/address/${BASE_WALLET}`;
 
-/* ---------- Asset preload registry ---------- */
-const HERO_CRITICAL_ASSETS = [logoAsset.url, mockupAsset.url, utaabCoinAsset.url];
-const DECORATIVE_ASSETS = [
-  tonCoinAsset.url,
-  ethCoinAsset.url,
-  btcCoinAsset.url,
-  goldCoinAsset.url,
-  goldBarAsset.url,
-  steamAsset.url,
-  titaniumBarAsset.url,
-  silverBarAsset.url,
-  gamepadAsset.url,
-  usdtAngleAsset.url,
-  tryAngleAsset.url,
-];
-const ALL_ASSETS = [...HERO_CRITICAL_ASSETS, ...DECORATIVE_ASSETS];
+const focusRing =
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2';
 
-/* ---------- FadeImg: drop-in <img> that fades in on load ---------- */
-interface FadeImgProps extends React.ImgHTMLAttributes<HTMLImageElement> {}
-const FadeImg = forwardRef<HTMLImageElement, FadeImgProps>(
-  ({ onLoad, style, ...props }, ref) => {
-    const [loaded, setLoaded] = useState(false);
-    return (
-      <img
-        ref={ref}
-        {...props}
-        onLoad={(e) => {
-          setLoaded(true);
-          onLoad?.(e);
-        }}
-        style={{
-          opacity: loaded ? 1 : 0,
-          transition: 'opacity 600ms cubic-bezier(0.16,1,0.3,1)',
-          ...style,
-        }}
-      />
-    );
-  },
-);
-FadeImg.displayName = 'FadeImg';
+const storyStages = [
+  { key: 'participation', anchor: 'story', href: UBPOINT_APP_URL, external: true },
+  { key: 'rewards', anchor: 'rewards' },
+  { key: 'proof', anchor: 'verified', href: BASESCAN_URL, external: true },
+  { key: 'sponsors', anchor: 'sponsors', href: SPONSOR_EMAIL, external: false },
+] as const;
 
-/* ---------- Light Navbar (page-local) ---------- */
 const useNavLinks = () => {
   const { t } = useTranslation();
   return [
-    { href: '#features', label: t('projects.ubpointPage.nav.features') },
-    { href: '#showcase', label: t('projects.ubpointPage.nav.insideApp') },
-    { href: '#sponsors', label: t('projects.ubpointPage.nav.sponsors') },
+    { href: '#story', label: t('projects.ubpointPage.nav.story') },
     { href: '#rewards', label: t('projects.ubpointPage.nav.rewards') },
+    { href: '#verified', label: t('projects.ubpointPage.nav.onChain') },
+    { href: '#sponsors', label: t('projects.ubpointPage.nav.sponsors') },
+    { href: '#download', label: t('projects.ubpointPage.nav.download') },
   ];
 };
 
-const LightNavbar = () => {
+const PageNavbar = () => {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
-  const navLinks = useNavLinks();
+  const links = useNavLinks();
+
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-blue-100">
-      <div className="max-w-7xl mx-auto px-5 md:px-6 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2.5">
-          <FadeImg src={logoAsset.url} alt="UBpoint" className="h-9 w-auto" />
-          <span className="text-base font-extrabold tracking-tight text-slate-900">UBpoint</span>
+    <header className="sticky top-0 z-40 h-16 border-b border-slate-200/80 bg-[#f8fafc]/90 backdrop-blur-xl">
+      <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <Link to="/" className={`flex items-center gap-2.5 rounded-md ${focusRing}`}>
+          <img src={UBPOINT_LOGO_URL} alt="" className="h-9 w-9 rounded-lg" />
+          <span className="text-[15px] font-extrabold tracking-[-0.03em] text-slate-950">UBpoint</span>
         </Link>
-        <nav className="hidden md:flex items-center gap-7">
-          {navLinks.map((l) => (
-            <a key={l.href} href={l.href} className="text-sm font-semibold text-slate-700 hover:text-blue-600 transition-colors">
-              {l.label}
+
+        <nav aria-label={t('projects.ubpointPage.nav.ariaLabel')} className="hidden items-center gap-5 xl:flex">
+          {links.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className={`rounded-md px-1 py-2 text-[13px] font-semibold text-slate-600 transition-colors hover:text-slate-950 ${focusRing}`}
+            >
+              {link.label}
             </a>
           ))}
         </nav>
+
         <div className="flex items-center gap-2">
-          <a href={UBPOINT_APP_URL} target="_blank" rel="noopener noreferrer" className="hidden sm:inline-block">
-            <Button className="h-9 px-4 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white text-sm font-semibold shadow-[0_8px_24px_-10px_rgba(37,99,235,0.6)]">
-              {t('projects.ubpointPage.nav.openApp')}
-            </Button>
+          <a
+            href={UBPOINT_APP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`hidden min-h-10 items-center rounded-full bg-slate-950 px-5 text-sm font-bold whitespace-nowrap text-white transition-transform hover:-translate-y-0.5 active:translate-y-0 sm:inline-flex ${focusRing}`}
+          >
+            {t('projects.ubpointPage.nav.openApp')}
+            <ArrowUpRight aria-hidden className="ms-2 h-4 w-4" strokeWidth={1.8} />
           </a>
           <button
-            className="md:hidden p-2 rounded-lg text-slate-700 hover:bg-blue-50"
-            onClick={() => setOpen((v) => !v)}
-            aria-label="Toggle menu"
+            type="button"
+            aria-expanded={open}
+            aria-controls="ubpoint-mobile-menu"
+            aria-label={t('projects.ubpointPage.nav.toggleMenu')}
+            onClick={() => setOpen((value) => !value)}
+            className={`inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-800 transition-colors hover:bg-slate-100 xl:hidden ${focusRing}`}
           >
-            {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {open ? <X aria-hidden className="h-5 w-5" strokeWidth={1.8} /> : <Menu aria-hidden className="h-5 w-5" strokeWidth={1.8} />}
           </button>
         </div>
       </div>
-      {open && (
-        <div className="md:hidden border-t border-blue-100 bg-white/95 backdrop-blur-xl">
-          <div className="px-5 py-3 flex flex-col gap-1">
-            {navLinks.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                onClick={() => setOpen(false)}
-                className="px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-700"
-              >
-                {l.label}
-              </a>
-            ))}
-            <a href={UBPOINT_APP_URL} target="_blank" rel="noopener noreferrer" className="mt-2">
-              <Button className="w-full h-10 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm font-semibold">
-                {t('projects.ubpointPage.nav.openApp')}
-              </Button>
-            </a>
-          </div>
-        </div>
-      )}
+
+      <AnimatePresence>
+        {open && (
+          <motion.nav
+            id="ubpoint-mobile-menu"
+            aria-label={t('projects.ubpointPage.nav.mobileAriaLabel')}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-x-0 top-16 border-b border-slate-200 bg-[#f8fafc]/[0.98] px-4 py-4 shadow-[0_18px_45px_rgba(30,64,175,0.08)] backdrop-blur-xl xl:hidden"
+          >
+            <div className="mx-auto grid max-w-7xl gap-1">
+              {links.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className={`rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-blue-50 hover:text-blue-800 ${focusRing}`}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </header>
   );
 };
 
-/* ---------- Light Footer (page-local) ---------- */
-const LightFooter = () => {
-  const { t } = useTranslation();
-  const navLinks = useNavLinks();
+interface EmptyPhoneProps {
+  progress: MotionValue<number>;
+  compact?: boolean;
+}
+
+const EmptyPhone = ({ progress, compact = false }: EmptyPhoneProps) => {
+  const rotateY = useTransform(progress, [0, 0.34, 0.68, 1], [-5, 3, -4, 4]);
+  const rotateZ = useTransform(progress, [0, 0.5, 1], [-0.8, 0.7, -0.4]);
+
   return (
-    <footer className="relative bg-blue-50/60 border-t border-blue-100">
-      <div className="max-w-7xl mx-auto px-5 sm:px-6 py-10 sm:py-14 grid gap-8 sm:gap-10 md:grid-cols-4">
-        <div className="md:col-span-2">
-          <div className="flex items-center gap-2.5">
-            <FadeImg src={logoAsset.url} alt="UBpoint" className="h-9 w-auto" />
-            <span className="text-lg font-extrabold tracking-tight text-slate-900">UBpoint</span>
+    <div className="relative flex items-center justify-center [perspective:1100px]" aria-hidden>
+      <div
+        aria-hidden
+        className="absolute h-[72%] w-[155%] rounded-full bg-blue-600/20 blur-[78px] sm:blur-[96px]"
+      />
+      <motion.div
+        style={{ rotateY, rotateZ, transformStyle: 'preserve-3d' }}
+        className={`relative aspect-[0.462] ${compact ? 'w-[184px] sm:w-[210px]' : 'w-[188px] sm:w-[225px] lg:w-[280px] xl:w-[300px]'}`}
+      >
+        <div className="absolute inset-0 rounded-[44px] bg-[linear-gradient(145deg,#f1f5f9_0%,#94a3b8_25%,#e2e8f0_52%,#64748b_100%)] p-[5px] shadow-[0_32px_80px_rgba(30,64,175,0.18),0_14px_28px_rgba(15,23,42,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] sm:rounded-[52px] sm:p-[6px]">
+          <div className="relative h-full w-full rounded-[39px] bg-slate-950 p-[3px] sm:rounded-[47px]">
+            <div className="relative h-full w-full overflow-hidden rounded-[36px] bg-[#f3f6fb] sm:rounded-[44px]">
+              <div className="absolute left-1/2 top-2 h-[20px] w-[68px] -translate-x-1/2 rounded-full bg-slate-950 sm:h-[23px] sm:w-[78px]" />
+            </div>
           </div>
-          <p className="mt-4 text-sm text-slate-600 max-w-md leading-relaxed">
+        </div>
+        <span aria-hidden className="absolute -left-[3px] top-[16%] h-[5%] w-[4px] rounded-s-md bg-slate-400" />
+        <span aria-hidden className="absolute -left-[3px] top-[24%] h-[9%] w-[4px] rounded-s-md bg-slate-400" />
+        <span aria-hidden className="absolute -left-[3px] top-[35%] h-[9%] w-[4px] rounded-s-md bg-slate-400" />
+        <span aria-hidden className="absolute -right-[3px] top-[27%] h-[12%] w-[4px] rounded-e-md bg-slate-400" />
+      </motion.div>
+    </div>
+  );
+};
+
+interface StageContentProps {
+  stage: (typeof storyStages)[number];
+}
+
+const StageContent = ({ stage }: StageContentProps) => {
+  const { t } = useTranslation();
+  const key = `projects.ubpointPage.story.${stage.key}`;
+
+  return (
+    <motion.div
+      key={stage.key}
+      initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }}
+      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+      exit={{ opacity: 0, y: -18, filter: 'blur(7px)' }}
+      transition={{ duration: 0.48, ease: [0.16, 1, 0.3, 1] }}
+      className="relative max-w-[640px]"
+    >
+      <h1 className="max-w-[640px] text-balance text-[clamp(2rem,3.65vw,3.25rem)] font-extrabold leading-[1.04] tracking-[-0.055em] text-slate-950">
+        {t(`${key}.title`)}
+      </h1>
+      <p className="mt-5 max-w-[540px] text-pretty text-base font-medium leading-7 text-slate-600 sm:text-lg sm:leading-8">
+        {t(`${key}.body`)}
+      </p>
+      {stage.href && (
+        <a
+          href={stage.href}
+          target={stage.external ? '_blank' : undefined}
+          rel={stage.external ? 'noopener noreferrer' : undefined}
+          className={`mt-7 inline-flex min-h-12 items-center rounded-full bg-slate-950 px-6 text-sm font-bold whitespace-nowrap text-white transition-transform hover:-translate-y-0.5 active:translate-y-0 ${focusRing}`}
+        >
+          {t(`${key}.cta`)}
+          {stage.external ? (
+            <ArrowUpRight aria-hidden className="ms-2 h-4 w-4" strokeWidth={1.8} />
+          ) : (
+            <ArrowRight aria-hidden className="ms-2 h-4 w-4" strokeWidth={1.8} />
+          )}
+        </a>
+      )}
+    </motion.div>
+  );
+};
+
+const StoryProgress = ({ progress, activeIndex }: { progress: MotionValue<number>; activeIndex: number }) => {
+  const scaleY = useTransform(progress, [0, 1], [0, 1]);
+  const { t } = useTranslation();
+
+  return (
+    <>
+      <div className="absolute bottom-5 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 md:bottom-9 md:left-[52%] md:translate-x-0">
+        {storyStages.map((stage, index) => (
+          <a
+            key={stage.key}
+            href={`#${stage.anchor}`}
+            aria-label={t('projects.ubpointPage.story.goTo', { number: index + 1 })}
+            aria-current={activeIndex === index ? 'step' : undefined}
+            className={`h-1.5 rounded-full transition-[width,background-color] duration-300 ${activeIndex === index ? 'w-7 bg-slate-950' : 'w-1.5 bg-slate-300'} ${focusRing}`}
+          />
+        ))}
+      </div>
+      <div aria-hidden className="absolute right-7 top-1/2 hidden h-[44%] w-px -translate-y-1/2 overflow-hidden bg-slate-200 md:block">
+        <motion.div style={{ scaleY, transformOrigin: 'top' }} className="h-full w-full bg-blue-700" />
+      </div>
+    </>
+  );
+};
+
+const AnimatedStory = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const activeIndexRef = useRef(0);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end end'],
+  });
+  const progress = useSpring(scrollYProgress, { stiffness: 110, damping: 24, mass: 0.35 });
+
+  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
+    const next = Math.min(storyStages.length - 1, Math.floor(latest * storyStages.length));
+    if (activeIndexRef.current === next) return;
+    activeIndexRef.current = next;
+    setActiveIndex(next);
+  });
+
+  return (
+    <section ref={sectionRef} className="relative h-[400dvh] bg-[#f8fafc]">
+      {storyStages.map((stage, index) => (
+        <span
+          key={stage.anchor}
+          id={stage.anchor}
+          aria-hidden
+          className="pointer-events-none absolute scroll-mt-16"
+          style={{ top: `${index * 18.75}%` }}
+        />
+      ))}
+
+      <div className="sticky top-16 min-h-[calc(100dvh-4rem)] overflow-hidden">
+        <div className="mx-auto grid min-h-[calc(100dvh-4rem)] max-w-7xl grid-rows-[minmax(0,0.9fr)_minmax(0,0.72fr)] items-center gap-4 px-4 pb-14 pt-5 sm:px-6 sm:pb-16 sm:pt-7 md:grid-cols-[45%_55%] md:grid-rows-1 md:gap-0 md:px-8 md:py-8">
+          <div className="relative flex min-h-0 items-center justify-center">
+            <EmptyPhone progress={progress} />
+          </div>
+
+          <div className="relative flex min-h-0 items-center px-2 text-center sm:px-6 md:h-full md:px-[8%] md:text-start">
+            <div aria-hidden className="pointer-events-none absolute -bottom-[10%] end-0 select-none text-[clamp(9rem,25vw,22rem)] font-extrabold leading-none tracking-[-0.08em] text-slate-950/[0.045]">
+              {String(activeIndex + 1).padStart(2, '0')}
+            </div>
+            <div className="relative z-[1] mx-auto md:mx-0">
+              <AnimatePresence mode="wait">
+                <StageContent stage={storyStages[activeIndex]} />
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
+        <StoryProgress progress={progress} activeIndex={activeIndex} />
+      </div>
+    </section>
+  );
+};
+
+const StaticStory = () => {
+  const { t } = useTranslation();
+  const progress = useMotionValue(0);
+
+  return (
+    <section className="bg-[#f8fafc] px-4 py-14 sm:px-6 sm:py-20">
+      <div className="mx-auto max-w-6xl">
+        <div id="story" className="scroll-mt-20">
+          <EmptyPhone progress={progress} compact />
+        </div>
+        <div className="mt-16 grid gap-14 md:grid-cols-2 md:gap-x-14 md:gap-y-20">
+          {storyStages.map((stage, index) => {
+            const key = `projects.ubpointPage.story.${stage.key}`;
+            return (
+              <article key={stage.key} id={stage.anchor === 'story' ? undefined : stage.anchor} className="scroll-mt-20">
+                <div className="text-sm font-extrabold text-blue-700">{String(index + 1).padStart(2, '0')}</div>
+                <h2 className="mt-3 text-3xl font-extrabold leading-tight tracking-[-0.04em] text-slate-950 sm:text-4xl">
+                  {t(`${key}.title`)}
+                </h2>
+                <p className="mt-4 max-w-[48ch] text-base font-medium leading-7 text-slate-600">{t(`${key}.body`)}</p>
+                {stage.href && (
+                  <a
+                    href={stage.href}
+                    target={stage.external ? '_blank' : undefined}
+                    rel={stage.external ? 'noopener noreferrer' : undefined}
+                    className={`mt-6 inline-flex min-h-12 items-center rounded-full bg-slate-950 px-6 text-sm font-bold text-white ${focusRing}`}
+                  >
+                    {t(`${key}.cta`)}
+                    <ArrowUpRight aria-hidden className="ms-2 h-4 w-4" strokeWidth={1.8} />
+                  </a>
+                )}
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Story = () => {
+  const reduceMotion = useReducedMotion();
+  return reduceMotion ? <StaticStory /> : <AnimatedStory />;
+};
+
+const AvailabilitySection = () => {
+  const { t } = useTranslation();
+
+  return (
+    <section id="download" className="scroll-mt-16 bg-[#f8fafc] px-4 py-24 sm:px-6 sm:py-32 lg:px-8 lg:py-40">
+      <div className="mx-auto max-w-7xl">
+        <div className="max-w-2xl">
+          <h2 className="text-balance text-4xl font-extrabold leading-[1.06] tracking-[-0.05em] text-slate-950 sm:text-5xl lg:text-6xl">
+            {t('projects.ubpointPage.availability.title')}
+          </h2>
+          <p className="mt-5 max-w-[52ch] text-base font-medium leading-7 text-slate-600 sm:text-lg">
+            {t('projects.ubpointPage.availability.body')}
+          </p>
+        </div>
+
+        <div className="mt-12 grid gap-4 md:grid-cols-12 md:grid-rows-2">
+          <div className="relative overflow-hidden rounded-2xl bg-blue-700 p-7 text-white shadow-[0_28px_80px_rgba(29,78,216,0.2)] sm:p-10 md:col-span-7 md:row-span-2 md:min-h-[440px] lg:p-12">
+            <div aria-hidden className="absolute -bottom-28 -right-24 h-80 w-80 rounded-full bg-white/10" />
+            <div className="relative flex h-full min-h-[300px] flex-col">
+              <MonitorSmartphone aria-hidden className="h-11 w-11" strokeWidth={1.5} />
+              <div className="mt-auto pt-20">
+                <div className="text-sm font-bold text-blue-100">{t('projects.ubpointPage.availability.availableNow')}</div>
+                <h3 className="mt-2 text-4xl font-extrabold tracking-[-0.045em] sm:text-5xl">
+                  {t('projects.ubpointPage.availability.webApp')}
+                </h3>
+                <a
+                  href={UBPOINT_APP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`mt-7 inline-flex min-h-12 items-center rounded-full bg-white px-6 text-sm font-extrabold whitespace-nowrap text-blue-800 transition-transform hover:-translate-y-0.5 active:translate-y-0 ${focusRing}`}
+                >
+                  {t('projects.ubpointPage.nav.openApp')}
+                  <ArrowUpRight aria-hidden className="ms-2 h-4 w-4" strokeWidth={1.8} />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {[
+            { key: 'ios', icon: Apple },
+            { key: 'android', icon: Smartphone },
+          ].map((platform) => (
+            <div
+              key={platform.key}
+              className="flex min-h-[210px] flex-col rounded-2xl border border-slate-200 bg-white p-7 sm:p-8 md:col-span-5"
+            >
+              <platform.icon aria-hidden className="h-9 w-9 text-slate-800" strokeWidth={1.5} />
+              <div className="mt-auto pt-12">
+                <h3 className="text-2xl font-extrabold tracking-[-0.035em] text-slate-950">
+                  {t(`projects.ubpointPage.availability.${platform.key}`)}
+                </h3>
+                <span aria-disabled="true" className="mt-3 inline-flex text-sm font-bold text-slate-500">
+                  {t('projects.ubpointPage.availability.comingSoon')}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const PageFooter = () => {
+  const { t } = useTranslation();
+  const links = useNavLinks();
+  const socialLinks = [
+    { href: 'https://www.linkedin.com/company/utaa-blockchain/', label: 'LinkedIn', icon: Linkedin },
+    { href: 'https://t.me/utaa_blockchain', label: 'Telegram', icon: Send },
+    { href: 'https://x.com/utaa_blockchain?s=11', label: 'X', icon: Twitter },
+    { href: 'mailto:contact@utaab.org', label: 'Email', icon: Mail },
+  ];
+
+  return (
+    <footer className="border-t border-slate-200 bg-[#f8fafc] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+      <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-[1.6fr_1fr_1fr]">
+        <div>
+          <div className="flex items-center gap-2.5">
+            <img src={UBPOINT_LOGO_URL} alt="" className="h-10 w-10 rounded-[10px]" />
+            <span className="text-lg font-extrabold tracking-[-0.03em] text-slate-950">UBpoint</span>
+          </div>
+          <p className="mt-4 max-w-md text-sm font-medium leading-6 text-slate-600">
             {t('projects.ubpointPage.footer.tagline')}
           </p>
-          <div className="mt-5 flex items-center gap-2">
-            {[
-              { href: 'https://www.linkedin.com/company/utaa-blockchain/', icon: Linkedin },
-              { href: 'https://t.me/utaa_blockchain', icon: Send },
-              { href: 'https://x.com/utaa_blockchain?s=11', icon: Twitter },
-              { href: 'mailto:contact@utaab.org', icon: Mail },
-            ].map((s, i) => (
+          <div className="mt-6 flex gap-2">
+            {socialLinks.map((social) => (
               <a
-                key={i}
-                href={s.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white border border-blue-100 flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-colors"
+                key={social.label}
+                href={social.href}
+                target={social.href.startsWith('http') ? '_blank' : undefined}
+                rel={social.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                aria-label={social.label}
+                className={`inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition-colors hover:border-blue-200 hover:text-blue-700 ${focusRing}`}
               >
-                <s.icon className="w-4 h-4" />
+                <social.icon aria-hidden className="h-4 w-4" strokeWidth={1.8} />
               </a>
             ))}
           </div>
         </div>
+
         <div>
-          <div className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
-            {t('projects.ubpointPage.footer.product')}
-          </div>
-          <ul className="space-y-2 text-sm">
-            {navLinks.map((l) => (
-              <li key={l.href}>
-                <a href={l.href} className="text-slate-700 hover:text-blue-600">{l.label}</a>
+          <h2 className="text-sm font-extrabold text-slate-950">{t('projects.ubpointPage.footer.product')}</h2>
+          <ul className="mt-4 space-y-3">
+            {links.map((link) => (
+              <li key={link.href}>
+                <a href={link.href} className={`rounded text-sm font-medium text-slate-600 hover:text-blue-700 ${focusRing}`}>
+                  {link.label}
+                </a>
               </li>
             ))}
           </ul>
         </div>
+
         <div>
-          <div className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
-            {t('projects.ubpointPage.footer.community')}
-          </div>
-          <ul className="space-y-2 text-sm">
-            <li><Link to="/" className="text-slate-700 hover:text-blue-600">{t('projects.ubpointPage.footer.utaabHome')}</Link></li>
-            <li><Link to="/projects" className="text-slate-700 hover:text-blue-600">{t('projects.ubpointPage.footer.allProjects')}</Link></li>
-            <li><a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="text-slate-700 hover:text-blue-600">{t('projects.ubpointPage.footer.whatsapp')}</a></li>
-            <li><a href={SPONSOR_EMAIL} className="text-slate-700 hover:text-blue-600">{t('projects.ubpointPage.footer.becomeSponsor')}</a></li>
+          <h2 className="text-sm font-extrabold text-slate-950">{t('projects.ubpointPage.footer.community')}</h2>
+          <ul className="mt-4 space-y-3 text-sm font-medium">
+            <li><Link to="/" className={`rounded text-slate-600 hover:text-blue-700 ${focusRing}`}>{t('projects.ubpointPage.footer.utaabHome')}</Link></li>
+            <li><Link to="/projects" className={`rounded text-slate-600 hover:text-blue-700 ${focusRing}`}>{t('projects.ubpointPage.footer.allProjects')}</Link></li>
+            <li><a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={`rounded text-slate-600 hover:text-blue-700 ${focusRing}`}>{t('projects.ubpointPage.footer.whatsapp')}</a></li>
+            <li><a href={SPONSOR_EMAIL} className={`rounded text-slate-600 hover:text-blue-700 ${focusRing}`}>{t('projects.ubpointPage.footer.becomeSponsor')}</a></li>
           </ul>
         </div>
       </div>
-      <div className="border-t border-blue-100">
-        <div className="max-w-7xl mx-auto px-5 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
-          <div>© {new Date().getFullYear()} UTAAB · UBpoint. {t('projects.ubpointPage.footer.rights')}</div>
-          <div>{t('projects.ubpointPage.footer.builtOn')}</div>
-        </div>
+
+      <div className="mx-auto mt-12 flex max-w-7xl flex-col gap-2 border-t border-slate-200 pt-6 text-xs font-medium text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+        <span>© {new Date().getFullYear()} UTAAB · UBpoint. {t('projects.ubpointPage.footer.rights')}</span>
+        <span>{t('projects.ubpointPage.footer.builtOn')}</span>
       </div>
     </footer>
   );
 };
 
-/* ---------- Decorative background (lightweight, no looped animations) ---------- */
-const HeroBackground = () => (
-  <div aria-hidden className="absolute inset-0 overflow-hidden pointer-events-none">
-    <div className="absolute inset-0 bg-gradient-to-b from-white via-blue-50/60 to-white" />
-    <div
-      className="absolute inset-0 opacity-[0.07]"
-      style={{
-        backgroundImage:
-          'linear-gradient(to right, #2563EB 1px, transparent 1px), linear-gradient(to bottom, #2563EB 1px, transparent 1px)',
-        backgroundSize: '56px 56px',
-        maskImage:
-          'radial-gradient(ellipse at center, rgba(0,0,0,0.9), transparent 75%)',
-      }}
-    />
-    {/* Single static blurred blob — keep visual identity, drop GPU cost */}
-    <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[520px] h-[520px] rounded-full bg-blue-400/20 blur-3xl" />
-  </div>
-);
-
-/* ---------- Floating iPhone device ---------- */
-const FloatingDevice = () => {
-  const { ready, heroReady, tier, replayKey } = useSplash();
-  const loop = tier === 'full';
-
-  // Latch: once the spread has started, never reset on re-renders.
-  // Only an explicit replayKey bump (from the debug panel) triggers a re-run.
-  const [spreadActive, setSpreadActive] = useState(false);
-  const startedKeyRef = useRef<number | null>(null);
-  useEffect(() => {
-    if (!heroReady) return;
-    if (startedKeyRef.current === replayKey) return;
-    startedKeyRef.current = replayKey;
-    setSpreadActive(false);
-    const t = window.setTimeout(() => setSpreadActive(true), 30);
-    return () => window.clearTimeout(t);
-  }, [heroReady, replayKey]);
-
-  const allBackCoins = useMemo(() => ([
-    { src: usdtAngleAsset.url, cls: 'top-2 -left-2 sm:-left-4 md:-left-10 w-16 sm:w-24 md:w-36', glow: 'rgba(16,185,129,0.45)', dur: 9, delay: 0, from: { x: 140, y: 40 } },
-    { src: tryAngleAsset.url, cls: 'top-10 -right-2 sm:-right-6 md:-right-14 w-16 sm:w-24 md:w-36', glow: 'rgba(220,38,38,0.4)', dur: 10, delay: 0.4, from: { x: -140, y: 30 } },
-    { src: ethCoinAsset.url, cls: 'top-1/2 -left-4 sm:-left-10 md:-left-20 w-14 sm:w-20 md:w-32', glow: 'rgba(100,116,139,0.45)', dur: 11, delay: 0.8, from: { x: 160, y: 0 } },
-    { src: goldCoinAsset.url, cls: 'bottom-12 -right-3 sm:-right-8 md:-right-16 w-14 sm:w-20 md:w-32', glow: 'rgba(202,138,4,0.5)', dur: 12, delay: 0.2, from: { x: -150, y: -20 } },
-    { src: silverBarAsset.url, cls: 'bottom-2 left-2 sm:left-6 md:left-2 w-16 sm:w-24 md:w-32', glow: 'rgba(148,163,184,0.5)', dur: 13, delay: 1, from: { x: 100, y: -80 } },
-    { src: steamAsset.url, cls: 'top-4 -left-3 sm:-left-8 md:-left-16 w-16 sm:w-24 md:w-36', glow: 'rgba(37,99,235,0.45)', dur: 10, delay: 1.3, from: { x: 140, y: 60 } },
-  ]), []);
-  const backCoins = useMemo(
-    () => (tier === 'minimal' ? [] : tier === 'reduced' ? allBackCoins.slice(0, 3) : allBackCoins),
-    [tier, allBackCoins],
-  );
-
-  const { t } = useTranslation();
-
-  return (
-    <div className="relative w-full max-w-[280px] sm:max-w-[340px] md:max-w-[420px] mx-auto px-2 sm:px-0">
-      <div className="absolute inset-0 -m-6 sm:-m-10 bg-gradient-to-br from-blue-400/40 via-blue-500/30 to-blue-600/20 blur-3xl rounded-full" />
-
-      <div aria-hidden className="absolute inset-0 -m-8 sm:-m-12 md:-m-24 pointer-events-none z-0">
-        {backCoins.map((c, i) => {
-          const initRot = c.from.x > 0 ? -12 : 12;
-          return (
-            <motion.div
-              key={i}
-              className={`absolute ${c.cls}`}
-              initial={{ opacity: 0, scale: 0.35, x: c.from.x, y: c.from.y, rotate: initRot }}
-              animate={spreadActive ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: c.from.x, y: c.from.y, rotate: initRot }}
-              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.15 + i * 0.14 }}
-            >
-              <motion.img
-                src={c.src}
-                alt=""
-                className="w-full select-none"
-                style={{ filter: `drop-shadow(0 14px 26px ${c.glow})` }}
-                animate={spreadActive && loop ? { y: [0, -10, 0], rotateZ: [-5, 5, -5] } : undefined}
-                transition={{ duration: c.dur, repeat: Infinity, ease: 'easeInOut', delay: c.delay }}
-              />
-            </motion.div>
-          );
-        })}
-      </div>
-
-      <motion.div
-        className="relative z-10"
-        initial={{ opacity: 0, scale: 0.85, y: 20 }}
-        animate={ready ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.85, y: 20 }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <motion.div
-          animate={ready && loop ? { y: [0, -14, 0], rotateZ: [-1.5, 1.5, -1.5] } : undefined}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <FadeImg
-            src={mockupAsset.url}
-            alt="UBpoint mobile app interface"
-            className="w-full h-auto drop-shadow-[0_30px_60px_rgba(37,99,235,0.35)]"
-            loading="eager"
-          />
-        </motion.div>
-      </motion.div>
-
-      <motion.div
-        className="absolute left-0 sm:-left-4 md:-left-12 top-8 sm:top-12 flex items-center gap-2 text-slate-700"
-        initial={{ opacity: 0, scale: 0.3, y: 0 }}
-        animate={ready
-          ? (loop ? { opacity: 1, scale: 1, y: [0, -8, 0] } : { opacity: 1, scale: 1, y: 0 })
-          : { opacity: 0, scale: 0.3, y: 0 }}
-        transition={ready && loop
-          ? {
-              opacity: splashTransition(9),
-              scale: splashTransition(9),
-              filter: splashTransition(9),
-              y: { duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 },
-            }
-          : splashTransition(9)}
-      >
-        <BadgeCheck className="w-4 h-4 text-blue-600 shrink-0" />
-        <div className="text-left">
-          <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">{t('projects.ubpointPage.hero.earned')}</div>
-          <div className="text-sm font-bold text-slate-900">{t('projects.ubpointPage.hero.ubp50')}</div>
-        </div>
-      </motion.div>
-
-      <motion.div
-        className="absolute right-0 sm:-right-2 md:-right-10 bottom-20 sm:bottom-24 flex items-center gap-2 text-slate-700"
-        initial={{ opacity: 0, scale: 0.3, y: 0 }}
-        animate={ready
-          ? (loop ? { opacity: 1, scale: 1, y: [0, 10, 0] } : { opacity: 1, scale: 1, y: 0 })
-          : { opacity: 0, scale: 0.3, y: 0 }}
-        transition={ready && loop
-          ? {
-              opacity: splashTransition(10),
-              scale: splashTransition(10),
-              filter: splashTransition(10),
-              y: { duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1.5 },
-            }
-          : splashTransition(10)}
-      >
-        <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0" />
-        <div className="text-left">
-          <div className="text-[10px] uppercase tracking-wide text-slate-500 font-semibold">{t('projects.ubpointPage.hero.onChain')}</div>
-          <div className="text-sm font-bold text-slate-900">{t('projects.ubpointPage.hero.verifiedBase')}</div>
-        </div>
-      </motion.div>
-
-      <motion.div
-        className="absolute -left-6 sm:-left-10 md:-left-20 bottom-2 sm:bottom-4 w-24 sm:w-36 md:w-48 pointer-events-none z-0"
-        initial={{ opacity: 0, scale: 0.35, x: 160, y: -80, rotate: -10 }}
-        animate={spreadActive ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: 160, y: -80, rotate: -10 }}
-        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.22 }}
-      >
-        <motion.img
-          src={utaabCoinAsset.url}
-          alt=""
-          aria-hidden
-          className="w-full drop-shadow-[0_20px_40px_rgba(37,99,235,0.35)]"
-          animate={spreadActive && loop ? { y: [0, -12, 0], rotateZ: [-6, 6, -6] } : undefined}
-          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      </motion.div>
-      <motion.div
-        className="absolute -right-3 sm:-right-6 md:-right-12 top-2 sm:top-4 w-20 sm:w-28 md:w-40 pointer-events-none z-0"
-        initial={{ opacity: 0, scale: 0.35, x: -160, y: 100, rotate: 10 }}
-        animate={spreadActive ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: -160, y: 100, rotate: 10 }}
-        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-      >
-        <motion.img
-          src={tonCoinAsset.url}
-          alt=""
-          aria-hidden
-          className="w-full drop-shadow-[0_15px_30px_rgba(37,99,235,0.45)]"
-          animate={spreadActive && loop ? { y: [0, 10, 0], rotateZ: [4, -4, 4] } : undefined}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-        />
-      </motion.div>
-      <motion.div
-        className="absolute -right-3 sm:-right-6 md:-right-14 bottom-1 sm:bottom-2 md:bottom-6 w-14 sm:w-20 md:w-28 pointer-events-none z-0"
-        initial={{ opacity: 0, scale: 0.35, x: -150, y: -80, rotate: 10 }}
-        animate={spreadActive ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 } : { opacity: 0, scale: 0.35, x: -150, y: -80, rotate: 10 }}
-        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.78 }}
-      >
-        <motion.img
-          src={btcCoinAsset.url}
-          alt=""
-          aria-hidden
-          className="w-full drop-shadow-[0_15px_30px_rgba(202,138,4,0.4)]"
-          animate={spreadActive && loop ? { y: [0, -10, 0], rotateZ: [-5, 5, -5] } : undefined}
-          transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1.2 }}
-        />
-      </motion.div>
-
-    </div>
-  );
-};
-
-/* ---------- Hero ---------- */
-const Hero = () => {
-  const { t } = useTranslation();
-  return (
-    <section className="relative pt-24 sm:pt-28 md:pt-36 pb-16 md:pb-32 overflow-hidden">
-      <HeroBackground />
-      <div className="relative max-w-7xl mx-auto px-5 sm:px-6 grid md:grid-cols-2 gap-16 md:gap-8 items-center">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: 'easeOut' }}
-        >
-          <FadeImg
-            src={logoAsset.url}
-            alt="UBpoint"
-            className="h-12 sm:h-16 md:h-20 w-auto mb-5 sm:mb-6 drop-shadow-[0_10px_30px_rgba(37,99,235,0.3)]"
-          />
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.05] text-balance">
-            {t('projects.ubpointPage.hero.titleStart')}{' '}
-            <span className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
-              {t('projects.ubpointPage.hero.titleAccent')}
-            </span>
-          </h1>
-          <p className="mt-5 sm:mt-6 text-base sm:text-lg md:text-xl text-slate-600 max-w-xl leading-relaxed">
-            {t('projects.ubpointPage.hero.subtitle')}
-          </p>
-          <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row flex-wrap gap-3">
-            <a href={UBPOINT_APP_URL} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
-              <Button className="w-full sm:w-auto h-12 px-6 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-[0_10px_30px_-10px_rgba(37,99,235,0.6)] rounded-full">
-                {t('projects.ubpointPage.hero.launchApp')}
-                <ArrowRight className="ml-2 w-4 h-4" />
-              </Button>
-            </a>
-            <a href="#rewards" className="w-full sm:w-auto">
-              <Button
-                variant="outline"
-                className="w-full sm:w-auto h-12 px-6 rounded-full !bg-white !text-slate-900 border-blue-200 hover:!bg-blue-50 hover:!text-slate-900 shadow-[0_8px_24px_-12px_rgba(37,99,235,0.4)]"
-              >
-                {t('projects.ubpointPage.hero.viewRewards')}
-              </Button>
-            </a>
-          </div>
-
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.9, delay: 0.2, ease: 'easeOut' }}
-        >
-          <FloatingDevice />
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
-/* ---------- Feature grid ---------- */
-const featureDefs = [
-  { key: 'earnUbp', icon: Wallet },
-  { key: 'unlockRewards', icon: Tag },
-  { key: 'onChainVerification', icon: ShieldCheck },
-  { key: 'studentIdentity', icon: GraduationCap },
-  { key: 'leaderboards', icon: Medal },
-  { key: 'campusEngagement', icon: Compass },
-] as const;
-
-const FeatureGrid = () => {
-  const { t } = useTranslation();
-  return (
-    <section id="features" className="relative py-16 sm:py-24 md:py-32 bg-white">
-      <div className="max-w-7xl mx-auto px-5 sm:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.05 }}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-2xl mx-auto mb-10 sm:mb-16"
-        >
-          <div className="text-xs uppercase tracking-[0.2em] text-blue-700/80 font-semibold mb-4">
-            {t('projects.ubpointPage.features.eyebrow')}
-          </div>
-          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
-            {t('projects.ubpointPage.features.title')}
-          </h2>
-          <p className="mt-4 text-slate-600 md:text-lg">
-            {t('projects.ubpointPage.features.subtitle')}
-          </p>
-        </motion.div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {featureDefs.map((f, i) => (
-            <motion.div
-              key={f.key}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.5, delay: i * 0.06 }}
-              className="group relative p-5 sm:p-6 rounded-2xl bg-white/70 backdrop-blur-xl border border-blue-100 shadow-[0_10px_30px_-15px_rgba(37,99,235,0.25)] hover:shadow-[0_20px_50px_-20px_rgba(37,99,235,0.45)] hover:-translate-y-1 transition-all"
-            >
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center mb-4 shadow-lg shadow-blue-500/30">
-                <f.icon className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">{t(`projects.ubpointPage.features.items.${f.key}.t`)}</h3>
-              <p className="text-sm text-slate-600 leading-relaxed">{t(`projects.ubpointPage.features.items.${f.key}.d`)}</p>
-              <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-blue-300/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-/* ---------- Verified On-Chain ---------- */
-const BASE_NAME = 'utaablockchain.base.eth';
-const BASE_WALLET = '0x4fF797906D7B56F9Bd2Db382BcB36C97d69A43A9';
-const BASESCAN_URL = `https://basescan.org/address/${BASE_WALLET}`;
-
-const VerifiedOnChain = () => {
-  const { t } = useTranslation();
-  const [copied, setCopied] = useState<string | null>(null);
-  const copy = (value: string, key: string) => {
-    navigator.clipboard?.writeText(value);
-    setCopied(key);
-    setTimeout(() => setCopied(null), 1500);
-  };
-
-  return (
-    <section id="verified" className="relative py-16 sm:py-24 md:py-28 bg-white">
-      <div className="max-w-5xl mx-auto px-5 sm:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.05 }}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-2xl mx-auto mb-12"
-        >
-          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight flex items-center justify-center gap-3">
-            {t('projects.ubpointPage.verified.title')}
-            <CheckCircle2 className="w-8 h-8 md:w-10 md:h-10 text-blue-600" />
-          </h2>
-          <p className="mt-4 text-slate-600 md:text-lg leading-relaxed">
-            {t('projects.ubpointPage.verified.subtitle')}
-          </p>
-        </motion.div>
-
-        <div className="grid md:grid-cols-2 gap-5">
-          {[
-            { label: t('projects.ubpointPage.verified.baseName'), value: BASE_NAME, key: 'name', mono: false },
-            { label: t('projects.ubpointPage.verified.officialWallet'), value: BASE_WALLET, display: '0x4fF7…43A9', key: 'wallet', mono: true },
-          ].map((item: any) => (
-            <motion.div
-              key={item.key}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.5 }}
-              className="p-6 rounded-2xl bg-white border border-blue-100 shadow-[0_10px_30px_-15px_rgba(37,99,235,0.25)]"
-            >
-              <div className="text-xs font-semibold uppercase tracking-wider text-blue-700 mb-2">
-                {item.label}
-              </div>
-              <div className={`text-sm sm:text-base md:text-lg text-slate-900 font-bold break-all ${item.mono ? 'font-mono' : ''}`}>
-                {item.display ?? item.value}
-              </div>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() => copy(item.value, item.key)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold hover:bg-blue-100 transition-colors"
-                >
-                  <Copy className="w-3.5 h-3.5" />
-                  {copied === item.key ? t('projects.ubpointPage.verified.copied') : t('projects.ubpointPage.verified.copy')}
-                </button>
-                <a
-                  href={BASESCAN_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-blue-100 text-slate-600 text-xs font-semibold hover:text-blue-700 hover:border-blue-200 transition-colors"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  {t('projects.ubpointPage.verified.viewOnBasescan')}
-                </a>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-/* ---------- Inside the app — horizontal scroll showcase ---------- */
-const showcaseDefs = [
-  { kind: 'real', key: 'homeDashboard' },
-  { kind: 'rewards', key: 'rewardsMarketplace' },
-  { kind: 'wallet', key: 'studentWallet' },
-  { kind: 'leaderboard', key: 'leaderboard' },
-  { kind: 'events', key: 'events' },
-  { kind: 'analytics', key: 'profileAnalytics' },
-] as const;
-
-const PhoneFrame: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="relative mx-auto w-[250px] h-[510px] rounded-[52px] bg-gradient-to-b from-slate-700 via-slate-900 to-black p-[3px] shadow-[0_30px_60px_-20px_rgba(15,23,42,0.55)] ring-1 ring-white/10">
-    <div className="relative w-full h-full rounded-[49px] bg-black p-[2px] overflow-hidden">
-      <div className="relative w-full h-full rounded-[47px] bg-white overflow-hidden">
-        {children}
-        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-[78px] h-[22px] rounded-full bg-black z-20 shadow-[inset_0_0_2px_rgba(255,255,255,0.15)]" />
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-white/40 to-transparent z-10" />
-      </div>
-    </div>
-    <span className="absolute left-[-2px] top-[110px] h-7 w-[3px] rounded-l-sm bg-slate-700" />
-    <span className="absolute left-[-2px] top-[160px] h-12 w-[3px] rounded-l-sm bg-slate-700" />
-    <span className="absolute left-[-2px] top-[220px] h-12 w-[3px] rounded-l-sm bg-slate-700" />
-    <span className="absolute right-[-2px] top-[170px] h-16 w-[3px] rounded-r-sm bg-slate-700" />
-  </div>
-);
-
-
-const MockScreen: React.FC<{ kind: typeof showcaseDefs[number]['kind'] }> = ({ kind }) => {
-  const { t } = useTranslation();
-  const Header = (
-    <div className="px-4 pt-10 pb-3 flex items-center justify-between border-b border-slate-100">
-      <div className="flex items-center gap-1.5">
-        <FadeImg src={logoAsset.url} alt="UBpoint" className="h-4 w-auto object-contain" />
-        <span className="text-[11px] font-bold text-slate-900">UBpoint.</span>
-      </div>
-      <div className="text-[9px] font-bold text-blue-700">200 UBP</div>
-    </div>
-  );
-
-
-  if (kind === 'real') {
-    return (
-      <div className="h-full flex flex-col overflow-hidden">
-        {Header}
-        <div className="p-3 space-y-2.5 overflow-hidden">
-          <div>
-            <div className="text-[9px] uppercase font-bold text-slate-500">{t('projects.ubpointPage.inApp.goodMorning')}</div>
-            <div className="text-[12px] font-extrabold text-slate-900">Alex Karimov</div>
-          </div>
-          <div className="p-3 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-400 text-white">
-            <div className="text-[9px] opacity-80">{t('projects.ubpointPage.inApp.totalUbp')}</div>
-            <div className="text-2xl font-extrabold mt-0.5 leading-tight">200.00</div>
-            <div className="mt-1.5 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-white/20 text-[9px] font-bold">
-              <TrendingUp className="w-2.5 h-2.5" /> {t('projects.ubpointPage.inApp.plus50')}
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-1.5">
-            {[
-              { icon: Wallet, label: t('projects.ubpointPage.inApp.earn') },
-              { icon: Tag, label: t('projects.ubpointPage.inApp.redeem') },
-              { icon: Send, label: t('projects.ubpointPage.inApp.send') },
-            ].map((a) => (
-              <div key={a.label} className="flex flex-col items-center gap-1 p-1.5 rounded-lg bg-blue-50/60 border border-blue-100">
-                <a.icon className="w-3.5 h-3.5 text-blue-600" />
-                <div className="text-[9px] font-bold text-slate-700">{a.label}</div>
-              </div>
-            ))}
-          </div>
-          <div>
-            <div className="text-[9px] uppercase font-bold text-slate-500 mb-1">{t('projects.ubpointPage.inApp.recent')}</div>
-            <div className="space-y-1">
-              {[
-                { l: t('projects.ubpointPage.inApp.hackathon'), a: '+50', pos: true },
-                { l: t('projects.ubpointPage.inApp.workshop'), a: '+25', pos: true },
-                { l: t('projects.ubpointPage.inApp.reward'), a: '-100', pos: false },
-              ].map((tx) => (
-                <div key={tx.l} className="flex items-center justify-between p-1.5 rounded-lg bg-white border border-slate-100">
-                  <div className="flex items-center gap-1.5">
-                    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${tx.pos ? 'bg-green-50' : 'bg-slate-100'}`}>
-                      {tx.pos ? (
-                        <ArrowDownLeft className="w-2.5 h-2.5 text-green-600" />
-                      ) : (
-                        <ArrowUpRight className="w-2.5 h-2.5 text-slate-500" />
-                      )}
-                    </div>
-                    <div className="text-[10px] font-semibold text-slate-800">{tx.l}</div>
-                  </div>
-                  <div className={`text-[10px] font-bold ${tx.pos ? 'text-green-600' : 'text-slate-900'}`}>{tx.a} UBP</div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="flex items-center gap-2 p-2 rounded-lg bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100">
-            <TrendingUp className="w-4 h-4 text-orange-500" />
-            <div className="text-[10px] font-bold text-slate-800">{t('projects.ubpointPage.inApp.streak')}</div>
-            <div className="ml-auto text-[9px] text-slate-500 font-semibold">{t('projects.ubpointPage.inApp.keepGoing')}</div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-  if (kind === 'rewards') {
-    const rewardItems = [
-      { label: t('projects.ubpointPage.inApp.items.steam'), price: '500 UBP', img: steamAsset.url },
-      { label: t('projects.ubpointPage.inApp.items.silver'), price: '1,200 UBP', img: titaniumBarAsset.url },
-      { label: t('projects.ubpointPage.inApp.items.partner'), price: '250 UBP', img: goldCoinAsset.url },
-      { label: t('projects.ubpointPage.inApp.items.gold'), price: '5,000 UBP', img: goldBarAsset.url },
-    ];
-    return (
-      <div className="h-full flex flex-col overflow-hidden">
-        {Header}
-        <div className="p-3 space-y-2 overflow-hidden">
-          <div className="text-[10px] uppercase font-bold text-slate-500">{t('projects.ubpointPage.inApp.rewards')}</div>
-          {rewardItems.map((r) => (
-            <div key={r.label} className="flex items-center justify-between p-2 rounded-lg bg-blue-50/60 border border-blue-100">
-              <div className="flex items-center gap-2">
-                <FadeImg src={r.img} alt="" className="w-7 h-7 object-contain drop-shadow" />
-                <div className="text-[10px] font-semibold text-slate-900">{r.label}</div>
-              </div>
-              <div className="text-[9px] font-bold text-blue-700">{r.price}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-  if (kind === 'wallet') {
-    return (
-      <div className="h-full flex flex-col overflow-hidden">
-        {Header}
-        <div className="p-4 overflow-hidden">
-          <div className="text-[10px] uppercase font-bold text-slate-500">{t('projects.ubpointPage.inApp.wallet')}</div>
-          <div className="mt-2 p-4 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-400 text-white">
-            <div className="text-[10px] opacity-80">{t('projects.ubpointPage.inApp.ubpToken')}</div>
-            <div className="text-3xl font-extrabold mt-1">200.00</div>
-            <div className="text-[9px] mt-3 opacity-80">utaablockchain.base.eth · Base</div>
-          </div>
-          <div className="mt-3 space-y-1.5">
-            {[
-              ['+50 UBP', t('projects.ubpointPage.inApp.hackathon')],
-              ['+25 UBP', t('projects.ubpointPage.inApp.workshop')],
-              ['-100 UBP', t('projects.ubpointPage.inApp.rewardRedeem')],
-            ].map(([a, l]) => (
-              <div key={l} className="flex justify-between text-[10px] py-1 border-b border-slate-100">
-                <span className="text-slate-600">{l}</span>
-                <span className={a.startsWith('+') ? 'text-green-600 font-bold' : 'text-slate-900 font-bold'}>{a}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-  if (kind === 'leaderboard') {
-    return (
-      <div className="h-full flex flex-col overflow-hidden">
-        {Header}
-        <div className="p-3 overflow-hidden">
-          <div className="text-[10px] uppercase font-bold text-slate-500 mb-2">{t('projects.ubpointPage.inApp.leaderboard')}</div>
-          {[['1', 'cryptostudent.eth', '1,820'], ['2', 'utaab.devon', '1,540'], ['3', 'you', '1,210'], ['4', 'web3.zara', '980'], ['5', 'base.kai', '740']].map(([r, n, p]) => (
-            <div key={r} className={`flex items-center gap-2 p-2 rounded-lg mb-1.5 ${n === 'you' ? 'bg-blue-50 border border-blue-200' : 'bg-slate-50'}`}>
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${r === '1' ? 'bg-amber-400 text-white' : 'bg-slate-200 text-slate-700'}`}>{r}</div>
-              <div className="flex-1 text-[10px] font-semibold text-slate-900">{n}</div>
-              <div className="text-[10px] font-bold text-blue-700">{p}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-  if (kind === 'events') {
-    return (
-      <div className="h-full flex flex-col overflow-hidden">
-        {Header}
-        <div className="p-3 space-y-2 overflow-hidden">
-          <div className="text-[10px] uppercase font-bold text-slate-500">{t('projects.ubpointPage.inApp.upcoming')}</div>
-          {[
-            [t('projects.ubpointPage.inApp.events.hackathon'), 'Nov 12 · +100 UBP'],
-            [t('projects.ubpointPage.inApp.events.workshop'), 'Nov 18 · +30 UBP'],
-            [t('projects.ubpointPage.inApp.events.meetup'), 'Nov 25 · +25 UBP'],
-          ].map(([tt, d]) => (
-            <div key={tt} className="p-2.5 rounded-xl bg-white border border-blue-100">
-              <div className="flex items-center justify-between">
-                <div className="text-[11px] font-bold text-slate-900">{tt}</div>
-                <div className="w-5 h-5 rounded-full bg-blue-50 flex items-center justify-center">
-                  <ArrowUpRight className="w-3 h-3 text-blue-600" />
-                </div>
-              </div>
-              <div className="text-[9px] text-slate-500 mt-1">{d}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-  // analytics
-  return (
-    <div className="h-full flex flex-col overflow-hidden">
-      {Header}
-      <div className="p-3 overflow-hidden">
-        <div className="text-[10px] uppercase font-bold text-slate-500">{t('projects.ubpointPage.inApp.yourActivity')}</div>
-        <div className="mt-3 flex items-end gap-1.5 h-24">
-          {[40, 60, 35, 80, 55, 90, 70].map((h, i) => (
-            <div key={i} className="flex-1 rounded-t bg-gradient-to-t from-blue-200 to-blue-600" style={{ height: `${h}%` }} />
-          ))}
-        </div>
-        <div className="mt-4 grid grid-cols-2 gap-2">
-          {[
-            [t('projects.ubpointPage.inApp.eventsLabel'), '12'],
-            [t('projects.ubpointPage.inApp.hackathonsLabel'), '3'],
-            [t('projects.ubpointPage.inApp.projectsLabel'), '5'],
-            [t('projects.ubpointPage.inApp.rankLabel'), '#3'],
-          ].map(([l, v]) => (
-            <div key={l} className="p-2 rounded-lg bg-blue-50/60 border border-blue-100">
-              <div className="text-[9px] uppercase font-bold text-slate-500">{l}</div>
-              <div className="text-base font-extrabold text-slate-900">{v}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-
-const Showcase = () => {
-  const { t } = useTranslation();
-  const ref = useRef<HTMLDivElement>(null);
-
-  return (
-    <section id="showcase" className="relative py-16 sm:py-24 md:py-32 bg-gradient-to-b from-white via-blue-50/40 to-white overflow-hidden">
-      <div className="max-w-7xl mx-auto px-5 sm:px-6 mb-10 sm:mb-14 text-center">
-        <div className="text-xs uppercase tracking-[0.2em] text-blue-700/80 font-semibold mb-4">
-          {t('projects.ubpointPage.showcase.eyebrow')}
-        </div>
-        <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
-          {t('projects.ubpointPage.showcase.title')}
-        </h2>
-      </div>
-      <div ref={ref} className="overflow-x-auto snap-x snap-mandatory scrollbar-hide">
-        <div
-          className="flex gap-8 md:gap-16 px-5 sm:px-6 pt-6 pb-10"
-        >
-          {showcaseDefs.map((s, i) => (
-            <motion.div
-              key={s.key}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.6, delay: i * 0.05 }}
-              className="shrink-0 w-[240px] sm:w-[260px] md:w-[300px] snap-center group"
-            >
-              <div className="relative transition-transform duration-500 group-hover:-translate-y-2">
-                <div aria-hidden className="absolute left-1/2 -translate-x-1/2 bottom-[-30px] w-[80%] h-12 rounded-full bg-blue-500/30 blur-2xl" />
-                <PhoneFrame>
-                  <MockScreen kind={s.kind} />
-                </PhoneFrame>
-              </div>
-              <div className="mt-8 text-center">
-                <div className="text-base font-bold text-slate-900">{t(`projects.ubpointPage.showcase.screens.${s.key}.t`)}</div>
-                <div className="text-xs text-slate-500 mt-1">{t(`projects.ubpointPage.showcase.screens.${s.key}.h`)}</div>
-              </div>
-            </motion.div>
-          ))}
-          <div className="shrink-0 w-6 sm:w-12" />
-        </div>
-
-      </div>
-    </section>
-  );
-};
-
-/* ---------- For Brands / Sponsors ---------- */
-const sponsorTaskDefs = [
-  { key: 'twitter', icon: Twitter, reward: 10 },
-  { key: 'discord', icon: MessageSquare, reward: 25 },
-  { key: 'tryApp', icon: Send, reward: 50 },
-] as const;
-
-
-const Sponsors = () => {
-  const { t } = useTranslation();
-  const { tier } = useSplash();
-  const loop = tier === 'full';
-  const list = t('projects.ubpointPage.sponsors.list', { returnObjects: true }) as string[];
-  return (
-    <section id="sponsors" className="relative py-16 sm:py-24 md:py-32 bg-white overflow-hidden">
-      {tier !== 'minimal' && (
-        <motion.img
-          src={goldCoinAsset.url}
-          alt=""
-          aria-hidden
-          loading="lazy"
-          decoding="async"
-          className="hidden md:block absolute -left-10 bottom-10 w-32 opacity-70 drop-shadow-[0_20px_40px_rgba(202,138,4,0.35)] pointer-events-none"
-          animate={loop ? { y: [0, -14, 0], rotateZ: [-6, 6, -6] } : undefined}
-          transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      )}
-      <div className="max-w-7xl mx-auto px-5 sm:px-6 grid md:grid-cols-2 gap-10 sm:gap-12 items-center">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.05 }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-blue-700/80 font-semibold mb-5">
-            <Building2 className="w-3.5 h-3.5" />
-            {t('projects.ubpointPage.sponsors.eyebrow')}
-          </div>
-          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
-            {t('projects.ubpointPage.sponsors.titleStart')}{' '}
-            <span className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
-              {t('projects.ubpointPage.sponsors.titleAccent')}
-            </span>
-          </h2>
-          <p className="mt-5 text-slate-600 md:text-lg leading-relaxed">
-            {t('projects.ubpointPage.sponsors.body')}
-          </p>
-          <ul className="mt-6 space-y-3">
-            {(Array.isArray(list) ? list : []).map((p) => (
-              <li key={p} className="flex items-start gap-2.5 text-sm text-slate-700">
-                <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-                {p}
-              </li>
-            ))}
-          </ul>
-          <a href={SPONSOR_EMAIL} className="inline-block mt-8">
-            <Button className="h-12 px-6 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white rounded-full shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)]">
-              {t('projects.ubpointPage.sponsors.becomeSponsor')}
-              <ArrowRight className="ml-2 w-4 h-4" />
-            </Button>
-          </a>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.05 }}
-          transition={{ duration: 0.6 }}
-          className="space-y-3"
-        >
-          <div className="text-xs uppercase tracking-wider font-bold text-slate-500 px-2">
-            {t('projects.ubpointPage.sponsors.liveSponsoredTasks')}
-          </div>
-          {sponsorTaskDefs.map((tk, i) => (
-            <motion.div
-              key={tk.key}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.4, delay: i * 0.08 }}
-              className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl bg-white border border-blue-100 shadow-[0_10px_30px_-15px_rgba(37,99,235,0.25)] hover:shadow-[0_20px_50px_-20px_rgba(37,99,235,0.4)] transition-all"
-            >
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shrink-0">
-                <tk.icon className="w-5 h-5 text-white" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <div className="text-sm font-bold text-slate-900">{t(`projects.ubpointPage.sponsors.tasks.${tk.key}`)}</div>
-                  <div className="inline-flex items-center gap-1 text-[10px] font-bold text-blue-700">
-                    <ShieldCheck className="w-3 h-3" /> {t('projects.ubpointPage.sponsors.verified')}
-                  </div>
-                </div>
-                <div className="text-xs text-slate-500 mt-0.5">{t('projects.ubpointPage.sponsors.sponsoredPartner')}</div>
-              </div>
-              <div className="text-right">
-                <div className="text-lg font-extrabold text-blue-600">+{tk.reward}</div>
-                <div className="text-[10px] uppercase font-bold text-slate-500">UBP</div>
-              </div>
-            </motion.div>
-          ))}
-          <div className="mt-4 p-4 rounded-2xl bg-blue-50/60 border border-blue-100 text-xs text-slate-600">
-            <span className="font-bold text-slate-900">{t('projects.ubpointPage.sponsors.howItWorksLabel')}</span>{' '}
-            {t('projects.ubpointPage.sponsors.howItWorks')}
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
-/* ---------- Metrics ---------- */
-const CountUp: React.FC<{ to: number; suffix?: string }> = ({ to, suffix = '' }) => {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-50px' });
-  const [val, setVal] = useState(0);
-  useEffect(() => {
-    if (!inView) return;
-    const start = performance.now();
-    const dur = 1400;
-    let raf = 0;
-    const tick = (t: number) => {
-      const p = Math.min(1, (t - start) / dur);
-      setVal(Math.floor(to * (1 - Math.pow(1 - p, 3))));
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [inView, to]);
-  return <span ref={ref}>{val}{suffix}</span>;
-};
-
-/**
- * SafeCoinImg — decorative coin renderer with graceful degradation:
- *  - Only starts animating after the image successfully loads.
- *  - On load error, renders a same-sized blue gradient placeholder so the
- *    floating layout slot is preserved and the section never reflows.
- *  - Sets `sizes` so the browser picks the right intrinsic resolution; we
- *    don't generate width-descriptor srcSet because the Lovable CDN
- *    (/__l5e/assets-v1/...) does not transform images. TODO: if multi-size
- *    variants are uploaded later via `lovable-assets`, wire them into srcSet.
- */
-interface SafeCoinImgProps {
-  src: string;
-  positionClass: string;
-  glow: string;
-  animate?: { y: number[]; rotateZ?: number[] };
-  duration: number;
-  delay: number;
-  sizes?: string;
-}
-const SafeCoinImg = ({ src, positionClass, glow, animate, duration, delay, sizes }: SafeCoinImgProps) => {
-  const [loaded, setLoaded] = useState(false);
-  const [errored, setErrored] = useState(false);
-  const safeAnimate = (loaded || errored) ? animate : undefined;
-
-  if (errored) {
-    return (
-      <motion.div
-        aria-hidden
-        className={`absolute ${positionClass} pointer-events-none select-none rounded-full bg-gradient-to-br from-blue-200/70 via-blue-300/50 to-blue-100/40 ring-1 ring-blue-200/60`}
-        style={{ aspectRatio: '1 / 1', filter: `drop-shadow(0 18px 32px ${glow})` }}
-        animate={safeAnimate}
-        transition={{ duration, repeat: Infinity, ease: 'easeInOut', delay }}
-      />
-    );
-  }
-
-  return (
-    <motion.img
-      src={src}
-      sizes={sizes}
-      alt=""
-      aria-hidden
-      loading="lazy"
-      decoding="async"
-      // @ts-expect-error fetchPriority is valid HTML; TS lib lag
-      fetchpriority="low"
-      onLoad={() => setLoaded(true)}
-      onError={() => setErrored(true)}
-      className={`absolute ${positionClass} pointer-events-none select-none transition-opacity duration-500`}
-      style={{ filter: `drop-shadow(0 18px 32px ${glow})`, opacity: loaded ? 1 : 0 }}
-      animate={safeAnimate}
-      transition={{ duration, repeat: Infinity, ease: 'easeInOut', delay }}
-    />
-  );
-};
-
-const Metrics = () => {
-  const { t } = useTranslation();
-  const { tier } = useSplash();
-  const loop = tier === 'full';
-  const softLoop = tier === 'reduced';
-  const desktopCoins = [
-    { src: utaabCoinAsset.url, cls: 'hidden md:block -left-12 top-1/2 -translate-y-1/2 w-44', glow: 'rgba(37,99,235,0.4)', dur: 9, delay: 0, sizes: '(min-width: 768px) 176px, 0px' },
-    { src: goldBarAsset.url, cls: 'hidden md:block -right-10 top-12 w-36', glow: 'rgba(202,138,4,0.45)', dur: 11, delay: 0.3, sizes: '(min-width: 768px) 144px, 0px' },
-    { src: titaniumBarAsset.url, cls: 'hidden md:block right-20 top-2 w-24', glow: 'rgba(148,163,184,0.45)', dur: 10, delay: 1.1, sizes: '(min-width: 768px) 96px, 0px' },
-    { src: silverBarAsset.url, cls: 'hidden md:block left-24 bottom-4 w-24', glow: 'rgba(148,163,184,0.45)', dur: 12, delay: 0.6, sizes: '(min-width: 768px) 96px, 0px' },
-    { src: ethCoinAsset.url, cls: 'hidden md:block right-12 bottom-10 w-24', glow: 'rgba(100,116,139,0.4)', dur: 10, delay: 0.7, sizes: '(min-width: 768px) 96px, 0px' },
-    { src: usdtAngleAsset.url, cls: 'hidden md:block left-1/4 bottom-2 w-24', glow: 'rgba(16,185,129,0.45)', dur: 10, delay: 1.4, sizes: '(min-width: 768px) 96px, 0px' },
-    { src: tryAngleAsset.url, cls: 'hidden md:block right-1/4 top-1/3 w-24', glow: 'rgba(220,38,38,0.4)', dur: 12, delay: 0.2, sizes: '(min-width: 768px) 96px, 0px' },
-    { src: steamAsset.url, cls: 'hidden md:block right-8 top-8 w-24', glow: 'rgba(37,99,235,0.45)', dur: 11, delay: 1.6, sizes: '(min-width: 768px) 96px, 0px' },
-  ];
-  const responsiveCoins = [
-    { src: btcCoinAsset.url, cls: 'left-2 top-2 w-12 sm:w-16 md:left-1/3 md:top-4 md:w-20', glow: 'rgba(202,138,4,0.45)', dur: 9, delay: 0.4, sizes: '(min-width: 768px) 80px, (min-width: 640px) 64px, 48px' },
-    { src: tonCoinAsset.url, cls: 'right-2 top-2 w-12 sm:w-16 md:right-1/3 md:top-6 md:w-20', glow: 'rgba(37,99,235,0.5)', dur: 11, delay: 0.9, sizes: '(min-width: 768px) 80px, (min-width: 640px) 64px, 48px' },
-    { src: goldCoinAsset.url, cls: 'right-3 bottom-3 w-12 sm:w-16 md:left-10 md:right-auto md:bottom-16 md:w-20', glow: 'rgba(202,138,4,0.5)', dur: 10, delay: 0.5, sizes: '(min-width: 768px) 80px, (min-width: 640px) 64px, 48px' },
-    { src: gamepadAsset.url, cls: 'left-2 bottom-3 w-14 sm:w-20 md:left-1/4 md:bottom-10 md:w-32', glow: 'rgba(96,165,250,0.4)', dur: 9, delay: 0.8, sizes: '(min-width: 768px) 128px, (min-width: 640px) 80px, 56px' },
-  ];
-  const coins = tier === 'minimal' ? [] : [...responsiveCoins, ...desktopCoins];
-  return (
-    <section id="rewards" className="relative py-16 sm:py-24 md:py-32 bg-gradient-to-b from-white to-blue-50/50 overflow-hidden">
-      {coins.map((c, i) => {
-        const animate = loop
-          ? { y: [0, i % 2 === 0 ? -16 : 16, 0], rotateZ: [0, i % 2 === 0 ? 8 : -8, 0] }
-          : softLoop
-          ? { y: [0, i % 2 === 0 ? -6 : 6, 0] }
-          : undefined;
-        const duration = softLoop ? c.dur + 4 : c.dur;
-        return (
-          <SafeCoinImg
-            key={i}
-            src={c.src}
-            positionClass={c.cls}
-            glow={c.glow}
-            animate={animate}
-            duration={duration}
-            delay={c.delay}
-            sizes={c.sizes}
-          />
-        );
-      })}
-      <div className="max-w-6xl mx-auto px-5 sm:px-6 relative">
-        <div className="text-center mb-10 sm:mb-14">
-          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
-            {t('projects.ubpointPage.metrics.title')}
-          </h2>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-          {[
-            { value: <><CountUp to={200} />+</>, label: t('projects.ubpointPage.metrics.distributed') },
-            { value: <><CountUp to={1} />+</>, label: t('projects.ubpointPage.metrics.events') },
-            { value: <><CountUp to={100} suffix="%" /></>, label: t('projects.ubpointPage.metrics.recorded') },
-            { value: '∞', label: t('projects.ubpointPage.metrics.futureEcosystem') },
-          ].map((m, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="p-5 sm:p-6 md:p-8 rounded-2xl bg-white/80 backdrop-blur-xl border border-blue-100 text-center shadow-[0_10px_30px_-15px_rgba(37,99,235,0.25)]"
-            >
-              <div className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
-                {m.value}
-              </div>
-              <div className="mt-2 text-xs md:text-sm text-slate-600 font-semibold">{m.label}</div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-/* ---------- Final CTA ---------- */
-const FinalCTA = () => {
-  const { t } = useTranslation();
-  return (
-    <section className="relative py-16 sm:py-24 md:py-32 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-700 via-blue-600 to-blue-500" />
-      <div aria-hidden className="absolute inset-0">
-        <div className="absolute -top-20 left-1/4 w-80 h-80 rounded-full bg-blue-300/30 blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full bg-white/10 blur-3xl" />
-        <div
-          className="absolute inset-0 opacity-[0.08]"
-          style={{
-            backgroundImage:
-              'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)',
-            backgroundSize: '40px 40px',
-          }}
-        />
-      </div>
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.05 }}
-        transition={{ duration: 0.7 }}
-        className="relative max-w-3xl mx-auto px-5 sm:px-6 text-center text-white"
-      >
-        <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-tight">
-          {t('projects.ubpointPage.finalCta.title')}
-        </h2>
-        <p className="mt-6 text-base md:text-lg text-blue-50/90 leading-relaxed">
-          {t('projects.ubpointPage.finalCta.body')}
-        </p>
-        <a href={UBPOINT_APP_URL} target="_blank" rel="noopener noreferrer" className="inline-block mt-10">
-          <Button className="h-14 px-8 bg-white text-blue-700 hover:bg-blue-50 rounded-full text-base font-bold shadow-2xl">
-            {t('projects.ubpointPage.finalCta.launchApp')}
-            <ArrowRight className="ml-2 w-5 h-5" />
-          </Button>
-        </a>
-        <div className="mt-6 text-xs text-blue-100/70">
-          <Link to="/projects" className="underline-offset-4 hover:underline">{t('projects.ubpointPage.finalCta.backToProjects')}</Link>
-        </div>
-      </motion.div>
-    </section>
-  );
-};
-
-/* ---------- Error boundary (page-local, light-themed fallback) ---------- */
-import { Component, ErrorInfo, ReactNode } from 'react';
 class UBpointErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
   state = { hasError: false };
+
   static getDerivedStateFromError() {
     return { hasError: true };
   }
-  componentDidCatch(err: Error, info: ErrorInfo) {
-    // Surface for debugging without crashing the route.
-    // eslint-disable-next-line no-console
-    console.error('[UBpointPage] render error', err, info);
+
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error('[UBpointPage] render error', error, info);
   }
+
   render() {
     if (!this.state.hasError) return this.props.children;
     return (
-      <div className="min-h-screen bg-white text-slate-900 flex flex-col items-center justify-center px-6 text-center">
-        <FadeImg src={logoAsset.url} alt="UBpoint" className="h-12 w-auto mb-5 drop-shadow-[0_10px_30px_rgba(37,99,235,0.3)]" />
-        <h1 className="text-2xl font-extrabold mb-2">UBpoint hit a snag</h1>
-        <p className="text-slate-600 max-w-md mb-6">
-          Something went wrong rendering this page. Please reload — your session is safe.
-        </p>
-        <div className="flex gap-3">
+      <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-[#f8fafc] px-6 text-center text-slate-950">
+        <img src={UBPOINT_LOGO_URL} alt="" className="mb-5 h-12 w-12 rounded-xl" />
+        <h1 className="text-2xl font-extrabold">UBpoint hit a snag</h1>
+        <p className="mt-3 max-w-md text-slate-600">Something went wrong while rendering this page. Your session is safe.</p>
+        <div className="mt-7 flex flex-wrap justify-center gap-3">
           <button
+            type="button"
             onClick={() => window.location.reload()}
-            className="h-11 px-5 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm font-semibold shadow-[0_8px_24px_-10px_rgba(37,99,235,0.6)]"
+            className={`min-h-11 rounded-full bg-slate-950 px-5 text-sm font-bold text-white ${focusRing}`}
           >
             Reload
           </button>
-          <Link
-            to="/"
-            className="h-11 px-5 inline-flex items-center rounded-full bg-white border border-blue-200 text-slate-900 text-sm font-semibold hover:bg-blue-50"
-          >
+          <Link to="/" className={`inline-flex min-h-11 items-center rounded-full border border-slate-300 bg-white px-5 text-sm font-bold text-slate-900 ${focusRing}`}>
             Back to UTAAB
           </Link>
         </div>
@@ -1263,311 +506,49 @@ class UBpointErrorBoundary extends Component<{ children: ReactNode }, { hasError
   }
 }
 
-/* ---------- Perf-tier debug panel (no console required) ---------- */
-const PerfDebugPanel = () => {
-  const { tier, tierOverride, setTierOverride, replaySpread, heroReady, ready } = useSplash();
-  const [enabled, setEnabled] = useState(false);
-
+const UBpointPageInner = () => {
   useEffect(() => {
-    try {
-      const fromQuery = new URLSearchParams(window.location.search).get('perf-debug') === '1';
-      const fromStorage = localStorage.getItem('ubpoint-perf-debug') === '1';
-      if (fromQuery || fromStorage) setEnabled(true);
-    } catch {}
-    const onKey = (e: KeyboardEvent) => {
-      if (e.shiftKey && (e.key === 'P' || e.key === 'p') && !e.metaKey && !e.ctrlKey && !e.altKey) {
-        const target = e.target as HTMLElement | null;
-        if (target && /input|textarea|select/i.test(target.tagName)) return;
-        setEnabled((v) => {
-          const next = !v;
-          try { localStorage.setItem('ubpoint-perf-debug', next ? '1' : '0'); } catch {}
-          return next;
-        });
-      }
+    const html = document.documentElement;
+    const body = document.body;
+    const previousHtml = html.style.background;
+    const previousBody = body.style.background;
+    html.style.background = '#f8fafc';
+    body.style.background = '#f8fafc';
+    return () => {
+      html.style.background = previousHtml;
+      body.style.background = previousBody;
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  if (!enabled) return null;
-
-  const tiers: PerfTier[] = ['full', 'reduced', 'minimal'];
   return (
-    <div
-      role="region"
-      aria-label="UBpoint performance debug panel"
-      className="fixed bottom-4 right-4 z-[70] w-[240px] rounded-2xl border border-blue-100 bg-white/95 backdrop-blur-xl shadow-2xl p-3 text-slate-900"
-    >
-      <div className="flex items-center justify-between mb-2">
-        <div className="text-[11px] font-extrabold uppercase tracking-wider text-blue-700">Perf debug</div>
-        <button
-          type="button"
-          onClick={() => {
-            setEnabled(false);
-            try { localStorage.setItem('ubpoint-perf-debug', '0'); } catch {}
-          }}
-          className="text-slate-400 hover:text-slate-700 text-xs"
-          aria-label="Close"
-        >
-          ✕
-        </button>
-      </div>
-      <div className="text-[11px] text-slate-500 mb-2">
-        Tier <span className="font-bold text-slate-900">{tier}</span>
-        {tierOverride && <span className="ml-1 text-blue-600">(override)</span>}
-        <span className="ml-2">· ready {ready ? '✓' : '…'} · hero {heroReady ? '✓' : '…'}</span>
-      </div>
-      <div className="grid grid-cols-3 gap-1.5 mb-2">
-        {tiers.map((tt) => {
-          const active = tierOverride === tt;
-          return (
-            <button
-              key={tt}
-              type="button"
-              onClick={() => setTierOverride(tt)}
-              className={`px-2 py-1.5 rounded-lg text-[11px] font-semibold border transition-colors ${
-                active
-                  ? 'bg-blue-600 text-white border-blue-600'
-                  : 'bg-white text-slate-700 border-blue-100 hover:bg-blue-50'
-              }`}
-            >
-              {tt}
-            </button>
-          );
-        })}
-      </div>
-      <div className="flex gap-1.5">
-        <button
-          type="button"
-          onClick={() => setTierOverride(null)}
-          className="flex-1 px-2 py-1.5 rounded-lg text-[11px] font-semibold bg-white border border-blue-100 text-slate-700 hover:bg-blue-50"
-        >
-          Auto
-        </button>
-        <button
-          type="button"
-          onClick={replaySpread}
-          className="flex-1 px-2 py-1.5 rounded-lg text-[11px] font-semibold bg-blue-50 border border-blue-100 text-blue-700 hover:bg-blue-100"
-        >
-          Replay
-        </button>
-      </div>
-      <div className="mt-2 text-[10px] text-slate-400">Toggle with Shift + P</div>
+    <div className="min-h-[100dvh] bg-[#f8fafc] font-sans text-slate-950 selection:bg-blue-200 selection:text-blue-950">
+      <PageNavbar />
+      <main>
+        <Story />
+        <AvailabilitySection />
+      </main>
+      <PageFooter />
     </div>
   );
 };
 
-
-const UBpointPageInner = () => {
-  const { t } = useTranslation();
-
-  // Skip the splash entirely on reduced-motion or low-memory devices, or if we
-  // already splashed this tab.
-  const initialReady = (() => {
-    if (typeof window === 'undefined') return false;
-    if (sessionStorage.getItem('ubpoint-splashed') === '1') return true;
-    try {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return true;
-      const mem = (navigator as any).deviceMemory;
-      if (typeof mem === 'number' && mem > 0 && mem <= 4) return true;
-    } catch {}
-    return false;
-  })();
-  const [ready, setReady] = useState(initialReady);
-  const autoTier = usePerfGuard();
-  const [tierOverride, setTierOverride] = useState<PerfTier | null>(null);
-  const tier = tierOverride ?? autoTier;
-  const [mockupDecoded, setMockupDecoded] = useState(false);
-  const [fontsReady, setFontsReady] = useState(false);
-  const [replayKey, setReplayKey] = useState(0);
-  const heroReady = ready && mockupDecoded && fontsReady;
-
-  // Mockup decode — independent of splash so heroReady can latch precisely.
-  useEffect(() => {
-    let cancelled = false;
-    const img = new Image();
-    img.src = mockupAsset.url;
-    img.decode().then(() => { if (!cancelled) setMockupDecoded(true); })
-      .catch(() => { if (!cancelled) setMockupDecoded(true); });
-    const fallback = window.setTimeout(() => { if (!cancelled) setMockupDecoded(true); }, 2500);
-    return () => { cancelled = true; window.clearTimeout(fallback); };
-  }, []);
-
-  // Wait for web fonts so coin entrance lines up with final hero typography.
-  useEffect(() => {
-    let cancelled = false;
-    const fallback = window.setTimeout(() => { if (!cancelled) setFontsReady(true); }, 1200);
-    const fonts = (document as any).fonts;
-    if (fonts?.ready?.then) {
-      fonts.ready.then(() => { if (!cancelled) setFontsReady(true); }).catch(() => {});
-    } else {
-      setFontsReady(true);
-    }
-    return () => { cancelled = true; window.clearTimeout(fallback); };
-  }, []);
-
-  const replaySpread = useCallback(() => {
-    setReplayKey((k) => k + 1);
-  }, []);
-
-
-  // Lock html/body background to opaque white so the global dark theme can
-  // never bleed through during paint gaps or splash fade-out.
-  useEffect(() => {
-    const html = document.documentElement;
-    const body = document.body;
-    const prevHtmlBg = html.style.background;
-    const prevBodyBg = body.style.background;
-    html.style.background = '#ffffff';
-    body.style.background = '#ffffff';
-    return () => {
-      html.style.background = prevHtmlBg;
-      body.style.background = prevBodyBg;
-    };
-  }, []);
-
-  useEffect(() => {
-    const prev = document.title;
-    document.title = 'UBpoint — Blockchain Student Engagement | UTAAB';
-    const meta = document.querySelector('meta[name="description"]');
-    const prevDesc = meta?.getAttribute('content') ?? '';
-    meta?.setAttribute(
-      'content',
-      "UBpoint is UTAAB's blockchain-powered student engagement platform. Earn UBP, unlock rewards, and verify everything on-chain.",
-    );
-    return () => {
-      document.title = prev;
-      meta?.setAttribute('content', prevDesc);
-    };
-  }, []);
-
-  // Preload hero assets, hard-cap splash at 1500ms, always release scroll lock.
-  useEffect(() => {
-    if (ready) return;
-    const prevBody = document.body.style.overflow;
-    const prevHtml = document.documentElement.style.overflow;
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
-    window.scrollTo({ top: 0, behavior: 'auto' });
-
-    const links: HTMLLinkElement[] = [];
-    const addPreload = (href: string, priority: 'high' | 'low') => {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'image';
-      link.href = href;
-      (link as any).fetchPriority = priority;
-      document.head.appendChild(link);
-      links.push(link);
-    };
-    HERO_CRITICAL_ASSETS.forEach((u) => addPreload(u, 'high'));
-
-    let cancelled = false;
-    const decodeCritical = Promise.allSettled(
-      HERO_CRITICAL_ASSETS.map((url) => {
-        const img = new Image();
-        img.src = url;
-        return img.decode().catch(() => undefined);
-      }),
-    );
-
-    const safety = window.setTimeout(() => {
-      if (cancelled) return;
-      setReady(true);
-      try { sessionStorage.setItem('ubpoint-splashed', '1'); } catch {}
-    }, 1500);
-
-    decodeCritical.then(() => {
-      if (cancelled) return;
-      window.clearTimeout(safety);
-      window.setTimeout(() => {
-        if (cancelled) return;
-        setReady(true);
-        try { sessionStorage.setItem('ubpoint-splashed', '1'); } catch {}
-      }, 200);
-    });
-
-    const release = () => {
-      document.body.style.overflow = prevBody;
-      document.documentElement.style.overflow = prevHtml;
-      links.forEach((l) => l.parentNode?.removeChild(l));
-    };
-
-    return () => {
-      cancelled = true;
-      window.clearTimeout(safety);
-      release();
-    };
-  }, [ready]);
-
-  return (
-    <SplashContext.Provider value={{ ready, heroReady, tier, replayKey, setTierOverride, tierOverride, replaySpread }}>
-      <div className="min-h-screen bg-white text-slate-900 font-sans">
-        <LightNavbar />
-        <main>
-          <Hero />
-          <FeatureGrid />
-          <VerifiedOnChain />
-          <Showcase />
-
-          <Sponsors />
-          <Metrics />
-          <FinalCTA />
-        </main>
-        <LightFooter />
-
-        <PerfDebugPanel />
-
-
-        <AnimatePresence>
-          {!ready && (
-            <motion.div
-              key="ubpoint-splash-overlay"
-              className="fixed inset-0 z-[60] cursor-wait bg-white"
-              initial={{ opacity: 1 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.4, ease: 'easeOut' }}
-              onWheelCapture={(e) => e.preventDefault()}
-              onTouchMoveCapture={(e) => e.preventDefault()}
-              style={{ touchAction: 'none' }}
-            >
-              <div className="absolute inset-0 flex items-center justify-center">
-                <FadeImg src={logoAsset.url} alt="UBpoint" className="h-14 w-auto opacity-90" />
-              </div>
-              <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-blue-100 shadow-lg">
-                  <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                  <span className="text-xs font-semibold text-slate-700 tracking-wide">
-                    {t('projects.ubpointPage.splash.initializing')}
-                  </span>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </SplashContext.Provider>
-  );
-};
-
-import SEO from '@/components/SEO';
-
 const UBpointPage = () => (
   <UBpointErrorBoundary>
     <SEO
-      title="UBpoint — Community Rewards Token by UTAAB"
-      description="UBpoint (UBP) is UTAAB's community rewards token — earn points for learning Web3, contributing to projects, and engaging with the student blockchain community."
+      title="UBpoint | Community Rewards by UTAAB"
+      description="Earn UBpoint through learning, events, and community contributions. Use the web app now, with iOS and Android apps coming soon."
       path="/projects/ubpoint"
       ogType="website"
       image="https://utaab.org/og-image.png"
       jsonLd={[
         {
           '@context': 'https://schema.org',
-          '@type': 'Product',
-          name: 'UBpoint (UBP)',
-          description: 'Community rewards token by UTAAB for Web3 learning, contributions and engagement.',
-          url: 'https://utaab.org/projects/ubpoint',
+          '@type': 'SoftwareApplication',
+          name: 'UBpoint',
+          applicationCategory: 'EducationalApplication',
+          operatingSystem: 'Web',
+          url: UBPOINT_APP_URL,
+          description: 'UTAAB community rewards platform for learning, contributions, events, and verifiable engagement.',
           brand: { '@type': 'Organization', name: 'UTAAB', url: 'https://utaab.org' },
         },
         {
@@ -1576,34 +557,18 @@ const UBpointPage = () => (
           mainEntity: [
             {
               '@type': 'Question',
-              name: 'What is UBpoint (UBP)?',
+              name: 'What is UBpoint?',
               acceptedAnswer: {
                 '@type': 'Answer',
-                text: 'UBpoint (UBP) is the UTAAB community rewards token. It tracks contributions, learning progress and engagement across the UTAAB blockchain ecosystem.',
+                text: 'UBpoint is the UTAAB community rewards platform for learning, contributions, events, and student engagement.',
               },
             },
             {
               '@type': 'Question',
-              name: 'How do I earn UBpoint?',
+              name: 'Where can I use UBpoint?',
               acceptedAnswer: {
                 '@type': 'Answer',
-                text: 'You earn UBP by completing UTAAB courses, contributing to community projects, participating in events, and engaging with the UTAAB Web3 community.',
-              },
-            },
-            {
-              '@type': 'Question',
-              name: 'Is UBpoint a cryptocurrency I can trade?',
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: 'UBpoint is currently a community rewards token used inside the UTAAB ecosystem. Any future on-chain or trading utility will be announced officially on utaab.org.',
-              },
-            },
-            {
-              '@type': 'Question',
-              name: 'What can I do with UBpoint?',
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: 'UBP can be used to unlock community perks, access selected programs, recognize top contributors, and participate in UTAAB initiatives.',
+                text: 'The UBpoint web app is available now. Native iOS and Android apps are coming soon.',
               },
             },
           ],

@@ -135,15 +135,17 @@ export const CourseDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background pt-24 flex items-center justify-center">
-        <div className="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full" />
+      <div className="flex min-h-[100dvh] items-center justify-center bg-background pt-24">
+        <EducationNavbar />
+        <div className="h-12 w-12 animate-pulse rounded-xl bg-white/[0.06]" />
       </div>
     );
   }
 
   if (!course) {
     return (
-      <div className="min-h-screen bg-background pt-24 flex items-center justify-center">
+      <div className="flex min-h-[100dvh] items-center justify-center bg-background pt-24">
+        <EducationNavbar />
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">{t('education.course.not_found')}</h1>
           <Button onClick={() => navigate('/education/courses')}>
@@ -163,11 +165,11 @@ export const CourseDetail = () => {
   } : undefined;
 
   return (
-    <div className="min-h-screen bg-background pt-24 pb-20">
+    <div className="min-h-[100dvh] bg-background pb-28 pt-20">
       <EducationNavbar />
       <CutiiAIPanel courseContext={courseContext} />
       {/* Hero Section */}
-      <div className="bg-gradient-to-b from-primary/10 to-transparent py-12 px-6 mb-12">
+      <div className="mb-12 border-b border-white/10 px-6 py-14">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Left Column - Course Info */}
@@ -179,7 +181,7 @@ export const CourseDetail = () => {
                 <Badge variant="outline">{t(`education.levels.${course.level}`)}</Badge>
               </div>
               
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              <h1 className="mb-5 max-w-[18ch] text-4xl font-extrabold tracking-[-0.055em] md:text-6xl">
                 {getCourseTitle(course)}
               </h1>
               
@@ -231,7 +233,7 @@ export const CourseDetail = () => {
 
             {/* Right Column - Enrollment Card */}
             <div className="lg:col-span-1">
-              <Card className="glass sticky top-24">
+              <Card className="glass sticky top-24 rounded-2xl">
                 <CardContent className="p-6">
                   {course.hero_image && (
                     <div className="aspect-video overflow-hidden rounded-lg mb-4">
@@ -274,7 +276,7 @@ export const CourseDetail = () => {
           <div className="lg:col-span-2 space-y-8">
             {/* What You'll Learn */}
             {getCourseOutcomes(course).length > 0 && (
-              <Card className="glass">
+              <Card className="glass rounded-2xl">
                 <CardHeader>
                   <CardTitle>{t('education.course.what_learn')}</CardTitle>
                 </CardHeader>
@@ -293,7 +295,7 @@ export const CourseDetail = () => {
 
             {/* Prerequisites */}
             {getCoursePrerequisites(course).length > 0 && (
-              <Card className="glass">
+              <Card className="glass rounded-2xl">
                 <CardHeader>
                   <CardTitle>{t('education.course.prerequisites')}</CardTitle>
                 </CardHeader>
@@ -309,7 +311,7 @@ export const CourseDetail = () => {
 
             {/* Course Description */}
             {getCourseDescription(course) && (
-              <Card className="glass">
+              <Card className="glass rounded-2xl">
                 <CardHeader>
                   <CardTitle>{t('education.course.about_course')}</CardTitle>
                 </CardHeader>
@@ -328,7 +330,7 @@ export const CourseDetail = () => {
 
             {/* Instructor Bio */}
             {course.instructors && getInstructorBio(course.instructors) && (
-              <Card className="glass">
+              <Card className="glass rounded-2xl">
                 <CardHeader>
                   <CardTitle>{t('education.course.instructor')}</CardTitle>
                 </CardHeader>

@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
-import { Search, Filter, X, Compass, Star, SearchX } from 'lucide-react';
+import { Search, Filter, X, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -20,8 +20,6 @@ import { ExternalCourseCard } from '@/components/education/ExternalCourseCard';
 import { externalCourses } from '@/data/externalCourses';
 import AnimatedImage from '@/components/common/AnimatedImage';
 import GlassCard from '@/components/glass/GlassCard';
-import AnimatedBlobBackground from '@/components/AnimatedBlobBackground';
-import BottomGradientOverlay from '@/components/BottomGradientOverlay';
 
 export const CourseCatalog = () => {
   const { t, i18n } = useTranslation();
@@ -170,20 +168,14 @@ export const CourseCatalog = () => {
   const totalCoursesCount = allCourses.db.length + allCourses.external.length;
 
   return (
-    <div className="min-h-screen bg-background text-foreground relative pt-24 pb-20 px-6">
-      <AnimatedBlobBackground />
+    <div className="relative min-h-[100dvh] bg-background px-5 pb-28 pt-28 text-foreground sm:px-8">
       <EducationNavbar />
       <CutiiAIPanel />
 
-      <div className="section-container relative z-10">
+      <main className="section-container relative z-10">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/15 border border-accent/20 text-accent">
-              <Compass className="h-5 w-5" />
-            </div>
-            <h1 className="text-3xl md:text-4xl font-bold">{t('education.catalog.title')}</h1>
-          </div>
+          <h1 className="mb-8 max-w-3xl text-4xl font-extrabold tracking-[-0.05em] md:text-6xl">{t('education.catalog.title')}</h1>
 
           {/* Search and Filter Toggle */}
           <div className="flex gap-2 mb-6">
@@ -214,7 +206,7 @@ export const CourseCatalog = () => {
 
           {/* Filters Panel */}
           {showFilters && (
-            <GlassCard className="p-6 mb-6">
+            <GlassCard className="mb-6 rounded-2xl p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                 <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                   <SelectTrigger className="glass">
@@ -386,10 +378,7 @@ export const CourseCatalog = () => {
             ))}
           </div>
         ) : (
-          <GlassCard className="max-w-md mx-auto p-10 text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/15 border border-accent/20 text-accent mb-4">
-              <SearchX className="h-6 w-6" />
-            </div>
+          <GlassCard className="mx-auto max-w-md rounded-2xl p-10 text-center">
             <p className="text-xl mb-4">{t('education.catalog.no_results')}</p>
             {activeFiltersCount > 0 && (
               <Button onClick={clearFilters} variant="outline" className="glass border-white/15">
@@ -398,9 +387,7 @@ export const CourseCatalog = () => {
             )}
           </GlassCard>
         )}
-      </div>
-
-      <BottomGradientOverlay />
+      </main>
     </div>
   );
 };

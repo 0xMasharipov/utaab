@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { NavArrowRight } from 'iconoir-react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
@@ -16,17 +16,52 @@ import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import SEO from '@/components/SEO';
+import OrbitalTeamBackdrop from '@/components/about/OrbitalTeamBackdrop';
+import circleGridHalf from '@/assets/about/circle-grid-half.webp';
+import abdulbakiOrbit from '@/assets/about/team-orbit/abdulbaki.webp';
+import abdullaOrbit from '@/assets/about/team-orbit/abdulla.webp';
+import anarOrbit from '@/assets/about/team-orbit/anar.webp';
+import burakOrbit from '@/assets/about/team-orbit/burak.webp';
+import ibrahimOrbit from '@/assets/about/team-orbit/ibrahim.webp';
+import mehmetBarukOrbit from '@/assets/about/team-orbit/mehmet-baruk.webp';
+import shuaybOrbit from '@/assets/about/team-orbit/shuayb.webp';
+import umutOrbit from '@/assets/about/team-orbit/umut.webp';
+import yanaOrbit from '@/assets/about/team-orbit/yana.webp';
+import yunusOrbit from '@/assets/about/team-orbit/yunus.webp';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' as const } },
 };
 
+const teamOrbitRows = [
+  [yanaOrbit, yunusOrbit, abdullaOrbit, umutOrbit],
+  [abdulbakiOrbit, mehmetBarukOrbit, anarOrbit, burakOrbit, shuaybOrbit],
+  [ibrahimOrbit, yanaOrbit, umutOrbit, abdullaOrbit, anarOrbit, yunusOrbit],
+  [burakOrbit, shuaybOrbit, mehmetBarukOrbit, abdulbakiOrbit, ibrahimOrbit, yanaOrbit, umutOrbit, anarOrbit],
+];
+
 const About = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [isPrivacyCenterOpen, setIsPrivacyCenterOpen] = useState(false);
   const { getTransitionClasses } = useLanguageTransition();
+  const reduceMotion = useReducedMotion();
+  const activeLanguage = (i18n.resolvedLanguage || i18n.language || 'en').split('-')[0];
+
+  useEffect(() => {
+    const html = document.documentElement;
+    const previousLanguage = html.lang;
+    const previousDirection = html.dir;
+
+    html.lang = activeLanguage;
+    html.dir = activeLanguage === 'ar' ? 'rtl' : 'ltr';
+
+    return () => {
+      html.lang = previousLanguage;
+      html.dir = previousDirection;
+    };
+  }, [activeLanguage]);
 
   const whatWeDo = [
     { titleKey: 'aboutPage.whatWeDo.educate.title', descKey: 'aboutPage.whatWeDo.educate.description' },
@@ -51,7 +86,7 @@ const About = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SEO
-        title="About UTAAB — Student Blockchain & Web3 Community"
+        title="About UTAAB | Student Blockchain & Web3 Community"
         description="What is UTAAB? A student-led Web3 ecosystem advancing blockchain education, real-world crypto projects, and global collaboration. Learn our mission, team and impact."
         path="/about"
         jsonLd={[
@@ -60,7 +95,7 @@ const About = () => {
             '@type': 'AboutPage',
             name: 'About UTAAB',
             url: 'https://utaab.org/about',
-            description: 'About the UTAAB student-led Web3 ecosystem — mission, projects and community.',
+            description: 'About the UTAAB student-led Web3 ecosystem, its mission, projects and community.',
             mainEntity: {
               '@type': 'Organization',
               name: 'UTAAB',
@@ -78,7 +113,7 @@ const About = () => {
                 name: 'What is UTAAB?',
                 acceptedAnswer: {
                   '@type': 'Answer',
-                  text: 'UTAAB is a student-led Web3 ecosystem focused on blockchain education, real projects, and cross-border collaboration — giving beginners a clear path from first guide to first shipped Web3 project.',
+                  text: 'UTAAB is a student-led Web3 ecosystem focused on blockchain education, real projects, and cross-border collaboration. It gives beginners a clear path from first guide to first shipped Web3 project.',
                 },
               },
               {
@@ -180,7 +215,7 @@ const About = () => {
                 />
                 <AnimatedImage
                   src={utaaCommunityAsset.url}
-                  alt="Türk-Alman Üniversitesi (TAU) — official university community"
+                  alt="Türk-Alman Üniversitesi (TAU), official university community"
                   containerClassName="absolute inset-0"
                   className="w-full h-full object-cover"
                   loading="lazy"
@@ -316,40 +351,73 @@ const About = () => {
       </GlassSectionWrapper>
 
       {/* 6. Closing CTA */}
-      <GlassSectionWrapper>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="relative"
-        >
-          {/* Radial glow behind CTA */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="w-[500px] h-[300px] bg-accent/[0.06] rounded-full blur-3xl" />
+      <GlassSectionWrapper className="overflow-hidden pb-0 pt-12 sm:pb-0 sm:pt-16 md:pb-0 md:pt-20">
+        <div className="relative flex min-h-[560px] items-center justify-center sm:min-h-[640px] lg:min-h-[700px]">
+          <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+            <img
+              src={circleGridHalf}
+              alt=""
+              width={1600}
+              height={1600}
+              loading="lazy"
+              decoding="async"
+              className="absolute bottom-[-12%] left-1/2 h-auto w-[520px] max-w-none -translate-x-1/2 opacity-[0.11] mix-blend-screen sm:bottom-[-18%] sm:w-[720px] lg:bottom-[-24%] lg:w-[920px]"
+              style={{
+                WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 18%, black 78%, transparent 100%)',
+                maskImage: 'linear-gradient(to bottom, transparent 0%, black 18%, black 78%, transparent 100%)',
+              }}
+            />
+
+            <OrbitalTeamBackdrop
+              rows={teamOrbitRows}
+              circleSize={72}
+              baseRadius={200}
+              orbitGap={160}
+              rotationDuration={22}
+              rowDelay={6}
+              direction="clockwise"
+              alternateDirection
+              fadeMode="out"
+              fadeBlur
+              showPaths
+              animate
+              animationDuration={0.7}
+              animationStagger={0.14}
+            />
+
+            <div className="absolute inset-x-0 top-[10%] h-[70%] bg-[radial-gradient(ellipse_at_center,hsl(217_50%_6%/0.05)_0%,hsl(217_50%_6%/0.36)_48%,hsl(217_50%_6%/0.82)_100%)]" />
           </div>
-          <GlassCard variant="strong" className="relative p-10 sm:p-16 text-center max-w-3xl mx-auto">
-            <h2 className={getTransitionClasses("text-3xl sm:text-4xl font-bold text-foreground mb-6")}>
-              {t('aboutPage.cta.title')}
-            </h2>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                onClick={() => navigate('/#join')}
-                className="bg-accent hover:bg-accent/90 text-accent-foreground rounded-full px-8 py-3 text-base"
-              >
-                {t('aboutPage.cta.joinButton')}
-                <NavArrowRight className="ml-2 h-4 w-4" strokeWidth={1.5} />
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => navigate('/#projects')}
-                className="rounded-full px-8 py-3 text-base border-border"
-              >
-                {t('aboutPage.cta.exploreButton')}
-              </Button>
+
+          <motion.div
+            initial={reduceMotion ? false : { opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: reduceMotion ? 0 : 0.75, ease: [0.16, 1, 0.3, 1] }}
+            className="relative top-10 z-10 w-full max-w-4xl px-1 sm:top-14 sm:px-4 lg:top-16"
+          >
+            <div className="about-orbit-cta-card relative isolate mx-auto overflow-hidden rounded-2xl px-6 py-12 text-center sm:px-12 sm:py-14 lg:px-16 lg:py-16">
+              <h2 className={getTransitionClasses("relative z-10 mx-auto mb-7 max-w-2xl text-3xl font-bold leading-tight text-foreground sm:text-4xl")}>
+                {t('aboutPage.cta.title')}
+              </h2>
+              <div className="relative z-10 flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
+                <Button
+                  onClick={() => navigate('/#join')}
+                  className="rounded-full bg-accent px-8 py-3 text-base text-[hsl(217_50%_6%)] transition-transform hover:bg-accent/90 hover:text-[hsl(217_50%_6%)] active:scale-[0.98]"
+                >
+                  {t('aboutPage.cta.joinButton')}
+                  <NavArrowRight className="ml-1 h-4 w-4 rtl:rotate-180" strokeWidth={1.5} />
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => navigate('/#projects')}
+                  className="rounded-full border-white/15 bg-[hsl(217_50%_6%/0.82)] px-8 py-3 text-base text-foreground transition-transform hover:bg-accent hover:text-[hsl(217_50%_6%)] active:scale-[0.98]"
+                >
+                  {t('aboutPage.cta.exploreButton')}
+                </Button>
+              </div>
             </div>
-          </GlassCard>
-        </motion.div>
+          </motion.div>
+        </div>
       </GlassSectionWrapper>
 
       <Footer onPrivacyClick={() => setIsPrivacyCenterOpen(true)} />

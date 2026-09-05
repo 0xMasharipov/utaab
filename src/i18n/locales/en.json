@@ -264,12 +264,12 @@
       "beta": "Beta — Live"
     },
     "ubp": {
-      "title": "UBpoint — UTAA Blockchain Point System",
-      "description": "A blockchain-based point system designed to reward contributions and active participation within the UTAAB ecosystem."
+      "title": "UBpoint — Earn for showing up",
+      "description": "Turn events, learning, and community contributions into verifiable UBP, then unlock rewards across the UTAAB ecosystem."
     },
     "tonra": {
-      "title": "TonRa — TON Research Network",
-      "description": "A TON-based research network for transparent collaboration and knowledge validation."
+      "title": "TonRa — Check TON before you trust it",
+      "description": "Scan wallets, tokens, projects, and airdrops with TonRa in Telegram before you interact."
     },
     "asn": {
       "title": "ASN — Academic Settlement Network",
@@ -303,63 +303,116 @@
       "students": "Students",
       "privacy": "Privacy",
       "layer2": "Layer 2",
+      "onChainRewards": "On-chain rewards",
+      "studentCommunity": "Student community",
+      "webAppLive": "Web app live",
+      "tonSecurity": "TON security",
+      "telegramBot": "Telegram bot",
+      "walletChecks": "Wallet checks",
       "governance": "Governance",
       "dao": "DAO"
     },
     "tonraPage": {
+      "nav": {
+        "ariaLabel": "TonRa navigation",
+        "mobileAriaLabel": "TonRa mobile navigation",
+        "checks": "What it checks",
+        "workflow": "How it works",
+        "safety": "Your safety",
+        "openTonra": "Open TonRa",
+        "toggleMenu": "Toggle menu"
+      },
       "hero": {
-        "tagline": "Explore TON with more confidence.",
-        "intro": "TonRa is a security-focused Telegram bot built to help users analyze wallets, tokens, and projects in the TON ecosystem. By scanning for suspicious activity, scam patterns, fake airdrops, and other potential risks, TonRa gives you a clearer view before you interact with a wallet, buy a token, or trust a new project.",
-        "tryBeta": "Try Early Beta on Telegram",
-        "backToProjects": "Back to Projects",
-        "devNote": "Some features are still under development."
+        "title": "Check TON before you trust it.",
+        "intro": "Scan wallets, tokens, projects, and airdrops with TonRa inside Telegram before you interact.",
+        "backToProjects": "Back to Projects"
       },
-      "whatIs": {
-        "title": "What is TonRa?",
-        "body": [
-          "TonRa is a Telegram-based security and research bot built for the TON ecosystem. It helps users quickly check wallets, tokens, and projects before interacting with them, making it easier to identify possible risks, scams, or suspicious activity.",
-          "The TON ecosystem is growing fast, with new tokens, communities, airdrops, and projects appearing every day. While this creates many opportunities, it also makes it harder for users to know which wallets, tokens, or projects are trustworthy. TonRa is designed to make this process simpler, faster, and safer.",
-          "With TonRa, users can scan and review TON-related information directly through Telegram. The bot helps highlight warning signs such as suspicious wallet behavior, risky token activity, fake airdrop patterns, or projects that may require extra caution.",
-          "TonRa is not just a scanner. It is a practical safety assistant for anyone using TON. Whether you are checking a token before buying, reviewing a wallet before sending funds, or verifying a project before joining an airdrop, TonRa gives you clearer information so you can make better decisions."
-        ]
+      "carousel": {
+        "ariaLabel": "TonRa phone preview",
+        "tabsLabel": "TonRa checks",
+        "previous": "Previous check",
+        "next": "Next check",
+        "goTo": "Show check {{number}}",
+        "wallets": {
+          "title": "Check a wallet",
+          "body": "Review public wallet behavior before sending funds."
+        },
+        "assets": {
+          "title": "Review tokens and projects",
+          "body": "Inspect available signals before buying a token or trusting a project."
+        },
+        "airdrops": {
+          "title": "Spot risky airdrops",
+          "body": "Look for suspicious campaign patterns before opening links or participating."
+        }
       },
-      "usedFor": {
-        "title": "What is TonRa used for?",
-        "items": {
-          "wallet": {
-            "title": "Check TON wallets",
-            "desc": "Review wallet behavior before sending funds."
+      "checks": {
+        "title": "One place to check what matters.",
+        "body": "TonRa brings common TON safety checks into a familiar Telegram conversation.",
+        "groups": {
+          "wallets": {
+            "title": "Wallet activity",
+            "body": "Review public wallet behavior before you transfer funds or interact."
           },
-          "token": {
-            "title": "Review tokens",
-            "desc": "Inspect tokens before buying or interacting with them."
+          "assets": {
+            "title": "Tokens and projects",
+            "body": "Examine available signals before buying a token or trusting a new project."
           },
-          "project": {
-            "title": "Identify risky projects",
-            "desc": "Spot suspicious or risky project behavior early."
-          },
-          "airdrop": {
-            "title": "Detect fake airdrops",
-            "desc": "Recognize possible scam campaigns and fake airdrops."
-          },
-          "overview": {
-            "title": "Quick risk overview",
-            "desc": "Get a quick risk summary directly inside Telegram."
-          },
-          "decisions": {
-            "title": "Safer decisions",
-            "desc": "Make better-informed choices when exploring TON."
+          "campaigns": {
+            "title": "Airdrop campaigns",
+            "body": "Surface suspicious patterns before opening a campaign link or participating."
           }
         }
       },
-      "why": {
-        "title": "Why TonRa matters",
-        "body": "Crypto users often need to make quick decisions, but scam projects can look professional and trustworthy at first glance. TonRa helps reduce this uncertainty by giving users a simple way to investigate before they act. Instead of relying only on social media posts, project claims, or community hype, users can use TonRa as an additional layer of protection. It helps bring more transparency to the TON ecosystem and supports safer participation for both beginners and experienced users."
+      "workflow": {
+        "title": "Send. Review. Decide.",
+        "body": "Security research should fit the moment you need it.",
+        "items": {
+          "send": {
+            "title": "Send what you want checked",
+            "body": "Share a wallet address, token, project link, or airdrop with TonRa."
+          },
+          "review": {
+            "title": "Review the signals",
+            "body": "TonRa organizes available risk indicators into a concise Telegram response."
+          },
+          "decide": {
+            "title": "Choose with more context",
+            "body": "Use the result as an additional safety layer before you act."
+          }
+        }
+      },
+      "safety": {
+        "title": "Your keys stay yours.",
+        "body": "TonRa works with public information. It never needs your seed phrase or private keys.",
+        "points": {
+          "publicData": {
+            "title": "Public data only",
+            "body": "Checks use information that can be inspected without access to your wallet."
+          },
+          "noKeys": {
+            "title": "No secret credentials",
+            "body": "Never send a seed phrase or private key to TonRa or anyone else."
+          },
+          "tonFocus": {
+            "title": "Built for TON",
+            "body": "TonRa focuses its research on wallets, assets, and projects in the TON ecosystem."
+          }
+        }
       },
       "cta": {
-        "title": "Open TonRa on Telegram",
-        "button": "Try Early Beta",
-        "note": "Some features are still under development."
+        "title": "A safer check starts in Telegram.",
+        "body": "Open TonRa and investigate before you interact.",
+        "note": "TonRa is in early beta. Some features remain under development."
+      },
+      "footer": {
+        "tagline": "A Telegram security and research bot for the TON ecosystem.",
+        "product": "Product",
+        "community": "Community",
+        "utaabHome": "UTAAB home",
+        "projects": "All projects",
+        "ecosystem": "TonRa for the TON ecosystem",
+        "rights": "All rights reserved."
       }
     },
     "ubpointPage": {
@@ -368,7 +421,44 @@
         "insideApp": "Inside the app",
         "sponsors": "Sponsors",
         "rewards": "Rewards",
-        "openApp": "Open App"
+        "openApp": "Open Web App",
+        "story": "How it works",
+        "onChain": "On-chain",
+        "download": "Get the app",
+        "ariaLabel": "UBpoint navigation",
+        "mobileAriaLabel": "UBpoint mobile navigation",
+        "toggleMenu": "Toggle menu"
+      },
+      "story": {
+        "goTo": "Go to story {{number}}",
+        "participation": {
+          "title": "Turn Participation Into Opportunity",
+          "body": "Attend events, contribute to projects, and earn UBP for the work you do.",
+          "cta": "Open Web App"
+        },
+        "rewards": {
+          "title": "Earn Points. Unlock Rewards.",
+          "body": "Redeem UBP for partner perks while your learning and community contributions keep adding up."
+        },
+        "proof": {
+          "title": "Proof You Can Verify",
+          "body": "UBpoint activity is recorded on Base, with official identifiers you can inspect before you interact.",
+          "cta": "View on Basescan"
+        },
+        "sponsors": {
+          "title": "Real Engagement for Sponsors",
+          "body": "Fund verified student actions and measure completed participation without paying for bots.",
+          "cta": "Become a Sponsor"
+        }
+      },
+      "availability": {
+        "title": "UBpoint, wherever you are.",
+        "body": "Use the web app today. Native mobile apps are coming soon.",
+        "availableNow": "Available now",
+        "comingSoon": "Coming soon",
+        "webApp": "Web App",
+        "ios": "iOS",
+        "android": "Android"
       },
       "hero": {
         "kicker": "UTAAB · Blockchain Engagement Platform",
@@ -1827,14 +1917,14 @@
   "aboutPage": {
     "hero": {
       "title": "Not Just a Community. Building Real-World Impact.",
-      "subtitle": "UTAAB is an innovation-driven ecosystem where ideas evolve into real-world projects — powered by blockchain, collaboration, and a shared vision for the future."
+      "subtitle": "UTAAB is an innovation-driven ecosystem where ideas evolve into real-world projects, powered by blockchain, collaboration, and a shared vision for the future."
     },
     "whyUtaab": {
       "title": "Why UTAAB?",
       "item1": "We are building the foundation for the next generation of developers.",
-      "item2": "At UTAAB, we focus on students, growth, and real-world development — not just technical skills, but mindset, resilience, and vision.",
+      "item2": "At UTAAB, we focus on students, growth, and real-world development: not just technical skills, but mindset, resilience, and vision.",
       "item3": "We believe that connection creates strength. By bringing people together, we enable support not only financially, but mentally and professionally.",
-      "item4": "Because the future isn't just about creating products — it's about shaping a qualified, sustainable, and borderless world."
+      "item4": "Because the future isn't just about creating products. It's about shaping a qualified, sustainable, and borderless world."
     },
     "mission": {
       "title": "Our Mission",
@@ -1865,7 +1955,7 @@
     },
     "impact": {
       "title": "Real-World Impact",
-      "subtitle": "We turn ideas into execution — creating real impact beyond the digital space.",
+      "subtitle": "We turn ideas into execution, creating real impact beyond the digital space.",
       "projects": {
         "title": "Projects",
         "description": "From DeFi tools to decentralized identity solutions, our projects solve real problems."
@@ -1998,7 +2088,8 @@
       "title": "UTAAB Whitepaper",
       "subtitle": "A clear, honest summary of what UTAAB is, why it exists, and where it's going next.",
       "download": "Download PDF (coming soon)",
-      "downloadHint": "PDF coming soon"
+      "downloadHint": "PDF coming soon",
+      "contents": "Inside the whitepaper"
     },
     "vision": {
       "title": "Vision",
@@ -2007,9 +2098,29 @@
       "p2": "Bridge the gap between learning and shipping by giving members real projects to build on.",
       "p3": "Create a borderless community where students, developers, and mentors collaborate as equals."
     },
+    "ecosystem": {
+      "title": "The Ecosystem We're Building",
+      "description": "UTAAB connects learning, contribution, research, and real projects in one open path from curiosity to meaningful work.",
+      "nodes": {
+        "education": "Education",
+        "community": "Community",
+        "projects": "Projects",
+        "research": "Research",
+        "contributors": "Contributors",
+        "mentorship": "Mentorship",
+        "partnerships": "Partnerships",
+        "governance": "Governance",
+        "credentials": "Credentials"
+      },
+      "states": {
+        "active": "Active now",
+        "emerging": "In development",
+        "planned": "Planned"
+      }
+    },
     "tech": {
       "title": "Technology",
-      "intro": "Our approach is intentionally pragmatic. We use technology that is open, well-understood, and battle-tested — and we explain everything we use.",
+      "intro": "Our approach is pragmatic. We use open, well-understood, battle-tested technology and explain every part of the stack.",
       "t1": {
         "title": "Open ecosystem",
         "description": "We rely on open standards and public blockchains rather than locked-down platforms. Anything we publish, you can inspect."
@@ -2025,23 +2136,23 @@
     },
     "roadmap": {
       "title": "Roadmap",
-      "intro": "Three phases. We move on once the previous one is real, not just announced.",
+      "intro": "We advance only when the previous phase is real, useful, and ready to support what comes next.",
       "phase1": {
-        "phase": "Phase 1 — Foundation",
+        "phase": "Foundation",
         "status": "In progress",
         "p1": "Launch core education platform with multilingual support (EN, TR, RU, AR).",
         "p2": "Publish beginner-to-advanced learning guides and the official MIT \"Blockchain and Money\" course.",
         "p3": "Grow the global community across student chapters and online channels."
       },
       "phase2": {
-        "phase": "Phase 2 — Builder Ecosystem",
+        "phase": "Builder ecosystem",
         "status": "Next",
         "p1": "Open contributor program with mentorship, paid bounties, and project tracks.",
         "p2": "Ship the first cohort of UTAAB-supported open-source Web3 projects.",
         "p3": "Launch a transparent governance model for community decisions."
       },
       "phase3": {
-        "phase": "Phase 3 — Global Network",
+        "phase": "Global network",
         "status": "Planned",
         "p1": "Hackathons, partnerships, and cross-border collaborations at scale.",
         "p2": "On-chain credentials and verifiable certificates for completed programs.",

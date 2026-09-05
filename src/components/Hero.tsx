@@ -122,6 +122,18 @@ export const Hero = () => {
         }}
       />
 
+      {/* Quiet handoff into the page background. Keeping this inside the hero
+          preserves its full viewport height while removing any visible seam. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 -bottom-px h-[clamp(180px,20vh,220px)] pointer-events-none"
+        style={{
+          zIndex: 3,
+          background:
+            'linear-gradient(to bottom, transparent 0%, hsl(var(--background) / 0.38) 42%, hsl(var(--background) / 0.88) 76%, hsl(var(--background)) 100%)',
+        }}
+      />
+
       {/* Content */}
       <div
         className="relative z-10 mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 items-center"

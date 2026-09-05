@@ -3,9 +3,7 @@
    glow, blob-fade-in, mobile-hero-pulse) live in tailwind.config.ts so the
    JIT compiler ships only what's referenced. The utility classes below
    reference those keyframes by name and bundle reduced-motion handling
-   that Tailwind utilities can't express.
-   Note: .hero-carousel-track / .hero-carousel-item are above-fold critical
-   and live in src/index.css so the marquee animates on first paint. */
+   that Tailwind utilities can't express. */
 
 
 /* Premium technical grid */
