@@ -45,12 +45,19 @@ const BASESCAN_URL = `https://basescan.org/address/${BASE_WALLET}`;
 const focusRing =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2';
 
-const storyStages = [
+type StoryStage = {
+  key: string;
+  anchor: string;
+  href?: string;
+  external?: boolean;
+};
+
+const storyStages: readonly StoryStage[] = [
   { key: 'participation', anchor: 'story', href: UBPOINT_APP_URL, external: true },
   { key: 'rewards', anchor: 'rewards' },
   { key: 'proof', anchor: 'verified', href: BASESCAN_URL, external: true },
   { key: 'sponsors', anchor: 'sponsors', href: SPONSOR_EMAIL, external: false },
-] as const;
+];
 
 const useNavLinks = () => {
   const { t } = useTranslation();
