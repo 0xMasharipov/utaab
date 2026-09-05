@@ -2,7 +2,6 @@ import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { RoundedBox } from '@react-three/drei';
 import { Group, Vector3, BufferGeometry, Float32BufferAttribute, LineBasicMaterial } from 'three';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 interface NodeDef {
   ringIdx: number;
@@ -21,11 +20,11 @@ const clusterBias = (baseAngle: number): number => {
   return baseAngle + (nearest - baseAngle) * 0.25;
 };
 
-const buildNodes = (isMobile: boolean): NodeDef[] => {
+const buildNodes = (): NodeDef[] => {
   const rings = [
-    { radius: 1.8, speed: 0.12, count: isMobile ? 4 : 8, tiltX: 0 },
-    { radius: 3.0, speed: -0.08, count: isMobile ? 6 : 12, tiltX: 0 },
-    { radius: 4.2, speed: 0.05, count: isMobile ? 5 : 10, tiltX: Math.PI / 12 },
+    { radius: 1.8, speed: 0.12, count: 8, tiltX: 0 },
+    { radius: 3.0, speed: -0.08, count: 12, tiltX: 0 },
+    { radius: 4.2, speed: 0.05, count: 10, tiltX: Math.PI / 12 },
   ];
   const nodes: NodeDef[] = [];
   rings.forEach((r, ri) => {
@@ -50,10 +49,9 @@ const tmp1 = new Vector3();
 const tmp2 = new Vector3();
 
 const OrbitNodes = () => {
-  const isMobile = useIsMobile();
-  const maxLines = isMobile ? 40 : MAX_LINES;
+  const maxLines = MAX_LINES;
 
-  const nodes = useMemo(() => buildNodes(isMobile), [isMobile]);
+  const nodes = useMemo(() => buildNodes(), []);
   const nodeCount = nodes.length;
 
   // Refs for each node group to read world positions
