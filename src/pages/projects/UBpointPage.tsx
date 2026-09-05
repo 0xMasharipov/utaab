@@ -10,9 +10,7 @@ import {
   AnimatePresence,
   motion,
   type MotionValue,
-  useMotionValue,
   useMotionValueEvent,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
@@ -301,50 +299,7 @@ const AnimatedStory = () => {
   );
 };
 
-const StaticStory = () => {
-  const { t } = useTranslation();
-  const progress = useMotionValue(0);
-
-  return (
-    <section className="bg-[#f8fafc] px-4 py-14 sm:px-6 sm:py-20">
-      <div className="mx-auto max-w-6xl">
-        <div id="story" className="scroll-mt-20">
-          <EmptyPhone progress={progress} compact />
-        </div>
-        <div className="mt-16 grid gap-14 md:grid-cols-2 md:gap-x-14 md:gap-y-20">
-          {storyStages.map((stage, index) => {
-            const key = `projects.ubpointPage.story.${stage.key}`;
-            return (
-              <article key={stage.key} id={stage.anchor === 'story' ? undefined : stage.anchor} className="scroll-mt-20">
-                <div className="text-sm font-extrabold text-blue-700">{String(index + 1).padStart(2, '0')}</div>
-                <h2 className="mt-3 text-3xl font-extrabold leading-tight tracking-[-0.04em] text-slate-950 sm:text-4xl">
-                  {t(`${key}.title`)}
-                </h2>
-                <p className="mt-4 max-w-[48ch] text-base font-medium leading-7 text-slate-600">{t(`${key}.body`)}</p>
-                {stage.href && (
-                  <a
-                    href={stage.href}
-                    target={stage.external ? '_blank' : undefined}
-                    rel={stage.external ? 'noopener noreferrer' : undefined}
-                    className={`mt-6 inline-flex min-h-12 items-center rounded-full bg-slate-950 px-6 text-sm font-bold text-white ${focusRing}`}
-                  >
-                    {t(`${key}.cta`)}
-                    <ArrowUpRight aria-hidden className="ms-2 h-4 w-4" strokeWidth={1.8} />
-                  </a>
-                )}
-              </article>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const Story = () => {
-  const reduceMotion = useReducedMotion();
-  return reduceMotion ? <StaticStory /> : <AnimatedStory />;
-};
+const Story = () => <AnimatedStory />;
 
 const AvailabilitySection = () => {
   const { t } = useTranslation();
