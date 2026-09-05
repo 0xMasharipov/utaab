@@ -23,7 +23,7 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import '@/styles/education.css';
 
-type DockIcon = ComponentType<{ className?: string; strokeWidth?: number }>;
+type DockIcon = ComponentType<{ className?: string; strokeWidth?: number | string }>;
 
 interface DockItem {
   label: string;
