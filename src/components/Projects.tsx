@@ -151,11 +151,12 @@ export const Projects = () => {
                   aria-hidden="true"
                   className={
                     isUbpoint
-                      ? 'absolute -bottom-[7%] -right-[22%] h-[67%] w-[116%] z-10 [mask-image:linear-gradient(to_bottom,transparent_0%,transparent_30%,black_58%,black_100%)] sm:[mask-image:none]'
+                      ? 'absolute -bottom-[7%] -right-[22%] h-[67%] w-[116%] z-10'
                       : isTonra
-                        ? 'absolute bottom-0 inset-x-0 h-[52%] w-full z-10 [mask-image:linear-gradient(to_bottom,transparent_0%,transparent_34%,black_68%,black_100%)] sm:bottom-[2%] sm:h-[60%] sm:[mask-image:none]'
-                        : 'absolute bottom-2 right-2 w-[72%] sm:w-[62%] md:w-[58%] h-[46%] z-10 opacity-[0.9]'
+                        ? 'absolute bottom-[2%] inset-x-0 h-[60%] w-full z-10'
+                        : 'absolute bottom-2 right-2 w-[62%] md:w-[58%] h-[46%] z-10 opacity-[0.9]'
                   }
+
                 >
                   <img
                     src={project.image}
