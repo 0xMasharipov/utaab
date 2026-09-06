@@ -217,22 +217,54 @@ export const AboutBlurb = () => {
           })}
         </motion.div>
 
-        {/* Stack — mobile */}
-        <div className="md:hidden flex flex-col gap-4 mb-10">
-          {cards.map((card, index) => (
+        {/* Vertical accordion — mobile (mirrors the desktop panels) */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="md:hidden flex flex-col gap-3 h-[460px] mb-10"
+        >
+          {cards.map((card, index) => {
+            const isActive = index === activeIndex;
+            return (
               <motion.div
                 key={card.titleKey}
-                initial={{ opacity: 0, y: 20 }}
-                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                transition={{ duration: 0.5, delay: 0.15 + index * 0.08 }}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isActive}
+                aria-label={t(card.titleKey)}
+                onClick={() => setActiveIndex(index)}
+                onFocus={() => setActiveIndex(index)}
+                onKeyDown={(e) => handleKeyDown(e, index)}
+                animate={{ flexGrow: isActive ? 4.2 : 1 }}
+                transition={spring}
+                style={{ flexBasis: 0 }}
+                className="relative min-h-0 cursor-pointer outline-none rounded-2xl focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
-                <GlassCard className="relative overflow-hidden h-[300px] p-0 border-white/20 shadow-[0_18px_60px_-20px_hsl(213_94%_68%/0.45)]">
+                <GlassCard
+                  className={cn(
+                    'relative h-full w-full overflow-hidden p-0 group',
+                    isActive
+                      ? 'border-white/20 shadow-[0_18px_60px_-20px_hsl(213_94%_68%/0.45)]'
+                      : 'border-white/[0.10]'
+                  )}
+                >
                   {/* Technical grid */}
-                  <div className="absolute inset-0 z-0 opacity-[0.07]" style={GRID_LAYER} aria-hidden="true" />
-
-                  {/* Accent wash */}
                   <div
-                    className="absolute inset-0 z-[1]"
+                    className={cn(
+                      'absolute inset-0 z-0 transition-opacity duration-500',
+                      isActive ? 'opacity-[0.07]' : 'opacity-[0.04]'
+                    )}
+                    style={GRID_LAYER}
+                    aria-hidden="true"
+                  />
+
+                  {/* Accent wash on active */}
+                  <div
+                    className={cn(
+                      'absolute inset-0 z-[1] transition-opacity duration-500',
+                      isActive ? 'opacity-100' : 'opacity-0'
+                    )}
                     style={{
                       background:
                         'radial-gradient(120% 90% at 50% 110%, hsl(213 94% 68% / 0.18) 0%, transparent 65%)',
@@ -247,7 +279,12 @@ export const AboutBlurb = () => {
                     aria-hidden="true"
                     loading="lazy"
                     sizes="60vw"
-                    containerClassName="absolute z-10 right-[1%] bottom-[22%] w-[56%] h-[52%] opacity-95"
+                    containerClassName={cn(
+                      'absolute z-10 transition-all duration-500 ease-out',
+                      isActive
+                        ? 'right-[1%] bottom-[30%] w-[50%] h-[46%] opacity-95'
+                        : 'right-0 bottom-0 h-full w-[38%] opacity-0'
+                    )}
                     className="w-full h-full object-contain object-right-bottom drop-shadow-[0_10px_30px_rgba(59,130,246,0.22)]"
                     placeholderClassName="opacity-0"
                   />
@@ -257,25 +294,49 @@ export const AboutBlurb = () => {
 
                   {/* Index numeral */}
                   <span
-                    className={cn(NUMERAL, 'absolute top-4 left-4 z-30 text-2xl text-foreground/40')}
+                    className={cn(
+                      NUMERAL,
+                      'absolute top-3.5 left-4 z-30 text-2xl transition-colors duration-500',
+                      isActive && 'text-foreground/40'
+                    )}
                     aria-hidden="true"
                   >
                     {String(index + 1).padStart(2, '0')}
                   </span>
 
+                  {/* Collapsed rail: title beside the numeral */}
+                  <div
+                    className={cn(
+                      'absolute inset-x-0 top-0 z-30 flex items-center gap-3 h-[52px] pl-14 pr-4 transition-opacity duration-300',
+                      isActive ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                    )}
+                  >
+                    <span className="text-sm font-extrabold text-foreground/90 truncate">
+                      {t(card.titleKey)}
+                    </span>
+                    <span className="h-px flex-1 bg-gradient-to-r from-white/15 to-transparent" aria-hidden="true" />
+                  </div>
+
                   {/* Content */}
                   <div className="absolute inset-x-0 bottom-0 z-30 p-5">
-                    <h3 className="text-xl font-extrabold text-foreground">{t(card.titleKey)}</h3>
-                    <div className="mt-3 mb-4 h-px w-16 bg-gradient-to-r from-accent/70 to-transparent" />
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {t(card.descriptionKey)}
-                    </p>
+                    <motion.div
+                      animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 8 }}
+                      transition={{ duration: prefersReducedMotion ? 0 : 0.35, delay: isActive ? 0.08 : 0 }}
+                      className={cn(!isActive && 'pointer-events-none h-0 overflow-hidden')}
+                    >
+                      <h3 className="text-xl font-extrabold text-foreground">{t(card.titleKey)}</h3>
+                      <div className="mt-3 mb-4 h-px w-16 bg-gradient-to-r from-accent/70 to-transparent" />
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {t(card.descriptionKey)}
+                      </p>
+                    </motion.div>
                   </div>
                 </GlassCard>
-
               </motion.div>
-          ))}
-        </div>
+            );
+          })}
+        </motion.div>
+
 
         <motion.div
           initial={{ opacity: 0, y: 10 }}

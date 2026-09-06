@@ -151,11 +151,12 @@ export const Projects = () => {
                   aria-hidden="true"
                   className={
                     isUbpoint
-                      ? 'absolute -bottom-[7%] -right-[22%] h-[67%] w-[116%] z-10 [mask-image:linear-gradient(to_bottom,transparent_0%,transparent_30%,black_58%,black_100%)] sm:[mask-image:none]'
+                      ? 'absolute -bottom-[7%] -right-[22%] h-[67%] w-[116%] z-10'
                       : isTonra
-                        ? 'absolute bottom-0 inset-x-0 h-[52%] w-full z-10 [mask-image:linear-gradient(to_bottom,transparent_0%,transparent_34%,black_68%,black_100%)] sm:bottom-[2%] sm:h-[60%] sm:[mask-image:none]'
-                        : 'absolute bottom-2 right-2 w-[72%] sm:w-[62%] md:w-[58%] h-[46%] z-10 opacity-[0.9]'
+                        ? 'absolute bottom-[2%] inset-x-0 h-[60%] w-full z-10'
+                        : 'absolute bottom-2 right-2 w-[62%] md:w-[58%] h-[46%] z-10 opacity-[0.9]'
                   }
+
                 >
                   <img
                     src={project.image}
@@ -238,30 +239,26 @@ export const Projects = () => {
                     {t(project.descriptionKey)}
                   </p>
 
-                  <div className={`mt-auto flex flex-wrap gap-1.5 text-[11px] sm:gap-2 ${
-                    isUbpoint
-                      ? 'relative z-10 -mx-1.5 rounded-lg bg-[#0a56dc]/70 px-1.5 py-1 backdrop-blur-sm sm:mx-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none'
-                      : isTonra
-                        ? 'relative z-10 -mx-1.5 rounded-lg bg-[#05080f]/72 px-1.5 py-1 backdrop-blur-sm sm:mx-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none'
-                        : 'text-muted-foreground'
+                  <div className={`mt-auto flex flex-wrap gap-2 text-[11px] ${
+                    isBranded ? 'relative z-10' : 'text-muted-foreground'
                   }`}>
                     {project.tags.map((tag, tagIndex) => (
                       <span
                         key={tagIndex}
                         className={
                           isUbpoint
-                            ? 'py-0.5 text-[10px] font-medium text-white sm:rounded-full sm:border sm:border-white/25 sm:bg-white/14 sm:px-2.5 sm:py-1 sm:text-[11px] sm:backdrop-blur-sm'
+                            ? 'rounded-full border border-white/25 bg-white/14 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-sm'
                             : isTonra
-                              ? 'py-0.5 text-[10px] font-medium text-[#a7d6ff] sm:rounded-full sm:border sm:border-[#1687ff]/20 sm:bg-[#1687ff]/10 sm:px-2.5 sm:py-1 sm:text-[11px] sm:backdrop-blur-sm'
+                              ? 'rounded-full border border-[#1687ff]/20 bg-[#1687ff]/10 px-2.5 py-1 text-[11px] font-medium text-[#a7d6ff] backdrop-blur-sm'
                               : undefined
                         }
                       >
-                        {isBranded && tagIndex > 0 && <span className="me-1 text-white/45 sm:hidden">•</span>}
                         {!isBranded && tagIndex > 0 && <span className="mr-1.5 text-white/20">•</span>}
                         {t(tag)}
                       </span>
                     ))}
                   </div>
+
                 </div>
               </GlassCard>
             );
