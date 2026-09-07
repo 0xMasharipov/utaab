@@ -196,7 +196,7 @@ const StoryPhone = ({ progress, image, compact = false }: StoryPhoneProps) => {
       />
       <motion.div
         style={{ rotateY, rotateZ, transformStyle: 'preserve-3d' }}
-        className={`relative aspect-[0.462] ${compact ? 'w-[184px] sm:w-[210px]' : 'w-[188px] sm:w-[225px] lg:w-[280px] xl:w-[300px]'}`}
+        className={`relative aspect-[0.462] ${compact ? 'w-[136px] sm:w-[210px]' : 'w-[136px] min-[430px]:w-[154px] sm:w-[225px] lg:w-[280px] xl:w-[300px]'}`}
       >
         <div className="absolute inset-0 rounded-[44px] bg-[linear-gradient(145deg,#f1f5f9_0%,#94a3b8_25%,#e2e8f0_52%,#64748b_100%)] p-[5px] shadow-[0_32px_80px_rgba(30,64,175,0.18),0_14px_28px_rgba(15,23,42,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] sm:rounded-[52px] sm:p-[6px]">
           <div className="relative h-full w-full rounded-[39px] bg-slate-950 p-[3px] sm:rounded-[47px]">
@@ -264,10 +264,10 @@ const StageContent = ({ stage }: StageContentProps) => {
       transition={{ duration: 0.48, ease: [0.16, 1, 0.3, 1] }}
       className="relative max-w-[640px]"
     >
-      <h1 className="max-w-[640px] text-balance text-[clamp(2rem,3.65vw,3.25rem)] font-extrabold leading-[1.04] tracking-[-0.055em] text-slate-950">
+      <h1 className="max-w-[640px] text-balance text-[clamp(1.2rem,5.35vw,1.45rem)] font-extrabold leading-[1.08] tracking-[-0.045em] text-slate-950 sm:text-[clamp(2rem,3.65vw,3.25rem)] sm:leading-[1.04] sm:tracking-[-0.055em]">
         <StageTitle stage={stage} />
       </h1>
-      <p className="mt-5 max-w-[540px] text-pretty text-base font-medium leading-7 text-slate-600 sm:text-lg sm:leading-8">
+      <p className="mt-3 max-w-[540px] text-pretty text-[0.72rem] font-medium leading-[1.15rem] text-slate-600 min-[430px]:text-[0.8rem] min-[430px]:leading-5 sm:mt-5 sm:text-lg sm:leading-8">
         {t(`${key}.body`)}
       </p>
       {stage.href && (
@@ -275,7 +275,7 @@ const StageContent = ({ stage }: StageContentProps) => {
           href={stage.href}
           target={stage.external ? '_blank' : undefined}
           rel={stage.external ? 'noopener noreferrer' : undefined}
-          className={`mt-7 inline-flex min-h-12 items-center rounded-full px-6 text-sm font-bold whitespace-nowrap transition-transform hover:-translate-y-0.5 active:translate-y-0 ${isUbpointCta ? ubpointButton : 'bg-slate-950 text-white'} ${focusRing}`}
+          className={`mt-4 inline-flex min-h-10 items-center rounded-full px-3 text-[0.68rem] font-bold whitespace-nowrap transition-transform hover:-translate-y-0.5 active:translate-y-0 min-[430px]:px-4 min-[430px]:text-xs sm:mt-7 sm:min-h-12 sm:px-6 sm:text-sm ${isUbpointCta ? ubpointButton : 'bg-slate-950 text-white'} ${focusRing}`}
         >
           {t(`${key}.cta`)}
           {stage.external ? (
@@ -295,18 +295,18 @@ const StoryProgress = ({ progress, activeIndex }: { progress: MotionValue<number
 
   return (
     <>
-      <div className="absolute bottom-5 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 md:bottom-9 md:left-[52%] md:translate-x-0">
+      <div className="absolute right-[5px] top-1/2 z-20 flex -translate-y-1/2 flex-col items-center gap-2 md:bottom-9 md:left-[52%] md:right-auto md:top-auto md:translate-x-0 md:translate-y-0 md:flex-row">
         {storyStages.map((stage, index) => (
           <a
             key={stage.key}
             href={`#${stage.anchor}`}
             aria-label={t('projects.ubpointPage.story.goTo', { number: index + 1 })}
             aria-current={activeIndex === index ? 'step' : undefined}
-            className={`h-1.5 rounded-full transition-[width,background-color] duration-300 ${activeIndex === index ? 'w-7 bg-slate-950' : 'w-1.5 bg-slate-300'} ${focusRing}`}
+            className={`w-1.5 rounded-full transition-[height,width,background-color] duration-300 md:h-1.5 ${activeIndex === index ? 'h-7 bg-slate-950 md:h-1.5 md:w-7' : 'h-1.5 bg-slate-300'} ${focusRing}`}
           />
         ))}
       </div>
-      <div aria-hidden className="absolute right-7 top-1/2 hidden h-[44%] w-px -translate-y-1/2 overflow-hidden bg-slate-200 md:block">
+      <div aria-hidden className="absolute right-2 top-1/2 block h-[44%] w-px -translate-y-1/2 overflow-hidden bg-slate-200 md:right-7">
         <motion.div style={{ scaleY, transformOrigin: 'top' }} className="h-full w-full bg-blue-700" />
       </div>
     </>
@@ -343,16 +343,16 @@ const AnimatedStory = () => {
       ))}
 
       <div className="sticky top-16 min-h-[calc(100dvh-4rem)] overflow-hidden">
-        <div className="mx-auto grid min-h-[calc(100dvh-4rem)] max-w-7xl grid-rows-[minmax(0,0.9fr)_minmax(0,0.72fr)] items-center gap-4 px-4 pb-14 pt-5 sm:px-6 sm:pb-16 sm:pt-7 md:grid-cols-[45%_55%] md:grid-rows-1 md:gap-0 md:px-8 md:py-8">
+        <div className="mx-auto grid min-h-[calc(100dvh-4rem)] max-w-7xl grid-cols-[42%_58%] grid-rows-1 items-center gap-0 px-3 py-6 pe-7 sm:px-6 sm:py-7 sm:pe-10 md:grid-cols-[45%_55%] md:px-8 md:py-8">
           <div className="relative flex min-h-0 items-center justify-center">
             <StoryPhone progress={progress} image={storyStages[activeIndex].image} />
           </div>
 
-          <div className="relative flex min-h-0 items-center px-2 text-center sm:px-6 md:h-full md:px-[8%] md:text-start">
-            <div aria-hidden className="pointer-events-none absolute -bottom-[10%] end-0 select-none text-[clamp(9rem,25vw,22rem)] font-extrabold leading-none tracking-[-0.08em] text-slate-950/[0.045]">
+          <div className="relative flex min-h-0 items-center ps-2 pe-0 text-start sm:px-6 md:h-full md:px-[8%]">
+            <div aria-hidden className="pointer-events-none absolute -bottom-[5%] end-0 select-none text-[clamp(6rem,25vw,22rem)] font-extrabold leading-none tracking-[-0.08em] text-slate-950/[0.045] md:-bottom-[10%]">
               {String(activeIndex + 1).padStart(2, '0')}
             </div>
-            <div className="relative z-[1] mx-auto md:mx-0">
+            <div className="relative z-[1] mx-0">
               <AnimatePresence mode="wait">
                 <StageContent stage={storyStages[activeIndex]} />
               </AnimatePresence>
@@ -429,30 +429,30 @@ const AvailabilitySection = () => {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-4 md:grid-cols-12 md:grid-rows-2">
-          <div className="relative overflow-hidden rounded-2xl bg-blue-700 p-7 text-white shadow-[0_28px_80px_rgba(29,78,216,0.2)] sm:p-10 md:col-span-7 md:row-span-2 md:min-h-[440px] lg:p-12">
+        <div className="mt-12 grid grid-cols-12 grid-rows-2 gap-2.5 sm:gap-4">
+          <div className="relative col-span-7 row-span-2 min-h-[290px] overflow-hidden rounded-2xl bg-blue-700 p-5 text-white shadow-[0_28px_80px_rgba(29,78,216,0.2)] sm:min-h-[380px] sm:p-10 md:min-h-[440px] lg:p-12">
             <div aria-hidden className="absolute -bottom-28 -right-24 h-80 w-80 rounded-full bg-white/10" />
-            <div className="relative flex h-full min-h-[300px] flex-col">
-              <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-white/15 bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]">
+            <div className="relative flex h-full min-h-[250px] flex-col sm:min-h-[300px]">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/15 bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] sm:h-20 sm:w-20 sm:rounded-2xl">
                 <img
                   src={webAppIcon}
                   alt=""
                   aria-hidden
                   loading="lazy"
                   decoding="async"
-                  className="h-[4.5rem] w-[4.5rem] object-contain"
+                  className="h-11 w-11 object-contain sm:h-[4.5rem] sm:w-[4.5rem]"
                 />
               </div>
-              <div className="mt-auto pt-20">
-                <div className="text-sm font-bold text-blue-100">{t('projects.ubpointPage.availability.availableNow')}</div>
-                <h3 className="mt-2 text-4xl font-extrabold tracking-[-0.045em] sm:text-5xl">
+              <div className="mt-auto pt-8 sm:pt-20">
+                <div className="text-[0.65rem] font-bold text-blue-100 sm:text-sm">{t('projects.ubpointPage.availability.availableNow')}</div>
+                <h3 className="mt-1 text-xl font-extrabold sm:mt-2 sm:text-5xl">
                   {t('projects.ubpointPage.availability.webApp')}
                 </h3>
                 <a
                   href={UBPOINT_APP_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`mt-7 inline-flex min-h-12 items-center rounded-full border border-white/60 px-6 text-sm font-extrabold whitespace-nowrap transition-transform hover:-translate-y-0.5 active:translate-y-0 ${ubpointButton} ${focusRing}`}
+                  className={`mt-4 inline-flex min-h-9 items-center rounded-full border border-white/60 px-3 text-[0.62rem] font-extrabold whitespace-nowrap transition-transform hover:-translate-y-0.5 active:translate-y-0 sm:mt-7 sm:min-h-12 sm:px-6 sm:text-sm ${ubpointButton} ${focusRing}`}
                 >
                   {t('projects.ubpointPage.nav.openApp')}
                   <ArrowUpRight aria-hidden className="ms-2 h-4 w-4" strokeWidth={1.8} />
@@ -464,23 +464,23 @@ const AvailabilitySection = () => {
           {mobilePlatforms.map((platform) => (
             <div
               key={platform.key}
-              className="flex min-h-[210px] flex-col rounded-2xl border border-slate-200 bg-white p-7 sm:p-8 md:col-span-5"
+              className="col-span-5 flex min-h-[140px] flex-col rounded-2xl border border-slate-200 bg-white p-4 sm:min-h-[180px] sm:p-8"
             >
-              <div className="flex h-20 items-center">
+              <div className="flex h-10 items-center sm:h-20">
                 <img
                   src={platform.icon}
                   alt=""
                   aria-hidden
                   loading="lazy"
                   decoding="async"
-                  className={`${platform.iconClassName} shrink-0 object-contain`}
+                  className={`${platform.iconClassName} max-h-12 max-w-12 shrink-0 object-contain sm:max-h-24 sm:max-w-24`}
                 />
               </div>
-              <div className="mt-auto pt-8">
-                <h3 className="text-2xl font-extrabold tracking-[-0.035em] text-slate-950">
+              <div className="mt-auto pt-3 sm:pt-8">
+                <h3 className="text-sm font-extrabold text-slate-950 sm:text-2xl sm:tracking-[-0.035em]">
                   {t(`projects.ubpointPage.availability.${platform.key}`)}
                 </h3>
-                <span aria-disabled="true" className="mt-3 inline-flex text-sm font-bold text-slate-500">
+                <span aria-disabled="true" className="mt-1 inline-flex text-[0.62rem] font-bold text-slate-500 sm:mt-3 sm:text-sm">
                   {t('projects.ubpointPage.availability.comingSoon')}
                 </span>
               </div>
@@ -504,8 +504,8 @@ const PageFooter = () => {
 
   return (
     <footer className="border-t border-slate-200 bg-[#f8fafc] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-      <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-[1.6fr_1fr_1fr]">
-        <div>
+      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-x-6 gap-y-9 md:grid-cols-[1.6fr_1fr_1fr] md:gap-10">
+        <div className="col-span-2 md:col-span-1">
           <div className="flex items-center gap-2.5">
             <img src={UBPOINT_LOGO_URL} alt="" className="h-10 w-10 rounded-[10px]" />
             <span className="text-lg font-extrabold tracking-[-0.03em] text-slate-950">UBpoint</span>
