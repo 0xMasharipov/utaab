@@ -33,7 +33,9 @@ export const Navbar = () => {
 
   const [prefersReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const { getTransitionClasses } = useLanguageTransition();
-  const shouldShowNavbar = !isHomepage || hasHomepageRevealed;
+  // Navigation stays visible and reachable everywhere, including the top of the
+  // homepage; scrolling only changes its appearance.
+  const shouldShowNavbar = true;
   const isScrolled = isHomepage && hasHomepageRevealed;
 
   // On the homepage, reveal once after the user's first intentional scroll.
