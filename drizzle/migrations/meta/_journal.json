@@ -71,6 +71,13 @@
       "when": 1788543977893,
       "tag": "0009_media_private_bucket_policies",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1788803196162,
+      "tag": "0010_public_verify_certificate_wrapper_service_role",
+      "breakpoints": true
     }
   ]
 }

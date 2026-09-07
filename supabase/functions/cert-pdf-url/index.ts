@@ -31,9 +31,9 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    // Call the private-schema verification RPC via service role.
+    // Call the verification RPC via service role (public wrapper around the
+    // private-schema function; execute is granted to service_role only).
     const { data, error } = await supabase
-      .schema("private" as any)
       .rpc("verify_certificate_by_hash", { _serial_hash: serialHash });
 
     if (error) {
