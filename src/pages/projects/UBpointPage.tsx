@@ -10,7 +10,9 @@ import {
   AnimatePresence,
   motion,
   type MotionValue,
+  useMotionValue,
   useMotionValueEvent,
+  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
@@ -18,20 +20,24 @@ import {
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
-  Apple,
   ArrowRight,
   ArrowUpRight,
   Linkedin,
   Mail,
   Menu,
-  MonitorSmartphone,
   Send,
-  Smartphone,
   Twitter,
   X,
 } from 'lucide-react';
 import SEO from '@/components/SEO';
 import logoAsset from '@/assets/ubpoint-logo.png.asset.json';
+import opportunityImage from '@/assets/projects/UBpoint/opportunity.webp';
+import earnPointsImage from '@/assets/projects/UBpoint/earn-points.webp';
+import verificationImage from '@/assets/projects/UBpoint/verification.webp';
+import sponsorsImage from '@/assets/projects/UBpoint/sponsors.webp';
+import webAppIcon from '@/assets/projects/UBpoint/web_app.png';
+import iosIcon from '@/assets/projects/UBpoint/ios.png';
+import androidIcon from '@/assets/projects/UBpoint/android.png';
 
 const UBPOINT_APP_URL = 'https://ubpoint.app/';
 const UBPOINT_LOGO_URL = `https://utaab.org${logoAsset.url}`;
@@ -40,21 +46,47 @@ const SPONSOR_EMAIL = 'mailto:contact@utaab.org?subject=UBpoint%20Sponsor%20Inqu
 const BASE_WALLET = '0x4fF797906D7B56F9Bd2Db382BcB36C97d69A43A9';
 const BASESCAN_URL = `https://basescan.org/address/${BASE_WALLET}`;
 
+const mobilePlatforms = [
+  { key: 'ios', icon: iosIcon, iconClassName: 'h-20 w-20' },
+  { key: 'android', icon: androidIcon, iconClassName: 'h-24 w-24 -ms-2' },
+] as const;
+
 const focusRing =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2';
+const ubpointButton =
+  'bg-[#0866ff] text-white shadow-[0_12px_28px_rgba(8,102,255,0.22)] hover:bg-[#0759dc]';
 
-type StoryStage = {
-  key: string;
-  anchor: string;
+interface StoryStage {
+  key: 'participation' | 'rewards' | 'proof' | 'sponsors';
+  anchor: 'story' | 'rewards' | 'verified' | 'sponsors';
+  image: string;
   href?: string;
   external?: boolean;
-};
+}
 
 const storyStages: readonly StoryStage[] = [
-  { key: 'participation', anchor: 'story', href: UBPOINT_APP_URL, external: true },
-  { key: 'rewards', anchor: 'rewards' },
-  { key: 'proof', anchor: 'verified', href: BASESCAN_URL, external: true },
-  { key: 'sponsors', anchor: 'sponsors', href: SPONSOR_EMAIL, external: false },
+  {
+    key: 'participation',
+    anchor: 'story',
+    image: opportunityImage,
+    href: UBPOINT_APP_URL,
+    external: true,
+  },
+  { key: 'rewards', anchor: 'rewards', image: earnPointsImage },
+  {
+    key: 'proof',
+    anchor: 'verified',
+    image: verificationImage,
+    href: BASESCAN_URL,
+    external: true,
+  },
+  {
+    key: 'sponsors',
+    anchor: 'sponsors',
+    image: sponsorsImage,
+    href: SPONSOR_EMAIL,
+    external: false,
+  },
 ];
 
 const useNavLinks = () => {
@@ -98,7 +130,7 @@ const PageNavbar = () => {
             href={UBPOINT_APP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className={`hidden min-h-10 items-center rounded-full bg-slate-950 px-5 text-sm font-bold whitespace-nowrap text-white transition-transform hover:-translate-y-0.5 active:translate-y-0 sm:inline-flex ${focusRing}`}
+            className={`hidden min-h-10 items-center rounded-full px-5 text-sm font-bold whitespace-nowrap transition-transform hover:-translate-y-0.5 active:translate-y-0 sm:inline-flex ${ubpointButton} ${focusRing}`}
           >
             {t('projects.ubpointPage.nav.openApp')}
             <ArrowUpRight aria-hidden className="ms-2 h-4 w-4" strokeWidth={1.8} />
@@ -146,12 +178,13 @@ const PageNavbar = () => {
   );
 };
 
-interface EmptyPhoneProps {
+interface StoryPhoneProps {
   progress: MotionValue<number>;
+  image: string;
   compact?: boolean;
 }
 
-const EmptyPhone = ({ progress, compact = false }: EmptyPhoneProps) => {
+const StoryPhone = ({ progress, image, compact = false }: StoryPhoneProps) => {
   const rotateY = useTransform(progress, [0, 0.34, 0.68, 1], [-5, 3, -4, 4]);
   const rotateZ = useTransform(progress, [0, 0.5, 1], [-0.8, 0.7, -0.4]);
 
@@ -168,6 +201,20 @@ const EmptyPhone = ({ progress, compact = false }: EmptyPhoneProps) => {
         <div className="absolute inset-0 rounded-[44px] bg-[linear-gradient(145deg,#f1f5f9_0%,#94a3b8_25%,#e2e8f0_52%,#64748b_100%)] p-[5px] shadow-[0_32px_80px_rgba(30,64,175,0.18),0_14px_28px_rgba(15,23,42,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] sm:rounded-[52px] sm:p-[6px]">
           <div className="relative h-full w-full rounded-[39px] bg-slate-950 p-[3px] sm:rounded-[47px]">
             <div className="relative h-full w-full overflow-hidden rounded-[36px] bg-[#f3f6fb] sm:rounded-[44px]">
+              <AnimatePresence initial={false} mode="popLayout">
+                <motion.img
+                  key={image}
+                  src={image}
+                  alt=""
+                  loading="eager"
+                  decoding="async"
+                  initial={{ opacity: 0, scale: 1.015 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.99 }}
+                  transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              </AnimatePresence>
               <div className="absolute left-1/2 top-2 h-[20px] w-[68px] -translate-x-1/2 rounded-full bg-slate-950 sm:h-[23px] sm:w-[78px]" />
             </div>
           </div>
@@ -182,12 +229,31 @@ const EmptyPhone = ({ progress, compact = false }: EmptyPhoneProps) => {
 };
 
 interface StageContentProps {
-  stage: (typeof storyStages)[number];
+  stage: StoryStage;
 }
+
+const StageTitle = ({ stage }: StageContentProps) => {
+  const { t } = useTranslation();
+  const key = `projects.ubpointPage.story.${stage.key}`;
+  const title = t(`${key}.title`);
+  const accent = t(`${key}.accent`);
+  const accentIndex = title.indexOf(accent);
+
+  if (accentIndex < 0) return <>{title}</>;
+
+  return (
+    <>
+      {title.slice(0, accentIndex)}
+      <span className="text-[#0866ff]">{accent}</span>
+      {title.slice(accentIndex + accent.length)}
+    </>
+  );
+};
 
 const StageContent = ({ stage }: StageContentProps) => {
   const { t } = useTranslation();
   const key = `projects.ubpointPage.story.${stage.key}`;
+  const isUbpointCta = stage.key === 'participation' || stage.key === 'sponsors';
 
   return (
     <motion.div
@@ -199,7 +265,7 @@ const StageContent = ({ stage }: StageContentProps) => {
       className="relative max-w-[640px]"
     >
       <h1 className="max-w-[640px] text-balance text-[clamp(2rem,3.65vw,3.25rem)] font-extrabold leading-[1.04] tracking-[-0.055em] text-slate-950">
-        {t(`${key}.title`)}
+        <StageTitle stage={stage} />
       </h1>
       <p className="mt-5 max-w-[540px] text-pretty text-base font-medium leading-7 text-slate-600 sm:text-lg sm:leading-8">
         {t(`${key}.body`)}
@@ -209,7 +275,7 @@ const StageContent = ({ stage }: StageContentProps) => {
           href={stage.href}
           target={stage.external ? '_blank' : undefined}
           rel={stage.external ? 'noopener noreferrer' : undefined}
-          className={`mt-7 inline-flex min-h-12 items-center rounded-full bg-slate-950 px-6 text-sm font-bold whitespace-nowrap text-white transition-transform hover:-translate-y-0.5 active:translate-y-0 ${focusRing}`}
+          className={`mt-7 inline-flex min-h-12 items-center rounded-full px-6 text-sm font-bold whitespace-nowrap transition-transform hover:-translate-y-0.5 active:translate-y-0 ${isUbpointCta ? ubpointButton : 'bg-slate-950 text-white'} ${focusRing}`}
         >
           {t(`${key}.cta`)}
           {stage.external ? (
@@ -279,7 +345,7 @@ const AnimatedStory = () => {
       <div className="sticky top-16 min-h-[calc(100dvh-4rem)] overflow-hidden">
         <div className="mx-auto grid min-h-[calc(100dvh-4rem)] max-w-7xl grid-rows-[minmax(0,0.9fr)_minmax(0,0.72fr)] items-center gap-4 px-4 pb-14 pt-5 sm:px-6 sm:pb-16 sm:pt-7 md:grid-cols-[45%_55%] md:grid-rows-1 md:gap-0 md:px-8 md:py-8">
           <div className="relative flex min-h-0 items-center justify-center">
-            <EmptyPhone progress={progress} />
+            <StoryPhone progress={progress} image={storyStages[activeIndex].image} />
           </div>
 
           <div className="relative flex min-h-0 items-center px-2 text-center sm:px-6 md:h-full md:px-[8%] md:text-start">
@@ -299,7 +365,54 @@ const AnimatedStory = () => {
   );
 };
 
-const Story = () => <AnimatedStory />;
+const StaticStory = () => {
+  const { t } = useTranslation();
+  const progress = useMotionValue(0);
+
+  return (
+    <section className="bg-[#f8fafc] px-4 py-14 sm:px-6 sm:py-20">
+      <div className="mx-auto max-w-5xl">
+        <div className="grid gap-20 sm:gap-24">
+          {storyStages.map((stage, index) => {
+            const key = `projects.ubpointPage.story.${stage.key}`;
+            return (
+              <article
+                key={stage.key}
+                id={stage.anchor}
+                className="grid scroll-mt-20 items-center gap-9 sm:grid-cols-[210px_minmax(0,1fr)] sm:gap-12"
+              >
+                <StoryPhone progress={progress} image={stage.image} compact />
+                <div className="text-center sm:text-start">
+                  <div className="text-sm font-extrabold text-blue-700">{String(index + 1).padStart(2, '0')}</div>
+                  <h2 className="mt-3 text-3xl font-extrabold leading-tight tracking-[-0.04em] text-slate-950 sm:text-4xl">
+                    <StageTitle stage={stage} />
+                  </h2>
+                  <p className="mt-4 max-w-[48ch] text-base font-medium leading-7 text-slate-600">{t(`${key}.body`)}</p>
+                  {stage.href && (
+                    <a
+                      href={stage.href}
+                      target={stage.external ? '_blank' : undefined}
+                      rel={stage.external ? 'noopener noreferrer' : undefined}
+                      className={`mt-6 inline-flex min-h-12 items-center rounded-full px-6 text-sm font-bold ${stage.key === 'participation' || stage.key === 'sponsors' ? ubpointButton : 'bg-slate-950 text-white'} ${focusRing}`}
+                    >
+                      {t(`${key}.cta`)}
+                      <ArrowUpRight aria-hidden className="ms-2 h-4 w-4" strokeWidth={1.8} />
+                    </a>
+                  )}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Story = () => {
+  const reduceMotion = useReducedMotion();
+  return reduceMotion ? <StaticStory /> : <AnimatedStory />;
+};
 
 const AvailabilitySection = () => {
   const { t } = useTranslation();
@@ -320,7 +433,16 @@ const AvailabilitySection = () => {
           <div className="relative overflow-hidden rounded-2xl bg-blue-700 p-7 text-white shadow-[0_28px_80px_rgba(29,78,216,0.2)] sm:p-10 md:col-span-7 md:row-span-2 md:min-h-[440px] lg:p-12">
             <div aria-hidden className="absolute -bottom-28 -right-24 h-80 w-80 rounded-full bg-white/10" />
             <div className="relative flex h-full min-h-[300px] flex-col">
-              <MonitorSmartphone aria-hidden className="h-11 w-11" strokeWidth={1.5} />
+              <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-white/15 bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]">
+                <img
+                  src={webAppIcon}
+                  alt=""
+                  aria-hidden
+                  loading="lazy"
+                  decoding="async"
+                  className="h-[4.5rem] w-[4.5rem] object-contain"
+                />
+              </div>
               <div className="mt-auto pt-20">
                 <div className="text-sm font-bold text-blue-100">{t('projects.ubpointPage.availability.availableNow')}</div>
                 <h3 className="mt-2 text-4xl font-extrabold tracking-[-0.045em] sm:text-5xl">
@@ -330,7 +452,7 @@ const AvailabilitySection = () => {
                   href={UBPOINT_APP_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`mt-7 inline-flex min-h-12 items-center rounded-full bg-white px-6 text-sm font-extrabold whitespace-nowrap text-blue-800 transition-transform hover:-translate-y-0.5 active:translate-y-0 ${focusRing}`}
+                  className={`mt-7 inline-flex min-h-12 items-center rounded-full border border-white/60 px-6 text-sm font-extrabold whitespace-nowrap transition-transform hover:-translate-y-0.5 active:translate-y-0 ${ubpointButton} ${focusRing}`}
                 >
                   {t('projects.ubpointPage.nav.openApp')}
                   <ArrowUpRight aria-hidden className="ms-2 h-4 w-4" strokeWidth={1.8} />
@@ -339,16 +461,22 @@ const AvailabilitySection = () => {
             </div>
           </div>
 
-          {[
-            { key: 'ios', icon: Apple },
-            { key: 'android', icon: Smartphone },
-          ].map((platform) => (
+          {mobilePlatforms.map((platform) => (
             <div
               key={platform.key}
               className="flex min-h-[210px] flex-col rounded-2xl border border-slate-200 bg-white p-7 sm:p-8 md:col-span-5"
             >
-              <platform.icon aria-hidden className="h-9 w-9 text-slate-800" strokeWidth={1.5} />
-              <div className="mt-auto pt-12">
+              <div className="flex h-20 items-center">
+                <img
+                  src={platform.icon}
+                  alt=""
+                  aria-hidden
+                  loading="lazy"
+                  decoding="async"
+                  className={`${platform.iconClassName} shrink-0 object-contain`}
+                />
+              </div>
+              <div className="mt-auto pt-8">
                 <h3 className="text-2xl font-extrabold tracking-[-0.035em] text-slate-950">
                   {t(`projects.ubpointPage.availability.${platform.key}`)}
                 </h3>

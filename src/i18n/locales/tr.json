@@ -433,20 +433,24 @@
         "goTo": "{{number}}. hikâyeye git",
         "participation": {
           "title": "Katılımı Fırsata Dönüştürün",
+          "accent": "Fırsata",
           "body": "Etkinliklere katılın, projelere katkıda bulunun ve yaptığınız çalışmalar karşılığında UBP kazanın.",
           "cta": "Web Uygulamasını Aç"
         },
         "rewards": {
           "title": "Puan Kazanın. Ödülleri Açın.",
+          "accent": "Kazanın",
           "body": "Öğrenme ve topluluk katkılarınız birikirken UBP'nizi iş ortağı avantajları için kullanın."
         },
         "proof": {
           "title": "Doğrulayabileceğiniz Kanıt",
+          "accent": "Kanıt",
           "body": "UBpoint etkinlikleri Base üzerinde kaydedilir. Etkileşimden önce resmî tanımlayıcıları inceleyebilirsiniz.",
           "cta": "Basescan'de Görüntüle"
         },
         "sponsors": {
           "title": "Sponsorlar İçin Gerçek Etkileşim",
+          "accent": "Sponsorlar",
           "body": "Doğrulanmış öğrenci faaliyetlerini destekleyin ve botlara ödeme yapmadan tamamlanan katılımı ölçün.",
           "cta": "Sponsor Olun"
         }

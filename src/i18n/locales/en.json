@@ -433,20 +433,24 @@
         "goTo": "Go to story {{number}}",
         "participation": {
           "title": "Turn Participation Into Opportunity",
+          "accent": "Opportunity",
           "body": "Attend events, contribute to projects, and earn UBP for the work you do.",
           "cta": "Open Web App"
         },
         "rewards": {
           "title": "Earn Points. Unlock Rewards.",
+          "accent": "Earn",
           "body": "Redeem UBP for partner perks while your learning and community contributions keep adding up."
         },
         "proof": {
           "title": "Proof You Can Verify",
+          "accent": "Proof",
           "body": "UBpoint activity is recorded on Base, with official identifiers you can inspect before you interact.",
           "cta": "View on Basescan"
         },
         "sponsors": {
           "title": "Real Engagement for Sponsors",
+          "accent": "Sponsors",
           "body": "Fund verified student actions and measure completed participation without paying for bots.",
           "cta": "Become a Sponsor"
         }
