@@ -545,6 +545,10 @@
     display: none;
   }
 
+  body.cutii-panel-open .edu-mobile-dock {
+    display: none;
+  }
+
   .edu-mobile-dock {
     position: fixed;
     z-index: 70;
