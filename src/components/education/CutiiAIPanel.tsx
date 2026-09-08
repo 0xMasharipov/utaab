@@ -71,6 +71,15 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
   }, []);
 
   useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('cutii-panel-open');
+    } else {
+      document.body.classList.remove('cutii-panel-open');
+    }
+    return () => document.body.classList.remove('cutii-panel-open');
+  }, [isOpen]);
+
+  useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
 
