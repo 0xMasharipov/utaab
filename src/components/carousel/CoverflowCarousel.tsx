@@ -316,7 +316,13 @@ export const CoverflowCarousel = ({
   }, [reducedMotion]);
 
   // Pointer drag.
-  const dragState = useRef({ startX: 0, startOffset: 0, lastX: 0, moved: 0 });
+  const dragState = useRef({
+    startX: 0,
+    startOffset: 0,
+    lastX: 0,
+    moved: 0,
+    captured: false,
+  });
 
   const onPointerDown = (e: React.PointerEvent) => {
     if (reducedMotion || e.button === 1 || e.button === 2) return;
@@ -328,8 +334,11 @@ export const CoverflowCarousel = ({
       startOffset: offsetRef.current,
       lastX: e.clientX,
       moved: 0,
+      captured: false,
     };
-    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+    // Pointer capture is deliberately deferred until an actual drag starts:
+    // capturing on pointerdown retargets the follow-up click to the viewport,
+    // which swallows taps on card links.
     wake();
   };
 
@@ -341,6 +350,10 @@ export const CoverflowCarousel = ({
       dragState.current.moved,
       Math.abs(dx)
     );
+    if (!dragState.current.captured && dragState.current.moved > 6) {
+      dragState.current.captured = true;
+      (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+    }
     const maxIdx = Math.max(count - 1, 0);
     offsetRef.current = clamp(
       dragState.current.startOffset - (dx / step) * dragSensitivity,
