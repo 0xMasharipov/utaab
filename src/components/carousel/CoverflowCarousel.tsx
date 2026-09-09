@@ -369,7 +369,10 @@ export const CoverflowCarousel = ({
   const endDrag = (e: React.PointerEvent) => {
     if (!draggingRef.current) return;
     draggingRef.current = false;
-    (e.currentTarget as HTMLElement).releasePointerCapture?.(e.pointerId);
+    if (dragState.current.captured) {
+      dragState.current.captured = false;
+      (e.currentTarget as HTMLElement).releasePointerCapture?.(e.pointerId);
+    }
     if (Math.abs(velocityRef.current) < 0.004) {
       velocityRef.current = 0;
       targetRef.current = clamp(
