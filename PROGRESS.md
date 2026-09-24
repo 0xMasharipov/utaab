@@ -1,8 +1,14 @@
 # UTAAB web progress
 
-Current phase: GitHub source handoff for contributor, certificate, and homepage blog updates; live application and Supabase deployment remain pending.
+Current phase: UBpoint GitHub source handoff; live application and Supabase deployment remain pending.
 
 ## Done
+
+- [x] Prepared the UBpoint mobile fix for GitHub `0xMasharipov/utaab` main on top of remote commit `ff4a620`, preserving the newer remote planning files and unrelated source.
+
+- [x] Matched UBpoint's mobile story to the desktop side-by-side phone/text composition, with proportional phone framing, readable wrapping, portrait/landscape sizing, and the same four animated stages.
+- [x] Stabilized the mobile scroll track, enlarged story navigation touch targets, corrected stage anchors and direct hash loading, and retained the side-by-side layout for reduced motion.
+- [x] Verified four-language layouts, RTL, story links, mobile navigation, direct-link reloads, download navigation, and reduced motion in Chromium; targeted lint and production build pass.
 
 - [x] Prepared the session's contributor, certificate, and homepage blog changes on top of GitHub `0xMasharipov/utaab` main, preserving newer remote migrations, assets, and unrelated components. Verified the publication checkout's production build and contributor contract tests.
 

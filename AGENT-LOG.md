@@ -1,5 +1,19 @@
 # Agent log
 
+## 2026-09-24 — UBpoint GitHub source handoff
+
+Prepared `src/pages/projects/UBpointPage.tsx`, the new `src/pages/projects/ubpoint.css`, and progress documentation for publication to `0xMasharipov/utaab` main at the user's request. Used the existing publication checkout at `/tmp/utaab-github-publish-20260924` because the workspace has no usable Git metadata. Fast-forwarded to remote `ff4a620` before copying the scoped UBpoint changes, preserving the newer remote planning files and unrelated code.
+
+The mobile implementation was verified across 96 story/viewport/language combinations, plus navigation, direct hash reloads, and reduced-motion checks in the previous session. The publication checkout also passes targeted ESLint and the production build. This handoff publishes source; live frontend rollout and the previously noted Supabase deployment are not verified by a GitHub push.
+
+## 2026-09-24 — UBpoint mobile side-by-side layout
+
+Updated `src/pages/projects/UBpointPage.tsx` and added scoped `src/pages/projects/ubpoint.css`. The user explicitly selected the desktop-style side-by-side phone/text composition on mobile. Replaced the stacked sticky layout, which exceeded a 320×568 viewport, with two fluid columns. Scaled the phone frame/camera, text, spacing, and wrapping buttons for narrow and landscape screens. Kept the four existing stories, assets, brand colors, and destinations. Reduced-motion articles also retain two columns.
+
+Used stable small-viewport units for the scroll track and panel, removed animated text blur, enlarged progress controls to 44px touch targets, and moved section anchors inside the matching story interval. Added hash restoration after lazy route mounting so direct links and reloads select the intended story.
+
+Validation: targeted ESLint and production build pass. Chromium checks cover English, Turkish, Russian, and Arabic at 320×568, 390×844, 768×1024, 844×390, and 1440×900, plus small landscape at 568×320. Checked all four stories for visible content/actions, separate columns, and horizontal overflow; checked hamburger links, direct hash reloads, download navigation, and reduced-motion rendering. Reviewed desktop, mobile, landscape, Turkish, and Arabic screenshots. Phase: local UBpoint refinement; these changes have not been published to GitHub or deployed.
+
 ## 2026-09-24 — GitHub source publication
 
 Prepared the contributor journey, certificate verification redesign, and compact homepage blog updates for `0xMasharipov/utaab` on `main`. This workspace has no usable Git metadata. Created a separate checkout at `/tmp/utaab-github-publish-20260924`, based on remote commit `9e1c85e`, and copied only the changes from this session and their assets, translations, tests, and documentation. Removed the obsolete contributor closing component. Preserved newer remote migrations, favicon/OG assets, submodule entries, and unrelated component changes; did not copy environment files or unrelated local differences.

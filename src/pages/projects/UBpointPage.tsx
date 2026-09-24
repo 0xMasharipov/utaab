@@ -38,6 +38,7 @@ import sponsorsImage from '@/assets/projects/UBpoint/sponsors.webp';
 import webAppIcon from '@/assets/projects/UBpoint/web_app.png';
 import iosIcon from '@/assets/projects/UBpoint/ios.png';
 import androidIcon from '@/assets/projects/UBpoint/android.png';
+import './ubpoint.css';
 
 const UBPOINT_APP_URL = 'https://ubpoint.app/';
 const UBPOINT_LOGO_URL = `https://utaab.org${logoAsset.url}`;
@@ -189,14 +190,14 @@ const StoryPhone = ({ progress, image, compact = false }: StoryPhoneProps) => {
   const rotateZ = useTransform(progress, [0, 0.5, 1], [-0.8, 0.7, -0.4]);
 
   return (
-    <div className="relative flex items-center justify-center [perspective:1100px]" aria-hidden>
+    <div className="ubpoint-phone relative flex items-center justify-center [perspective:1100px]" aria-hidden>
       <div
         aria-hidden
-        className="absolute h-[72%] w-[155%] rounded-full bg-blue-600/20 blur-[78px] sm:blur-[96px]"
+        className="ubpoint-phone-glow absolute h-[72%] w-[155%] rounded-full bg-blue-600/20 blur-[78px] sm:blur-[96px]"
       />
       <motion.div
         style={{ rotateY, rotateZ, transformStyle: 'preserve-3d' }}
-        className={`relative aspect-[0.462] ${compact ? 'w-[184px] sm:w-[210px]' : 'w-[188px] sm:w-[225px] lg:w-[280px] xl:w-[300px]'}`}
+        className={`ubpoint-phone-device relative aspect-[0.462] ${compact ? 'w-[184px] sm:w-[210px]' : 'w-[188px] sm:w-[225px] lg:w-[280px] xl:w-[300px]'}`}
       >
         <div className="absolute inset-0 rounded-[44px] bg-[linear-gradient(145deg,#f1f5f9_0%,#94a3b8_25%,#e2e8f0_52%,#64748b_100%)] p-[5px] shadow-[0_32px_80px_rgba(30,64,175,0.18),0_14px_28px_rgba(15,23,42,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] sm:rounded-[52px] sm:p-[6px]">
           <div className="relative h-full w-full rounded-[39px] bg-slate-950 p-[3px] sm:rounded-[47px]">
@@ -258,11 +259,11 @@ const StageContent = ({ stage }: StageContentProps) => {
   return (
     <motion.div
       key={stage.key}
-      initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }}
-      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-      exit={{ opacity: 0, y: -18, filter: 'blur(7px)' }}
+      initial={{ opacity: 0, y: 18 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -12 }}
       transition={{ duration: 0.48, ease: [0.16, 1, 0.3, 1] }}
-      className="relative max-w-[640px]"
+      className="ubpoint-stage-content relative max-w-[640px]"
     >
       <h1 className="max-w-[640px] text-balance text-[clamp(2rem,3.65vw,3.25rem)] font-extrabold leading-[1.04] tracking-[-0.055em] text-slate-950">
         <StageTitle stage={stage} />
@@ -275,7 +276,7 @@ const StageContent = ({ stage }: StageContentProps) => {
           href={stage.href}
           target={stage.external ? '_blank' : undefined}
           rel={stage.external ? 'noopener noreferrer' : undefined}
-          className={`mt-7 inline-flex min-h-12 items-center rounded-full px-6 text-sm font-bold whitespace-nowrap transition-transform hover:-translate-y-0.5 active:translate-y-0 ${isUbpointCta ? ubpointButton : 'bg-slate-950 text-white'} ${focusRing}`}
+          className={`mt-7 inline-flex min-h-12 items-center rounded-full px-6 text-sm font-bold transition-transform hover:-translate-y-0.5 active:translate-y-0 ${isUbpointCta ? ubpointButton : 'bg-slate-950 text-white'} ${focusRing}`}
         >
           {t(`${key}.cta`)}
           {stage.external ? (
@@ -295,15 +296,17 @@ const StoryProgress = ({ progress, activeIndex }: { progress: MotionValue<number
 
   return (
     <>
-      <div className="absolute bottom-5 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 md:bottom-9 md:left-[52%] md:translate-x-0">
+      <div className="ubpoint-story-controls absolute bottom-2 left-1/2 z-10 flex -translate-x-1/2 items-center md:bottom-5 md:left-[52%] md:translate-x-0">
         {storyStages.map((stage, index) => (
           <a
             key={stage.key}
             href={`#${stage.anchor}`}
             aria-label={t('projects.ubpointPage.story.goTo', { number: index + 1 })}
             aria-current={activeIndex === index ? 'step' : undefined}
-            className={`h-1.5 rounded-full transition-[width,background-color] duration-300 ${activeIndex === index ? 'w-7 bg-slate-950' : 'w-1.5 bg-slate-300'} ${focusRing}`}
-          />
+            className={`flex h-11 w-11 items-center justify-center rounded-full ${focusRing}`}
+          >
+            <span aria-hidden className={`h-1.5 rounded-full transition-[width,background-color] duration-300 ${activeIndex === index ? 'w-7 bg-slate-950' : 'w-1.5 bg-slate-300'}`} />
+          </a>
         ))}
       </div>
       <div aria-hidden className="absolute right-7 top-1/2 hidden h-[44%] w-px -translate-y-1/2 overflow-hidden bg-slate-200 md:block">
@@ -319,7 +322,7 @@ const AnimatedStory = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ['start start', 'end end'],
+    offset: ['start 64px', 'end end'],
   });
   const progress = useSpring(scrollYProgress, { stiffness: 110, damping: 24, mass: 0.35 });
 
@@ -331,28 +334,29 @@ const AnimatedStory = () => {
   });
 
   return (
-    <section ref={sectionRef} className="relative h-[400dvh] bg-[#f8fafc]">
+    <section ref={sectionRef} className="ubpoint-story relative bg-[#f8fafc]">
       {storyStages.map((stage, index) => (
         <span
           key={stage.anchor}
           id={stage.anchor}
           aria-hidden
           className="pointer-events-none absolute scroll-mt-16"
-          style={{ top: `${index * 18.75}%` }}
+          // Land inside each stage, rather than on a transition boundary.
+          style={{ top: `${index === 0 ? 0 : index * 18.75 + 4}%` }}
         />
       ))}
 
-      <div className="sticky top-16 min-h-[calc(100dvh-4rem)] overflow-hidden">
-        <div className="mx-auto grid min-h-[calc(100dvh-4rem)] max-w-7xl grid-rows-[minmax(0,0.9fr)_minmax(0,0.72fr)] items-center gap-4 px-4 pb-14 pt-5 sm:px-6 sm:pb-16 sm:pt-7 md:grid-cols-[45%_55%] md:grid-rows-1 md:gap-0 md:px-8 md:py-8">
-          <div className="relative flex min-h-0 items-center justify-center">
+      <div className="ubpoint-story-panel sticky top-16 overflow-hidden">
+        <div className="ubpoint-story-grid mx-auto grid max-w-7xl items-center">
+          <div className="relative flex min-h-0 min-w-0 items-center justify-center">
             <StoryPhone progress={progress} image={storyStages[activeIndex].image} />
           </div>
 
-          <div className="relative flex min-h-0 items-center px-2 text-center sm:px-6 md:h-full md:px-[8%] md:text-start">
+          <div className="ubpoint-story-copy relative flex min-h-0 min-w-0 items-center text-start">
             <div aria-hidden className="pointer-events-none absolute -bottom-[10%] end-0 select-none text-[clamp(9rem,25vw,22rem)] font-extrabold leading-none tracking-[-0.08em] text-slate-950/[0.045]">
               {String(activeIndex + 1).padStart(2, '0')}
             </div>
-            <div className="relative z-[1] mx-auto md:mx-0">
+            <div className="relative z-[1] min-w-0">
               <AnimatePresence mode="wait">
                 <StageContent stage={storyStages[activeIndex]} />
               </AnimatePresence>
@@ -379,10 +383,10 @@ const StaticStory = () => {
               <article
                 key={stage.key}
                 id={stage.anchor}
-                className="grid scroll-mt-20 items-center gap-9 sm:grid-cols-[210px_minmax(0,1fr)] sm:gap-12"
+                className="ubpoint-static-story grid scroll-mt-20 items-center gap-9 sm:grid-cols-[210px_minmax(0,1fr)] sm:gap-12"
               >
                 <StoryPhone progress={progress} image={stage.image} compact />
-                <div className="text-center sm:text-start">
+                <div className="ubpoint-stage-content min-w-0 text-start">
                   <div className="text-sm font-extrabold text-blue-700">{String(index + 1).padStart(2, '0')}</div>
                   <h2 className="mt-3 text-3xl font-extrabold leading-tight tracking-[-0.04em] text-slate-950 sm:text-4xl">
                     <StageTitle stage={stage} />
@@ -411,6 +415,17 @@ const StaticStory = () => {
 
 const Story = () => {
   const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    // The route is lazy-loaded, so native hash scrolling can precede its anchors.
+    const anchor = window.location.hash.slice(1);
+    if (anchor !== 'download' && !storyStages.some((stage) => stage.anchor === anchor)) return;
+    const frame = requestAnimationFrame(() => {
+      document.getElementById(anchor)?.scrollIntoView({ behavior: 'instant', block: 'start' });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [reduceMotion]);
+
   return reduceMotion ? <StaticStory /> : <AnimatedStory />;
 };
 

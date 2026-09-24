@@ -1,0 +1,147 @@
+/* A stable scroll track avoids jumps when mobile browser chrome collapses. */
+.ubpoint-story {
+  height: 400svh;
+}
+
+.ubpoint-story-grid {
+  min-height: calc(100svh - 4rem);
+  grid-template-columns: minmax(0, 45fr) minmax(0, 55fr);
+  padding: 2rem;
+}
+
+.ubpoint-story-copy {
+  height: 100%;
+  padding-inline: 8%;
+}
+
+.ubpoint-phone {
+  width: 100%;
+  min-width: 0;
+}
+
+.ubpoint-phone-device {
+  max-width: min(90%, calc((100svh - 10rem) * 0.462));
+}
+
+.ubpoint-stage-content {
+  overflow-wrap: anywhere;
+}
+
+.ubpoint-stage-content a {
+  max-width: 100%;
+  padding-block: 0.75rem;
+  line-height: 1.4;
+}
+
+.ubpoint-stage-content a svg {
+  flex-shrink: 0;
+}
+
+@media (max-width: 767px) {
+  .ubpoint-story-grid {
+    grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
+    gap: 1rem;
+    padding: 1.5rem 1rem 4rem;
+  }
+
+  .ubpoint-story-copy {
+    padding-inline: 0;
+  }
+
+  .ubpoint-phone-device {
+    width: 100%;
+    max-width: min(225px, calc((100svh - 10rem) * 0.462));
+  }
+}
+
+@media (max-width: 767px), (max-height: 520px) {
+  .ubpoint-phone-device {
+    container-type: inline-size;
+  }
+
+  /* Scale the physical frame and camera with the phone, not the viewport. */
+  .ubpoint-phone-device > div {
+    border-radius: 20cqw;
+    padding: 2.3cqw;
+  }
+
+  .ubpoint-phone-device > div > div {
+    border-radius: 18cqw;
+    padding: 1.4cqw;
+  }
+
+  .ubpoint-phone-device > div > div > div {
+    border-radius: 16.6cqw;
+  }
+
+  .ubpoint-phone-device img + div {
+    top: 3.7cqw;
+    width: 36cqw;
+    height: 10cqw;
+  }
+}
+
+@media (max-width: 767px) {
+  .ubpoint-phone-glow {
+    width: 145%;
+    filter: blur(42px);
+  }
+
+  .ubpoint-stage-content h1,
+  .ubpoint-stage-content h2 {
+    font-size: clamp(1.375rem, 5.6vw, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.045em;
+  }
+
+  .ubpoint-stage-content p {
+    margin-top: 1rem;
+    font-size: clamp(0.875rem, 2.6vw, 1rem);
+    line-height: 1.55;
+  }
+
+  .ubpoint-stage-content a {
+    margin-top: 1.25rem;
+    min-height: 2.75rem;
+    padding-inline: 0.875rem;
+    font-size: 0.75rem;
+  }
+
+  .ubpoint-static-story {
+    grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
+    gap: 1rem;
+  }
+}
+
+/* Keep both columns and the controls visible when a phone is rotated. */
+@media (max-height: 520px) {
+  .ubpoint-story-grid {
+    padding-block: 0.5rem 3rem;
+  }
+
+  .ubpoint-story-copy {
+    padding-inline: 4%;
+  }
+
+  .ubpoint-story-copy h1 {
+    font-size: clamp(1.25rem, 3vw, 2rem);
+    line-height: 1.1;
+  }
+
+  .ubpoint-story-copy p {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .ubpoint-story-copy a {
+    margin-top: 0.75rem;
+    min-height: 2.75rem;
+    padding-block: 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .ubpoint-story-controls {
+    bottom: 0.25rem;
+  }
+}
