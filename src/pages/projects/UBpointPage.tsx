@@ -5,14 +5,13 @@ import {
   useEffect,
   useRef,
   useState,
+  useSyncExternalStore,
 } from 'react';
 import {
   AnimatePresence,
   motion,
   type MotionValue,
-  useMotionValue,
   useMotionValueEvent,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
@@ -46,6 +45,15 @@ const WHATSAPP_URL = 'https://chat.whatsapp.com/HnTcuJYiKAiDpLPnG33mEr';
 const SPONSOR_EMAIL = 'mailto:contact@utaab.org?subject=UBpoint%20Sponsor%20Inquiry';
 const BASE_WALLET = '0x4fF797906D7B56F9Bd2Db382BcB36C97d69A43A9';
 const BASESCAN_URL = `https://basescan.org/address/${BASE_WALLET}`;
+
+const motionPreferenceQuery = '(prefers-reduced-motion: reduce)';
+const subscribeToMotionPreference = (onChange: () => void) => {
+  const query = window.matchMedia(motionPreferenceQuery);
+  query.addEventListener('change', onChange);
+  return () => query.removeEventListener('change', onChange);
+};
+const getMotionPreference = () => window.matchMedia(motionPreferenceQuery).matches;
+const getServerMotionPreference = () => true;
 
 const mobilePlatforms = [
   { key: 'ios', icon: iosIcon, iconClassName: 'h-20 w-20' },
@@ -182,10 +190,10 @@ const PageNavbar = () => {
 interface StoryPhoneProps {
   progress: MotionValue<number>;
   image: string;
-  compact?: boolean;
+  reduceMotion: boolean;
 }
 
-const StoryPhone = ({ progress, image, compact = false }: StoryPhoneProps) => {
+const StoryPhone = ({ progress, image, reduceMotion }: StoryPhoneProps) => {
   const rotateY = useTransform(progress, [0, 0.34, 0.68, 1], [-5, 3, -4, 4]);
   const rotateZ = useTransform(progress, [0, 0.5, 1], [-0.8, 0.7, -0.4]);
 
@@ -196,8 +204,8 @@ const StoryPhone = ({ progress, image, compact = false }: StoryPhoneProps) => {
         className="ubpoint-phone-glow absolute h-[72%] w-[155%] rounded-full bg-blue-600/20 blur-[78px] sm:blur-[96px]"
       />
       <motion.div
-        style={{ rotateY, rotateZ, transformStyle: 'preserve-3d' }}
-        className={`ubpoint-phone-device relative aspect-[0.462] ${compact ? 'w-[184px] sm:w-[210px]' : 'w-[188px] sm:w-[225px] lg:w-[280px] xl:w-[300px]'}`}
+        style={{ rotateY: reduceMotion ? 0 : rotateY, rotateZ: reduceMotion ? 0 : rotateZ, transformStyle: 'preserve-3d' }}
+        className="ubpoint-phone-device relative aspect-[0.462] w-[188px] sm:w-[225px] lg:w-[280px] xl:w-[300px]"
       >
         <div className="absolute inset-0 rounded-[44px] bg-[linear-gradient(145deg,#f1f5f9_0%,#94a3b8_25%,#e2e8f0_52%,#64748b_100%)] p-[5px] shadow-[0_32px_80px_rgba(30,64,175,0.18),0_14px_28px_rgba(15,23,42,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] sm:rounded-[52px] sm:p-[6px]">
           <div className="relative h-full w-full rounded-[39px] bg-slate-950 p-[3px] sm:rounded-[47px]">
@@ -209,10 +217,10 @@ const StoryPhone = ({ progress, image, compact = false }: StoryPhoneProps) => {
                   alt=""
                   loading="eager"
                   decoding="async"
-                  initial={{ opacity: 0, scale: 1.015 }}
+                  initial={reduceMotion ? false : { opacity: 0, scale: 1.015 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.99 }}
-                  transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                  exit={reduceMotion ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.99 }}
+                  transition={{ duration: reduceMotion ? 0 : 0.32, ease: [0.16, 1, 0.3, 1] }}
                   className="absolute inset-0 h-full w-full object-cover"
                 />
               </AnimatePresence>
@@ -231,6 +239,7 @@ const StoryPhone = ({ progress, image, compact = false }: StoryPhoneProps) => {
 
 interface StageContentProps {
   stage: StoryStage;
+  reduceMotion?: boolean;
 }
 
 const StageTitle = ({ stage }: StageContentProps) => {
@@ -251,7 +260,7 @@ const StageTitle = ({ stage }: StageContentProps) => {
   );
 };
 
-const StageContent = ({ stage }: StageContentProps) => {
+const StageContent = ({ stage, reduceMotion = false }: StageContentProps) => {
   const { t } = useTranslation();
   const key = `projects.ubpointPage.story.${stage.key}`;
   const isUbpointCta = stage.key === 'participation' || stage.key === 'sponsors';
@@ -259,10 +268,10 @@ const StageContent = ({ stage }: StageContentProps) => {
   return (
     <motion.div
       key={stage.key}
-      initial={{ opacity: 0, y: 18 }}
+      initial={reduceMotion ? false : { opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -12 }}
-      transition={{ duration: 0.48, ease: [0.16, 1, 0.3, 1] }}
+      exit={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: -12 }}
+      transition={{ duration: reduceMotion ? 0 : 0.48, ease: [0.16, 1, 0.3, 1] }}
       className="ubpoint-stage-content relative max-w-[640px]"
     >
       <h1 className="max-w-[640px] text-balance text-[clamp(2rem,3.65vw,3.25rem)] font-extrabold leading-[1.04] tracking-[-0.055em] text-slate-950">
@@ -316,7 +325,7 @@ const StoryProgress = ({ progress, activeIndex }: { progress: MotionValue<number
   );
 };
 
-const AnimatedStory = () => {
+const ScrollStory = ({ reduceMotion }: { reduceMotion: boolean }) => {
   const sectionRef = useRef<HTMLElement>(null);
   const activeIndexRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -324,7 +333,8 @@ const AnimatedStory = () => {
     target: sectionRef,
     offset: ['start 64px', 'end end'],
   });
-  const progress = useSpring(scrollYProgress, { stiffness: 110, damping: 24, mass: 0.35 });
+  const smoothedProgress = useSpring(scrollYProgress, { stiffness: 110, damping: 24, mass: 0.35 });
+  const progress = reduceMotion ? scrollYProgress : smoothedProgress;
 
   useMotionValueEvent(scrollYProgress, 'change', (latest) => {
     const next = Math.min(storyStages.length - 1, Math.floor(latest * storyStages.length));
@@ -349,7 +359,7 @@ const AnimatedStory = () => {
       <div className="ubpoint-story-panel sticky top-16 overflow-hidden">
         <div className="ubpoint-story-grid mx-auto grid max-w-7xl items-center">
           <div className="relative flex min-h-0 min-w-0 items-center justify-center">
-            <StoryPhone progress={progress} image={storyStages[activeIndex].image} />
+            <StoryPhone progress={progress} image={storyStages[activeIndex].image} reduceMotion={reduceMotion} />
           </div>
 
           <div className="ubpoint-story-copy relative flex min-h-0 min-w-0 items-center text-start">
@@ -358,7 +368,7 @@ const AnimatedStory = () => {
             </div>
             <div className="relative z-[1] min-w-0">
               <AnimatePresence mode="wait">
-                <StageContent stage={storyStages[activeIndex]} />
+                <StageContent key={storyStages[activeIndex].key} stage={storyStages[activeIndex]} reduceMotion={reduceMotion} />
               </AnimatePresence>
             </div>
           </div>
@@ -369,52 +379,10 @@ const AnimatedStory = () => {
   );
 };
 
-const StaticStory = () => {
-  const { t } = useTranslation();
-  const progress = useMotionValue(0);
-
-  return (
-    <section className="bg-[#f8fafc] px-4 py-14 sm:px-6 sm:py-20">
-      <div className="mx-auto max-w-5xl">
-        <div className="grid gap-20 sm:gap-24">
-          {storyStages.map((stage, index) => {
-            const key = `projects.ubpointPage.story.${stage.key}`;
-            return (
-              <article
-                key={stage.key}
-                id={stage.anchor}
-                className="ubpoint-static-story grid scroll-mt-20 items-center gap-9 sm:grid-cols-[210px_minmax(0,1fr)] sm:gap-12"
-              >
-                <StoryPhone progress={progress} image={stage.image} compact />
-                <div className="ubpoint-stage-content min-w-0 text-start">
-                  <div className="text-sm font-extrabold text-blue-700">{String(index + 1).padStart(2, '0')}</div>
-                  <h2 className="mt-3 text-3xl font-extrabold leading-tight tracking-[-0.04em] text-slate-950 sm:text-4xl">
-                    <StageTitle stage={stage} />
-                  </h2>
-                  <p className="mt-4 max-w-[48ch] text-base font-medium leading-7 text-slate-600">{t(`${key}.body`)}</p>
-                  {stage.href && (
-                    <a
-                      href={stage.href}
-                      target={stage.external ? '_blank' : undefined}
-                      rel={stage.external ? 'noopener noreferrer' : undefined}
-                      className={`mt-6 inline-flex min-h-12 items-center rounded-full px-6 text-sm font-bold ${stage.key === 'participation' || stage.key === 'sponsors' ? ubpointButton : 'bg-slate-950 text-white'} ${focusRing}`}
-                    >
-                      {t(`${key}.cta`)}
-                      <ArrowUpRight aria-hidden className="ms-2 h-4 w-4" strokeWidth={1.8} />
-                    </a>
-                  )}
-                </div>
-              </article>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-};
-
 const Story = () => {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useSyncExternalStore(
+    subscribeToMotionPreference, getMotionPreference, getServerMotionPreference,
+  );
 
   useEffect(() => {
     // The route is lazy-loaded, so native hash scrolling can precede its anchors.
@@ -424,9 +392,9 @@ const Story = () => {
       document.getElementById(anchor)?.scrollIntoView({ behavior: 'instant', block: 'start' });
     });
     return () => cancelAnimationFrame(frame);
-  }, [reduceMotion]);
+  }, []);
 
-  return reduceMotion ? <StaticStory /> : <AnimatedStory />;
+  return <ScrollStory reduceMotion={reduceMotion} />;
 };
 
 const AvailabilitySection = () => {

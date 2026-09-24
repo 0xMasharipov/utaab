@@ -107,9 +107,16 @@
     font-size: 0.75rem;
   }
 
-  .ubpoint-static-story {
-    grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
-    gap: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ubpoint-story-controls span,
+  .ubpoint-stage-content a {
+    transition: none;
+  }
+
+  .ubpoint-stage-content a:hover {
+    transform: none;
   }
 }
 

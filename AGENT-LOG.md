@@ -1,5 +1,13 @@
 # Agent log
 
+## 2026-09-24 — Unified UBpoint scrolling story
+
+Reproduced the user's report of three extra phone mockups beneath the first: `prefers-reduced-motion: reduce` selected `StaticStory`, rendering four separate articles and no sticky panel. The earlier responsive checks accepted that layout, so they did not enforce the user's intended single-phone interaction for this setting.
+
+Updated `src/pages/projects/UBpointPage.tsx` and `ubpoint.css` to remove the static story branch and its unused styling. All devices now use one pinned phone whose screenshot and text change with scroll progress. Reduced motion removes tilt and transition movement without changing the layout or duplicating phones. Added live preference subscription without resetting scroll or the active stage, and keyed stage content correctly for entrance/exit transitions.
+
+Validation: Chromium passes 56 forward/reverse scrolling states in both motion modes at 320×568, 390×844, 568×320, and 1440×900; eight live preference changes preserve the current stage/scroll position; all four screenshots and headings change inside one phone. An additional 80 stage/viewport/locale checks pass for responsive bounds, navigation, direct hash reloads, and reduced motion. Targeted lint and the publication checkout production build pass. Prepared the correction on the publication checkout based on GitHub main `18a70fb`; live frontend rollout is not established by source publication.
+
 ## 2026-09-24 — UBpoint GitHub source handoff
 
 Prepared `src/pages/projects/UBpointPage.tsx`, the new `src/pages/projects/ubpoint.css`, and progress documentation for publication to `0xMasharipov/utaab` main at the user's request. Used the existing publication checkout at `/tmp/utaab-github-publish-20260924` because the workspace has no usable Git metadata. Fast-forwarded to remote `ff4a620` before copying the scoped UBpoint changes, preserving the newer remote planning files and unrelated code.

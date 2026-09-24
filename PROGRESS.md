@@ -1,8 +1,12 @@
 # UTAAB web progress
 
-Current phase: UBpoint GitHub source handoff; live application and Supabase deployment remain pending.
+Current phase: UBpoint unified scrolling story correction and GitHub handoff; live application and Supabase deployment remain pending.
 
 ## Done
+
+- [x] Reproduced the reported four stacked mockups with reduced motion enabled. Removed the separate static layout so every motion setting uses one pinned phone and four scroll-driven slides.
+- [x] Retained reduced-motion accessibility with immediate slide changes and no phone tilt, while normal motion keeps animated transitions. Live preference changes preserve the active slide and scroll position.
+- [x] Passed 56 forward/reverse scrolling states, eight live motion-preference changes, and 80 viewport/stage/locale checks, including mobile navigation and direct section links.
 
 - [x] Prepared the UBpoint mobile fix for GitHub `0xMasharipov/utaab` main on top of remote commit `ff4a620`, preserving the newer remote planning files and unrelated source.
 
