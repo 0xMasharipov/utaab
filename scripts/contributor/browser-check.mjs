@@ -1,0 +1,130 @@
+import assert from 'node:assert/strict';
+const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const baseURL = process.env.CONTRIBUTOR_URL || 'http://127.0.0.1:8081';
+const answer = 'I would ask the team which commitment is most urgent, explain the tradeoffs, and agree on a realistic next step.';
+const draft = {fullName:'Browser Test',email:'browser@example.org',topicInterests:['Research'],strengths:['Research'],workPreference:'Small team',decisionStyle:'Evidence',weeklyHours:'1-3',whyJoin:Array(55).fill('learning').join(' '),scenarioAnswers:{deadline:answer,evidence:answer,priorities:answer}};
+const dimensions=['motivation','collaboration','judgment','ownership','communication'];
+const report={primary_role:'Research',secondary_role:'Product',compatibility_score:74,profile_summary:'You describe an interest in evidence and collaboration.',strengths:['Considering tradeoffs'],why_this_role:'Your answers describe checking assumptions.',growth_recommendations:'Try a small research task.',suggested_first_step:'Discuss a research question with a mentor.',recommended_department:'Research',growth_path:'Start with a small collaborative study.',observations:dimensions.map(dimension=>({dimension,observation:'This response suggests a preference for discussing tradeoffs.',uncertainty:'A hypothetical answer does not establish how you act in practice.',evidence:[{source:'deadline',quote:'ask the team which commitment is most urgent'}]})),role_evidence:[{source:'evidence',quote:'explain the tradeoffs'}],discussion_questions:['How have you handled a similar situation?']};
+let debugPage;
+(async()=>{
+ const browser=await chromium.launch({headless:true,executablePath:'/usr/bin/chromium',args:['--no-sandbox']});
+ const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'});
+ await context.route('**/rest/v1/**',route=>route.fulfill({status:200,contentType:'application/json',body:'[]'}));
+ const page=await context.newPage(); debugPage=page;
+ const errors=[];page.on('pageerror',error=>errors.push(error.message));
+ let language='en';
+ const load=async(lang='en',saved=null)=>{
+  language=lang;
+  await page.goto(`${baseURL}/contributor-match`);
+  await page.evaluate(({lang,saved})=>{localStorage.setItem('i18nextLng',lang);localStorage.removeItem('utaab-contributor-assessment');if(saved)localStorage.setItem('utaab-contributor-assessment',JSON.stringify(saved));},{lang,saved});
+  await page.reload();await page.waitForSelector('.cm-form-panel', {state:'attached'});
+ };
+ const jumpStep=async(index)=>{await page.locator('.cm-step-picker > summary').click();await page.locator('.cm-step-nav button').nth(index).click();assert.equal(await page.locator('.cm-step-picker').getAttribute('open'),null);};
+ await load();
+ assert.equal(await page.locator('.cm-overview').isVisible(),true);
+ assert.equal(await page.locator('.cm-form-panel').isVisible(),false);
+ assert.equal(await page.locator('.cm-overview-details details[open]').count(),0);
+ assert.equal(await page.locator('.cm-artwork').count(),0);
+ assert.equal(await page.getByLabel('Full Name',{exact:false}).count(),1);
+ await page.locator('.cm-welcome .cm-button').click();
+ await page.locator('.cm-form-actions .cm-button').click();
+ await page.getByRole('alert').waitFor();
+ await page.waitForTimeout(100);
+ assert.equal(await page.locator('#contributor-fullName').evaluate(el=>document.activeElement===el),true);
+ assert.ok((await page.locator('.cm-form-panel-header h3').textContent()).includes('About'));
+ await page.getByLabel('Full Name',{exact:false}).fill('Draft restoration');
+ await page.reload();
+ await page.waitForSelector('.cm-form-panel', {state:'attached'});
+ assert.equal(await page.getByLabel('Full Name',{exact:false}).inputValue(),'Draft restoration');
+ console.log('PASS required field validation, accessible labels, draft restoration');
+ for(const lang of ['en','tr','ru','ar']){
+  await load(lang);
+  for(const width of [1440,768,390,320]){
+   await page.setViewportSize({width,height:950});
+   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,`${lang} overflow ${width}`);
+   assert.equal(await page.locator('.cm-welcome .cm-button').evaluate(el=>el.getBoundingClientRect().bottom<950),true,`${lang} hero CTA ${width}`);
+  }
+  assert.equal(await page.locator('html').getAttribute('dir'),lang==='ar'?'rtl':'ltr');
+  assert.ok(!(await page.locator('main').innerText()).includes('contributor.studio.'));
+  assert.equal(await page.locator('.cm-brand-core').first().evaluate(el=>getComputedStyle(el).animationName),'none');
+  await page.locator('.cm-welcome .cm-button').click();await page.locator('.cm-assessment-view').waitFor({state:'visible'});
+  for(const width of [320,390,768,1440]){await page.setViewportSize({width,height:950});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,lang+' assessment overflow '+width);}
+  assert.ok(!(await page.locator('.cm-assessment-view').innerText()).includes('contributor.journey.'));
+  await page.locator('.cm-back-overview').click();await page.locator('.cm-overview').waitFor({state:'visible'});
+  console.log('PASS',lang,'overview and assessment at 320/390/768/1440px, CTA, translations, direction, reduced motion');
+ }
+ await page.setViewportSize({width:1440,height:1000});await load('en',draft);
+ await page.locator('.cm-welcome .cm-button').click();
+ await page.locator('.cm-form-actions .cm-button').click();await page.waitForTimeout(100);
+ assert.match(await page.locator('.cm-form-panel-header h3').textContent(),/Interests/);
+ await page.locator('.cm-back-overview').click();await page.locator('.cm-overview').waitFor({state:'visible'});
+ assert.equal(await page.locator('.cm-overview').isVisible(),true);
+ await page.goBack();await page.locator('.cm-assessment-view').waitFor({state:'visible'});
+ assert.match(await page.locator('.cm-form-panel-header h3').textContent(),/Interests/);
+ await page.goForward();await page.locator('.cm-overview').waitFor({state:'visible'});
+ assert.equal(await page.locator('.cm-overview').isVisible(),true);
+ await page.locator('.cm-welcome .cm-button').click();
+ assert.match(await page.locator('.cm-form-panel-header h3').textContent(),/Interests/);
+ await jumpStep(0);
+ assert.equal(await page.getByLabel('Full Name',{exact:false}).inputValue(),draft.fullName);
+ console.log('PASS focused view, overview/back/forward navigation, answers and current-step retention');
+ let attempts=0;let mode='failure';let payload;
+ await page.route('**/functions/v1/contributor-match',async route=>{
+  attempts++;payload=route.request().postDataJSON();
+  await new Promise(resolve=>setTimeout(resolve,350));
+  await route.fulfill({status:mode==='failure'?500:mode==='limit'?429:mode==='unavailable'?402:200,contentType:'application/json',body:JSON.stringify(mode==='success'?{result:report}:mode==='malformed'?{result:{...report,role_evidence:[{source:'evidence',quote:'this was fabricated'}]}}:{error:'Test error'})});
+ });
+ for(let i=0;i<6;i++){await page.locator('.cm-form-actions .cm-button').click();await page.waitForTimeout(60);}
+ assert.match(await page.locator('.cm-form-panel-header h3').textContent(),/Review/);
+ await jumpStep(0);
+ await page.getByLabel('Email',{exact:false}).fill('');
+ await jumpStep(6);
+ await page.locator('.cm-form-actions .cm-button').click();
+ await page.getByRole('alert').waitFor();
+ assert.match(await page.locator('.cm-form-panel-header h3').textContent(),/About/);
+ assert.equal(attempts,0);
+ await page.getByLabel('Email',{exact:false}).fill(draft.email);
+ await jumpStep(5);
+ await page.locator('#deadline-answer').fill('too short');
+ await page.locator('.cm-form-actions .cm-button').click();
+ assert.match(await page.getByRole('alert').innerText(),/80/);
+ await page.locator('#deadline-answer').fill(answer);
+ await page.locator('.cm-form-actions .cm-button').click();
+ console.log('PASS all-stage review validation and scenario minimum');
+ for (const failure of ['failure','limit','unavailable','malformed']){
+  mode=failure;
+  await page.locator('.cm-form-actions .cm-button').click();
+  await page.locator('.cm-loading').waitFor();
+  await page.getByRole('alert').waitFor();
+  assert.match(await page.locator('.cm-form-panel-header h3').textContent(),/Review/);
+  assert.ok(await page.evaluate(()=>localStorage.getItem('utaab-contributor-assessment')));
+  console.log('PASS recovery',failure);
+ }
+ mode='success';
+ const before=attempts;
+ await page.locator('.cm-form-actions .cm-button').evaluate(el=>{el.click();el.click();});
+ await page.locator('[data-report-title]').waitFor();
+ assert.equal(attempts,before+1);
+ assert.equal(payload.formData.assessmentVersion,2);assert.equal(payload.formData.locale,'en');
+ assert.equal(await page.evaluate(()=>localStorage.getItem('utaab-contributor-assessment')),null);
+ assert.equal(await page.locator('.cm-report-details[open]').count(),0);
+ assert.equal(await page.locator('.cm-report-observations article').count(),5);
+ assert.equal(await page.evaluate(()=>document.activeElement?.hasAttribute('data-report-title')),true);
+ await page.locator('.cm-student-report').screenshot({path:'/tmp/contributor-report.png'});
+ await page.locator('.cm-report-details > summary').first().click();
+ assert.equal(await page.locator('.cm-report-observations article:visible').count(),5);
+ await page.locator('.cm-report-details > summary').first().click();
+ for(const width of [320,390,768,1440]){await page.setViewportSize({width,height:1000});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'report overflow '+width);}
+ console.log('PASS success report, exact citations, duplicate guard, draft cleanup, result focus');
+ await load('en');await page.screenshot({path:'/tmp/contributor-desktop.png',fullPage:true});
+ await page.setViewportSize({width:390,height:844});await page.screenshot({path:'/tmp/contributor-mobile.png',fullPage:true});
+ await load('ar',draft);await page.screenshot({path:'/tmp/contributor-arabic.png',fullPage:true});
+ await page.emulateMedia({reducedMotion:'no-preference'});await page.setViewportSize({width:1440,height:1000});await load('en');
+ assert.equal(await page.locator('.cm-brand-core').first().evaluate(el=>getComputedStyle(el).animationName),'cm-brand-float');
+ await page.setViewportSize({width:1440,height:500});
+ await page.locator('footer').scrollIntoViewIfNeeded();await page.waitForTimeout(250);
+ assert.equal(await page.locator('.cm-brand-core').first().evaluate(el=>getComputedStyle(el).animationPlayState),'paused');
+ console.log('PASS animation runs in view and stops offscreen');
+ assert.deepEqual(errors,[]); console.log('PASS no page runtime errors');
+ await browser.close();
+})().catch(async error=>{console.error(error); if(debugPage){console.log((await debugPage.locator('.cm-form-panel').innerText()).slice(0,2000));await debugPage.screenshot({path:'/tmp/contributor-failure.png',fullPage:true});}process.exit(1)});

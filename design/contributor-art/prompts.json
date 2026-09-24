@@ -1,0 +1,44 @@
+{
+  "tool": "Built-in image_gen.imagegen",
+  "date": "2026-09-23",
+  "basePrompt": "Use case: stylized-concept. Asset type: premium dark website transparent 3D illustration, square composition. Style: exquisite physically rendered white porcelain sculpture, matte chalk-white surfaces with subtle polished edges, dimensional soft grey self-shadowing, directional softbox upper left, soft rim light. Realistic object, sophisticated museum product photography, not a flat icon or cartoon. Entire object isolated on genuinely transparent alpha background, no backdrop, no floor, no text, no watermark, no colored elements, no black pedestal. Object fills 85% of square, full silhouette preserved; website handles cropping. Camera three-quarter view, elegant diagonal composition. Subject: ",
+  "subjects": {
+    "purpose": "Three beautifully folded white porcelain origami birds in flight together, one larger leading bird in foreground with broad angular wings, two smaller behind rising toward upper right. Sculptural tangible thickness at paper edges. Represents diverse people finding shared purpose.",
+    "builder": "A beautifully crafted miniature architectural staircase and arched passage sculpture. Solid white architectural model with six substantial cantilevered steps ascending around a single large arch, precise joinery, visible depth and chamfered edges. Represents building and progress.",
+    "researcher": "One elegant laboratory microscope rendered entirely in white porcelain, including white lenses, round adjustment wheels and broad solid base. Recognizable sophisticated optical microscope, tilted three-quarter view, exquisite mechanical detail, no glass transparency. Represents inquiry and discovery.",
+    "operator": "An intricate mechanical timing instrument sculpture: three thick intermeshing toothed gears arranged as one compact coordinated mechanism, one large gear and two smaller gears connected by a visible white axle bracket. All white ceramic, crisp circular machining, sculptural engineered depth. Represents coordination and reliable operations.",
+    "connector": "Two sculptural human hands in a confident friendly handshake, wrists ending in minimal tailored cuffs. All white porcelain including hands and cuffs, museum sculpture with clean anatomical realism, no sleeves extending beyond short wrist ends. One cohesive beautiful handshake isolated diagonally. Represents community and partnership.",
+    "creator": "A beautifully crafted open blank notebook with thick white pages gently curving upwards, and a sculptural white fountain pen resting diagonally across its pages, with finely formed nib and subtle page edge detail. Entirely white ceramic product sculpture. Represents sharing personal perspectives, writing and creating.",
+    "strategist": "One bold elegant sculptural white chess knight with carefully carved horse head, simplified flowing mane and heavy circular base, accompanied by one smaller white pawn set slightly behind. Beautiful porcelain chess pieces, clear scale contrast, dramatic three-quarter angle. Represents strategic thinking and weighing choices."
+  },
+  "usage": {
+    "purpose": [
+      "Hero",
+      "Closing"
+    ],
+    "builder": [
+      "Process: starting point",
+      "Builder",
+      "Report"
+    ],
+    "researcher": [
+      "Researcher"
+    ],
+    "operator": [
+      "Operator"
+    ],
+    "connector": [
+      "Connector",
+      "Analysis loading"
+    ],
+    "creator": [
+      "Process: perspective",
+      "Assessment",
+      "Creator"
+    ],
+    "strategist": [
+      "Process: dilemmas",
+      "Strategist"
+    ]
+  }
+}

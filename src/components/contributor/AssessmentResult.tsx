@@ -1,210 +1,90 @@
-import { motion } from 'framer-motion';
-import { Trophy, Star, GraphUp, Archery, Flash, NavArrowRight } from 'iconoir-react';
-import GlassCard from '@/components/glass/GlassCard';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useTranslation } from 'react-i18next';
+import { ArrowUpRight } from 'iconoir-react';
+import { AnimatedUtaabMark, Reveal } from './ContributorMotion';
+import { roles, type AIResult, type Evidence } from '../../../supabase/functions/_shared/contributor-contract';
+export type { AIResult } from '../../../supabase/functions/_shared/contributor-contract';
 
-export interface AIResult {
-  primary_role: string;
-  secondary_role: string;
-  compatibility_score: number;
-  profile_summary: string;
-  strengths: string[];
-  why_this_role: string;
-  growth_recommendations: string;
-  suggested_first_step: string;
-  recommended_department: string;
-  growth_path: string;
-}
-
-interface AssessmentResultProps {
-  result: AIResult | null;
-  isLoading: boolean;
-}
-
-function CircularScore({ score }: { score: number }) {
+export function ReportEvidence({ evidence }: { evidence: Evidence[] }) {
   const { t } = useTranslation();
-  const circumference = 2 * Math.PI * 54;
-  const offset = circumference - (score / 100) * circumference;
+  return <div className="cm-report-evidence">{evidence.map((item, i) => {
+    const source = ['deadline', 'evidence', 'priorities'].includes(item.source)
+      ? t(`contributor.studio.${item.source}Title`)
+      : t(`contributor.form.${item.source}`);
+    return <blockquote className="cm-evidence" key={i}><span dir="auto">“{item.quote}”</span><cite>{t('contributor.studio.source', { source })}</cite></blockquote>;
+  })}</div>;
+}
 
-  return (
-    <div className="relative w-36 h-36 mx-auto">
-      <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
-        <circle cx="60" cy="60" r="54" fill="none" stroke="hsl(var(--muted))" strokeWidth="8" />
-        <motion.circle
-          cx="60" cy="60" r="54" fill="none"
-          stroke="url(#scoreGradient)" strokeWidth="8" strokeLinecap="round"
-          strokeDasharray={circumference}
-          initial={{ strokeDashoffset: circumference }}
-          animate={{ strokeDashoffset: offset }}
-          transition={{ duration: 1.5, ease: 'easeOut' }}
-        />
-        <defs>
-          <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="hsl(var(--primary))" />
-            <stop offset="100%" stopColor="hsl(var(--secondary))" />
-          </linearGradient>
-        </defs>
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <motion.span
-          className="text-3xl font-extrabold text-foreground"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          {score}%
-        </motion.span>
-        <span className="text-xs text-muted-foreground">{t('contributor.result.match')}</span>
+// Shared with the existing reviewer screen: the same observations, quotes, and caveats.
+export function ReportInsights({ result }: { result: AIResult }) {
+  const { t } = useTranslation();
+  return <>
+    {!!result.role_evidence?.length && <div className="cm-report-block"><h3>{t('contributor.studio.roleEvidence')}</h3><ReportEvidence evidence={result.role_evidence} /></div>}
+    {!!result.observations?.length && <>
+      <h3 className="cm-report-section-title">{t('contributor.studio.observations')}</h3>
+      <div className="cm-report-observations">{result.observations.map(item => <article key={item.dimension} className="cm-report-block">
+        <h3>{t(`contributor.studio.${item.dimension}`)}</h3><p>{item.observation}</p>
+        <ReportEvidence evidence={item.evidence} />
+        <p className="cm-uncertainty"><strong>{t('contributor.studio.uncertainty')}: </strong>{item.uncertainty}</p>
+      </article>)}</div>
+    </>}
+    {!!result.discussion_questions?.length && <div className="cm-report-block"><h3>{t('contributor.studio.discussion')}</h3><ul>{result.discussion_questions.map((question, i) => <li key={i}>{question}</li>)}</ul></div>}
+  </>;
+}
+
+export default function AssessmentResult({ result, isLoading, embedded = false }: { result: AIResult | null; isLoading: boolean; embedded?: boolean }) {
+  const { t } = useTranslation();
+  const roleName = (role: string) => {
+    const index = roles.indexOf(role as typeof roles[number]);
+    return index < 0 ? role : t(`contributor.studio.roleNames.${index}`);
+  };
+  if (isLoading) return <section className="cm-shell cm-loading" role="status" aria-live="polite">
+    <AnimatedUtaabMark /><div><h2 tabIndex={-1} data-loading-title>{t('contributor.studio.loadingTitle')}</h2><p>{t('contributor.studio.loadingText')}</p></div>
+  </section>;
+  if (!result) return null;
+  if (!embedded) return <section className="cm-report cm-student-report cm-shell">
+    <header className="cm-report-heading">
+      <p className="cm-report-label">{t('contributor.result.primaryMatch')}</p>
+      <h2 tabIndex={-1} data-report-title>{roleName(result.primary_role)}</h2>
+      <p>{result.profile_summary}</p>
+    </header>
+    <div className="cm-report-block"><h3>{t('contributor.journey.firstContribution')}</h3><p>{result.suggested_first_step}</p></div>
+    <details className="cm-details cm-report-details"><summary>{t('contributor.studio.roleEvidence')}</summary>
+      <p className="cm-report-reason">{result.why_this_role}</p>
+      <ReportInsights result={result} />
+    </details>
+    <details className="cm-details cm-report-details"><summary>{t('contributor.journey.morePaths')}</summary>
+      <div className="cm-report-stack">
+        <div className="cm-report-block"><span className="cm-report-label">{t('contributor.result.secondaryMatch')}</span><h3 className="cm-report-role">{roleName(result.secondary_role)}</h3><p>{t('contributor.studio.estimate')}: {Math.round(result.compatibility_score)} / 100</p><p className="cm-uncertainty">{t('contributor.studio.estimateNote')}</p></div>
+        <div className="cm-report-block"><h3>{t('contributor.result.yourStrengths')}</h3><ul>{result.strengths.map((strength, i) => <li key={i}>{strength}</li>)}</ul></div>
+        <div className="cm-report-block"><h3>{t('contributor.result.growthRecommendations')}</h3><p>{result.growth_recommendations}</p></div>
+        <div className="cm-report-block"><h3>{t('contributor.result.growthPath')}</h3><p>{result.growth_path}</p></div>
+        <div className="cm-report-block"><h3>{t('contributor.result.recommendedDepartment')}</h3><p>{result.recommended_department}</p></div>
+      </div>
+    </details>
+    <p className="cm-disclosure">{t('contributor.studio.disclosure')}</p>
+    <a className="cm-button mt-8" href="/">{t('contributor.result.exploreUtaab')}<ArrowUpRight width={18} aria-hidden="true" /></a>
+  </section>;
+  return <section className="cm-report">
+    <Reveal className="cm-report-heading">
+      <h2 tabIndex={-1} data-report-title>{t('contributor.studio.reportTitle')}</h2><p>{result.profile_summary}</p>
+    </Reveal>
+    <div className="cm-report-grid">
+      <div className="cm-report-block"><span className="cm-report-label">{t('contributor.result.primaryMatch')}</span><h3 className="cm-report-role">{roleName(result.primary_role)}</h3><p>{result.why_this_role}</p></div>
+      <div className="cm-report-block"><span className="cm-report-label">{t('contributor.result.secondaryMatch')}</span><h3 className="cm-report-role">{roleName(result.secondary_role)}</h3><p>{t('contributor.studio.estimate')}: {Math.round(result.compatibility_score)} / 100</p><p className="cm-uncertainty">{t('contributor.studio.estimateNote')}</p></div>
+    </div>
+    <div className="cm-report-stack mt-6"><ReportInsights result={result} /></div>
+    <h3 className="cm-report-section-title mb-6">{t('contributor.result.suggestedNextSteps')}</h3>
+    <div className="cm-report-grid">
+      <div className="cm-report-stack">
+        <div className="cm-report-block"><h3>{t('contributor.result.suggestedNextSteps')}</h3><p>{result.suggested_first_step}</p></div>
+        <div className="cm-report-block"><h3>{t('contributor.result.growthRecommendations')}</h3><p>{result.growth_recommendations}</p></div>
+        <div className="cm-report-block"><h3>{t('contributor.result.growthPath')}</h3><p>{result.growth_path}</p></div>
+      </div>
+      <div className="cm-report-stack">
+        <div className="cm-report-block"><h3>{t('contributor.result.yourStrengths')}</h3><ul>{result.strengths.map((strength,i) => <li key={i}>{strength}</li>)}</ul></div>
+        <div className="cm-report-block"><h3>{t('contributor.result.recommendedDepartment')}</h3><p>{result.recommended_department}</p></div>
       </div>
     </div>
-  );
+    <p className="cm-disclosure">{t('contributor.studio.disclosure')}</p>
+  </section>;
 }
-
-function LoadingSkeleton() {
-  const { t } = useTranslation();
-  return (
-    <section className="py-20 px-4">
-      <div className="max-w-4xl mx-auto">
-        <GlassCard variant="strong" className="p-8 md:p-12">
-          <div className="text-center mb-10">
-            <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center mx-auto mb-4 animate-pulse">
-              <Flash className="w-7 h-7 text-secondary animate-pulse" strokeWidth={1.5} />
-            </div>
-            <h2 className="text-2xl font-bold text-foreground mb-2">{t('contributor.result.analyzing')}</h2>
-            <p className="text-muted-foreground">{t('contributor.result.analyzingSubtitle')}</p>
-          </div>
-          <div className="space-y-6">
-            <Skeleton className="h-36 w-36 rounded-full mx-auto" />
-            <Skeleton className="h-24 w-full rounded-xl" />
-            <div className="grid md:grid-cols-2 gap-4">
-              <Skeleton className="h-32 rounded-xl" />
-              <Skeleton className="h-32 rounded-xl" />
-            </div>
-            <Skeleton className="h-20 w-full rounded-xl" />
-          </div>
-        </GlassCard>
-      </div>
-    </section>
-  );
-}
-
-const AssessmentResult = ({ result, isLoading }: AssessmentResultProps) => {
-  const { t } = useTranslation();
-
-  if (isLoading) return <LoadingSkeleton />;
-  if (!result) return null;
-
-  return (
-    <section className="py-20 px-4">
-      <div className="max-w-4xl mx-auto">
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-          <GlassCard variant="strong" className="p-8 md:p-12">
-            <div className="text-center mb-10">
-              <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center mx-auto mb-4">
-                <Trophy className="w-7 h-7 text-secondary" strokeWidth={1.5} />
-              </div>
-              <h2 className="text-3xl font-bold text-foreground mb-2" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                {t('contributor.result.title')}
-              </h2>
-              <p className="text-muted-foreground">{t('contributor.result.subtitle')}</p>
-            </div>
-
-            <div className="mb-10">
-              <CircularScore score={result.compatibility_score} />
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-4 mb-8">
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
-                <GlassCard className="p-6 border-primary/30">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Star className="w-5 h-5 text-secondary" strokeWidth={1.5} />
-                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">{t('contributor.result.primaryMatch')}</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-foreground">{result.primary_role}</h3>
-                </GlassCard>
-              </motion.div>
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
-                <GlassCard className="p-6">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Archery className="w-5 h-5 text-muted-foreground" strokeWidth={1.5} />
-                    <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">{t('contributor.result.secondaryMatch')}</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-foreground">{result.secondary_role}</h3>
-                </GlassCard>
-              </motion.div>
-            </div>
-
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="mb-8">
-              <GlassCard variant="subtle" className="p-6">
-                <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-3">{t('contributor.result.profileSummary')}</h4>
-                <p className="text-foreground leading-relaxed">{result.profile_summary}</p>
-              </GlassCard>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="mb-8">
-              <GlassCard variant="subtle" className="p-6">
-                <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-3">{t('contributor.result.whyThisRole')}</h4>
-                <p className="text-foreground leading-relaxed">{result.why_this_role}</p>
-              </GlassCard>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="mb-8">
-              <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-3">{t('contributor.result.yourStrengths')}</h4>
-              <div className="flex flex-wrap gap-2">
-                {result.strengths.map((s, i) => (
-                  <span key={i} className="px-3 py-1.5 rounded-full text-sm bg-primary/15 text-secondary border border-white/[0.08]">
-                    {s}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-
-            <div className="grid md:grid-cols-2 gap-4 mb-8">
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
-                <GlassCard variant="subtle" className="p-5 h-full">
-                  <div className="flex items-center gap-2 mb-2">
-                    <GraphUp className="w-4 h-4 text-secondary" strokeWidth={1.5} />
-                    <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider">{t('contributor.result.growthPath')}</h4>
-                  </div>
-                  <p className="text-sm text-foreground">{result.growth_path}</p>
-                </GlassCard>
-              </motion.div>
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}>
-                <GlassCard variant="subtle" className="p-5 h-full">
-                  <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-2">{t('contributor.result.recommendedDepartment')}</h4>
-                  <p className="text-sm text-foreground">{result.recommended_department}</p>
-                </GlassCard>
-              </motion.div>
-            </div>
-
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }} className="mb-8">
-              <GlassCard variant="subtle" className="p-6 border-primary/20">
-                <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-3">{t('contributor.result.suggestedNextSteps')}</h4>
-                <p className="text-foreground leading-relaxed">{result.suggested_first_step}</p>
-              </GlassCard>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.1 }}>
-              <GlassCard variant="subtle" className="p-6">
-                <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-3">{t('contributor.result.growthRecommendations')}</h4>
-                <p className="text-foreground leading-relaxed">{result.growth_recommendations}</p>
-              </GlassCard>
-            </motion.div>
-
-            <div className="text-center mt-10">
-              <Button asChild size="lg" className="bg-primary/80 hover:bg-primary text-primary-foreground px-8 py-6 text-lg rounded-xl">
-                <a href="/">
-                  {t('contributor.result.exploreUtaab')} <NavArrowRight className="w-5 h-5 ml-2" strokeWidth={1.5} />
-                </a>
-              </Button>
-            </div>
-          </GlassCard>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
-export default AssessmentResult;

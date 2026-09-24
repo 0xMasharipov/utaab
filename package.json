@@ -10,6 +10,7 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
+    "test:contributor": "node --experimental-strip-types scripts/contributor/assessment.test.ts",
     "preview": "vite preview"
   },
   "dependencies": {

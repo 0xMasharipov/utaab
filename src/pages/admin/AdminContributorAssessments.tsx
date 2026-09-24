@@ -4,9 +4,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Search, ChevronDown, ChevronUp, GitMerge } from 'lucide-react';
 import { format } from 'date-fns';
+import AssessmentResult from '@/components/contributor/AssessmentResult';
+import { validateResult, isRecord } from '../../../supabase/functions/_shared/contributor-contract';
+import '@/components/contributor/contributor.css';
 
 export default function AdminContributorAssessments() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -29,13 +31,13 @@ export default function AdminContributorAssessments() {
     a.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const getResult = (item: any) => {
-    try {
-      return item.ai_result as any;
-    } catch {
-      return null;
-    }
-  };
+  interface LegacyReport {
+    primaryRole?: string; primary_role?: string; secondaryRole?: string;
+    compatibility_score?: number; matchScore?: number; match_score?: number; score?: number;
+    summary?: string; strengths?: string | string[]; growthPaths?: string | string[];
+  }
+  const getResult = (item: { ai_result: unknown }): LegacyReport | null =>
+    isRecord(item.ai_result) ? item.ai_result as LegacyReport : null;
 
   return (
     <div className="space-y-6">
@@ -66,7 +68,9 @@ export default function AdminContributorAssessments() {
             const result = getResult(item);
             const isExpanded = expandedId === item.id;
             const primaryRole = result?.primaryRole || result?.primary_role || 'N/A';
-            const matchScore = result?.matchScore || result?.match_score || result?.score || null;
+            const matchScore = result?.compatibility_score ?? result?.matchScore ?? result?.match_score ?? result?.score ?? null;
+            let coachingReport = null;
+            try { coachingReport = validateResult(item.ai_result, isRecord(item.form_data) ? item.form_data : undefined); } catch { /* Older report formats use the original renderer. */ }
 
             return (
               <Card key={item.id} className="glass-panel overflow-hidden">
@@ -85,7 +89,7 @@ export default function AdminContributorAssessments() {
                       </div>
                       <div className="hidden sm:flex items-center gap-3">
                         <Badge variant="outline">{primaryRole}</Badge>
-                        {matchScore && (
+                        {matchScore !== null && (
                           <Badge className="bg-primary/20 text-primary border-0">
                             {matchScore}%
                           </Badge>
@@ -104,7 +108,7 @@ export default function AdminContributorAssessments() {
 
                   {isExpanded && result && (
                     <div className="border-t border-border/50 p-4 space-y-4 bg-muted/5">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {coachingReport ? <div className="contributor-studio p-5 rounded-lg"><AssessmentResult result={coachingReport} isLoading={false} embedded /></div> : <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {result.summary && (
                           <div>
                             <h4 className="text-sm font-semibold mb-1">Profile Summary</h4>
@@ -137,7 +141,7 @@ export default function AdminContributorAssessments() {
                             </div>
                           </div>
                         )}
-                      </div>
+                      </div>}
                       {item.form_data && (
                         <details className="text-xs">
                           <summary className="cursor-pointer text-muted-foreground hover:text-foreground">

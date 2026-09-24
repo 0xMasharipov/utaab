@@ -48,7 +48,7 @@ const Index = () => {
             .select('*')
             .eq('status', 'published')
             .order('publish_date', { ascending: false, nullsFirst: false })
-            .limit(6);
+            .limit(3);
           if (error) throw error;
           return data;
         },

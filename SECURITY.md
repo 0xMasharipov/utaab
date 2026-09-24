@@ -76,7 +76,7 @@ script-src 'self' 'nonce-{RANDOM}';
 style-src 'self' 'nonce-{RANDOM}' 'unsafe-inline';
 img-src 'self' https: data:;
 font-src 'self' data:;
-connect-src 'self' https://*.supabase.co https://ai.gateway.lovable.dev;
+connect-src 'self' https://*.supabase.co https://ai.gateway.lovable.dev https://mainnet.base.org https://sepolia.base.org;
 media-src 'self' https:;
 object-src 'none';
 frame-ancestors 'none';
