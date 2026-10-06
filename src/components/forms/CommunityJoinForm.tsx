@@ -391,7 +391,7 @@ export const CommunityJoinForm = () => {
             <button type="button" onClick={handleNext} className="join-btn-primary w-full">
               {t('join.next')}
               <ChevronRight className="ml-2 h-5 w-5" />
-            </Button>
+            </button>
           </motion.div>
         )}
 
@@ -463,11 +463,11 @@ export const CommunityJoinForm = () => {
               <button type="button" onClick={handleBack} className="join-btn-ghost flex-1">
                 <ChevronLeft className="mr-2 h-5 w-5" />
                 {t('join.back')}
-              </Button>
+              </button>
               <button type="button" onClick={handleNext} className="join-btn-primary flex-1">
                 {t('join.next')}
                 <ChevronRight className="ml-2 h-5 w-5" />
-              </Button>
+              </button>
             </div>
           </motion.div>
         )}
@@ -585,11 +585,11 @@ export const CommunityJoinForm = () => {
               <button type="button" onClick={handleBack} className="join-btn-ghost flex-1">
                 <ChevronLeft className="mr-2 h-5 w-5" />
                 {t('join.back')}
-              </Button>
+              </button>
               <button type="button" onClick={handleNext} className="join-btn-primary flex-1">
                 {t('join.next')}
                 <ChevronRight className="ml-2 h-5 w-5" />
-              </Button>
+              </button>
             </div>
           </motion.div>
         )}
@@ -647,10 +647,10 @@ export const CommunityJoinForm = () => {
               <button type="button" onClick={handleBack} className="join-btn-ghost flex-1">
                 <ChevronLeft className="mr-2 h-5 w-5" />
                 {t('join.back')}
-              </Button>
+              </button>
               <button type="submit" className="join-btn-primary flex-1" disabled={isSubmitting}>
                 {isSubmitting ? t('join.submitting') : t('join.submit')}
-              </Button>
+              </button>
             </div>
           </motion.div>
         )}
