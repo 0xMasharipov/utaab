@@ -294,10 +294,10 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
             launcherRef.current?.focus();
           }}
           style={isDesktop && !isMaximized ? {
-            left: windowRect.x,
-            top: windowRect.y,
-            width: windowRect.width,
-            height: windowRect.height,
+            '--cutii-window-x': `${windowRect.x}px`,
+            '--cutii-window-y': `${windowRect.y}px`,
+            '--cutii-window-width': `${windowRect.width}px`,
+            '--cutii-window-height': `${windowRect.height}px`,
           } : undefined}
           data-desktop={isDesktop ? 'true' : 'false'}
           data-maximized={isMaximized ? 'true' : 'false'}

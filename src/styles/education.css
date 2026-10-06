@@ -333,8 +333,12 @@
 }
 
 .cutii-panel[data-desktop='true'][data-maximized='false'] {
+  top: var(--cutii-window-y) !important;
   right: auto !important;
   bottom: auto !important;
+  left: var(--cutii-window-x) !important;
+  width: var(--cutii-window-width) !important;
+  height: var(--cutii-window-height) !important;
   min-width: 500px;
   min-height: 400px;
   max-width: calc(100vw - 32px) !important;
