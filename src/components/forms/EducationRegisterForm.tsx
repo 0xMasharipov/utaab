@@ -237,6 +237,9 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
 
       if (data.user) {
         await logLogin(data.user.id, otpEmail, 'email');
+        if (mode === 'signin') {
+          await logSecurityEvent('student_login_success', 'low', { email: otpEmail });
+        }
       }
 
       toast({
@@ -280,6 +283,22 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
     // Set cooldown immediately to block double-clicks even if request is slow
     setResendCooldown(60);
     try {
+      if (mode === 'signin') {
+        const { error } = await supabase.auth.signInWithOtp({
+          email: otpEmail,
+          options: { shouldCreateUser: false },
+        });
+        if (error) throw error;
+
+        setConfirmationMode('code');
+        setOtpType('email');
+        toast({
+          title: 'Code resent',
+          description: `We sent a new verification code to ${otpEmail}.`,
+        });
+        return;
+      }
+
       const { data: resendResp, error } = await supabase.functions.invoke(
         'education-resend-otp',
         {
@@ -365,8 +384,9 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
           return;
         }
 
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: formData.email.trim().toLowerCase(),
+        const normalizedEmail = formData.email.trim().toLowerCase();
+        const { error } = await supabase.auth.signInWithPassword({
+          email: normalizedEmail,
           password: formData.password,
         });
 
@@ -420,18 +440,28 @@ export const EducationRegisterForm = ({ initialMode = 'signup' }: { initialMode?
           return;
         }
 
-        await logSecurityEvent('student_login_success', 'low', { email: formData.email });
-        
-        if (data.user) {
-          await logLogin(data.user.id, formData.email, 'email');
-        }
+        // Password is the first factor only. End that session before requesting
+        // the email code so access is granted only after OTP verification.
+        const { error: signOutError } = await supabase.auth.signOut();
+        if (signOutError) throw signOutError;
+
+        const { error: otpError } = await supabase.auth.signInWithOtp({
+          email: normalizedEmail,
+          options: { shouldCreateUser: false },
+        });
+        if (otpError) throw otpError;
+
+        setOtpEmail(normalizedEmail);
+        setOtpType('email');
+        setConfirmationMode('code');
+        setOtpCode('');
+        setAwaitingOtp(true);
+        setResendCooldown(60);
 
         toast({
-          title: t('education.registration.welcomeBack'),
-          description: t('education.registration.signInSuccess'),
+          title: 'Verification required',
+          description: `We sent a 6-digit verification code to ${normalizedEmail}.`,
         });
-
-        navigate('/education');
       } catch (error: any) {
         console.error('Sign in failed:', error);
         toast({
