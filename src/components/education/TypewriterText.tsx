@@ -7,13 +7,11 @@ interface TypewriterTextProps {
 }
 
 export const TypewriterText = ({ text, speed = 30, onComplete }: TypewriterTextProps) => {
-  const [displayedText, setDisplayedText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     if (currentIndex < text.length) {
       const timeout = setTimeout(() => {
-        setDisplayedText(prev => prev + text[currentIndex]);
         setCurrentIndex(prev => prev + 1);
       }, speed);
       return () => clearTimeout(timeout);
@@ -24,15 +22,22 @@ export const TypewriterText = ({ text, speed = 30, onComplete }: TypewriterTextP
 
   // Reset when text changes
   useEffect(() => {
-    setDisplayedText('');
     setCurrentIndex(0);
   }, [text]);
 
+  const settledText = text.slice(0, Math.max(0, currentIndex - 1));
+  const enteringCharacter = currentIndex > 0 ? text[currentIndex - 1] : '';
+
   return (
-    <span className="whitespace-pre-wrap">
-      {displayedText}
+    <span className="cutii-reply-reveal whitespace-pre-wrap">
+      {settledText}
+      {enteringCharacter && (
+        <span key={currentIndex} className="cutii-reply-reveal__character">
+          {enteringCharacter}
+        </span>
+      )}
       {currentIndex < text.length && (
-        <span className="inline-block w-0.5 h-4 bg-primary ml-0.5 animate-pulse" />
+        <span className="cutii-reply-reveal__cursor" aria-hidden="true" />
       )}
     </span>
   );
