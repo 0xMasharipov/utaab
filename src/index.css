@@ -493,3 +493,33 @@
 }
 .animate-fade-up      { animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
+
+/* Join form */
+.join-aura { background: radial-gradient(60% 50% at 75% 40%, hsl(var(--accent) / 0.14), transparent 70%); }
+.join-card {
+  position: relative;
+  background: linear-gradient(160deg, hsl(var(--card) / 0.55), hsl(var(--background) / 0.35));
+  border: 1px solid hsl(var(--accent) / 0.22);
+  box-shadow: 0 30px 80px -30px hsl(var(--accent) / 0.35), inset 0 1px 0 hsl(var(--foreground) / 0.06);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+.join-card::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(120deg, hsl(var(--accent) / 0.25), transparent 35%, transparent 70%, hsl(var(--accent) / 0.15));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; padding: 1px;
+}
+.join-input {
+  height: 3rem; border-radius: 0.9rem;
+  background: hsl(var(--background) / 0.45);
+  border: 1px solid hsl(var(--border) / 0.6);
+  color: hsl(var(--foreground));
+  transition: border-color .2s, box-shadow .2s, background .2s;
+}
+textarea.join-input { height: auto; }
+.join-input:focus, .join-input:focus-visible {
+  outline: none; border-color: hsl(var(--accent));
+  box-shadow: 0 0 0 4px hsl(var(--accent) / 0.18);
+  background: hsl(var(--background) / 0.65);
+}
