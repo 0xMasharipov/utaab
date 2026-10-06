@@ -49,9 +49,8 @@ const ProfileCard = ({
 
   useEffect(() => {
     if (!enableTilt) return;
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const coarse = window.matchMedia('(pointer: coarse)').matches;
-    setTiltEnabled(!reduced && (!coarse || enableMobileTilt));
+    setTiltEnabled(!coarse || enableMobileTilt);
   }, [enableTilt, enableMobileTilt]);
 
   const handlePointerMove = useCallback(

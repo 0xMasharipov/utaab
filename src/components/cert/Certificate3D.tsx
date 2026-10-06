@@ -9,7 +9,7 @@ export default function Certificate3D() {
   const { t } = useTranslation();
   const stage = useRef<HTMLDivElement>(null);
   const inView = useInView(stage, { amount: 0.15 });
-  const [reduced, setReduced] = useState(true);
+  const reduced = false;
   const [hovered, setHovered] = useState(false);
   const [finePointer, setFinePointer] = useState(false);
   const x = useMotionValue(8);
@@ -19,10 +19,9 @@ export default function Certificate3D() {
 
   useEffect(() => {
     const media = window.matchMedia('(hover: hover) and (pointer: fine)');
-    const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const update = () => { setFinePointer(media.matches); setReduced(motionPreference.matches); };
-    update(); media.addEventListener('change', update); motionPreference.addEventListener('change', update);
-    return () => { media.removeEventListener('change', update); motionPreference.removeEventListener('change', update); };
+    const update = () => setFinePointer(media.matches);
+    update(); media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
   }, []);
 
   useEffect(() => {

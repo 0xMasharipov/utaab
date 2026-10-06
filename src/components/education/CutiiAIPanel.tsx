@@ -35,7 +35,6 @@ export interface CutiiAIPanelProps {
 
 const CutiiAvatar = ({ className = '' }: { className?: string }) => (
   <picture className={className}>
-    <source media="(prefers-reduced-motion: reduce)" srcSet={cutiiPoster} />
     <img src={cutiiAnimated} alt="" className="h-full w-full object-contain" />
   </picture>
 );
