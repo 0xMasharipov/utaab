@@ -1,8 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
 import { User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import AnimatedImage from '@/components/common/AnimatedImage';
-import utaabMark from '@/assets/utaab-logo-diamond.png';
 
 export interface ProfileCardProps {
   avatarUrl?: string;
@@ -12,19 +10,10 @@ export interface ProfileCardProps {
   status?: string;
   contactText?: string;
   showUserInfo?: boolean;
-  enableTilt?: boolean;
-  enableMobileTilt?: boolean;
-  mobileTiltSensitivity?: number;
-  behindGlowEnabled?: boolean;
-  behindGlowColor?: string;
-  behindGlowSize?: number;
   className?: string;
   onContactClick?: () => void;
   onClick?: () => void;
 }
-
-const GRAIN =
-  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E\")";
 
 const ProfileCard = ({
   avatarUrl,
@@ -34,78 +23,19 @@ const ProfileCard = ({
   status,
   contactText = 'Contact',
   showUserInfo = true,
-  enableTilt = true,
-  enableMobileTilt = true,
-  mobileTiltSensitivity = 5,
-  behindGlowEnabled = true,
-  behindGlowColor = 'hsl(217 91% 60% / 0.45)',
-  behindGlowSize = 320,
   className,
   onContactClick,
   onClick,
-}: ProfileCardProps) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [tiltEnabled, setTiltEnabled] = useState(false);
-
-  useEffect(() => {
-    if (!enableTilt) return;
-    const coarse = window.matchMedia('(pointer: coarse)').matches;
-    setTiltEnabled(!coarse || enableMobileTilt);
-  }, [enableTilt, enableMobileTilt]);
-
-  const handlePointerMove = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
-      const el = cardRef.current;
-      if (!el || !tiltEnabled) return;
-      const rect = el.getBoundingClientRect();
-      const px = (e.clientX - rect.left) / rect.width;
-      const py = (e.clientY - rect.top) / rect.height;
-      const sensitivity = e.pointerType === 'touch' ? mobileTiltSensitivity : 10;
-      el.style.setProperty('--px', `${px * 100}%`);
-      el.style.setProperty('--py', `${py * 100}%`);
-      el.style.setProperty('--rx', `${(0.5 - py) * sensitivity}deg`);
-      el.style.setProperty('--ry', `${(px - 0.5) * sensitivity}deg`);
-    },
-    [tiltEnabled, mobileTiltSensitivity],
-  );
-
-  const resetTilt = useCallback(() => {
-    const el = cardRef.current;
-    if (!el) return;
-    el.style.setProperty('--rx', '0deg');
-    el.style.setProperty('--ry', '0deg');
-    el.style.setProperty('--px', '50%');
-    el.style.setProperty('--py', '50%');
-  }, []);
-
-  return (
-    <div className={cn('relative', className)} style={{ perspective: '1000px' }}>
-      {/* Behind glow */}
-      {behindGlowEnabled && (
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-1/2 top-1/2 -z-10 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl opacity-60"
-          style={{
-            width: behindGlowSize,
-            height: behindGlowSize,
-            background: `radial-gradient(circle, ${behindGlowColor} 0%, transparent 70%)`,
-          }}
-        />
-      )}
-
+}: ProfileCardProps) => (
+    <div className={cn('relative', className)}>
       <div
-        ref={cardRef}
-        onPointerMove={handlePointerMove}
-        onPointerLeave={resetTilt}
         onClick={onClick}
         role={onClick ? 'button' : undefined}
         tabIndex={onClick ? 0 : undefined}
         onKeyDown={(e) => e.key === 'Enter' && onClick?.()}
         aria-label={onClick ? name : undefined}
-        className="group relative aspect-[4/5] w-full cursor-pointer overflow-hidden rounded-[28px] border border-white/[0.10] shadow-xl transition-[transform,border-color] duration-200 ease-out will-change-transform motion-safe:hover:border-white/25"
+        className="group relative aspect-[4/5] w-full cursor-pointer overflow-hidden rounded-[28px] border border-white/[0.10] shadow-xl transition-colors duration-200 motion-safe:hover:border-white/25"
         style={{
-          transform: 'rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))',
-          transformStyle: 'preserve-3d',
           background:
             'linear-gradient(160deg, hsl(217 60% 18% / 0.9) 0%, hsl(222 47% 9% / 0.95) 55%, hsl(220 60% 14% / 0.9) 100%)',
         }}
@@ -116,7 +46,7 @@ const ProfileCard = ({
             src={avatarUrl}
             alt={name}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 ease-out motion-safe:group-hover:scale-[1.03]"
+            className="h-full w-full object-cover"
             containerClassName="absolute inset-0 h-full w-full"
           />
         ) : (
@@ -124,67 +54,6 @@ const ProfileCard = ({
             <User className="h-20 w-20 text-muted-foreground/50" />
           </div>
         )}
-
-        {/* Holographic sheen following the pointer */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 z-10 opacity-40 mix-blend-color-dodge transition-opacity duration-300 group-hover:opacity-70"
-          style={{
-            background:
-              'radial-gradient(circle at var(--px, 50%) var(--py, 50%), hsl(199 89% 60% / 0.45) 0%, hsl(217 91% 60% / 0.28) 30%, transparent 60%)',
-          }}
-        />
-        {/* Glare */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 z-10 opacity-25 mix-blend-overlay"
-          style={{
-            background:
-              'linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.55) 48%, transparent 62%)',
-          }}
-        />
-        {/* Grain */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 z-10 opacity-[0.10] mix-blend-soft-light"
-          style={{ backgroundImage: GRAIN, backgroundSize: '140px 140px' }}
-        />
-
-        {/* Holographic grainy UTAAB corner mark (top-left) */}
-        <div aria-hidden className="pointer-events-none absolute left-4 top-4 z-20 h-9 w-9">
-          <img
-            src={utaabMark}
-            alt=""
-            className="h-full w-full object-contain opacity-40"
-            style={{ filter: 'saturate(1.6) drop-shadow(0 0 6px hsl(199 89% 60% / 0.55))' }}
-          />
-          <div
-            className="absolute inset-0 opacity-60 mix-blend-color-dodge"
-            style={{
-              background:
-                'linear-gradient(135deg, hsl(199 89% 60% / 0.6), hsl(217 91% 60% / 0.35), hsl(190 90% 70% / 0.5))',
-              WebkitMaskImage: `url(${utaabMark})`,
-              maskImage: `url(${utaabMark})`,
-              WebkitMaskSize: 'contain',
-              maskSize: 'contain',
-              WebkitMaskRepeat: 'no-repeat',
-              maskRepeat: 'no-repeat',
-            }}
-          />
-          <div
-            className="absolute inset-0 opacity-30 mix-blend-overlay"
-            style={{
-              backgroundImage: GRAIN,
-              backgroundSize: '60px 60px',
-              WebkitMaskImage: `url(${utaabMark})`,
-              maskImage: `url(${utaabMark})`,
-              WebkitMaskSize: 'contain',
-              maskSize: 'contain',
-              WebkitMaskRepeat: 'no-repeat',
-              maskRepeat: 'no-repeat',
-            }}
-          />
-        </div>
 
         {/* Bottom scrim */}
         <div
@@ -234,6 +103,5 @@ const ProfileCard = ({
       </div>
     </div>
   );
-};
 
 export default ProfileCard;

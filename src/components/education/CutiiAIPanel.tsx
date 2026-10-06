@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react';
 import { Expand, SendDiagonal, Xmark } from 'iconoir-react';
-import { Orb } from '@yogesharc/thinking-orbs';
 import { useTranslation } from 'react-i18next';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
@@ -38,9 +37,26 @@ const CutiiAvatar = ({ className = '' }: { className?: string }) => (
   </picture>
 );
 
+const ThinkingOrb = ({ size = 'large', active = true, label }: {
+  size?: 'small' | 'large';
+  active?: boolean;
+  label?: string;
+}) => (
+  <span
+    className={`cutii-orb cutii-orb--${size}${active ? ' is-active' : ''}`}
+    role={label ? 'img' : undefined}
+    aria-label={label}
+    aria-hidden={label ? undefined : true}
+  >
+    <span className="cutii-orb__dot cutii-orb__dot--one" />
+    <span className="cutii-orb__dot cutii-orb__dot--two" />
+    <span className="cutii-orb__dot cutii-orb__dot--three" />
+  </span>
+);
+
 const ThinkingLoader = ({ label }: { label: string }) => (
   <div className="flex items-center gap-2 text-sm text-slate-300" role="status">
-    <Orb state="reasoning" size={20} label={label} className="text-sky-400" />
+    <ThinkingOrb label={label} />
     <span>{label}</span>
   </div>
 );
@@ -316,7 +332,7 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
                   {t('education.cutii.title')}
                 </DialogTitle>
                 <p className="mt-0.5 flex items-center gap-1.5 text-xs text-slate-400">
-                  <Orb state={isLoading ? 'reasoning' : 'base'} size={14} className="text-sky-400" />
+                   <ThinkingOrb size="small" active={isLoading} />
                   {t('education.cutii.status', { defaultValue: 'Course assistant' })}
                 </p>
               </div>
