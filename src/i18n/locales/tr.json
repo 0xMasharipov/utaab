@@ -664,6 +664,13 @@
   },
   "join": {
     "title": "UTAA Blockchain'e Katıl",
+    "communityTitleStart": "Topluluğumuza",
+    "communityTitleEnd": "katılın",
+    "communitySubtitle": "UTAAB ekosisteminin bir parçası olmak için başvurun.",
+    "stepShort1": "Profil",
+    "stepShort2": "Deneyim",
+    "stepShort3": "Portfolyo",
+    "stepShort4": "Son",
     "subtitle": "Büyüyen topluluğumuzun bir parçası olun",
     "step1": "Profil",
     "step2": "Deneyim ve İlgi Alanları",

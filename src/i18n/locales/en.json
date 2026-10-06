@@ -664,6 +664,13 @@
   },
   "join": {
     "title": "Join UTAA Blockchain",
+    "communityTitleStart": "Join our",
+    "communityTitleEnd": "community",
+    "communitySubtitle": "Apply to become a part of the UTAAB ecosystem.",
+    "stepShort1": "Profile",
+    "stepShort2": "Experience",
+    "stepShort3": "Portfolio",
+    "stepShort4": "Final",
     "subtitle": "Become part of our growing community",
     "step1": "Profile",
     "step2": "Experience & Interests",
