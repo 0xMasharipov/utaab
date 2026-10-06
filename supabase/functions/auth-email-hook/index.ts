@@ -1,6 +1,6 @@
 import * as React from 'npm:react@18.3.1'
 import { renderAsync } from 'npm:@react-email/components@0.0.22'
-import { createAuthEmailHandler } from 'npm:@lovable.dev/email-js@0.1.0'
+import { createAuthEmailHandler } from 'npm:@lovable.dev/email-js@0.3.1'
 import { SignupEmail } from '../_shared/email-templates/signup.tsx'
 import { InviteEmail } from '../_shared/email-templates/invite.tsx'
 import { MagicLinkEmail } from '../_shared/email-templates/magic-link.tsx'
@@ -136,6 +136,7 @@ const handler = createAuthEmailHandler({
           siteUrl: SITE_URL,
           recipient: data.email,
           confirmationUrl: data.url,
+          token: data.token ?? undefined,
         }),
     },
     invite: {
@@ -148,12 +149,14 @@ const handler = createAuthEmailHandler({
         }),
     },
     magiclink: {
-      subject: 'Your login link',
+      subject: 'Your UTAAB verification code',
       render: (data) =>
-        React.createElement(MagicLinkEmail, {
-          siteName: SITE_NAME,
-          confirmationUrl: data.url,
-        }),
+        data.token
+          ? React.createElement(ReauthenticationEmail, { token: data.token })
+          : React.createElement(MagicLinkEmail, {
+              siteName: SITE_NAME,
+              confirmationUrl: data.url,
+            }),
     },
     recovery: {
       subject: 'Reset your password',
