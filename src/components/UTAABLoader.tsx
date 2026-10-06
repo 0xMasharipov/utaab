@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import loaderMark from "@/assets/utaab-loader-mark.svg";
 
 interface UTAABLoaderProps {
   onComplete?: () => void;
@@ -7,19 +6,16 @@ interface UTAABLoaderProps {
 
 export default function UTAABLoader({ onComplete }: UTAABLoaderProps) {
   const [visible, setVisible] = useState(true);
-  const [prefersReducedMotion] = useState(
-    () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-  );
   const completedRef = useRef(false);
 
   useEffect(() => {
     const exitTimer = window.setTimeout(
       () => setVisible(false),
-      prefersReducedMotion ? 300 : 1050,
+      1050,
     );
 
     return () => window.clearTimeout(exitTimer);
-  }, [prefersReducedMotion]);
+  }, []);
 
   useEffect(() => {
     if (visible || completedRef.current) return;
@@ -28,10 +24,10 @@ export default function UTAABLoader({ onComplete }: UTAABLoaderProps) {
       if (completedRef.current) return;
       completedRef.current = true;
       onComplete?.();
-    }, prefersReducedMotion ? 260 : 520);
+    }, 520);
 
     return () => window.clearTimeout(safetyTimer);
-  }, [visible, prefersReducedMotion, onComplete]);
+  }, [visible, onComplete]);
 
   const handleTransitionEnd = (event: React.TransitionEvent<HTMLDivElement>) => {
     if (
@@ -55,17 +51,17 @@ export default function UTAABLoader({ onComplete }: UTAABLoaderProps) {
       onTransitionEnd={handleTransitionEnd}
       style={{
         opacity: visible ? 1 : 0,
-        transitionDuration: prefersReducedMotion ? "200ms" : "420ms",
+        transitionDuration: "420ms",
       }}
     >
       <div className="utaab-loader-mark">
         <div className="utaab-loader-halo" />
-        <img
-          src={loaderMark}
-          alt=""
-          draggable={false}
-          className="utaab-loader-vector"
-        />
+        <svg className="utaab-loader-vector" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+          <g className="utaab-loader-piece utaab-loader-piece--top"><rect x="43" y="14" width="34" height="34" rx="7" transform="rotate(45 60 31)" /></g>
+          <g className="utaab-loader-piece utaab-loader-piece--left"><rect x="14" y="43" width="34" height="34" rx="7" transform="rotate(45 31 60)" /></g>
+          <g className="utaab-loader-piece utaab-loader-piece--right"><rect x="72" y="43" width="34" height="34" rx="7" transform="rotate(45 89 60)" /></g>
+          <g className="utaab-loader-piece utaab-loader-piece--bottom"><rect x="43" y="72" width="34" height="34" rx="7" transform="rotate(45 60 89)" /></g>
+        </svg>
       </div>
 
       <style>{`
@@ -102,6 +98,25 @@ export default function UTAABLoader({ onComplete }: UTAABLoaderProps) {
           filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.12));
         }
 
+        .utaab-loader-piece {
+          fill: #fff;
+          opacity: 0;
+          transform-box: fill-box;
+          transform-origin: center;
+          animation: utaab-loader-assemble 680ms cubic-bezier(.22, 1, .36, 1) both;
+        }
+
+        .utaab-loader-piece--top { --piece-x: 0px; --piece-y: -15px; --piece-rotation: -5deg; }
+        .utaab-loader-piece--left { --piece-x: -15px; --piece-y: 0px; --piece-rotation: -5deg; animation-delay: 60ms; }
+        .utaab-loader-piece--right { --piece-x: 15px; --piece-y: 0px; --piece-rotation: 5deg; animation-delay: 60ms; }
+        .utaab-loader-piece--bottom { --piece-x: 0px; --piece-y: 15px; --piece-rotation: 5deg; animation-delay: 120ms; }
+
+        @keyframes utaab-loader-assemble {
+          0% { opacity: 0; transform: translate(var(--piece-x), var(--piece-y)) rotate(var(--piece-rotation)) scale(.9); }
+          72% { opacity: 1; transform: translate(0, 0) rotate(0) scale(1.035); }
+          100% { opacity: 1; transform: translate(0, 0) rotate(0) scale(1); }
+        }
+
         .utaab-loader-halo {
           position: absolute;
           inset: -42%;
@@ -128,13 +143,6 @@ export default function UTAABLoader({ onComplete }: UTAABLoaderProps) {
           }
         }
 
-        @media (prefers-reduced-motion: reduce) {
-          .utaab-loader-halo {
-            animation: none;
-            opacity: 0.18;
-            transform: scale(1);
-          }
-        }
       `}</style>
     </div>
   );

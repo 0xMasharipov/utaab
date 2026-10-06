@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
-import { SendDiagonal, Xmark } from 'iconoir-react';
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
+import { Expand, SendDiagonal, Xmark } from 'iconoir-react';
 import { Orb } from '@yogesharc/thinking-orbs';
 import { useTranslation } from 'react-i18next';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '@/components/ui/button';
+import { useBreakpoint } from '@/hooks/useBreakpoint';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { TypewriterText } from './TypewriterText';
@@ -49,6 +51,8 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
   const { t } = useTranslation();
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
+  const [windowRect, setWindowRect] = useState({ x: 0, y: 0, width: 860, height: 680 });
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
@@ -60,6 +64,17 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const interactionRef = useRef<{
+    mode: 'drag' | 'resize';
+    edge?: string;
+    startX: number;
+    startY: number;
+    rect: typeof windowRect;
+  } | null>(null);
+  const breakpoint = useBreakpoint();
+  const isDesktop = breakpoint === 'desktop';
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => setUser(session?.user ?? null));
@@ -77,6 +92,102 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
     }
     return () => document.body.classList.remove('cutii-panel-open');
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const frame = window.requestAnimationFrame(() => inputRef.current?.focus());
+    return () => window.cancelAnimationFrame(frame);
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isDesktop) {
+      setIsMaximized(false);
+      return;
+    }
+
+    const fitToViewport = () => {
+      setWindowRect((current) => {
+        const width = Math.min(Math.max(500, current.width), window.innerWidth - 32);
+        const height = Math.min(Math.max(400, current.height), window.innerHeight - 32);
+        return {
+          width,
+          height,
+          x: Math.min(Math.max(16, current.x || (window.innerWidth - width) / 2), window.innerWidth - width - 16),
+          y: Math.min(Math.max(16, current.y || (window.innerHeight - height) / 2), window.innerHeight - height - 16),
+        };
+      });
+    };
+
+    fitToViewport();
+    window.addEventListener('resize', fitToViewport);
+    return () => window.removeEventListener('resize', fitToViewport);
+  }, [isDesktop, isOpen]);
+
+  useEffect(() => {
+    const handlePointerMove = (event: PointerEvent) => {
+      const interaction = interactionRef.current;
+      if (!interaction || !isDesktop || isMaximized) return;
+      const dx = event.clientX - interaction.startX;
+      const dy = event.clientY - interaction.startY;
+
+      if (interaction.mode === 'drag') {
+        setWindowRect((current) => ({
+          ...current,
+          x: Math.min(Math.max(8, interaction.rect.x + dx), window.innerWidth - current.width - 8),
+          y: Math.min(Math.max(8, interaction.rect.y + dy), window.innerHeight - current.height - 8),
+        }));
+        return;
+      }
+
+      const edge = interaction.edge ?? '';
+      let { x, y, width, height } = interaction.rect;
+      if (edge.includes('e')) width = Math.min(window.innerWidth - x - 8, Math.max(500, width + dx));
+      if (edge.includes('s')) height = Math.min(window.innerHeight - y - 8, Math.max(400, height + dy));
+      if (edge.includes('w')) {
+        const nextWidth = Math.min(x + width - 8, Math.max(500, width - dx));
+        x += width - nextWidth;
+        width = nextWidth;
+      }
+      if (edge.includes('n')) {
+        const nextHeight = Math.min(y + height - 8, Math.max(400, height - dy));
+        y += height - nextHeight;
+        height = nextHeight;
+      }
+      setWindowRect({ x, y, width, height });
+    };
+
+    const stopInteraction = () => {
+      interactionRef.current = null;
+      document.body.classList.remove('cutii-window-interacting');
+    };
+
+    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointerup', stopInteraction);
+    window.addEventListener('pointercancel', stopInteraction);
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', stopInteraction);
+      window.removeEventListener('pointercancel', stopInteraction);
+      document.body.classList.remove('cutii-window-interacting');
+    };
+  }, [isDesktop, isMaximized]);
+
+  const startInteraction = (
+    event: ReactPointerEvent<HTMLElement>,
+    mode: 'drag' | 'resize',
+    edge?: string,
+  ) => {
+    if (!isDesktop || isMaximized || event.button !== 0) return;
+    event.preventDefault();
+    interactionRef.current = {
+      mode,
+      edge,
+      startX: event.clientX,
+      startY: event.clientY,
+      rect: windowRect,
+    };
+    document.body.classList.add('cutii-window-interacting');
+  };
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -163,6 +274,7 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
   return (
     <>
       <button
+        ref={launcherRef}
         type="button"
         onClick={() => setIsOpen(true)}
         className="cutii-launcher"
@@ -179,8 +291,26 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
           overlayClassName="cutii-overlay"
           className="cutii-panel"
           onEscapeKeyDown={() => setIsOpen(false)}
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            launcherRef.current?.focus();
+          }}
+          style={isDesktop && !isMaximized ? {
+            left: windowRect.x,
+            top: windowRect.y,
+            width: windowRect.width,
+            height: windowRect.height,
+          } : undefined}
+          data-desktop={isDesktop ? 'true' : 'false'}
+          data-maximized={isMaximized ? 'true' : 'false'}
         >
-          <header className="cutii-panel__header">
+          <header
+            className="cutii-panel__header"
+            onPointerDown={(event) => {
+              if ((event.target as HTMLElement).closest('button')) return;
+              startInteraction(event, 'drag');
+            }}
+          >
             <div className="flex min-w-0 items-center gap-3">
               <CutiiAvatar className="block h-11 w-11 shrink-0 overflow-hidden rounded-xl bg-[#091321]" />
               <div className="min-w-0">
@@ -193,14 +323,31 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
                 </p>
               </div>
             </div>
-            <button
-              type="button"
-              onClick={() => setIsOpen(false)}
-              className="cutii-close"
-              aria-label={t('common.close', { defaultValue: 'Close' })}
-            >
-              <Xmark className="h-5 w-5" strokeWidth={1.7} />
-            </button>
+            <div className="flex items-center gap-1">
+              {isDesktop && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsMaximized((current) => !current)}
+                  className="cutii-close"
+                  aria-label={isMaximized ? 'Restore window' : 'Maximize window'}
+                  title={isMaximized ? 'Restore window' : 'Maximize window'}
+                >
+                  <Expand className={`h-5 w-5 ${isMaximized ? 'rotate-180' : ''}`} strokeWidth={1.7} />
+                </Button>
+              )}
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsOpen(false)}
+                className="cutii-close"
+                aria-label={t('common.close', { defaultValue: 'Close' })}
+              >
+                <Xmark className="h-5 w-5" strokeWidth={1.7} />
+              </Button>
+            </div>
           </header>
 
           <ScrollArea className="min-h-0 flex-1">
@@ -241,6 +388,7 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
               {t('education.cutii.input_placeholder')}
             </label>
             <textarea
+              ref={inputRef}
               id="cutii-message"
               value={input}
               onChange={(event) => setInput(event.target.value)}
@@ -267,6 +415,18 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
               {t('education.cutii.footer_disclaimer')}
             </p>
           </form>
+          {isDesktop && !isMaximized && (
+            <>
+              {['n', 'e', 's', 'w', 'ne', 'se', 'sw', 'nw'].map((edge) => (
+                <span
+                  key={edge}
+                  aria-hidden="true"
+                  className={`cutii-resize-handle cutii-resize-handle--${edge}`}
+                  onPointerDown={(event) => startInteraction(event, 'resize', edge)}
+                />
+              ))}
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </>
