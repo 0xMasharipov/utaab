@@ -15,7 +15,7 @@ const corsHeaders = {
 }
 
 // Configuration
-const SITE_NAME = "utaab"
+const SITE_NAME = "UTAAB"
 const SENDER_DOMAIN = "notify.utaab.org"
 const ROOT_DOMAIN = "utaab.org"
 const FROM_DOMAIN = "utaab.org"
@@ -25,7 +25,7 @@ const SITE_URL = `https://${ROOT_DOMAIN}`
 const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
   signup: SignupEmail,
   invite: InviteEmail,
-  magiclink: MagicLinkEmail,
+  magiclink: ReauthenticationEmail,
   recovery: RecoveryEmail,
   email_change: EmailChangeEmail,
   reauthentication: ReauthenticationEmail,
@@ -44,10 +44,10 @@ const SAMPLE_DATA: Record<string, object> = {
     siteUrl: SAMPLE_PROJECT_URL,
     recipient: SAMPLE_EMAIL,
     confirmationUrl: SAMPLE_PROJECT_URL,
+    token: '123456',
   },
   magiclink: {
-    siteName: SITE_NAME,
-    confirmationUrl: SAMPLE_PROJECT_URL,
+    token: '123456',
   },
   recovery: {
     siteName: SITE_NAME,

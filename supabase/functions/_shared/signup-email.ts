@@ -1,6 +1,6 @@
 import { sendTemplateEmail } from './transactional-email-templates/send-email.ts';
 
-export const SITE_NAME = 'utaab';
+export const SITE_NAME = 'UTAAB';
 export const SITE_URL = 'https://utaab.org';
 export const SENDER_DOMAIN = 'notify.utaab.org';
 export const FROM_DOMAIN = 'utaab.org';
