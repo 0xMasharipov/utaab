@@ -306,6 +306,32 @@ export default function AdminUsers() {
           <h1 className="text-3xl font-bold">Users & Roles</h1>
           <p className="text-muted-foreground">Manage users, roles, and sessions</p>
         </div>
+        <div className="flex gap-2">
+        <Button
+          variant="outline"
+          className="gap-2"
+          disabled={applicants.length === 0}
+          onClick={async () => {
+            const XLSX = await import('xlsx');
+            const fmt = (v: unknown) => Array.isArray(v) ? v.join(', ') : v ?? '';
+            const rows = applicants.map((a: any) => ({
+              'Full name': fmt(a.full_name), Email: fmt(a.email), Telegram: fmt(a.telegram),
+              Department: fmt(a.department), Country: fmt(a.country), City: fmt(a.city),
+              Experience: fmt(a.experience_level), Interests: fmt(a.interests),
+              Tracks: fmt(a.preferred_tracks), 'Hours/week': fmt(a.availability_hours),
+              GitHub: fmt(a.github_url), LinkedIn: fmt(a.linkedin_url), Portfolio: fmt(a.portfolio_url),
+              Motivation: fmt(a.motivation), Status: fmt(a.status), Source: fmt(a.source),
+              'Applied at': a.created_at ? new Date(a.created_at).toLocaleString() : '',
+            }));
+            const ws = XLSX.utils.json_to_sheet(rows);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Members');
+            XLSX.writeFile(wb, `utaab-members-${new Date().toISOString().slice(0, 10)}.xlsx`);
+          }}
+        >
+          <FileUser className="h-4 w-4" />
+          Export members (Excel)
+        </Button>
         <Dialog open={inviteDialogOpen} onOpenChange={setInviteDialogOpen}>
           <DialogTrigger asChild>
             <Button className="gap-2">
@@ -355,6 +381,7 @@ export default function AdminUsers() {
             </div>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       {/* Search */}

@@ -217,7 +217,7 @@ export const CommunityJoinForm = () => {
 
   if (submitted) {
     return (
-      <div className="glass rounded-3xl p-8 md:p-12 text-center">
+      <div className="join-card rounded-[28px] p-8 md:p-12 text-center">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -265,7 +265,7 @@ export const CommunityJoinForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} onKeyDown={handleKeyDown} className="glass rounded-3xl p-6 md:p-12">
+    <form onSubmit={handleSubmit} onKeyDown={handleKeyDown} className="join-card rounded-[28px] p-6 md:p-10">
       {/* Progress Indicator */}
       <div className="flex justify-between mb-8">
         {[1, 2, 3, 4].map((s) => (
@@ -307,7 +307,7 @@ export const CommunityJoinForm = () => {
                   id="full_name"
                   value={formData.full_name || ''}
                   onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                  className="glass border-white/20 focus:border-accent text-foreground"
+                  className="join-input"
                   placeholder={t('join.name')}
                 />
                 {errors.full_name && <p className="text-destructive text-sm mt-1">{errors.full_name}</p>}
@@ -320,7 +320,7 @@ export const CommunityJoinForm = () => {
                   type="email"
                   value={formData.email || ''}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="glass border-white/20 focus:border-accent text-foreground"
+                  className="join-input"
                   placeholder={t('join.email')}
                 />
                 {errors.email && <p className="text-destructive text-sm mt-1">{errors.email}</p>}
@@ -334,7 +334,7 @@ export const CommunityJoinForm = () => {
                   id="telegram"
                   value={formData.telegram || ''}
                   onChange={(e) => setFormData({ ...formData, telegram: e.target.value })}
-                  className="glass border-white/20 focus:border-accent text-foreground"
+                  className="join-input"
                   placeholder="@username"
                 />
               </div>
@@ -345,7 +345,7 @@ export const CommunityJoinForm = () => {
                   id="department"
                   value={formData.department || ''}
                   onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                  className="glass border-white/20 focus:border-accent text-foreground"
+                  className="join-input"
                   placeholder={t('join.department')}
                 />
                 {errors.department && <p className="text-destructive text-sm mt-1">{errors.department}</p>}
@@ -360,7 +360,7 @@ export const CommunityJoinForm = () => {
                     id="country"
                     value={formData.country || ''}
                     onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                    className="glass border-white/20 focus:border-accent text-foreground"
+                    className="join-input"
                   />
                 </div>
                 <div>
@@ -371,7 +371,7 @@ export const CommunityJoinForm = () => {
                     id="city"
                     value={formData.city || ''}
                     onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    className="glass border-white/20 focus:border-accent text-foreground"
+                    className="join-input"
                   />
                 </div>
               </div>
@@ -417,7 +417,7 @@ export const CommunityJoinForm = () => {
                 >
                   <SelectTrigger
                     id="experience_level"
-                    className="glass border-white/20 focus:border-accent text-foreground data-[placeholder]:text-muted-foreground bg-white/5 hover:bg-white/10"
+                    className="join-input data-[placeholder]:text-muted-foreground bg-white/5 hover:bg-white/10"
                   >
                     <SelectValue placeholder={t('join.selectExperience')} />
                   </SelectTrigger>
@@ -493,7 +493,7 @@ export const CommunityJoinForm = () => {
                   type="url"
                   value={formData.github_url || ''}
                   onChange={(e) => setFormData({ ...formData, github_url: e.target.value })}
-                  className="glass border-white/20 focus:border-accent text-foreground"
+                  className="join-input"
                   placeholder="https://github.com/username"
                 />
                 {errors.github_url && <p className="text-destructive text-sm mt-1">{errors.github_url}</p>}
@@ -508,7 +508,7 @@ export const CommunityJoinForm = () => {
                   type="url"
                   value={formData.portfolio_url || ''}
                   onChange={(e) => setFormData({ ...formData, portfolio_url: e.target.value })}
-                  className="glass border-white/20 focus:border-accent text-foreground"
+                  className="join-input"
                   placeholder="https://yoursite.com"
                 />
                 {errors.portfolio_url && <p className="text-destructive text-sm mt-1">{errors.portfolio_url}</p>}
@@ -523,7 +523,7 @@ export const CommunityJoinForm = () => {
                   type="url"
                   value={formData.linkedin_url || ''}
                   onChange={(e) => setFormData({ ...formData, linkedin_url: e.target.value })}
-                  className="glass border-white/20 focus:border-accent text-foreground"
+                  className="join-input"
                   placeholder="https://linkedin.com/in/username"
                 />
                 {errors.linkedin_url && <p className="text-destructive text-sm mt-1">{errors.linkedin_url}</p>}
@@ -537,7 +537,7 @@ export const CommunityJoinForm = () => {
                   min="1"
                   value={formData.availability_hours || ''}
                   onChange={(e) => setFormData({ ...formData, availability_hours: parseInt(e.target.value) || 0 })}
-                  className="glass border-white/20 focus:border-accent text-foreground"
+                  className="join-input"
                   placeholder="10"
                 />
                 {errors.availability_hours && <p className="text-destructive text-sm mt-1">{errors.availability_hours}</p>}
@@ -571,7 +571,7 @@ export const CommunityJoinForm = () => {
                   id="motivation"
                   value={formData.motivation || ''}
                   onChange={(e) => setFormData({ ...formData, motivation: e.target.value })}
-                  className="glass border-white/20 focus:border-accent text-foreground min-h-[120px]"
+                  className="join-input min-h-[120px]"
                   placeholder={t('join.motivationHelper')}
                 />
                 <p className={`text-sm mt-2 ${motivationLength < 300 ? 'text-muted-foreground' : motivationLength > 500 ? 'text-destructive' : 'text-accent'}`}>

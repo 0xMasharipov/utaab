@@ -67,12 +67,14 @@ const Index = () => {
   // The Navbar passes { state: { scrollTo: id } } when the user clicks an
   // Ecosystem/Join link from a non-home page.
   useEffect(() => {
-    const targetId = (location.state as any)?.scrollTo as string | undefined;
+    const targetId =
+      ((location.state as any)?.scrollTo as string | undefined) ||
+      (location.hash ? location.hash.slice(1) : undefined);
     if (!targetId) return;
     if (!showBelowFold) return;
 
     let attempts = 0;
-    const maxAttempts = 30; // ~3s at 100ms
+    const maxAttempts = 60; // ~6s at 100ms
     const tryScroll = () => {
       const el = document.getElementById(targetId);
       if (el) {

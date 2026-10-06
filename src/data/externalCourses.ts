@@ -1,3 +1,5 @@
+import mitCourseImage from '@/assets/courses/blockchain-finance-network.png.asset.json';
+
 export interface ExternalCourse {
   id: string;
   slug: string;
@@ -54,7 +56,7 @@ export const externalCourses: ExternalCourse[] = [
     description_tr: 'Blockchain teknolojisi, kripto para birimleri ve bunların para ve finansal sistemler üzerindeki etkisi hakkında kapsamlı kurs. Eski SEC Başkanı Prof. Gary Gensler tarafından veriliyor.',
     description_ru: 'Всесторонний курс о технологии блокчейн, криптовалютах и их влиянии на денежные и финансовые системы. Преподает проф. Гэри Генслер, бывший председатель SEC.',
     description_ar: 'دورة شاملة حول تقنية البلوكشين والعملات المشفرة وتأثيرها على الأنظمة المالية والنقدية. يدرّسها البروفيسور غاري جينسلر، رئيس هيئة الأوراق المالية السابق.',
-    hero_image: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800',
+    hero_image: mitCourseImage.url,
     level: 'intermediate',
     language: 'en',
     is_free: true,

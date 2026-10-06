@@ -53,7 +53,14 @@ export const Hero = () => {
   };
 
   const scrollToJoin = () => {
-    document.getElementById('join')?.scrollIntoView({ behavior: 'smooth' });
+    const el = document.getElementById('join');
+    if (el) {
+      window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 100, behavior: 'smooth' });
+    } else {
+      // Join section is lazily mounted — let the home page scroll once it renders.
+      window.history.replaceState({ usr: { scrollTo: 'join' }, key: 'join' }, '', '/#join');
+      window.dispatchEvent(new PopStateEvent('popstate', { state: window.history.state }));
+    }
   };
 
   return (
