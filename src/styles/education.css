@@ -332,6 +332,21 @@
   -webkit-backdrop-filter: blur(24px);
 }
 
+.cutii-panel[data-desktop='true'][data-maximized='false'] {
+  right: auto !important;
+  bottom: auto !important;
+  min-width: 500px;
+  min-height: 400px;
+  max-width: calc(100vw - 32px) !important;
+  max-height: calc(100dvh - 32px) !important;
+}
+
+.cutii-panel[data-desktop='true'][data-maximized='true'] {
+  inset: 16px !important;
+  width: calc(100vw - 32px) !important;
+  height: calc(100dvh - 32px) !important;
+}
+
 .cutii-overlay {
   background: rgb(1 5 12 / 0.66) !important;
   backdrop-filter: blur(3px);
@@ -346,6 +361,11 @@
   justify-content: space-between;
   border-bottom: 1px solid var(--edu-border);
   padding: 12px 14px 12px 16px;
+  touch-action: none;
+}
+
+.cutii-panel[data-desktop='true'][data-maximized='false'] .cutii-panel__header {
+  cursor: move;
 }
 
 .cutii-close {
@@ -441,6 +461,53 @@
 .cutii-send:disabled {
   cursor: not-allowed;
   opacity: 0.38;
+}
+
+.cutii-resize-handle {
+  position: absolute;
+  z-index: 3;
+  touch-action: none;
+}
+
+.cutii-resize-handle--n,
+.cutii-resize-handle--s {
+  right: 10px;
+  left: 10px;
+  height: 8px;
+  cursor: ns-resize;
+}
+
+.cutii-resize-handle--n { top: -4px; }
+.cutii-resize-handle--s { bottom: -4px; }
+
+.cutii-resize-handle--e,
+.cutii-resize-handle--w {
+  top: 10px;
+  bottom: 10px;
+  width: 8px;
+  cursor: ew-resize;
+}
+
+.cutii-resize-handle--e { right: -4px; }
+.cutii-resize-handle--w { left: -4px; }
+
+.cutii-resize-handle--ne,
+.cutii-resize-handle--se,
+.cutii-resize-handle--sw,
+.cutii-resize-handle--nw {
+  width: 16px;
+  height: 16px;
+}
+
+.cutii-resize-handle--ne { top: -5px; right: -5px; cursor: nesw-resize; }
+.cutii-resize-handle--se { right: -5px; bottom: -5px; cursor: nwse-resize; }
+.cutii-resize-handle--sw { bottom: -5px; left: -5px; cursor: nesw-resize; }
+.cutii-resize-handle--nw { top: -5px; left: -5px; cursor: nwse-resize; }
+
+body.cutii-window-interacting,
+body.cutii-window-interacting * {
+  cursor: grabbing !important;
+  user-select: none !important;
 }
 
 .cutii-thinking {
@@ -610,6 +677,7 @@
     height: calc(100dvh - 64px) !important;
     border-width: 1px 0 0 !important;
     border-radius: 0 !important;
+    animation: cutii-mobile-enter 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
   .edu-register-link {
@@ -619,15 +687,9 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .education-mode *,
-  .education-mode *::before,
-  .education-mode *::after {
-    scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+@keyframes cutii-mobile-enter {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (prefers-reduced-transparency: reduce) {
