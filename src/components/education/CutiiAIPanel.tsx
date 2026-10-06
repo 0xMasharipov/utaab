@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react';
 import { Expand, SendDiagonal, Xmark } from 'iconoir-react';
 import { Orb } from '@yogesharc/thinking-orbs';
 import { useTranslation } from 'react-i18next';
@@ -293,12 +293,12 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
             event.preventDefault();
             launcherRef.current?.focus();
           }}
-          style={isDesktop && !isMaximized ? {
+          style={isDesktop && !isMaximized ? ({
             '--cutii-window-x': `${windowRect.x}px`,
             '--cutii-window-y': `${windowRect.y}px`,
             '--cutii-window-width': `${windowRect.width}px`,
             '--cutii-window-height': `${windowRect.height}px`,
-          } : undefined}
+          } as CSSProperties) : undefined}
           data-desktop={isDesktop ? 'true' : 'false'}
           data-maximized={isMaximized ? 'true' : 'false'}
         >
