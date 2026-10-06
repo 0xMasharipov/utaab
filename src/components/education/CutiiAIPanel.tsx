@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { SendDiagonal, Xmark } from 'iconoir-react';
+import { Orb } from '@yogesharc/thinking-orbs';
 import { useTranslation } from 'react-i18next';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
@@ -38,11 +39,9 @@ const CutiiAvatar = ({ className = '' }: { className?: string }) => (
 );
 
 const ThinkingLoader = ({ label }: { label: string }) => (
-  <div className="cutii-thinking" role="status" aria-label={label}>
-    {Array.from({ length: 9 }).map((_, index) => (
-      <span key={index} className="cutii-thinking__box" aria-hidden="true" />
-    ))}
-    <span className="sr-only">{label}</span>
+  <div className="flex items-center gap-2 text-sm text-slate-300" role="status">
+    <Orb state="reasoning" size={20} label={label} className="text-sky-400" />
+    <span>{label}</span>
   </div>
 );
 
@@ -188,7 +187,8 @@ export const CutiiAIPanel = ({ courseContext, lessonContext }: CutiiAIPanelProps
                 <DialogTitle className="truncate text-base font-bold text-white">
                   {t('education.cutii.title')}
                 </DialogTitle>
-                <p className="mt-0.5 text-xs text-slate-400">
+                <p className="mt-0.5 flex items-center gap-1.5 text-xs text-slate-400">
+                  <Orb state={isLoading ? 'reasoning' : 'base'} size={14} className="text-sky-400" />
                   {t('education.cutii.status', { defaultValue: 'Course assistant' })}
                 </p>
               </div>
