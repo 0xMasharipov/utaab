@@ -9,6 +9,7 @@ import { useBreakpoint } from '@/hooks/useBreakpoint';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { TypewriterText } from './TypewriterText';
+import { Orb } from '@/components/ui/thinking-orb';
 import cutiiAnimated from '@/assets/cutii-assistant.webp';
 import '@/styles/education.css';
 
@@ -41,23 +42,28 @@ const ThinkingOrb = ({ size = 'large', active = true, label }: {
   size?: 'small' | 'large';
   active?: boolean;
   label?: string;
-}) => (
-  <span
-    className={`cutii-orb cutii-orb--${size}${active ? ' is-active' : ''}`}
-    role={label ? 'img' : undefined}
-    aria-label={label}
-    aria-hidden={label ? undefined : true}
-  >
-    <span className="cutii-orb__dot cutii-orb__dot--one" />
-    <span className="cutii-orb__dot cutii-orb__dot--two" />
-    <span className="cutii-orb__dot cutii-orb__dot--three" />
-  </span>
-);
+}) => {
+  const pixelSize = size === 'small' ? 16 : 22;
+
+  return (
+    <span className={`cutii-thinking-orb cutii-thinking-orb--${size}`}>
+      <Orb
+        state={active ? 'reasoning' : 'base'}
+        size={pixelSize}
+        speed={active ? 1.15 : 0.72}
+        density={1.08}
+        dotSize={1.06}
+        label={label}
+        className="cutii-thinking-orb__svg"
+      />
+    </span>
+  );
+};
 
 const ThinkingLoader = ({ label }: { label: string }) => (
-  <div className="flex items-center gap-2 text-sm text-slate-300" role="status">
+  <div className="cutii-thinking-status" role="status">
     <ThinkingOrb label={label} />
-    <span>{label}</span>
+    <span className="cutii-thinking-status__label">{label}</span>
   </div>
 );
 
