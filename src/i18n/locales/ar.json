@@ -664,6 +664,13 @@
   },
   "join": {
     "title": "انضم إلى UTAA Blockchain",
+    "communityTitleStart": "انضم إلى",
+    "communityTitleEnd": "مجتمعنا",
+    "communitySubtitle": "قدّم طلبك لتصبح جزءًا من منظومة UTAAB.",
+    "stepShort1": "الملف",
+    "stepShort2": "الخبرة",
+    "stepShort3": "الأعمال",
+    "stepShort4": "الأخير",
     "subtitle": "كن جزءًا من مجتمعنا المتنامي",
     "step1": "الملف الشخصي",
     "step2": "الخبرة والاهتمامات",

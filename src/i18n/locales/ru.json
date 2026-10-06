@@ -664,6 +664,13 @@
   },
   "join": {
     "title": "Присоединиться к UTAA Blockchain",
+    "communityTitleStart": "Присоединяйтесь к",
+    "communityTitleEnd": "сообществу",
+    "communitySubtitle": "Подайте заявку, чтобы стать частью экосистемы UTAAB.",
+    "stepShort1": "Профиль",
+    "stepShort2": "Опыт",
+    "stepShort3": "Портфолио",
+    "stepShort4": "Финал",
     "subtitle": "Станьте частью нашего растущего сообщества",
     "step1": "Профиль",
     "step2": "Опыт и интересы",
