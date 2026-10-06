@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { MotionConfig, useReducedMotion } from 'framer-motion';
+import { MotionConfig } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { ArrowLeft } from 'iconoir-react';
@@ -17,7 +17,6 @@ import '@/components/contributor/contributor.css';
 
 export default function ContributorMatch() {
   const { t } = useTranslation();
-  const reduced = useReducedMotion();
   const [searchParams, setSearchParams] = useSearchParams();
   const assessmentView = searchParams.get('view') === 'assessment';
   const [started, setStarted] = useState(assessmentView);
@@ -27,7 +26,7 @@ export default function ContributorMatch() {
   const inFlight = useRef(false);
   const formRef = useRef<HTMLDivElement>(null);
   const overviewRef = useRef<HTMLDivElement>(null);
-  const scrollTo = useCallback((element: HTMLElement | null) => element?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' }), [reduced]);
+  const scrollTo = useCallback((element: HTMLElement | null) => element?.scrollIntoView({ behavior: 'smooth', block: 'start' }), []);
   const changeView = (assessment: boolean) => {
     const next = new URLSearchParams(searchParams);
     if (assessment) next.set('view', 'assessment'); else next.delete('view');

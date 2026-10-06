@@ -671,10 +671,3 @@
     aspect-ratio: 1.13;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .certificate-page *, .certificate-page *::before, .certificate-page *::after {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
-  }
-}

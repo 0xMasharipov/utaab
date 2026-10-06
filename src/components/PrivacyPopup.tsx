@@ -156,8 +156,7 @@ export const PrivacyPopup = ({ onAccept, onCustomize }: PrivacyPopupProps) => {
     onCustomize();
   };
 
-  // Check for prefers-reduced-motion
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const prefersReducedMotion = false;
 
   const backdropAnimationProps = prefersReducedMotion 
     ? {} 

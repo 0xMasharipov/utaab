@@ -50,14 +50,7 @@
       }
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      .piece {
-        animation: none;
-        opacity: 1;
-        transform: none;
-      }
-    }
-  </style>
+      </style>
 
   <g class="piece top">
     <rect x="43" y="14" width="34" height="34" rx="7" transform="rotate(45 60 31)" />

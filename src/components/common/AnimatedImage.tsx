@@ -12,18 +12,9 @@ const AnimatedImage = forwardRef<HTMLImageElement, AnimatedImageProps>(
     // Eager images skip the viewport gate so their fade-in isn't held back
     // by the IntersectionObserver callback.
     const [inView, setInView] = useState(loading === 'eager');
-    const [reducedMotion, setReducedMotion] = useState(false);
+    const reducedMotion = false;
     const containerRef = useRef<HTMLDivElement>(null);
 
-
-    useEffect(() => {
-      // Respect user accessibility preference — skip blur/scale/translate for reduced-motion users.
-      const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
-      setReducedMotion(mql.matches);
-      const onChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-      mql.addEventListener('change', onChange);
-      return () => mql.removeEventListener('change', onChange);
-    }, []);
 
     useEffect(() => {
       const el = containerRef.current;

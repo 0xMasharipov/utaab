@@ -115,7 +115,7 @@ export const CoverflowCarousel = ({
   const [activeIndex, setActiveIndex] = useState(
     clamp(initialIndex, 0, Math.max(count - 1, 0))
   );
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const reducedMotion = false;
   const [colors, setColors] = useState<string[]>([]);
 
   // Animation state kept in refs so the rAF loop never sees stale closures.
@@ -134,14 +134,6 @@ export const CoverflowCarousel = ({
   const runningRef = useRef(false);
   const [inView, setInView] = useState(true);
 
-
-  useEffect(() => {
-    const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setReducedMotion(mql.matches);
-    const onChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-    mql.addEventListener('change', onChange);
-    return () => mql.removeEventListener('change', onChange);
-  }, []);
 
   // Responsive card sizing.
   useLayoutEffect(() => {

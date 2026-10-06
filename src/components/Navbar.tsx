@@ -31,7 +31,7 @@ export const Navbar = () => {
 
   const isRTL = i18n.language === 'ar';
 
-  const [prefersReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const prefersReducedMotion = false;
   const { getTransitionClasses } = useLanguageTransition();
   // Navigation stays visible and reachable everywhere, including the top of the
   // homepage; scrolling only changes its appearance.
