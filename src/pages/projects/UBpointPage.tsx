@@ -5,7 +5,6 @@ import {
   useEffect,
   useRef,
   useState,
-  useSyncExternalStore,
 } from 'react';
 import {
   AnimatePresence,
@@ -45,15 +44,6 @@ const WHATSAPP_URL = 'https://chat.whatsapp.com/HnTcuJYiKAiDpLPnG33mEr';
 const SPONSOR_EMAIL = 'mailto:contact@utaab.org?subject=UBpoint%20Sponsor%20Inquiry';
 const BASE_WALLET = '0x4fF797906D7B56F9Bd2Db382BcB36C97d69A43A9';
 const BASESCAN_URL = `https://basescan.org/address/${BASE_WALLET}`;
-
-const motionPreferenceQuery = '(prefers-reduced-motion: reduce)';
-const subscribeToMotionPreference = (onChange: () => void) => {
-  const query = window.matchMedia(motionPreferenceQuery);
-  query.addEventListener('change', onChange);
-  return () => query.removeEventListener('change', onChange);
-};
-const getMotionPreference = () => window.matchMedia(motionPreferenceQuery).matches;
-const getServerMotionPreference = () => true;
 
 const mobilePlatforms = [
   { key: 'ios', icon: iosIcon, iconClassName: 'h-20 w-20' },
@@ -380,9 +370,7 @@ const ScrollStory = ({ reduceMotion }: { reduceMotion: boolean }) => {
 };
 
 const Story = () => {
-  const reduceMotion = useSyncExternalStore(
-    subscribeToMotionPreference, getMotionPreference, getServerMotionPreference,
-  );
+  const reduceMotion = false;
 
   useEffect(() => {
     // The route is lazy-loaded, so native hash scrolling can precede its anchors.

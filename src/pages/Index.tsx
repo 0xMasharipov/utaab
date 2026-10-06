@@ -78,8 +78,7 @@ const Index = () => {
       if (el) {
         const navbarHeight = 100;
         const top = el.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        window.scrollTo({ top, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+        window.scrollTo({ top, behavior: 'smooth' });
         // Clear the state so a refresh doesn't re-trigger
         navigate(location.pathname, { replace: true, state: {} });
         return;

@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { MotionConfig } from "framer-motion";
 import { LanguageTransitionProvider } from "@/contexts/LanguageTransitionContext";
 import { ADMIN_ROUTES } from "@/config/routes";
 import { usePageViewTracker } from "@/hooks/usePageViewTracker";
@@ -81,6 +82,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Web3Providers>
+      <MotionConfig reducedMotion="never">
       <LanguageTransitionProvider>
         <TooltipProvider>
           <Toaster />
@@ -160,6 +162,7 @@ function App() {
           </BrowserRouter>
         </TooltipProvider>
       </LanguageTransitionProvider>
+      </MotionConfig>
       </Web3Providers>
     </QueryClientProvider>
   );
