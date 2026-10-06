@@ -11,7 +11,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { TypewriterText } from './TypewriterText';
 import cutiiAnimated from '@/assets/cutii-assistant.webp';
-import cutiiPoster from '@/assets/cutii-assistant-poster.webp';
 import '@/styles/education.css';
 
 interface Message {
