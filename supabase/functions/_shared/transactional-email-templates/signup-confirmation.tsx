@@ -8,7 +8,7 @@ export const template = {
   subject: 'Confirm your email',
   displayName: 'Signup confirmation',
   previewData: {
-    siteName: 'utaab',
+    siteName: 'UTAAB',
     siteUrl: 'https://utaab.org',
     recipient: 'user@example.test',
     confirmationUrl: 'https://utaab.org/education',

@@ -1,6 +1,6 @@
 import * as React from 'npm:react@18.3.1'
 import { renderAsync } from 'npm:@react-email/components@0.0.22'
-import { createAuthEmailHandler } from 'npm:@lovable.dev/email-js@0.1.0'
+import { createAuthEmailHandler } from 'npm:@lovable.dev/email-js@0.3.1'
 import { SignupEmail } from '../_shared/email-templates/signup.tsx'
 import { InviteEmail } from '../_shared/email-templates/invite.tsx'
 import { MagicLinkEmail } from '../_shared/email-templates/magic-link.tsx'
@@ -15,7 +15,7 @@ const corsHeaders = {
 }
 
 // Configuration
-const SITE_NAME = "utaab"
+const SITE_NAME = "UTAAB"
 const SENDER_DOMAIN = "notify.utaab.org"
 const ROOT_DOMAIN = "utaab.org"
 const FROM_DOMAIN = "utaab.org"
@@ -25,7 +25,7 @@ const SITE_URL = `https://${ROOT_DOMAIN}`
 const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
   signup: SignupEmail,
   invite: InviteEmail,
-  magiclink: MagicLinkEmail,
+  magiclink: ReauthenticationEmail,
   recovery: RecoveryEmail,
   email_change: EmailChangeEmail,
   reauthentication: ReauthenticationEmail,
@@ -44,10 +44,10 @@ const SAMPLE_DATA: Record<string, object> = {
     siteUrl: SAMPLE_PROJECT_URL,
     recipient: SAMPLE_EMAIL,
     confirmationUrl: SAMPLE_PROJECT_URL,
+    token: '123456',
   },
   magiclink: {
-    siteName: SITE_NAME,
-    confirmationUrl: SAMPLE_PROJECT_URL,
+    token: '123456',
   },
   recovery: {
     siteName: SITE_NAME,
@@ -136,6 +136,7 @@ const handler = createAuthEmailHandler({
           siteUrl: SITE_URL,
           recipient: data.email,
           confirmationUrl: data.url,
+          token: data.token ?? undefined,
         }),
     },
     invite: {
@@ -148,12 +149,14 @@ const handler = createAuthEmailHandler({
         }),
     },
     magiclink: {
-      subject: 'Your login link',
+      subject: 'Your UTAAB verification code',
       render: (data) =>
-        React.createElement(MagicLinkEmail, {
-          siteName: SITE_NAME,
-          confirmationUrl: data.url,
-        }),
+        data.token
+          ? React.createElement(ReauthenticationEmail, { token: data.token })
+          : React.createElement(MagicLinkEmail, {
+              siteName: SITE_NAME,
+              confirmationUrl: data.url,
+            }),
     },
     recovery: {
       subject: 'Reset your password',
