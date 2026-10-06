@@ -74,9 +74,3 @@
   .home-blog-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .home-blog-post:nth-child(3) { display: block; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .home-blog *, .home-blog *::before, .home-blog *::after {
-    animation: none !important;
-    transition: none !important;
-  }
-}

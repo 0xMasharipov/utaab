@@ -434,17 +434,6 @@
     padding-inline: 14px;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .contributor-studio *, .contributor-studio *::before, .contributor-studio *::after {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
-  }
-  .cm-button:hover {
-    transform: none;
-  }
-}
-
 /* Student journey: overview first, then a single focused workspace. */
 .contributor-studio [hidden] { display: none !important; }
 .contributor-studio summary:focus-visible {
@@ -552,11 +541,6 @@
   .cm-loading { grid-template-columns: 1fr; gap: 16px; padding-block: 25px; }
   .cm-loading h2 { font-size: 24px; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .cm-brand-core { animation: none; }
-  .cm-brand-active .cm-brand-core { will-change: auto; }
-}
-
 /* Quiet drafting-grid detail; decorative layers remain static and non-interactive. */
 .contributor-studio :is(h1,h2,h3)[tabindex="-1"]:focus { outline: none; }
 .cm-overview, .cm-assessment-view { position: relative; isolation: isolate; }

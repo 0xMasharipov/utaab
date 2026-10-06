@@ -109,17 +109,6 @@
 
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .ubpoint-story-controls span,
-  .ubpoint-stage-content a {
-    transition: none;
-  }
-
-  .ubpoint-stage-content a:hover {
-    transform: none;
-  }
-}
-
 /* Keep both columns and the controls visible when a phone is rotated. */
 @media (max-height: 520px) {
   .ubpoint-story-grid {
