@@ -266,7 +266,7 @@ export function mountOrb(
   { state: asked, variant, size = 20, speed = 1, label, shape, render = DOTS, density = 1, dotSize = 1, tilt = 20 }: OrbOptions = {},
 ) {
   // A state that doesn't exist (from plain JS, say) falls back to base, and a variant the state doesn't have to its default.
-  const which: OrbState = asked && Object.hasOwn(VARIANTS, asked) ? asked : "base";
+  const which: OrbState = asked && Object.prototype.hasOwnProperty.call(VARIANTS, asked) ? asked : "base";
   const own = variant !== "default" && (VARIANTS[which] as readonly string[]).includes(variant ?? "");
   const state = (own ? `${which}-${variant}` : which) as Look;
   const attrs = { width: size, height: size, viewBox: `0 0 ${size} ${size}`, fill: "currentColor" };
