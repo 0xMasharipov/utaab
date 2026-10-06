@@ -1,3 +1,3 @@
 # Roadmap
 
-- [ ] Restore CUTII chat by correcting the rejected Grok API credential and retesting an authenticated request.
+- [ ] Restore CUTII chat by entering a valid xAI-issued `GROK_API_KEY`; live tests still return “Incorrect API key provided.”
