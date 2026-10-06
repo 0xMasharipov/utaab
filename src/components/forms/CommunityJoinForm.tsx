@@ -267,22 +267,19 @@ export const CommunityJoinForm = () => {
   return (
     <form onSubmit={handleSubmit} onKeyDown={handleKeyDown} className="join-card rounded-[28px] p-6 md:p-10">
       {/* Progress Indicator */}
-      <div className="flex justify-between mb-8">
+      <div className="flex items-start mb-10 px-1">
         {[1, 2, 3, 4].map((s) => (
-          <div key={s} className="flex items-center flex-1">
-            <div
-              className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all ${
-                s <= step ? 'bg-accent text-accent-foreground' : 'glass text-muted-foreground'
-              }`}
-            >
-              {s}
+          <div key={s} className={`flex items-start ${s < 4 ? 'flex-1' : ''}`}>
+            <div className="flex flex-col items-center w-10">
+              <div className={`join-step-dot ${s === step ? 'join-step-dot--active' : s < step ? 'join-step-dot--done' : ''}`}>
+                {s < step ? '✓' : s}
+              </div>
+              <span className={`join-step-label ${s <= step ? 'join-step-label--active' : ''}`}>
+                {t(`join.stepShort${s}`)}
+              </span>
             </div>
             {s < 4 && (
-              <div
-                className={`flex-1 h-1 mx-2 rounded transition-all ${
-                  s < step ? 'bg-accent' : 'bg-white/10'
-                }`}
-              />
+              <div className={`join-step-line ${s < step ? 'join-step-line--done' : ''}`} />
             )}
           </div>
         ))}
@@ -445,10 +442,8 @@ export const CommunityJoinForm = () => {
                       key={interest}
                       type="button"
                       onClick={() => toggleArrayItem('interests', interest)}
-                      className={`glass rounded-xl p-4 text-left transition-all hover:scale-105 ${
-                        formData.interests?.includes(interest)
-                          ? 'bg-accent/20 border-accent text-accent-foreground border-2'
-                          : 'hover:bg-white/10 border border-white/10'
+                      className={`join-chip ${
+                        formData.interests?.includes(interest) ? 'join-chip--active' : ''
                       }`}
                     >
                       <span className="text-sm font-medium">{t(`join.${interest}`)}</span>
@@ -551,10 +546,8 @@ export const CommunityJoinForm = () => {
                       key={track}
                       type="button"
                       onClick={() => toggleArrayItem('preferred_tracks', track)}
-                      className={`glass rounded-xl p-4 text-left transition-all hover:scale-105 ${
-                        formData.preferred_tracks?.includes(track)
-                          ? 'bg-accent/20 border-accent text-accent-foreground border-2'
-                          : 'hover:bg-white/10 border border-white/10'
+                      className={`join-chip ${
+                        formData.preferred_tracks?.includes(track) ? 'join-chip--active' : ''
                       }`}
                     >
                       <span className="text-sm font-medium">{t(`join.${track}`)}</span>
