@@ -381,6 +381,7 @@ export default function AdminUsers() {
             </div>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       {/* Search */}
