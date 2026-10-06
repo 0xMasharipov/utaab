@@ -268,10 +268,14 @@ serve(async (req) => {
       }
     }
 
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    const GROK_API_KEY = Deno.env.get('GROK_API_KEY');
 
-    if (!LOVABLE_API_KEY) {
-      throw new Error('LOVABLE_API_KEY is not configured');
+    if (!GROK_API_KEY) {
+      console.error('GROK_API_KEY is not configured');
+      return new Response(
+        JSON.stringify({ error: 'AI service is not configured', type: 'configuration_error' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     // Simplified system prompt to reduce attack surface
@@ -321,15 +325,15 @@ ${lessonContext.description ? `Description: ${lessonContext.description}` : ''}`
 
     systemPrompt += `\n\nRemember: You are an educational assistant. Stay helpful, clear, and focused on learning.`;
 
-    // Call Lovable AI
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+    // Call xAI from the server so the Grok credential is never exposed to clients.
+    const response = await fetch('https://api.x.ai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+        'Authorization': `Bearer ${GROK_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
+        model: 'grok-4.7',
         messages: [
           { role: 'system', content: systemPrompt },
           ...messages
@@ -366,7 +370,17 @@ ${lessonContext.description ? `Description: ${lessonContext.description}` : ''}`
       }
 
       const errorText = await response.text();
-      throw new Error('AI service error');
+      console.error('Grok API request failed', {
+        status: response.status,
+        body: errorText.slice(0, 1000),
+      });
+      return new Response(
+        JSON.stringify({ error: 'AI service is temporarily unavailable', type: 'provider_error' }),
+        {
+          status: response.status >= 500 ? 500 : response.status,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     const data = await response.json();
