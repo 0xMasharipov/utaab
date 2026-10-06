@@ -302,7 +302,7 @@ export const CommunityJoinForm = () => {
             
             <div className="space-y-4 mb-6">
               <div>
-                <Label htmlFor="full_name" className="text-foreground mb-2 block">{t('join.name')}</Label>
+                <Label htmlFor="full_name" className="join-label">{t('join.name')}</Label>
                 <Input
                   id="full_name"
                   value={formData.full_name || ''}
@@ -314,7 +314,7 @@ export const CommunityJoinForm = () => {
               </div>
 
               <div>
-                <Label htmlFor="email" className="text-foreground mb-2 block">{t('join.email')}</Label>
+                <Label htmlFor="email" className="join-label">{t('join.email')}</Label>
                 <Input
                   id="email"
                   type="email"
@@ -327,8 +327,8 @@ export const CommunityJoinForm = () => {
               </div>
 
               <div>
-                <Label htmlFor="telegram" className="text-foreground mb-2 block">
-                  {t('join.telegram')} <span className="text-muted-foreground text-sm">({t('join.optional')})</span>
+                <Label htmlFor="telegram" className="join-label">
+                  {t('join.telegram')} <span className="text-muted-foreground text-xs normal-case font-normal">({t('join.optional')})</span>
                 </Label>
                 <Input
                   id="telegram"
@@ -340,7 +340,7 @@ export const CommunityJoinForm = () => {
               </div>
 
               <div>
-                <Label htmlFor="department" className="text-foreground mb-2 block">{t('join.department')}</Label>
+                <Label htmlFor="department" className="join-label">{t('join.department')}</Label>
                 <Input
                   id="department"
                   value={formData.department || ''}
@@ -353,8 +353,8 @@ export const CommunityJoinForm = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="country" className="text-foreground mb-2 block">
-                    {t('join.country')} <span className="text-muted-foreground text-sm">({t('join.optional')})</span>
+                  <Label htmlFor="country" className="join-label">
+                    {t('join.country')} <span className="text-muted-foreground text-xs normal-case font-normal">({t('join.optional')})</span>
                   </Label>
                   <Input
                     id="country"
@@ -364,8 +364,8 @@ export const CommunityJoinForm = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="city" className="text-foreground mb-2 block">
-                    {t('join.city')} <span className="text-muted-foreground text-sm">({t('join.optional')})</span>
+                  <Label htmlFor="city" className="join-label">
+                    {t('join.city')} <span className="text-muted-foreground text-xs normal-case font-normal">({t('join.optional')})</span>
                   </Label>
                   <Input
                     id="city"
@@ -388,7 +388,7 @@ export const CommunityJoinForm = () => {
               />
             </div>
 
-            <Button type="button" onClick={handleNext} className="btn-primary w-full">
+            <button type="button" onClick={handleNext} className="join-btn-primary w-full">
               {t('join.next')}
               <ChevronRight className="ml-2 h-5 w-5" />
             </Button>
@@ -408,7 +408,7 @@ export const CommunityJoinForm = () => {
             
             <div className="space-y-6 mb-6">
               <div>
-                <Label htmlFor="experience_level" className="text-foreground mb-3 block">{t('join.experienceLevel')}</Label>
+                <Label htmlFor="experience_level" className="join-label">{t('join.experienceLevel')}</Label>
                 <Select
                   value={formData.experience_level}
                   onValueChange={(value: 'beginner' | 'intermediate' | 'advanced') => 
@@ -417,7 +417,7 @@ export const CommunityJoinForm = () => {
                 >
                   <SelectTrigger
                     id="experience_level"
-                    className="join-input data-[placeholder]:text-muted-foreground bg-white/5 hover:bg-white/10"
+                    className="join-input data-[placeholder]:text-muted-foreground"
                   >
                     <SelectValue placeholder={t('join.selectExperience')} />
                   </SelectTrigger>
@@ -437,7 +437,7 @@ export const CommunityJoinForm = () => {
               </div>
 
               <div>
-                <Label className="text-foreground mb-3 block">{t('join.interests')}</Label>
+                <Label className="join-label">{t('join.interests')}</Label>
                 <p className="text-sm text-muted-foreground mb-3">{t('join.selectInterests')}</p>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {interestOptions.map((interest) => (
@@ -460,11 +460,11 @@ export const CommunityJoinForm = () => {
             </div>
 
             <div className="flex gap-3">
-              <Button type="button" onClick={handleBack} variant="outline" className="flex-1 glass hover:bg-white/10">
+              <button type="button" onClick={handleBack} className="join-btn-ghost flex-1">
                 <ChevronLeft className="mr-2 h-5 w-5" />
                 {t('join.back')}
               </Button>
-              <Button type="button" onClick={handleNext} className="btn-primary flex-1">
+              <button type="button" onClick={handleNext} className="join-btn-primary flex-1">
                 {t('join.next')}
                 <ChevronRight className="ml-2 h-5 w-5" />
               </Button>
@@ -485,8 +485,8 @@ export const CommunityJoinForm = () => {
             
             <div className="space-y-4 mb-6">
               <div>
-                <Label htmlFor="github_url" className="text-foreground mb-2 block">
-                  {t('join.github')} <span className="text-muted-foreground text-sm">({t('join.optional')})</span>
+                <Label htmlFor="github_url" className="join-label">
+                  {t('join.github')} <span className="text-muted-foreground text-xs normal-case font-normal">({t('join.optional')})</span>
                 </Label>
                 <Input
                   id="github_url"
@@ -500,8 +500,8 @@ export const CommunityJoinForm = () => {
               </div>
 
               <div>
-                <Label htmlFor="portfolio_url" className="text-foreground mb-2 block">
-                  {t('join.portfolio')} <span className="text-muted-foreground text-sm">({t('join.optional')})</span>
+                <Label htmlFor="portfolio_url" className="join-label">
+                  {t('join.portfolio')} <span className="text-muted-foreground text-xs normal-case font-normal">({t('join.optional')})</span>
                 </Label>
                 <Input
                   id="portfolio_url"
@@ -515,8 +515,8 @@ export const CommunityJoinForm = () => {
               </div>
 
               <div>
-                <Label htmlFor="linkedin_url" className="text-foreground mb-2 block">
-                  {t('join.linkedin')} <span className="text-muted-foreground text-sm">({t('join.optional')})</span>
+                <Label htmlFor="linkedin_url" className="join-label">
+                  {t('join.linkedin')} <span className="text-muted-foreground text-xs normal-case font-normal">({t('join.optional')})</span>
                 </Label>
                 <Input
                   id="linkedin_url"
@@ -530,7 +530,7 @@ export const CommunityJoinForm = () => {
               </div>
 
               <div>
-                <Label htmlFor="availability_hours" className="text-foreground mb-2 block">{t('join.availability')}</Label>
+                <Label htmlFor="availability_hours" className="join-label">{t('join.availability')}</Label>
                 <Input
                   id="availability_hours"
                   type="number"
@@ -544,7 +544,7 @@ export const CommunityJoinForm = () => {
               </div>
 
               <div>
-                <Label className="text-foreground mb-3 block">{t('join.preferredTracks')}</Label>
+                <Label className="join-label">{t('join.preferredTracks')}</Label>
                 <div className="grid grid-cols-2 gap-3">
                   {trackOptions.map((track) => (
                     <button
@@ -565,7 +565,7 @@ export const CommunityJoinForm = () => {
               </div>
 
               <div>
-                <Label htmlFor="motivation" className="text-foreground mb-2 block">{t('join.motivation')}</Label>
+                <Label htmlFor="motivation" className="join-label">{t('join.motivation')}</Label>
                 <p className="text-sm text-muted-foreground mb-2">{t('join.motivationHelper')}</p>
                 <Textarea
                   id="motivation"
@@ -582,11 +582,11 @@ export const CommunityJoinForm = () => {
             </div>
 
             <div className="flex gap-3">
-              <Button type="button" onClick={handleBack} variant="outline" className="flex-1 glass hover:bg-white/10">
+              <button type="button" onClick={handleBack} className="join-btn-ghost flex-1">
                 <ChevronLeft className="mr-2 h-5 w-5" />
                 {t('join.back')}
               </Button>
-              <Button type="button" onClick={handleNext} className="btn-primary flex-1">
+              <button type="button" onClick={handleNext} className="join-btn-primary flex-1">
                 {t('join.next')}
                 <ChevronRight className="ml-2 h-5 w-5" />
               </Button>
@@ -644,11 +644,11 @@ export const CommunityJoinForm = () => {
             </div>
 
             <div className="flex gap-3">
-              <Button type="button" onClick={handleBack} variant="outline" className="flex-1 glass hover:bg-white/10">
+              <button type="button" onClick={handleBack} className="join-btn-ghost flex-1">
                 <ChevronLeft className="mr-2 h-5 w-5" />
                 {t('join.back')}
               </Button>
-              <Button type="submit" className="btn-primary flex-1" disabled={isSubmitting}>
+              <button type="submit" className="join-btn-primary flex-1" disabled={isSubmitting}>
                 {isSubmitting ? t('join.submitting') : t('join.submit')}
               </Button>
             </div>
