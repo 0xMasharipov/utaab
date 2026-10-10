@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Xmark, User } from 'iconoir-react';
+import { User } from 'iconoir-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { BrandLogo } from '@/components/common/BrandLogo';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 import { LanguageGrid } from '@/components/common/LanguageSelector';
+import { LiquidMorphFloatingMenu } from '@/components/ui/liquid-morph-floating-menu';
 
 
 export const Navbar = () => {
@@ -14,9 +15,7 @@ export const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMenuMounted, setIsMenuMounted] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const hamburgerRef = useRef<HTMLButtonElement>(null);
 
   const isRTL = i18n.language === 'ar';
   const prefersReducedMotion = false;
@@ -24,19 +23,8 @@ export const Navbar = () => {
 
   const closeMenu = useCallback(() => {
     setIsMenuOpen(false);
-    setTimeout(() => hamburgerRef.current?.focus(), 150);
+    setTimeout(() => document.querySelector<HTMLElement>('.utaab-menu-trigger')?.focus(), 150);
   }, []);
-
-  // Keep panel mounted during exit animation for smooth close
-  useEffect(() => {
-    if (isMenuOpen) {
-      setIsMenuMounted(true);
-      return;
-    }
-    if (!isMenuMounted) return;
-    const timer = setTimeout(() => setIsMenuMounted(false), prefersReducedMotion ? 0 : 240);
-    return () => clearTimeout(timer);
-  }, [isMenuOpen, isMenuMounted, prefersReducedMotion]);
 
   useEffect(() => {
     if (!isMenuOpen) return;
@@ -94,153 +82,83 @@ export const Navbar = () => {
             <BrandLogo className="w-[138px] sm:w-[168px] h-auto" />
           </a>
         </Button>
-        <Button
-          ref={hamburgerRef}
-          type="button"
-          variant="ghost"
-          className="utaab-menu-trigger"
-          onClick={() => setIsMenuOpen((open) => !open)}
-          aria-label={isMenuOpen ? t('nav.close') : t('nav.menu')}
-          aria-expanded={isMenuOpen}
-          aria-controls="nav-overlay"
+        <LiquidMorphFloatingMenu
+          ref={menuRef}
+          isOpen={isMenuOpen}
+          onToggle={() => setIsMenuOpen((open) => !open)}
+          triggerLabel={t('nav.menu', 'MENU')}
+          closeLabel={t('nav.close')}
+          panelLabel={t('nav.menu')}
         >
-          <span className="utaab-menu-grid" aria-hidden="true" />
-          <span>{t('nav.menu', 'MENU').toUpperCase()}</span>
-        </Button>
+          <div className="utaab-liquid-panel__header">
+            <BrandLogo className="w-[148px] h-auto" />
+            <span className="utaab-liquid-panel__eyebrow">UTAAB / NAV</span>
+          </div>
+          <div className="utaab-liquid-panel__scroll">
+            <div className="utaab-liquid-panel__sections">
+              <section>
+                <h2 className="utaab-liquid-panel__label">{t('nav.ecosystem', 'Ecosystem')}</h2>
+                <div className="utaab-liquid-panel__links">
+                  {[
+                    { key: 'community', id: 'community' },
+                    { key: 'learn', id: 'learn' },
+                    { key: 'events', id: 'events' },
+                    { key: 'projects', id: 'projects' },
+                  ].map((item, index) => (
+                    <Button key={item.key} variant="ghost" className="utaab-liquid-link" onClick={() => scrollToSection(item.id)} style={{ animationDelay: `${0.05 * index}s` }}>
+                      <span>{t(`nav.${item.key}`)}</span><span aria-hidden="true">{t(`nav.${item.key}`)}</span>
+                    </Button>
+                  ))}
+                </div>
+              </section>
+              <section>
+                <h2 className="utaab-liquid-panel__label">{t('nav.explore', 'Explore')}</h2>
+                <div className="utaab-liquid-panel__links">
+                  {[
+                    { key: 'resources', path: '/resources' },
+                    { key: 'blog', path: '/blog' },
+                    { key: 'education', path: '/education', label: 'education.title' },
+                    { key: 'verifyCertificate', path: '/verify-certificate' },
+                  ].map((item, index) => (
+                    <Button key={item.key} variant="ghost" className="utaab-liquid-link" onClick={() => handleNavigate(item.path)} style={{ animationDelay: `${0.05 * (index + 4)}s` }}>
+                      <span>{t(item.label ?? `nav.${item.key}`)}</span><span aria-hidden="true">{t(item.label ?? `nav.${item.key}`)}</span>
+                    </Button>
+                  ))}
+                </div>
+              </section>
+              <section>
+                <h2 className="utaab-liquid-panel__label">{t('nav.organization', 'Organization')}</h2>
+                <div className="utaab-liquid-panel__links">
+                  {[
+                    { key: 'about', path: '/about' },
+                    { key: 'team', path: '/team' },
+                    { key: 'contributorMatch', path: '/contributor-match' },
+                  ].map((item, index) => (
+                    <Button key={item.key} variant="ghost" className="utaab-liquid-link" onClick={() => handleNavigate(item.path)} style={{ animationDelay: `${0.05 * (index + 8)}s` }}>
+                      <span>{t(`nav.${item.key}`)}</span><span aria-hidden="true">{t(`nav.${item.key}`)}</span>
+                    </Button>
+                  ))}
+                  <Button variant="ghost" className="utaab-liquid-link" onClick={() => scrollToSection('join')}>
+                    <span>{t('nav.join')}</span><span aria-hidden="true">{t('nav.join')}</span>
+                  </Button>
+                </div>
+              </section>
+            </div>
+            <div className="utaab-liquid-panel__footer">
+              <div className="flex gap-2 w-full">
+                <Button onClick={() => handleNavigate('/education')} className="flex-1">{t('education.title')}</Button>
+                <Button onClick={() => scrollToSection('join')} variant="outline" className="flex-1 bg-card/50">{t('nav.join')}</Button>
+              </div>
+              <Button variant="ghost" onClick={() => handleNavigate('/education/sign-in')} className="w-full text-muted-foreground">
+                <User className="h-4 w-4" strokeWidth={1.5} />{t('nav.studentAuthOptions')}
+              </Button>
+              <div className={cn('w-full', isRTL && 'text-right')}><LanguageGrid /></div>
+            </div>
+          </div>
+        </LiquidMorphFloatingMenu>
       </nav>
 
-      {isMenuMounted && (
-        <div className="utaab-drawer-layer" data-state={isMenuOpen ? 'open' : 'closed'}>
-          <button className="utaab-drawer-backdrop" type="button" onClick={closeMenu} aria-label={t('nav.close')} tabIndex={-1} />
-          <aside
-            id="nav-overlay"
-            ref={menuRef}
-            role="dialog"
-            aria-modal="true"
-            aria-label={t('nav.menu')}
-            data-state={isMenuOpen ? 'open' : 'closed'}
-            className="utaab-drawer"
-          >
-            <div className="utaab-drawer__header">
-              <BrandLogo className="w-[150px] h-auto" />
-              <Button
-                onClick={closeMenu}
-                variant="ghost"
-                size="icon"
-                className="utaab-drawer__close"
-                aria-label={t('nav.close')}
-              >
-                <Xmark className="h-5 w-5" strokeWidth={1.5} />
-              </Button>
-            </div>
-            <div className="utaab-drawer__body">
-              <div className="utaab-drawer__sections">
-                <section>
-                  <h2 className="utaab-drawer__label">
-                    {t('nav.ecosystem', 'Ecosystem')}
-                  </h2>
-                  <div className="utaab-drawer__links">
-                    {[
-                      { key: 'community', id: 'community' },
-                      { key: 'learn', id: 'learn' },
-                      { key: 'events', id: 'events' },
-                      { key: 'projects', id: 'projects' },
-                    ].map((item, i) => (
-                      <button
-                        key={item.key}
-                        onClick={() => scrollToSection(item.id)}
-                        className={getTransitionClasses(
-                          "utaab-drawer__link nav-menu-item"
-                        )}
-                        style={{ animationDelay: `${0.03 * i}s` }}
-                      >
-                        {t(`nav.${item.key}`)}
-                      </button>
-                    ))}
-                  </div>
-                </section>
-                <section>
-                  <h2 className="utaab-drawer__label">
-                    {t('nav.explore', 'Explore')}
-                  </h2>
-                  <div className="utaab-drawer__links">
-                    {[
-                      { key: 'resources', type: 'page', path: '/resources' },
-                      { key: 'blog', type: 'page', path: '/blog' },
-                      { key: 'education', type: 'page', path: '/education', label: 'education.title' },
-                      { key: 'verifyCertificate', type: 'page', path: '/verify-certificate' },
-                    ].map((item, i) => (
-                  <button
-                        key={item.key}
-                        onClick={() => handleNavigate(item.path)}
-                        className={getTransitionClasses(
-                          "utaab-drawer__link nav-menu-item"
-                        )}
-                        style={{ animationDelay: `${0.03 * (i + 4)}s` }}
-                      >
-                        {t('label' in item ? item.label : `nav.${item.key}`)}
-                      </button>
-                    ))}
-                  </div>
-                </section>
-                <section>
-                  <h2 className="utaab-drawer__label">
-                    {t('nav.organization', 'Organization')}
-                  </h2>
-                  <div className="utaab-drawer__links">
-                    {[
-                      { key: 'about', type: 'page', path: '/about', label: 'nav.about' },
-                      { key: 'team', type: 'page', path: '/team' },
-                      { key: 'contributorMatch', type: 'page', path: '/contributor-match' },
-                      { key: 'join', type: 'scroll', id: 'join' },
-                    ].map((item, i) => (
-                      <button
-                        key={item.key}
-                        onClick={() => item.type === 'scroll' && item.id ? scrollToSection(item.id) : item.path ? handleNavigate(item.path) : undefined}
-                        className={getTransitionClasses(
-                          "utaab-drawer__link nav-menu-item"
-                        )}
-                        style={{ animationDelay: `${0.03 * (i + 7)}s` }}
-                      >
-                        {t(`nav.${item.key}`)}
-                      </button>
-                    ))}
-                  </div>
-                </section>
-              </div>
-              <div className="utaab-drawer__footer">
-                <div className="flex gap-2 w-full">
-                  <Button
-                    onClick={() => handleNavigate('/education')}
-                    className="flex-1"
-                  >
-                    {t('education.title')}
-                  </Button>
-                  <Button
-                    onClick={() => scrollToSection('join')}
-                    variant="outline"
-                    className="flex-1 bg-card/50"
-                  >
-                    {t('nav.join')}
-                  </Button>
-                </div>
-                <Button
-                    variant="ghost"
-                    onClick={() => handleNavigate('/education/sign-in')}
-                    className="w-full text-muted-foreground"
-                  >
-                    <User className="h-4 w-4" strokeWidth={1.5} />
-                    {t('nav.studentAuthOptions')}
-                </Button>
-                <div className={cn('w-full', isRTL && 'text-right')}>
-                  <LanguageGrid />
-                </div>
-
-              </div>
-            </div>
-          </aside>
-        </div>
-      )}
+      {isMenuOpen && <button className="utaab-liquid-backdrop" type="button" onClick={closeMenu} aria-label={t('nav.close')} tabIndex={-1} />}
     </>
   );
 };
