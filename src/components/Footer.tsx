@@ -20,7 +20,6 @@ const TikTokIcon = ({ className, strokeWidth = 1.5 }: { className?: string; stro
 import footerGeoDesktop from '@/assets/footer-geo-desktop.png';
 import footerGeoMobile from '@/assets/footer-geo-mobile.png';
 import { BrandLogo } from '@/components/common/BrandLogo';
-import AnimatedImage from '@/components/common/AnimatedImage';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 import { Link } from 'react-router-dom';
 

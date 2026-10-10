@@ -29,7 +29,6 @@ import EcosystemFlow, {
   type EcosystemNodeState,
   type NodeItem,
 } from '@/components/whitepaper/EcosystemFlow';
-import logo from '@/assets/logo-new.webp';
 
 const Whitepaper = () => {
   const { t } = useTranslation();
