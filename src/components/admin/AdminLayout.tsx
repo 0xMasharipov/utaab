@@ -23,6 +23,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
+import { BrandLogo } from '@/components/common/BrandLogo';
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: ADMIN_ROUTES.DASHBOARD },
@@ -165,9 +166,10 @@ export const AdminLayout = ({ children }: { children?: React.ReactNode }) => {
           <div className="p-6 border-b border-white/10">
             <div className="flex items-center justify-between">
               {isSidebarOpen && (
-                <h1 className="text-xl font-bold">
-                  UTAAB <span className="text-primary">Management</span>
-                </h1>
+                <div className="space-y-2">
+                  <BrandLogo className="h-8 w-auto" />
+                  <p className="text-xs font-semibold uppercase text-muted-foreground">Management</p>
+                </div>
               )}
               <Button
                 variant="ghost"

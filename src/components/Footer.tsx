@@ -17,11 +17,9 @@ const TikTokIcon = ({ className, strokeWidth = 1.5 }: { className?: string; stro
     <path d="M21 8.5a8.5 8.5 0 0 1-5-1.6V16a6 6 0 1 1-6-6c.34 0 .67.03 1 .09v3.09a3 3 0 1 0 2 2.82V2h3a5.5 5.5 0 0 0 5 5.5z" />
   </svg>
 );
-import logo from '@/assets/logo-new.webp';
 import footerGeoDesktop from '@/assets/footer-geo-desktop.png';
 import footerGeoMobile from '@/assets/footer-geo-mobile.png';
-import { BrandText } from '@/components/common/BrandText';
-import AnimatedImage from '@/components/common/AnimatedImage';
+import { BrandLogo } from '@/components/common/BrandLogo';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 import { Link } from 'react-router-dom';
 
@@ -79,14 +77,11 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-10 md:gap-12 mb-8 sm:mb-12">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-3 mb-3 sm:mb-4">
-              <AnimatedImage
-                src={logo}
+            <div className="flex items-center mb-3 sm:mb-4">
+              <BrandLogo
                 alt="UTAA Blockchain logo"
-                className="h-7 sm:h-8 w-auto transition-transform hover:scale-105 mix-blend-lighten brightness-110"
-                width={120} height={32} loading="eager"
+                className="h-9 sm:h-11 w-auto transition-transform hover:scale-105"
               />
-              <BrandText variant="footer" />
             </div>
             <p className={getTransitionClasses("text-muted-foreground leading-relaxed text-base text-left")}>
               {t('footer.description')}

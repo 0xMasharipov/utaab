@@ -10,8 +10,7 @@ import {
 } from 'iconoir-react';
 import { useTranslation } from 'react-i18next';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
-import logo from '@/assets/logo-new.webp';
-import { BrandText } from '@/components/common/BrandText';
+import { BrandLogo } from '@/components/common/BrandLogo';
 import { LanguageSelector } from '@/components/common/LanguageSelector';
 import {
   DropdownMenu,
@@ -141,8 +140,7 @@ export const EducationNavbar = () => {
       <header className="edu-topbar">
         <div className="edu-topbar__inner">
           <Link to="/education" className="edu-brand" aria-label="UTAAB Edu">
-            <img src={logo} alt="" className="h-8 w-8 object-contain" width="32" height="32" />
-            <BrandText variant="navbar-mobile" />
+            <BrandLogo className="h-8 sm:h-9 w-auto" />
             <span className="edu-brand__division">EDU</span>
           </Link>
 

@@ -3,61 +3,24 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Xmark, User } from 'iconoir-react';
 import { Button } from '@/components/ui/button';
-// framer-motion removed from critical path — CSS animations used instead
 import { cn } from '@/lib/utils';
-import logo from '@/assets/logo-new-small.webp';
-import { BrandText } from '@/components/common/BrandText';
+import { BrandLogo } from '@/components/common/BrandLogo';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
-import { LanguageSelector, LanguageGrid } from '@/components/common/LanguageSelector';
+import { LanguageGrid } from '@/components/common/LanguageSelector';
 
 
 export const Navbar = () => {
   const { t, i18n } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
-  const isHomepage = location.pathname === '/';
-  const [hasHomepageRevealed, setHasHomepageRevealed] = useState(
-    () => typeof window !== 'undefined' && window.scrollY > 24,
-  );
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMenuMounted, setIsMenuMounted] = useState(false);
-  const [logoLoaded, setLogoLoaded] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
-  const navRef = useRef<HTMLElement>(null);
-  const pillRef = useRef<HTMLDivElement>(null);
-  const [panelTop, setPanelTop] = useState(68);
-  const [pillRect, setPillRect] = useState({ left: 0, width: 0 });
 
   const isRTL = i18n.language === 'ar';
-
   const prefersReducedMotion = false;
   const { getTransitionClasses } = useLanguageTransition();
-  // Navigation stays visible and reachable everywhere, including the top of the
-  // homepage; scrolling only changes its appearance.
-  const shouldShowNavbar = true;
-  const isScrolled = isHomepage && hasHomepageRevealed;
-
-  // On the homepage, reveal once after the user's first intentional scroll.
-  // Other routes keep navigation available immediately.
-  useEffect(() => {
-    if (!isHomepage) return;
-
-    if (window.scrollY > 24) {
-      setHasHomepageRevealed(true);
-      return;
-    }
-
-    setHasHomepageRevealed(false);
-    const handleScroll = () => {
-      if (window.scrollY <= 24) return;
-      setHasHomepageRevealed(true);
-      window.removeEventListener('scroll', handleScroll);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [isHomepage]);
 
   const closeMenu = useCallback(() => {
     setIsMenuOpen(false);
@@ -75,63 +38,28 @@ export const Navbar = () => {
     return () => clearTimeout(timer);
   }, [isMenuOpen, isMenuMounted, prefersReducedMotion]);
 
-  // Click outside to close
   useEffect(() => {
     if (!isMenuOpen) return;
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node) &&
-          hamburgerRef.current && !hamburgerRef.current.contains(e.target as Node)) {
-        closeMenu();
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isMenuOpen, closeMenu]);
-
-  // Measure navbar bottom and pill rect for panel positioning
-  // Use rAF + debounce to batch reads and avoid forced reflow
-  useEffect(() => {
-    let rafId = 0;
-    let resizeTimer: ReturnType<typeof setTimeout> | undefined;
-
-    const measure = () => {
-      // Batch all DOM reads inside a single rAF, after layout is committed
-      rafId = requestAnimationFrame(() => {
-        const navEl = navRef.current;
-        const pillEl = pillRef.current;
-        // Read both rects together so the browser only flushes layout once
-        const pillRect = pillEl?.getBoundingClientRect();
-        // offsetTop/offsetHeight ignore the entrance transform, so opening the
-        // menu immediately after reveal still places the panel correctly.
-        if (navEl) setPanelTop(navEl.offsetTop + navEl.offsetHeight + 2);
-        if (pillRect) setPillRect({ left: pillRect.left, width: pillRect.width });
-      });
-    };
-
-    // Defer initial measurement until after first paint to avoid forced reflow on mount
-    const initialId = requestAnimationFrame(measure);
-
-    const onResize = () => {
-      if (resizeTimer) clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(measure, 100);
-    };
-    window.addEventListener('resize', onResize, { passive: true });
-    return () => {
-      window.removeEventListener('resize', onResize);
-      cancelAnimationFrame(initialId);
-      cancelAnimationFrame(rafId);
-      if (resizeTimer) clearTimeout(resizeTimer);
-    };
-  }, []);
-
-  // Escape key
-  useEffect(() => {
-    if (!isMenuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') closeMenu();
+      if (e.key === 'Tab' && menuRef.current) {
+        const focusable = menuRef.current.querySelectorAll<HTMLElement>('button, a[href], [tabindex]:not([tabindex="-1"])');
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (!first || !last) return;
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
     };
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    const focusTimer = window.setTimeout(() => menuRef.current?.querySelector<HTMLElement>('button')?.focus(), 80);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      window.clearTimeout(focusTimer);
+    };
   }, [isMenuOpen, closeMenu]);
 
   const scrollToSection = (id: string) => {
@@ -153,18 +81,6 @@ export const Navbar = () => {
     }, prefersReducedMotion ? 0 : 200);
   };
 
-  const navItems = [
-    { key: 'community', id: 'community' },
-    { key: 'learn', id: 'learn' },
-    { key: 'events', id: 'events' },
-    { key: 'projects', id: 'projects' },
-  ];
-
-  const pageNavItems = [
-    { key: 'blog', path: '/blog' },
-    { key: 'team', path: '/team' },
-  ];
-
   const handleNavigate = (path: string) => {
     closeMenu();
     setTimeout(() => navigate(path), prefersReducedMotion ? 0 : 200);
@@ -172,138 +88,58 @@ export const Navbar = () => {
 
   return (
     <>
-      <nav
-        ref={navRef}
-        aria-hidden={!shouldShowNavbar}
-        className={cn(
-          'fixed top-2 sm:top-4 left-1/2 z-50 w-[96%] sm:w-[95%] max-w-6xl',
-          !shouldShowNavbar && 'pointer-events-none',
-        )}
-        style={{
-          transform: shouldShowNavbar
-            ? 'translate3d(-50%, 0, 0)'
-            : 'translate3d(-50%, calc(-100% - 24px), 0)',
-          opacity: shouldShowNavbar ? 1 : 0,
-          visibility: shouldShowNavbar ? 'visible' : 'hidden',
-          transition: prefersReducedMotion
-            ? 'none'
-            : shouldShowNavbar
-              ? 'transform 520ms cubic-bezier(0.22, 1, 0.36, 1), opacity 360ms ease-out, visibility 0s linear 0s'
-              : 'transform 520ms cubic-bezier(0.22, 1, 0.36, 1), opacity 280ms ease-in, visibility 0s linear 520ms',
-        }}
-      >
-        <div
-          ref={pillRef}
-          className={`rounded-full px-4 sm:px-5 md:px-8 py-3 sm:py-4 border transition-all duration-300 ${
-            isScrolled
-              ? 'border-white/[0.12] shadow-xl'
-              : 'border-white/[0.06] shadow-lg'
-          }`}
-          style={{
-            background: isScrolled
-              ? 'linear-gradient(135deg, rgba(10, 10, 20, 0.9) 0%, rgba(15, 20, 35, 0.85) 100%)'
-              : 'linear-gradient(135deg, rgba(10, 15, 25, 0.35) 0%, rgba(10, 15, 25, 0.3) 50%, rgba(10, 15, 25, 0.35) 100%)',
-            backdropFilter: 'blur(24px) saturate(180%) brightness(0.95)',
-            WebkitBackdropFilter: 'blur(24px) saturate(180%) brightness(0.95)',
-            boxShadow: isScrolled
-              ? '0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08)'
-              : '0 4px 24px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.06)',
-          }}
+      <nav className="utaab-nav-cluster" aria-label={t('nav.menu')}>
+        <Button asChild variant="ghost" className="utaab-nav-logo" aria-label="UTAAB - Home">
+          <a href="/" onClick={(event) => { event.preventDefault(); location.pathname === '/' ? scrollToSection('hero') : navigate('/'); }}>
+            <BrandLogo className="w-[138px] sm:w-[168px] h-auto" />
+          </a>
+        </Button>
+        <Button
+          ref={hamburgerRef}
+          type="button"
+          variant="ghost"
+          className="utaab-menu-trigger"
+          onClick={() => setIsMenuOpen((open) => !open)}
+          aria-label={isMenuOpen ? t('nav.close') : t('nav.menu')}
+          aria-expanded={isMenuOpen}
+          aria-controls="nav-overlay"
         >
-          <div className="flex items-center justify-between">
-            {/* Left: Logo */}
-            <div className="sm:flex-1 flex justify-start">
-              <button
-                onClick={() => {
-                  if (window.location.pathname === '/') scrollToSection('hero');
-                  else navigate('/');
-                }}
-                className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity flex-shrink-0"
-                aria-label="UTAAB - Home"
-              >
-                <div className="relative h-8 sm:h-10 w-8 sm:w-10 flex-shrink-0">
-                  {!logoLoaded && <div className="absolute inset-0 rounded-lg bg-muted animate-pulse" />}
-                  <img
-                    src={logo}
-                    alt="UTAA Blockchain"
-                    className={`h-8 sm:h-10 w-auto mix-blend-lighten brightness-110 transition-opacity duration-500 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
-                    width="40" height="40"
-                    {...{ fetchpriority: "high" }}
-                    decoding="async"
-                    onLoad={() => setLogoLoaded(true)}
-                  />
-                </div>
-                <BrandText variant="navbar-mobile" className={`sm:hidden transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`} />
-                <BrandText variant="navbar-tablet" className={`hidden sm:block md:hidden transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`} />
-                <BrandText variant="navbar-desktop" className={`hidden md:block transition-opacity duration-500 delay-100 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`} />
-              </button>
-            </div>
-
-            {/* Center: Spacer */}
-            <div className="hidden sm:block flex-1" />
-
-            {/* Right: Globe + MENU */}
-            <div className={cn("sm:flex-1 flex justify-end items-center gap-3 sm:gap-4", isRTL && "flex-row-reverse")} style={{ transform: 'translateZ(0)' }}>
-              {/* Language Selector */}
-              <LanguageSelector sideOffset={22} />
-
-
-              {/* MENU text button */}
-              <button
-                ref={hamburgerRef}
-                className="text-sm font-semibold tracking-[0.06em] uppercase text-white bg-transparent hover:opacity-70 transition-opacity cursor-pointer select-none py-2 px-1"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                aria-label={isMenuOpen ? t('nav.close') : t('nav.menu')}
-                aria-expanded={isMenuOpen}
-                aria-controls="nav-overlay"
-              >
-                {isMenuOpen ? t('nav.close', 'CLOSE').toUpperCase() : t('nav.menu', 'MENU').toUpperCase()}
-              </button>
-            </div>
-          </div>
-        </div>
+          <span className="utaab-menu-grid" aria-hidden="true" />
+          <span>{t('nav.menu', 'MENU').toUpperCase()}</span>
+        </Button>
       </nav>
 
-      {/* Premium frosted glass mega menu panel */}
       {isMenuMounted && (
-          <div
+        <div className="utaab-drawer-layer" data-state={isMenuOpen ? 'open' : 'closed'}>
+          <button className="utaab-drawer-backdrop" type="button" onClick={closeMenu} aria-label={t('nav.close')} tabIndex={-1} />
+          <aside
             id="nav-overlay"
             ref={menuRef}
             role="dialog"
             aria-modal="true"
             aria-label={t('nav.menu')}
             data-state={isMenuOpen ? 'open' : 'closed'}
-            className="fixed z-[80] overflow-y-auto nav-menu-panel"
-            style={{
-              top: `${panelTop}px`,
-              left: `${pillRect.left}px`,
-              width: `${pillRect.width}px`,
-              maxHeight: `calc(100vh - ${panelTop + 8}px)`,
-              background: 'rgba(255, 255, 255, 0.08)',
-              backdropFilter: 'blur(20px) saturate(140%)',
-              WebkitBackdropFilter: 'blur(20px) saturate(140%)',
-              boxShadow: '0 30px 80px rgba(0, 0, 0, 0.25)',
-              borderRadius: '24px',
-              border: '1px solid rgba(255, 255, 255, 0.16)',
-            }}
+            className="utaab-drawer"
           >
-            <div className="relative p-6 pt-12 sm:p-10 sm:pt-12 md:py-[60px] md:px-[80px]">
-              {/* Close button */}
-              <button
+            <div className="utaab-drawer__header">
+              <BrandLogo className="w-[150px] h-auto" />
+              <Button
                 onClick={closeMenu}
-                className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 rounded-full bg-white/[0.08] hover:bg-white/[0.15] border border-white/10 transition-colors z-10"
+                variant="ghost"
+                size="icon"
+                className="utaab-drawer__close"
                 aria-label={t('nav.close')}
               >
-                <Xmark className="h-5 w-5 text-white/80" strokeWidth={1.5} />
-              </button>
-              {/* 3-Column Navigation Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-12 lg:gap-20">
-                {/* Column 1 — Ecosystem */}
-                <div className="flex flex-col">
-                  <span className="text-xs uppercase tracking-[2px] text-white/40 font-semibold mb-4 px-4">
+                <Xmark className="h-5 w-5" strokeWidth={1.5} />
+              </Button>
+            </div>
+            <div className="utaab-drawer__body">
+              <div className="utaab-drawer__sections">
+                <section>
+                  <h2 className="utaab-drawer__label">
                     {t('nav.ecosystem', 'Ecosystem')}
-                  </span>
-                  <div className="flex flex-col gap-1">
+                  </h2>
+                  <div className="utaab-drawer__links">
                     {[
                       { key: 'community', id: 'community' },
                       { key: 'learn', id: 'learn' },
@@ -314,7 +150,7 @@ export const Navbar = () => {
                         key={item.key}
                         onClick={() => scrollToSection(item.id)}
                         className={getTransitionClasses(
-                          "text-left text-lg font-semibold tracking-wide text-white/90 hover:text-white hover:bg-white/[0.08] transition-all duration-200 px-4 py-2.5 rounded-xl nav-menu-item"
+                          "utaab-drawer__link nav-menu-item"
                         )}
                         style={{ animationDelay: `${0.03 * i}s` }}
                       >
@@ -322,14 +158,12 @@ export const Navbar = () => {
                       </button>
                     ))}
                   </div>
-                </div>
-
-                {/* Column 2 — Explore */}
-                <div className="flex flex-col sm:border-0 border-t border-white/[0.08] pt-4 sm:pt-0">
-                  <span className="text-xs uppercase tracking-[2px] text-white/40 font-semibold mb-4 px-4">
+                </section>
+                <section>
+                  <h2 className="utaab-drawer__label">
                     {t('nav.explore', 'Explore')}
-                  </span>
-                  <div className="flex flex-col gap-1">
+                  </h2>
+                  <div className="utaab-drawer__links">
                     {[
                       { key: 'resources', type: 'page', path: '/resources' },
                       { key: 'blog', type: 'page', path: '/blog' },
@@ -340,7 +174,7 @@ export const Navbar = () => {
                         key={item.key}
                         onClick={() => handleNavigate(item.path)}
                         className={getTransitionClasses(
-                          "text-left text-lg font-semibold tracking-wide text-white/90 hover:text-white hover:bg-white/[0.08] transition-all duration-200 px-4 py-2.5 rounded-xl nav-menu-item"
+                          "utaab-drawer__link nav-menu-item"
                         )}
                         style={{ animationDelay: `${0.03 * (i + 4)}s` }}
                       >
@@ -348,14 +182,12 @@ export const Navbar = () => {
                       </button>
                     ))}
                   </div>
-                </div>
-
-                {/* Column 3 — Organization */}
-                <div className="flex flex-col sm:border-0 border-t border-white/[0.08] pt-4 sm:pt-0">
-                  <span className="text-xs uppercase tracking-[2px] text-white/40 font-semibold mb-4 px-4">
+                </section>
+                <section>
+                  <h2 className="utaab-drawer__label">
                     {t('nav.organization', 'Organization')}
-                  </span>
-                  <div className="flex flex-col gap-1">
+                  </h2>
+                  <div className="utaab-drawer__links">
                     {[
                       { key: 'about', type: 'page', path: '/about', label: 'nav.about' },
                       { key: 'team', type: 'page', path: '/team' },
@@ -364,9 +196,9 @@ export const Navbar = () => {
                     ].map((item, i) => (
                       <button
                         key={item.key}
-                        onClick={() => item.type === 'scroll' ? scrollToSection(item.id!) : handleNavigate(item.path!)}
+                        onClick={() => item.type === 'scroll' && item.id ? scrollToSection(item.id) : item.path ? handleNavigate(item.path) : undefined}
                         className={getTransitionClasses(
-                          "text-left text-lg font-semibold tracking-wide text-white/90 hover:text-white hover:bg-white/[0.08] transition-all duration-200 px-4 py-2.5 rounded-xl nav-menu-item"
+                          "utaab-drawer__link nav-menu-item"
                         )}
                         style={{ animationDelay: `${0.03 * (i + 7)}s` }}
                       >
@@ -374,53 +206,41 @@ export const Navbar = () => {
                       </button>
                     ))}
                   </div>
-                </div>
+                </section>
               </div>
-
-              {/* Divider */}
-              <div className="w-full h-px bg-white/[0.10] my-6 sm:my-8" />
-
-              {/* Bottom CTA Row */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                {/* Left: Action buttons */}
-                <div className="flex items-center gap-3 w-full sm:w-auto">
+              <div className="utaab-drawer__footer">
+                <div className="flex gap-2 w-full">
                   <Button
                     onClick={() => handleNavigate('/education')}
-                    className="flex-1 sm:flex-none bg-gradient-to-r from-blue-600/90 to-blue-500/90 hover:from-blue-500 hover:to-blue-400 text-white font-semibold rounded-[18px] py-2.5 px-5 shadow-sm text-sm"
-                    size="sm"
+                    className="flex-1"
                   >
                     {t('education.title')}
                   </Button>
                   <Button
                     onClick={() => scrollToSection('join')}
                     variant="outline"
-                    className="flex-1 sm:flex-none bg-white/[0.06] border-white/20 hover:bg-white/[0.12] text-white font-semibold rounded-[18px] py-2.5 px-5 text-sm"
-                    size="sm"
+                    className="flex-1 bg-card/50"
                   >
                     {t('nav.join')}
                   </Button>
                 </div>
-
-                {/* Center: Auth */}
-                <div className="flex flex-col items-center gap-1.5">
-                  <button
+                <Button
+                    variant="ghost"
                     onClick={() => handleNavigate('/education/sign-in')}
-                    className="flex items-center justify-center gap-2 text-sm font-medium text-white/70 border border-white/[0.12] hover:bg-white/[0.08] transition-all duration-200 py-2 px-5 rounded-full bg-transparent"
+                    className="w-full text-muted-foreground"
                   >
-                    <User className="h-3.5 w-3.5 text-white/50" strokeWidth={1.5} />
+                    <User className="h-4 w-4" strokeWidth={1.5} />
                     {t('nav.studentAuthOptions')}
-                  </button>
-                </div>
-
-                {/* Right: Language selector */}
-                <div className="w-full sm:w-auto sm:max-w-[320px]">
+                </Button>
+                <div className={cn('w-full', isRTL && 'text-right')}>
                   <LanguageGrid />
                 </div>
 
               </div>
             </div>
-          </div>
-        )}
+          </aside>
+        </div>
+      )}
     </>
   );
 };

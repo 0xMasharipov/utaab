@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Home, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/logo-new.webp";
+import { BrandLogo } from "@/components/common/BrandLogo";
 
 const NotFound = () => {
   const location = useLocation();
@@ -65,11 +65,9 @@ const NotFound = () => {
                   "radial-gradient(circle, hsl(var(--accent) / 0.5), transparent 70%)",
               }}
             />
-            <img
-              src={logo}
-              alt="UTAAB"
+            <BrandLogo
+              variant="mark"
               className="relative w-20 h-20 md:w-24 md:h-24 object-contain"
-              style={{ mixBlendMode: "screen" }}
             />
           </div>
         </div>
