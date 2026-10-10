@@ -13,7 +13,7 @@ import { Eye, EyeOff, Mail, RefreshCw } from "lucide-react";
 import { useSecurity } from "@/hooks/useSecurity";
 import { Separator } from "@/components/ui/separator";
 import { UtaabCaptcha, UtaabCaptchaRef } from "@/components/security/UtaabCaptcha";
-import utaabLogo from "@/assets/utaab-logo-diamond.png";
+import { BrandLogo } from "@/components/common/BrandLogo";
 
 const logAdminLogin = async (params: {
   event_type: string;
@@ -410,11 +410,7 @@ export default function AdminLogin() {
       <Card className="w-full max-w-md glass-card">
         <CardHeader className="space-y-4 text-center">
           <div className="mx-auto w-20 h-20 rounded-2xl bg-primary/5 ring-1 ring-primary/20 flex items-center justify-center p-2 shadow-lg shadow-primary/10">
-            <img
-              src={utaabLogo}
-              alt="UTAAB"
-              className="w-full h-full object-contain drop-shadow-[0_0_12px_hsl(var(--primary)/0.4)]"
-            />
+            <BrandLogo variant="mark" className="w-full h-full drop-shadow-[0_0_12px_hsl(var(--primary)/0.4)]" />
           </div>
           <CardTitle className="text-2xl font-bold">Sign In</CardTitle>
           <CardDescription>

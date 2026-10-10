@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { BrandLogo } from '@/components/common/BrandLogo';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
-import { LanguageSelector, LanguageGrid } from '@/components/common/LanguageSelector';
+import { LanguageGrid } from '@/components/common/LanguageSelector';
 
 
 export const Navbar = () => {
