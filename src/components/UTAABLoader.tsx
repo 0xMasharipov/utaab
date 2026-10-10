@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import markAsset from "@/assets/utaab-mark.png.asset.json";
 
 interface UTAABLoaderProps {
   onComplete?: () => void;
@@ -56,6 +57,7 @@ export default function UTAABLoader({ onComplete }: UTAABLoaderProps) {
     >
       <div className="utaab-loader-mark">
         <div className="utaab-loader-halo" />
+        <img src={markAsset.url} alt="" className="utaab-loader-brand-mark" />
         <svg className="utaab-loader-vector" viewBox="0 0 120 120" fill="none" aria-hidden="true">
           <g className="utaab-loader-piece utaab-loader-piece--top"><rect x="43" y="14" width="34" height="34" rx="7" transform="rotate(45 60 31)" /></g>
           <g className="utaab-loader-piece utaab-loader-piece--left"><rect x="14" y="43" width="34" height="34" rx="7" transform="rotate(45 31 60)" /></g>
@@ -98,6 +100,21 @@ export default function UTAABLoader({ onComplete }: UTAABLoaderProps) {
           filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.12));
         }
 
+        .utaab-loader-brand-mark {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          opacity: 0;
+          animation: utaab-loader-brand-reveal 280ms ease-out 720ms forwards;
+          filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.12));
+        }
+
+        @keyframes utaab-loader-brand-reveal {
+          to { opacity: 1; }
+        }
+
         .utaab-loader-piece {
           fill: #fff;
           opacity: 0;
@@ -114,7 +131,7 @@ export default function UTAABLoader({ onComplete }: UTAABLoaderProps) {
         @keyframes utaab-loader-assemble {
           0% { opacity: 0; transform: translate(var(--piece-x), var(--piece-y)) rotate(var(--piece-rotation)) scale(.9); }
           72% { opacity: 1; transform: translate(0, 0) rotate(0) scale(1.035); }
-          100% { opacity: 1; transform: translate(0, 0) rotate(0) scale(1); }
+          100% { opacity: 0; transform: translate(0, 0) rotate(0) scale(1); }
         }
 
         .utaab-loader-halo {

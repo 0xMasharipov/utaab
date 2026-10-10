@@ -29,6 +29,7 @@ import EcosystemFlow, {
   type EcosystemNodeState,
   type NodeItem,
 } from '@/components/whitepaper/EcosystemFlow';
+import { BrandLogo } from '@/components/common/BrandLogo';
 
 const Whitepaper = () => {
   const { t } = useTranslation();
@@ -196,7 +197,7 @@ const Whitepaper = () => {
             >
               <div aria-hidden="true" className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-accent/[0.08] blur-3xl" />
               <div className="relative flex items-center gap-3 border-b border-white/10 pb-6">
-                <img src={logo} alt="" className="h-9 w-auto mix-blend-lighten" width={64} height={64} />
+                <BrandLogo variant="mark" alt="" className="h-9 w-9" />
                 <div>
                   <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
                     {t('whitepaper.hero.contents', 'Inside the whitepaper')}
@@ -265,7 +266,7 @@ const Whitepaper = () => {
                 nodeItems={ecosystemNodes}
                 centerContent={(
                   <div className="flex flex-col items-center gap-2">
-                    <img src={logo} alt="" className="h-10 w-auto mix-blend-lighten sm:h-12" width={72} height={72} />
+                    <BrandLogo variant="mark" alt="" className="h-10 w-10 sm:h-12 sm:w-12" />
                     <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground sm:text-xs">UTAAB</span>
                   </div>
                 )}
