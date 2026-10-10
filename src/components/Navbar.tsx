@@ -5,7 +5,6 @@ import { User } from 'iconoir-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { BrandLogo } from '@/components/common/BrandLogo';
-import { useLanguageTransition } from '@/hooks/useLanguageTransition';
 import { LanguageGrid } from '@/components/common/LanguageSelector';
 import { LiquidMorphFloatingMenu } from '@/components/ui/liquid-morph-floating-menu';
 
@@ -19,8 +18,6 @@ export const Navbar = () => {
 
   const isRTL = i18n.language === 'ar';
   const prefersReducedMotion = false;
-  const { getTransitionClasses } = useLanguageTransition();
-
   const closeMenu = useCallback(() => {
     setIsMenuOpen(false);
     setTimeout(() => document.querySelector<HTMLElement>('.utaab-menu-trigger')?.focus(), 150);
