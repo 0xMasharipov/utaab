@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState, type PointerEvent } from 'react';
 import { motion, useInView, useMotionValue, useSpring } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import markAsset from '@/assets/utaab-mark.png.asset.json';
+import mark from '@/assets/utaab-mark-white.svg';
 import embossedMark from '@/assets/utaab-mark-white-3d.svg';
-
-const mark = markAsset.url;
 
 /** Local certificate artwork. Only transforms move; sample content is never verification evidence. */
 export default function Certificate3D() {
