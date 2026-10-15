@@ -21,9 +21,11 @@ function Portrait({ member, slot, duplicate, selected, onSelect, onProfile }: {
   const { t } = useTranslation();
   const { getTransitionClasses } = useLanguageTransition();
   const [failed, setFailed] = useState(false);
+  const pointerType = useRef('keyboard');
   const initials = member.name.trim().split(/\s+/).map(word => word[0]).filter(Boolean);
   return (
     <article className="team-roster-portrait" data-selected={selected} aria-hidden={duplicate || undefined}
+      onPointerDown={event => { pointerType.current = event.pointerType; }}
       onPointerEnter={event => { if (event.pointerType === 'mouse') onSelect(slot, event.currentTarget); }}
       onPointerLeave={event => {
         if (event.pointerType === 'mouse' && !event.currentTarget.contains(document.activeElement)) onSelect(null);
@@ -40,7 +42,7 @@ function Portrait({ member, slot, duplicate, selected, onSelect, onProfile }: {
         aria-label={`${member.name}, ${member.position}`} aria-expanded={selected}
         aria-controls={`roster-${slot}`}
         onFocus={event => { if (event.currentTarget.matches(':focus-visible')) onSelect(slot, event.currentTarget.parentElement ?? undefined); }}
-        onClick={event => onSelect(selected ? null : slot, event.currentTarget.parentElement ?? undefined)} />
+        onClick={event => onSelect(selected && pointerType.current !== 'mouse' ? null : slot, event.currentTarget.parentElement ?? undefined)} />
       <span className={getTransitionClasses('team-roster-chip')}>{member.position}</span>
       <div id={`roster-${slot}`} className="team-roster-details" aria-hidden={!selected}
         {...(!selected ? { inert: '' } : {})}>
@@ -61,6 +63,7 @@ export default function UtaabTeamRoster({ members, profileOpen, onProfile }: Ros
   const { t, i18n } = useTranslation();
   const { getTransitionClasses } = useLanguageTransition();
   const root = useRef<HTMLElement>(null);
+  const nudgeFrame = useRef(0);
   const [active, setActive] = useState<string | null>(null);
   const [paused, setPaused] = useState(false);
   const [unseen, setUnseen] = useState(false);
@@ -75,9 +78,10 @@ export default function UtaabTeamRoster({ members, profileOpen, onProfile }: Ros
     const resize = () => { setColumns(window.innerWidth <= 1100 ? 2 : 3); setActive(null); };
     document.addEventListener('visibilitychange', visibility);
     window.addEventListener('resize', resize);
-    return () => { observer.disconnect(); document.removeEventListener('visibilitychange', visibility); window.removeEventListener('resize', resize); };
+    return () => { observer.disconnect(); cancelAnimationFrame(nudgeFrame.current); document.removeEventListener('visibilitychange', visibility); window.removeEventListener('resize', resize); };
   }, []);
   const select = useCallback((slot: string | null, card?: HTMLElement) => {
+    cancelAnimationFrame(nudgeFrame.current);
     setActive(slot);
     if (!slot) {
       root.current?.querySelectorAll<HTMLElement>('.team-roster-nudge').forEach(element => { element.style.transform = ''; });
@@ -87,7 +91,7 @@ export default function UtaabTeamRoster({ members, profileOpen, onProfile }: Ros
     const frame = card.closest<HTMLElement>('.team-roster-column, .team-roster-strip');
     const nudge = card.closest<HTMLElement>('.team-roster-nudge');
     if (!frame || !nudge) return;
-    requestAnimationFrame(() => {
+    nudgeFrame.current = requestAnimationFrame(() => {
       const bounds = frame.getBoundingClientRect();
       const rect = card.getBoundingClientRect();
       const strip = frame.classList.contains('team-roster-strip');
