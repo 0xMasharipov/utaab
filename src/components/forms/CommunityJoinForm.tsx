@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { WhatsAppButton } from '@/components/common/WhatsAppButton';
 import {
@@ -37,7 +36,6 @@ const createSchema = (t: any) => z.object({
   linkedin_url: z.string().url({ message: t('join.validation.urlInvalid') }).optional().or(z.literal('')),
   availability_hours: z.number({ invalid_type_error: t('join.validation.availabilityInvalid') }).int().min(1, { message: t('join.validation.availabilityRequired') }),
   preferred_tracks: z.array(z.string()).min(1, { message: t('join.validation.tracksRequired') }),
-  motivation: z.string().trim().min(300, { message: t('join.validation.motivationTooShort') }).max(500, { message: t('join.validation.motivationTooLong') }),
   kvkk_consent: z.boolean().refine(val => val === true, { message: t('join.validation.consentRequired') }),
   honeypot: z.string().max(0).optional(),
 });
@@ -81,7 +79,6 @@ export const CommunityJoinForm = () => {
         schema.pick({
           availability_hours: true,
           preferred_tracks: true,
-          motivation: true,
           github_url: true,
           portfolio_url: true,
           linkedin_url: true,
@@ -170,18 +167,17 @@ export const CommunityJoinForm = () => {
         body: {
           full_name: validatedData.full_name,
           email: validatedData.email,
-          telegram: validatedData.telegram || null,
+          telegram: validatedData.telegram || undefined,
           department: validatedData.department,
-          country: validatedData.country || null,
-          city: validatedData.city || null,
+          country: validatedData.country || undefined,
+          city: validatedData.city || undefined,
           experience_level: validatedData.experience_level,
           interests: validatedData.interests,
-          github_url: validatedData.github_url || null,
-          portfolio_url: validatedData.portfolio_url || null,
-          linkedin_url: validatedData.linkedin_url || null,
+          github_url: validatedData.github_url || undefined,
+          portfolio_url: validatedData.portfolio_url || undefined,
+          linkedin_url: validatedData.linkedin_url || undefined,
           availability_hours: validatedData.availability_hours,
           preferred_tracks: validatedData.preferred_tracks,
-          motivation: validatedData.motivation,
           kvkk_consent: validatedData.kvkk_consent,
           kvkk_consent_version: '1.0',
           honeypot: validatedData.honeypot || '',
@@ -213,7 +209,6 @@ export const CommunityJoinForm = () => {
     }));
   };
 
-  const motivationLength = (formData.motivation || '').length;
 
   if (submitted) {
     return (
@@ -557,21 +552,7 @@ export const CommunityJoinForm = () => {
                 {errors.preferred_tracks && <p className="text-destructive text-sm mt-2">{errors.preferred_tracks}</p>}
               </div>
 
-              <div>
-                <Label htmlFor="motivation" className="join-label">{t('join.motivation')}</Label>
-                <p className="text-sm text-muted-foreground mb-2">{t('join.motivationHelper')}</p>
-                <Textarea
-                  id="motivation"
-                  value={formData.motivation || ''}
-                  onChange={(e) => setFormData({ ...formData, motivation: e.target.value })}
-                  className="join-input min-h-[120px]"
-                  placeholder={t('join.motivationHelper')}
-                />
-                <p className={`text-sm mt-2 ${motivationLength < 300 ? 'text-muted-foreground' : motivationLength > 500 ? 'text-destructive' : 'text-accent'}`}>
-                  {t('join.charCount', { count: motivationLength, max: 500 })}
-                </p>
-                {errors.motivation && <p className="text-destructive text-sm mt-1">{errors.motivation}</p>}
-              </div>
+
             </div>
 
             <div className="flex gap-3">

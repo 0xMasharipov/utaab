@@ -7,7 +7,7 @@ const applicationSchema = z.object({
   full_name: z.string().trim().min(1).max(100),
   email: z.string().trim().email().max(255),
   telegram: z.string().trim().max(100).optional(),
-  department: z.enum(['development', 'design', 'marketing', 'education', 'research', 'community', 'other']),
+  department: z.string().trim().min(1).max(100),
   country: z.string().max(100).optional(),
   city: z.string().max(100).optional(),
   experience_level: z.enum(['beginner', 'intermediate', 'advanced', 'expert']),
@@ -16,7 +16,7 @@ const applicationSchema = z.object({
   portfolio_url: z.string().url().max(500).optional().or(z.literal('')),
   linkedin_url: z.string().url().max(500).optional().or(z.literal('')),
   preferred_tracks: z.array(z.string().max(50)).min(1).max(5),
-  motivation: z.string().trim().min(50).max(2000),
+  motivation: z.string().trim().max(500).optional().default(''),
   availability_hours: z.number().min(1).max(40),
   kvkk_consent: z.literal(true),
   kvkk_consent_version: z.string().max(10),
@@ -156,10 +156,10 @@ serve(async (req) => {
     }
     
     // Create Supabase client with service role
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-    );
+    const supabaseUrl = Deno.env.get('SUPABASE_URL');
+    const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    if (!supabaseUrl || !serviceRoleKey) throw new Error('Missing server configuration');
+    const supabase = createClient(supabaseUrl, serviceRoleKey);
 
     // Validate UTAAB token if provided
     if (validated.utaab_token) {
