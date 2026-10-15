@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Place the half-visible footer icon at bottom-center, extend ASCII beneath the description, and verify continuous motion and animated fallback.
+
 - [x] Enlarge the centered white footer icon and anchor it to the footer's bottom center on computer and phone; clickability, animation, reduced-motion and WebGL fallback checks passed. Physical iPhone/Safari testing is unavailable.
 
 

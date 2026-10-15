@@ -30,6 +30,8 @@ export interface GradientASCIIProps extends Omit<HTMLAttributes<HTMLDivElement>,
   lightMode?: boolean;
   fontFamily?: string;
   dpr?: number;
+  continuousMotion?: boolean;
+  onRendererChange?: (available: boolean) => void;
   style?: CSSProperties;
 }
 
@@ -515,6 +517,8 @@ const GradientASCII = ({
   lightMode = false,
   fontFamily = DEFAULT_FONT,
   dpr,
+  continuousMotion = false,
+  onRendererChange,
   className = '',
   style,
   ...rest
@@ -523,6 +527,8 @@ const GradientASCII = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wakeRef = useRef<(() => void) | null>(null);
   const [contextVersion, setContextVersion] = useState(0);
+  const rendererChangeRef = useRef(onRendererChange);
+  rendererChangeRef.current = onRendererChange;
   const palette = (Array.isArray(colors) && colors.length ? colors : DEFAULT_COLORS).slice(0, MAX_COLORS);
   const settings: Settings = {
     colors: palette.length > 1 ? palette : [palette[0], palette[0]],
@@ -558,6 +564,7 @@ const GradientASCII = ({
     const onLost = (event: Event) => {
       event.preventDefault();
       if (containerRef.current) delete containerRef.current.dataset.renderer;
+      rendererChangeRef.current?.(false);
     };
     const onRestored = () => setContextVersion(version => version + 1);
     canvas.addEventListener('webglcontextlost', onLost);
@@ -578,7 +585,10 @@ const GradientASCII = ({
       depth: false,
       stencil: false
     });
-    if (!container || !canvas || !gl) return undefined;
+    if (!container || !canvas || !gl) {
+      rendererChangeRef.current?.(false);
+      return undefined;
+    }
     container.dataset.renderer = 'webgl';
 
     const field = link(gl, FIELD);
@@ -587,10 +597,12 @@ const GradientASCII = ({
     const composite = link(gl, COMPOSITE);
     if (!field || !halo || !blur || !composite) {
       delete container.dataset.renderer;
+      rendererChangeRef.current?.(false);
       [field, halo, blur, composite].forEach(item => { if (item) gl.deleteProgram(item.program); });
       return undefined;
     }
     const vao = gl.createVertexArray();
+    rendererChangeRef.current?.(true);
     const fieldTarget = createTarget(gl, 2);
     const haloA = createTarget(gl, 1);
     const haloB = createTarget(gl, 1);
@@ -614,7 +626,7 @@ const GradientASCII = ({
       return rgb;
     };
 
-    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    const reduce = !continuousMotion && (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false);
     const view = { width: 1, height: 1, ratio: 1 };
     const ramp = new Float32Array(MAX_COLORS * 3);
     const clickData = new Float32Array(MAX_CLICKS * 4);
@@ -922,7 +934,7 @@ const GradientASCII = ({
       gl.deleteVertexArray(vao);
       [field, halo, blur, composite].forEach(item => gl.deleteProgram(item.program));
     };
-  }, [contextVersion]);
+  }, [contextVersion, continuousMotion]);
 
   useEffect(() => {
     wakeRef.current?.();
