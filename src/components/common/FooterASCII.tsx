@@ -30,7 +30,7 @@ export default function FooterASCII() {
       {nearby && palette.length > 0 && (
         <Suspense fallback={null}>
           <GradientASCII colors={palette} shape="horizon" characters=" =+xX01#@"
-            continuousMotion onRendererChange={setRendererAvailable}
+            continuousMotion fullHeight onRendererChange={setRendererAvailable}
             cellSize={14} density={0.75} glyphOpacity={0.85} gradientOpacity={0.28}
             glow={0.3} flicker={0.1} flow={0.45} speed={0.7} grain={0.01}
             softness={0.7} dpr={1.25} mouseInteraction clickEffect="wave" />

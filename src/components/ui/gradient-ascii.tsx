@@ -31,6 +31,7 @@ export interface GradientASCIIProps extends Omit<HTMLAttributes<HTMLDivElement>,
   fontFamily?: string;
   dpr?: number;
   continuousMotion?: boolean;
+  fullHeight?: boolean;
   onRendererChange?: (available: boolean) => void;
   style?: CSSProperties;
 }
@@ -125,6 +126,7 @@ uniform vec4 uClicks[4];
 uniform int uClickEffect;
 uniform float uIntro;
 uniform float uFrame;
+uniform float uFullHeight;
 in vec2 vUv;
 layout(location = 0) out vec4 outColor;
 layout(location = 1) out vec4 outAux;
@@ -172,6 +174,7 @@ vec3 horizon(vec2 p, float time, out float order) {
   float soft = mix(0.05, 0.22, uSoftness);
   float edge = p.y - arch;
   float rim = 0.38 * smoothstep(-soft, 0.42, edge);
+  rim = max(rim, uFullHeight * (0.48 + 0.06 * sin(p.x * 3.0 + time * 0.5)));
   vec2 sun = vec2(0.08 * sin(time * 0.31) * span, 0.58);
   float spread = length((p - sun) / vec2(0.95 * span, 0.75));
   float sky = mix(0.55, 1.0, smoothstep(0.2, 0.95, spread));
@@ -518,6 +521,7 @@ const GradientASCII = ({
   fontFamily = DEFAULT_FONT,
   dpr,
   continuousMotion = false,
+  fullHeight = false,
   onRendererChange,
   className = '',
   style,
@@ -734,6 +738,7 @@ const GradientASCII = ({
       gl.uniform1i(fu.uClickEffect, s.clickEffect);
       gl.uniform1f(fu.uIntro, introClock);
       gl.uniform1f(fu.uFrame, frameSeed);
+      gl.uniform1f(fu.uFullHeight, fullHeight ? 1 : 0);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
 
       const glowing = s.glow > 0.001;
@@ -934,7 +939,7 @@ const GradientASCII = ({
       gl.deleteVertexArray(vao);
       [field, halo, blur, composite].forEach(item => gl.deleteProgram(item.program));
     };
-  }, [contextVersion, continuousMotion]);
+  }, [contextVersion, continuousMotion, fullHeight]);
 
   useEffect(() => {
     wakeRef.current?.();
