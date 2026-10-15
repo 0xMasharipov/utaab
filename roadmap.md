@@ -1,5 +1,8 @@
 # Roadmap
 
+- [x] Replace public top navigation with the branded bottom liquid-glass menu; opening, language switching, Blog navigation, cross-page Join, scroll direction, footer hiding and desktop/phone layouts verified. Physical iPhone/Safari remains untested.
+- [x] Update supplied small logo lockup and favicon without changing the decorative footer mark; hosted image delivery checked.
+
 - [x] Place the half-visible footer icon at bottom-center and extend ASCII beneath the description; desktop/phone layout, reduced-motion animation, animated fallback, context recovery, off-screen pause/resume and controls verified. Physical iPhone/Safari remains untested.
 
 - [x] Enlarge the centered white footer icon and anchor it to the footer's bottom center on computer and phone; clickability, animation, reduced-motion and WebGL fallback checks passed. Physical iPhone/Safari testing is unavailable.

@@ -78,17 +78,20 @@ const Index = () => {
     const tryScroll = () => {
       const el = document.getElementById(targetId);
       if (el) {
-        const navbarHeight = 100;
-        const top = el.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+        const top = el.getBoundingClientRect().top + window.pageYOffset;
         window.scrollTo({ top, behavior: 'smooth' });
         // Clear the state so a refresh doesn't re-trigger
-        navigate(location.pathname, { replace: true, state: {} });
+        // Keep the destination hash so the global route reset cannot cancel
+        // this section scroll when the transient state is cleared.
+        if ((location.state as { scrollTo?: string } | null)?.scrollTo) {
+          navigate(`${location.pathname}#${targetId}`, { replace: true, state: {} });
+        }
         return;
       }
       if (++attempts < maxAttempts) setTimeout(tryScroll, 100);
     };
     tryScroll();
-  }, [showBelowFold, location.state, location.pathname, navigate]);
+  }, [showBelowFold, location.state, location.hash, location.pathname, navigate]);
 
 
   useEffect(() => {

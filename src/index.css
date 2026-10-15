@@ -8,6 +8,11 @@
 
 @layer base {
   :root {
+    --navigation-surface: 217 45% 9%;
+    --navigation-border: 213 70% 72%;
+    --navigation-shadow: 0 12px 48px hsl(217 60% 2% / .5), inset 0 1px 0 hsl(0 0% 100% / .12);
+    --navigation-sheen: linear-gradient(145deg, hsl(213 94% 68% / .12), transparent 46%, hsl(0 0% 100% / .04));
+
     /* Core Colors - Black, Blue, White palette */
     --background: 217 50% 6%;
     --foreground: 0 0% 98%;
