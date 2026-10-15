@@ -50,11 +50,6 @@ export const WhatsAppButton = ({
     }
   }, [autoRedirect, redirectDelay, cancelled]);
 
-  const handleClick = () => {
-    setCancelled(true);
-    WHATSAPP_CONFIG.openWhatsApp();
-  };
-
   const buttonClass = variant === 'primary' ? 'btn-primary' : 'btn-glass';
 
   return (
