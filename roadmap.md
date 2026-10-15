@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Restore and verify the centered white footer icon with ASCII behind it on desktop and phone layouts; animation, links, reduced-motion and WebGL fallback checks passed. Physical iPhone/Safari testing is unavailable.
+
 - [x] Integrate and verify the branded footer ASCII animation on computer and phone layouts, including motion and fallback. Physical iPhone/Safari verification is unavailable.
 
 - [x] Remove motivation essay and add welcoming copy.
