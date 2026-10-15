@@ -8,3 +8,4 @@
 - Footer ASCII graphics and the clipped icon-only brand mark share a decorative layer beneath footer content; the local renderer opts into continuous gentle motion with an animated Canvas2D fallback, semantic palette tokens, near-view loading and off-screen/hidden-tab pausing so desktop/iOS motion parity never blocks navigation or wastes rendering work.
 
 - Public page wrappers reuse the Navbar entry point for a local bottom floating menu with frame-batched scroll tracking and lazy-footer observation; education/admin retain independent navigation so public redesigns do not affect account flows.
+- Public floating-menu motion uses a single timed shell with explicit dimensions and permanently mounted content measured at its expanded width; this prevents Safari reflow jumps, supports tap reversal, and keeps closed content inert with a gentle reduced-motion fade.
