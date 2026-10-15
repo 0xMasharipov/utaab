@@ -9,3 +9,4 @@
 
 - Public page wrappers reuse the Navbar entry point for a local bottom floating menu with frame-batched scroll tracking and lazy-footer observation; education/admin retain independent navigation so public redesigns do not affect account flows.
 - Public floating-menu motion uses a single timed shell with explicit dimensions and permanently mounted content measured at its expanded width; this prevents Safari reflow jumps, supports tap reversal, and keeps closed content inert with a gentle reduced-motion fade.
+- TeamPage uses the local portrait roster over useTeamMembers with separate reveal and full-profile actions; CSS transform loops pause on selection, profile display, hidden tabs and off-screen state, while decorative duplicates stay outside keyboard navigation and an ordered directory keeps every member accessible.

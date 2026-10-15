@@ -1926,6 +1926,8 @@
     "subtitle": "UTAAB'ın İnşaatçıları"
   },
   "team": {
+    "badge": "UTAAB'ın arkasındaki insanlar",
+    "roster": { "pause": "Portreleri duraklat", "resume": "Portreleri devam ettir", "profile": "Profili görüntüle", "directory": "Tüm ekip üyeleri" },
     "title": "Ekibimiz",
     "subtitle": "Web3 eğitimi ve topluluk geleceğini inşa eden vizyonerler",
     "members": {
