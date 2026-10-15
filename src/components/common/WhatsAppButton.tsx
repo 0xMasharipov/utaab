@@ -50,28 +50,19 @@ export const WhatsAppButton = ({
     }
   }, [autoRedirect, redirectDelay, cancelled]);
 
-  const handleClick = () => {
-    setCancelled(true);
-    WHATSAPP_CONFIG.openWhatsApp();
-  };
-
   const buttonClass = variant === 'primary' ? 'btn-primary' : 'btn-glass';
 
   return (
     <div className="space-y-2">
       <Button 
         className={`${buttonClass} w-full ${className}`}
-        onClick={handleClick}
         asChild
       >
         <a 
           href={WHATSAPP_CONFIG.getWhatsAppUrl()} 
           target="_blank" 
           rel="noopener noreferrer"
-          onClick={(e) => {
-            e.preventDefault();
-            handleClick();
-          }}
+          onClick={() => setCancelled(true)}
         >
            <ChatBubble className="mr-2 h-5 w-5" strokeWidth={1.5} />
            {message}
@@ -87,12 +78,13 @@ export const WhatsAppButton = ({
         >
           <p className="text-sm text-muted-foreground">
             Redirecting in {countdown}s...{' '}
-            <button
+            <Button
+              variant="link"
               onClick={() => setCancelled(true)}
-              className="text-accent hover:underline"
+              className="h-auto p-0 text-accent"
             >
               Cancel
-            </button>
+            </Button>
           </p>
         </motion.div>
       )}

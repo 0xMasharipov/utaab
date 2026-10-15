@@ -1,0 +1,3 @@
+ALTER TABLE public.community_applications DROP CONSTRAINT community_applications_motivation_check;
+ALTER TABLE public.community_applications ADD CONSTRAINT community_applications_motivation_check CHECK (motivation = '' OR (char_length(motivation) >= 300 AND char_length(motivation) <= 500));
+COMMENT ON COLUMN public.community_applications.motivation IS 'Legacy optional motivation essay. New community applications store an empty string when omitted; existing essays are preserved.';
