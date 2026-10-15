@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, type CSSProperties, type HTMLAttributes } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type HTMLAttributes } from 'react';
 
 export type GradientASCIIShape = 'horizon' | 'pinch' | 'rise' | 'eclipse';
 
@@ -522,6 +522,7 @@ const GradientASCII = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wakeRef = useRef<(() => void) | null>(null);
+  const [contextVersion, setContextVersion] = useState(0);
   const palette = (Array.isArray(colors) && colors.length ? colors : DEFAULT_COLORS).slice(0, MAX_COLORS);
   const settings: Settings = {
     colors: palette.length > 1 ? palette : [palette[0], palette[0]],
@@ -550,6 +551,22 @@ const GradientASCII = ({
   };
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const onLost = (event: Event) => {
+      event.preventDefault();
+      if (containerRef.current) delete containerRef.current.dataset.renderer;
+    };
+    const onRestored = () => setContextVersion(version => version + 1);
+    canvas.addEventListener('webglcontextlost', onLost);
+    canvas.addEventListener('webglcontextrestored', onRestored);
+    return () => {
+      canvas.removeEventListener('webglcontextlost', onLost);
+      canvas.removeEventListener('webglcontextrestored', onRestored);
+    };
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -798,7 +815,7 @@ const GradientASCII = ({
 
     const frame = (now: number) => {
       raf = 0;
-      if (disposed || !visible || document.hidden) return;
+      if (disposed || !visible || document.hidden || gl.isContextLost()) return;
       const s = settingsRef.current;
       const dt = last ? clamp((now - last) / 1000, 0.001, 0.05) : 1 / 60;
       last = now;
@@ -905,7 +922,7 @@ const GradientASCII = ({
       gl.deleteVertexArray(vao);
       [field, halo, blur, composite].forEach(item => gl.deleteProgram(item.program));
     };
-  }, []);
+  }, [contextVersion]);
 
   useEffect(() => {
     wakeRef.current?.();
