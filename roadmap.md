@@ -1,7 +1,7 @@
 # Roadmap
 
-- [ ] Adapt the supplied drifting roster for the team page with natural photos, existing profiles and localized controls.
-- [ ] Match menu effects across desktop/phone and verify roster interactions, motion, languages and navigation.
+- [x] Adapt the supplied drifting roster with natural photos, real roster order, full profiles, localized controls and accessible member directory.
+- [x] Share desktop/phone menu timing and add touch/focus effect feedback; verified roster drift, pause, tap/keyboard profile access, social links, four languages, RTL, tablet layout, missing-image fallback and decorative keyboard exclusions in Chromium/WebKit. Physical iPhone smoothness remains unverified; headless WebKit frame sampling has rendering limitations.
 
 - [x] Repair coordinated public-menu opening/closing with native transitions and fixed-width measured content; Chromium and WebKit frame samples, Reduce Motion, rapid taps, dismissal, navigation and scroll/footer behavior checked. Physical iPhone smoothness remains unverified; headless WebKit showed rendering artifacts, so emulation is not a device guarantee.
 
