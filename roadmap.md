@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Repair and verify coordinated public-menu opening/closing on phone and desktop, including Reduce Motion and rapid taps; physical iPhone confirmation remains external.
+- [x] Repair coordinated public-menu opening/closing with native transitions and fixed-width measured content; Chromium and WebKit frame samples, Reduce Motion, rapid taps, dismissal, navigation and scroll/footer behavior checked. Physical iPhone smoothness remains unverified; headless WebKit showed rendering artifacts, so emulation is not a device guarantee.
 
 - [x] Replace public top navigation with the branded bottom liquid-glass menu; opening, language switching, Blog navigation, cross-page Join, scroll direction, footer hiding and desktop/phone layouts verified. Physical iPhone/Safari remains untested.
 - [x] Update supplied small logo lockup and favicon without changing the decorative footer mark; hosted image delivery checked.
