@@ -52,6 +52,13 @@
     /* Glow effects */
     --glow-blue: 213 94% 68%;
     --glow-intensity: 0.5;
+    --footer-surface-top: 217 50% 8%;
+    --footer-surface-bottom: 217 55% 4%;
+    --footer-ascii-deep: #0b3c6d;
+    --footer-ascii-blue: #2f80ed;
+    --footer-ascii-ice: #a5d8ff;
+    --footer-ascii-light: #f4f7fb;
+    --footer-ascii-fallback: linear-gradient(170deg, transparent 18%, hsl(var(--accent) / 0.12) 48%, transparent 80%);
   }
 
   * {
@@ -89,6 +96,39 @@
 }
 
 @layer components {
+  .footer-surface {
+    background: linear-gradient(to bottom, hsl(var(--footer-surface-top)), hsl(var(--footer-surface-bottom)));
+  }
+
+  .footer-ascii {
+    position: absolute;
+    top: 0;
+    left: -12%;
+    width: 65%;
+    height: 380px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.75;
+    mask-image: linear-gradient(to right, transparent, black 20%, black 65%, transparent), linear-gradient(to bottom, transparent, black 15%, black 70%, transparent);
+    mask-composite: intersect;
+    -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 65%, transparent), linear-gradient(to bottom, transparent, black 15%, black 70%, transparent);
+    -webkit-mask-composite: source-in;
+    background: var(--footer-ascii-fallback);
+  }
+
+  .footer-ascii:has([data-renderer="webgl"]) {
+    background: none;
+  }
+
+  @media (max-width: 767px) {
+    .footer-ascii {
+      left: -15%;
+      width: 130%;
+      height: 300px;
+      opacity: 0.65;
+    }
+  }
+
   /* Glass morphism base */
   .glass {
     @apply bg-white/5 backdrop-blur-xl border border-white/10;

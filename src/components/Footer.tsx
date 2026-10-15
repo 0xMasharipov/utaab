@@ -18,8 +18,7 @@ const TikTokIcon = ({ className, strokeWidth = 1.5 }: { className?: string; stro
   </svg>
 );
 import logo from '@/assets/logo-new.webp';
-import footerGeoDesktop from '@/assets/footer-geo-desktop.png';
-import footerGeoMobile from '@/assets/footer-geo-mobile.png';
+import FooterASCII from '@/components/common/FooterASCII';
 import { BrandText } from '@/components/common/BrandText';
 import AnimatedImage from '@/components/common/AnimatedImage';
 import { useLanguageTransition } from '@/hooks/useLanguageTransition';
@@ -51,29 +50,11 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
   ];
 
   return (
-    <footer className="relative overflow-hidden py-12 sm:py-16 bg-gradient-to-b from-[hsl(217,50%,8%)] to-[hsl(217,55%,4%)]">
+    <footer className="footer-surface relative isolate overflow-hidden py-12 sm:py-16">
       {/* Top glow line */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 
-      {/* Radial glow behind geometric */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-accent/[0.04] rounded-full blur-3xl pointer-events-none z-0" />
-
-      {/* Geometric background — Desktop */}
-      <img
-        src={footerGeoDesktop}
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none select-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[65%] max-w-[900px] opacity-[0.08] z-0 hidden md:block object-contain"
-        draggable={false}
-      />
-      {/* Geometric background — Mobile */}
-      <img
-        src={footerGeoMobile}
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none select-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[85%] max-w-[400px] opacity-[0.09] z-0 block md:hidden object-contain"
-        draggable={false}
-      />
+      <FooterASCII />
 
       <div className="relative z-10 section-container">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-10 md:gap-12 mb-8 sm:mb-12">
