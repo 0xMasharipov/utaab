@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Xmark, User, ArrowUpRight } from 'iconoir-react';
 import { Button } from '@/components/ui/button';
@@ -20,21 +19,44 @@ interface FloatingMenuProps {
   routeKey: string;
   onNavigate: (destination: string, section?: boolean) => void;
 }
-const ease = [0.22, 1, 0.36, 1] as const;
-
 export default function FloatingMenu({ groups, routeKey, onNavigate }: FloatingMenuProps) {
   const { t, i18n } = useTranslation();
   const { getTransitionClasses } = useLanguageTransition();
-  const reducedMotion = useReducedMotion();
   const [isOpen, setIsOpen] = useState(false);
   const { scrollVisible, footerVisible } = useFloatingNavigation(routeKey);
   const container = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const firstLink = useRef<HTMLButtonElement>(null);
+  const content = useRef<HTMLElement>(null);
+  const [panelSize, setPanelSize] = useState({ width: 358, height: 0 });
   const visible = !footerVisible && (scrollVisible || isOpen);
   const close = useCallback((restoreFocus = false) => {
     setIsOpen(false);
     if (restoreFocus) trigger.current?.focus();
+  }, []);
+
+  // Measure at the final width, never at the shell's intermediate width.
+  // Keeping this content mounted also lets a rapid tap reverse the same animation.
+  useLayoutEffect(() => {
+    const element = content.current;
+    if (!element) return;
+    const measure = () => {
+      const width = Math.min(560, document.documentElement.clientWidth - 32);
+      element.style.width = `${width}px`;
+      const height = Math.ceil(element.getBoundingClientRect().height);
+      setPanelSize(previous => previous.width === width && previous.height === height
+        ? previous : { width, height });
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    window.addEventListener('resize', measure);
+    window.visualViewport?.addEventListener('resize', measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', measure);
+      window.visualViewport?.removeEventListener('resize', measure);
+    };
   }, []);
 
   useEffect(() => { setIsOpen(false); }, [routeKey]);
@@ -71,21 +93,19 @@ export default function FloatingMenu({ groups, routeKey, onNavigate }: FloatingM
       aria-hidden={!visible} {...(!visible ? { inert: '' } : {})}
       onKeyDown={event => {
         if (!isOpen || event.key !== 'Tab') return;
-        const buttons = container.current?.querySelectorAll<HTMLButtonElement>('button:not([disabled])');
+        const buttons = container.current?.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], [tabindex="0"]');
         const first = buttons?.[0];
         const last = buttons?.[buttons.length - 1];
         if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
         else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
       }}>
-      <div className={`liquid-nav ${isOpen ? 'liquid-nav--open' : ''}`}>
+      <div className={`liquid-nav ${isOpen ? 'liquid-nav--open' : ''}`}
+        style={{ '--liquid-nav-expanded-height': `${panelSize.height + 60}px`,
+          '--liquid-nav-expanded-width': `${panelSize.width}px` } as CSSProperties}>
         <div className="liquid-nav-light" aria-hidden="true" />
-        <AnimatePresence initial={false}>
-          {isOpen && visible && (
-            <motion.div id="public-floating-menu" className="liquid-nav-panel"
-              initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: reducedMotion ? 0.01 : 0.45, ease }}>
-              <nav aria-label={t('nav.menu', 'Menu')} className="liquid-nav-content">
+            <div id="public-floating-menu" className="liquid-nav-panel"
+              aria-hidden={!isOpen || !visible} {...(!isOpen || !visible ? { inert: '' } : {})}>
+              <nav ref={content} aria-label={t('nav.menu', 'Menu')} className="liquid-nav-content">
                 <div className="liquid-nav-header">
                   <Button ref={firstLink} variant="ghost" className="liquid-nav-brand"
                     aria-label="UTAAB - Home" onClick={() => go('hero', true)}>
@@ -101,9 +121,8 @@ export default function FloatingMenu({ groups, routeKey, onNavigate }: FloatingM
                     <section key={group.label} className="liquid-nav-group">
                       <h2 className={getTransitionClasses('liquid-nav-group-label')}>{group.label}</h2>
                       {group.items.map((item, index) => (
-                        <motion.div key={item.destination}
-                          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: reducedMotion ? 0 : 0.12 + (groupIndex * 3 + index) * 0.025, duration: 0.3 }}>
+                        <div key={item.destination} className="liquid-nav-item"
+                          style={{ '--liquid-nav-item-delay': `${0.08 + (groupIndex * 4 + index) * 0.018}s` } as CSSProperties}>
                           <Button variant="ghost" className="liquid-nav-link"
                             onClick={() => go(item.destination, item.section)}>
                             <span className={getTransitionClasses('liquid-nav-link-label')}>
@@ -111,7 +130,7 @@ export default function FloatingMenu({ groups, routeKey, onNavigate }: FloatingM
                             </span>
                             <ArrowUpRight className="liquid-nav-link-arrow h-4 w-4" />
                           </Button>
-                        </motion.div>
+                        </div>
                       ))}
                     </section>
                   ))}
@@ -132,13 +151,11 @@ export default function FloatingMenu({ groups, routeKey, onNavigate }: FloatingM
                   ))}
                 </div>
               </nav>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            </div>
         <Button ref={trigger} variant="ghost" className="liquid-nav-trigger"
           aria-label={isOpen ? t('nav.close', 'Close') : t('nav.menu', 'Menu')}
           title={isOpen ? t('nav.close', 'Close') : t('nav.menu', 'Menu')}
-          aria-expanded={isOpen} aria-controls={isOpen ? 'public-floating-menu' : undefined}
+          aria-expanded={isOpen} aria-controls="public-floating-menu"
           tabIndex={visible ? 0 : -1} onClick={() => setIsOpen(open => !open)}
           onKeyDown={event => {
             if (event.key === 'ArrowUp' && !isOpen) {
