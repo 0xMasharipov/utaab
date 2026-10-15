@@ -155,7 +155,7 @@ export const CommunityJoinForm = () => {
 
       const urlParams = new URLSearchParams(window.location.search);
       const metadata = {
-        locale: i18n.language,
+        locale: i18n.resolvedLanguage || 'en',
         utm_source: urlParams.get('utm_source') || undefined,
         utm_medium: urlParams.get('utm_medium') || undefined,
         utm_campaign: urlParams.get('utm_campaign') || undefined,
