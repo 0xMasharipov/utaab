@@ -5,4 +5,4 @@
 - CUTII owns a local copy of Thinking Orbs so its required desktop/iOS motion parity does not inherit the package's reduced-motion freeze.
 - Email/password sign-in requires a fresh email OTP for both education users and administrators so a password alone never grants account access.
 - Community applications accept omitted legacy motivation as an empty string server-side; frontend, server validation and storage constraints must agree so joining never requires an essay.
-- Footer ASCII graphics and the icon-only brand mark share a centered decorative layer beneath footer content; the local renderer uses semantic palette tokens, near-view loading, off-screen pausing and a static fallback so decoration never blocks navigation or wastes rendering work.
+- Footer ASCII graphics and the clipped icon-only brand mark share a decorative layer beneath footer content; the local renderer opts into continuous gentle motion with an animated Canvas2D fallback, semantic palette tokens, near-view loading and off-screen/hidden-tab pausing so desktop/iOS motion parity never blocks navigation or wastes rendering work.

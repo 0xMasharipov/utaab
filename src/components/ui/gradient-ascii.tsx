@@ -30,6 +30,9 @@ export interface GradientASCIIProps extends Omit<HTMLAttributes<HTMLDivElement>,
   lightMode?: boolean;
   fontFamily?: string;
   dpr?: number;
+  continuousMotion?: boolean;
+  fullHeight?: boolean;
+  onRendererChange?: (available: boolean) => void;
   style?: CSSProperties;
 }
 
@@ -123,6 +126,7 @@ uniform vec4 uClicks[4];
 uniform int uClickEffect;
 uniform float uIntro;
 uniform float uFrame;
+uniform float uFullHeight;
 in vec2 vUv;
 layout(location = 0) out vec4 outColor;
 layout(location = 1) out vec4 outAux;
@@ -170,6 +174,7 @@ vec3 horizon(vec2 p, float time, out float order) {
   float soft = mix(0.05, 0.22, uSoftness);
   float edge = p.y - arch;
   float rim = 0.38 * smoothstep(-soft, 0.42, edge);
+  rim = max(rim, uFullHeight * (0.48 + 0.06 * sin(p.x * 3.0 + time * 0.5)));
   vec2 sun = vec2(0.08 * sin(time * 0.31) * span, 0.58);
   float spread = length((p - sun) / vec2(0.95 * span, 0.75));
   float sky = mix(0.55, 1.0, smoothstep(0.2, 0.95, spread));
@@ -515,6 +520,9 @@ const GradientASCII = ({
   lightMode = false,
   fontFamily = DEFAULT_FONT,
   dpr,
+  continuousMotion = false,
+  fullHeight = false,
+  onRendererChange,
   className = '',
   style,
   ...rest
@@ -523,6 +531,8 @@ const GradientASCII = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wakeRef = useRef<(() => void) | null>(null);
   const [contextVersion, setContextVersion] = useState(0);
+  const rendererChangeRef = useRef(onRendererChange);
+  rendererChangeRef.current = onRendererChange;
   const palette = (Array.isArray(colors) && colors.length ? colors : DEFAULT_COLORS).slice(0, MAX_COLORS);
   const settings: Settings = {
     colors: palette.length > 1 ? palette : [palette[0], palette[0]],
@@ -558,6 +568,7 @@ const GradientASCII = ({
     const onLost = (event: Event) => {
       event.preventDefault();
       if (containerRef.current) delete containerRef.current.dataset.renderer;
+      rendererChangeRef.current?.(false);
     };
     const onRestored = () => setContextVersion(version => version + 1);
     canvas.addEventListener('webglcontextlost', onLost);
@@ -578,7 +589,10 @@ const GradientASCII = ({
       depth: false,
       stencil: false
     });
-    if (!container || !canvas || !gl) return undefined;
+    if (!container || !canvas || !gl) {
+      rendererChangeRef.current?.(false);
+      return undefined;
+    }
     container.dataset.renderer = 'webgl';
 
     const field = link(gl, FIELD);
@@ -587,10 +601,12 @@ const GradientASCII = ({
     const composite = link(gl, COMPOSITE);
     if (!field || !halo || !blur || !composite) {
       delete container.dataset.renderer;
+      rendererChangeRef.current?.(false);
       [field, halo, blur, composite].forEach(item => { if (item) gl.deleteProgram(item.program); });
       return undefined;
     }
     const vao = gl.createVertexArray();
+    rendererChangeRef.current?.(true);
     const fieldTarget = createTarget(gl, 2);
     const haloA = createTarget(gl, 1);
     const haloB = createTarget(gl, 1);
@@ -614,7 +630,7 @@ const GradientASCII = ({
       return rgb;
     };
 
-    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    const reduce = !continuousMotion && (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false);
     const view = { width: 1, height: 1, ratio: 1 };
     const ramp = new Float32Array(MAX_COLORS * 3);
     const clickData = new Float32Array(MAX_CLICKS * 4);
@@ -722,6 +738,7 @@ const GradientASCII = ({
       gl.uniform1i(fu.uClickEffect, s.clickEffect);
       gl.uniform1f(fu.uIntro, introClock);
       gl.uniform1f(fu.uFrame, frameSeed);
+      gl.uniform1f(fu.uFullHeight, fullHeight ? 1 : 0);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
 
       const glowing = s.glow > 0.001;
@@ -922,7 +939,7 @@ const GradientASCII = ({
       gl.deleteVertexArray(vao);
       [field, halo, blur, composite].forEach(item => gl.deleteProgram(item.program));
     };
-  }, [contextVersion]);
+  }, [contextVersion, continuousMotion, fullHeight]);
 
   useEffect(() => {
     wakeRef.current?.();
