@@ -18,6 +18,7 @@ const TikTokIcon = ({ className, strokeWidth = 1.5 }: { className?: string; stro
   </svg>
 );
 import logo from '@/assets/logo-new.webp';
+import footerMark from '@/assets/utaab-mark-white.svg';
 import FooterASCII from '@/components/common/FooterASCII';
 import { BrandText } from '@/components/common/BrandText';
 import AnimatedImage from '@/components/common/AnimatedImage';
@@ -54,7 +55,10 @@ export const Footer = ({ onPrivacyClick }: FooterProps) => {
       {/* Top glow line */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 
-      <FooterASCII />
+      <div className="footer-brand-backdrop" aria-hidden="true">
+        <FooterASCII />
+        <img src={footerMark} alt="" className="footer-centered-mark" width={120} height={120} />
+      </div>
 
       <div className="relative z-10 section-container">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-10 md:gap-12 mb-8 sm:mb-12">
