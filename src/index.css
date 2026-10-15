@@ -113,9 +113,9 @@
   .footer-centered-mark {
     position: absolute;
     left: 50%;
-    top: 48%;
-    transform: translate(-50%, -50%);
-    width: min(38%, 320px);
+    bottom: 3%;
+    transform: translateX(-50%);
+    width: min(46%, 400px);
     height: auto;
     aspect-ratio: 1;
     object-fit: contain;
@@ -124,12 +124,11 @@
 
   .footer-ascii {
     position: absolute;
-    top: 50%;
+    bottom: 0;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     width: min(100%, 1100px);
-    height: 100%;
-    max-height: 560px;
+    height: min(100%, 560px);
     pointer-events: none;
     opacity: var(--footer-ascii-opacity);
     mask-image: linear-gradient(to right, transparent, black 30%, black 70%, transparent), linear-gradient(to bottom, transparent, black 25%, black 65%, transparent);
@@ -145,12 +144,12 @@
 
   @media (max-width: 767px) {
     .footer-centered-mark {
-      width: min(72%, 280px);
+      width: min(86%, 340px);
     }
 
     .footer-ascii {
       width: 100%;
-      height: 520px;
+      height: 560px;
     }
   }
 
