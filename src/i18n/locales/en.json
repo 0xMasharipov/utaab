@@ -1927,7 +1927,7 @@
   },
   "team": {
     "badge": "The people behind UTAAB",
-    "roster": { "pause": "Pause portraits", "resume": "Resume portraits", "profile": "View profile", "directory": "All team members" },
+    "roster": { "heading": "UTAAB Team", "intro": "The people bringing blockchain education, projects and community together.", "profile": "View profile", "directory": "All team members" },
     "title": "Our Team",
     "subtitle": "The visionaries building the future of Web3 education and community",
     "members": {
