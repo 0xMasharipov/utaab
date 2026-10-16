@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
-import { ArrowUpRight, Pause, Play } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import AnimatedImage from '@/components/common/AnimatedImage';
@@ -65,7 +65,6 @@ export default function UtaabTeamRoster({ members, profileOpen, onProfile }: Ros
   const root = useRef<HTMLElement>(null);
   const nudgeFrame = useRef(0);
   const [active, setActive] = useState<string | null>(null);
-  const [paused, setPaused] = useState(false);
   const [unseen, setUnseen] = useState(false);
   const [hidden, setHidden] = useState(document.hidden);
   const [columns, setColumns] = useState(window.innerWidth <= 1100 ? 2 : 3);
@@ -109,7 +108,7 @@ export default function UtaabTeamRoster({ members, profileOpen, onProfile }: Ros
     return () => document.removeEventListener('pointerdown', outside);
   }, [active, select]);
   useEffect(() => { select(null); }, [i18n.language, select]);
-  const halted = paused || unseen || hidden || Boolean(active) || profileOpen;
+  const halted = unseen || hidden || Boolean(active) || profileOpen;
   const renderTrack = (list: TeamMemberView[], prefix: string) => {
     // Fill a complete column before duplicating it; padding is decorative.
     const deck = list.length ? Array.from({ length: Math.max(4, list.length) }, (_, index) => ({ member: list[index % list.length], duplicate: index >= list.length })) : [];
@@ -127,18 +126,10 @@ export default function UtaabTeamRoster({ members, profileOpen, onProfile }: Ros
   return <section ref={root} className="team-roster" data-halted={halted} aria-labelledby="utaab-team-title">
     <div className="team-roster-stage">
       <div className="team-roster-copy">
-        <p className={getTransitionClasses('team-roster-eyebrow')}>{t('team.badge')}</p>
         <h1 id="utaab-team-title" className={getTransitionClasses('team-roster-title')}>
-          <span className="team-roster-brand">UTAAB</span><span>{t('team.title')}</span>
+          {t('team.roster.heading')}
         </h1>
-        <p className={getTransitionClasses('team-roster-intro')}>{t('team.subtitle')}</p>
-        <div className="team-roster-controls">
-          <Button variant="ghost" size="icon" className="team-roster-pause" aria-pressed={paused}
-            title={t(paused ? 'team.roster.resume' : 'team.roster.pause')}
-            aria-label={t(paused ? 'team.roster.resume' : 'team.roster.pause')} onClick={() => setPaused(value => !value)}>
-            {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
-          </Button>
-        </div>
+        <p className={getTransitionClasses('team-roster-intro')}>{t('team.roster.intro')}</p>
       </div>
       <div className="team-roster-wall" role="group" aria-label={t('team.title')}>
         {Array.from({ length: columns }, (_, column) => <div className="team-roster-column" key={column}>
@@ -149,9 +140,11 @@ export default function UtaabTeamRoster({ members, profileOpen, onProfile }: Ros
         {renderTrack(members, 's')}
       </div>
     </div>
-    <div className="team-roster-directory" aria-label={t('team.roster.directory')}>
-      {members.map(member => <Button key={member.id} variant="ghost" className="team-roster-directory-link"
+    <nav className="team-roster-directory" aria-label={t('team.roster.directory')}>
+      <p className={getTransitionClasses('team-roster-directory-heading')}>{t('team.roster.directory')}</p>
+      <div className="team-roster-directory-list">{members.map(member => <Button key={member.id} variant="ghost" className="team-roster-directory-link"
         onClick={() => onProfile(member)}>{member.name}</Button>)}
-    </div>
+      </div>
+    </nav>
   </section>;
 }

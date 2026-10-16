@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Remove the team-page play/pause control and refine page-specific copy, hierarchy and spacing; desktop/tablet/phone drift and profiles, keyboard selection pauses, Reduce Motion, translated headings and overflow checks passed. Physical iPhone smoothness remains unverified.
+
 - [x] Adapt the supplied drifting roster with natural photos, real roster order, full profiles, localized controls and accessible member directory.
 - [x] Share desktop/phone menu timing and add touch/focus effect feedback; verified roster drift, pause, tap/keyboard profile access, social links, four languages, RTL, tablet layout, missing-image fallback and decorative keyboard exclusions in Chromium/WebKit. Physical iPhone smoothness remains unverified; headless WebKit frame sampling has rendering limitations.
 

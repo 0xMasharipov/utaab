@@ -1927,7 +1927,7 @@
   },
   "team": {
     "badge": "UTAAB'ın arkasındaki insanlar",
-    "roster": { "pause": "Portreleri duraklat", "resume": "Portreleri devam ettir", "profile": "Profili görüntüle", "directory": "Tüm ekip üyeleri" },
+    "roster": { "heading": "UTAAB Ekibi", "intro": "Blockchain eğitimini, projeleri ve topluluğu bir araya getiren insanlar.", "profile": "Profili görüntüle", "directory": "Tüm ekip üyeleri" },
     "title": "Ekibimiz",
     "subtitle": "Web3 eğitimi ve topluluk geleceğini inşa eden vizyonerler",
     "members": {
